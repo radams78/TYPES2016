@@ -5,7 +5,6 @@ open import Data.Empty renaming (⊥ to Empty)
 open import Data.List hiding (replicate)
 open import Data.Vec hiding (map;replicate)
 open import Prelims
-open import Prelims.Endo
 open import Grammar.Taxonomy
 open import Grammar.Base
 
