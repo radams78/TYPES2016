@@ -4,8 +4,8 @@ open import Data.Nat
 open import Data.Empty renaming (⊥ to Empty)
 open import Data.List hiding (replicate)
 open import Data.Vec hiding (map;replicate)
---open import Prelims
---open import Prelims.Endo
+open import Prelims
+open import Prelims.Endo
 open import Grammar.Taxonomy
 open import Grammar.Base
 
@@ -180,15 +180,16 @@ Pi : ∀ {n} → snocVec Type n → Type → Type
 Pi [] B = B
 Pi (AA snoc A) B = Pi AA (A ⇛ B)
 
-APPF : ∀ {F V} → Term V → FoldFunc.F F (Term V) → Term V
-APPF {F} {V} = FoldFunc.foldl₀ F appT
+--APPF : ∀ {F V} → Term V → FoldFunc.F F (Term V) → Term V
+--APPF {F} {V} = FoldFunc.foldl₀ F appT
 
 --APPF-rep : ∀ {F U V} (M : Term U) (NN : FoldFunc.F F (Term U)) (ρ : Rep U V) →
 --  (APPF {F} M NN) 〈 ρ 〉 ≡ APPF {F} (M 〈 ρ 〉) (FoldFunc.map F (λ N → N 〈 ρ 〉) NN)
 --TODO
 
 APP' : ∀ {V} → Term V → List (Term V) → Term V
-APP' = APPF {LIST}
+APP' M [] = M
+APP' M (N ∷ NN) = APP' (appT M N) NN
 
 APP'-rep : ∀ {U V} (M : Term U) (NN : List (Term U)) (ρ : Rep U V) → (APP' M NN) 〈 ρ 〉 ≡ APP' (M 〈 ρ 〉) (Data.List.map (λ x → x 〈 ρ 〉) NN)
 APP'-rep M [] ρ = refl
@@ -198,7 +199,7 @@ APPl : ∀ {V} → Term V → snocList (Term V) → Term V
 APPl M [] = M
 APPl M (NN snoc N) = appT (APPl M NN) N
 
-APPl-rep : ∀ {U V} {M : Term U} {NN : snocList (Term U)} {ρ : Rep U V} → (APPl M NN) 〈 ρ 〉 ≡ APPl (M 〈 ρ 〉) (FoldFunc.map SNOCLIST (λ x → x 〈 ρ 〉) NN)
+APPl-rep : ∀ {U V} {M : Term U} {NN : snocList (Term U)} {ρ : Rep U V} → (APPl M NN) 〈 ρ 〉 ≡ APPl (M 〈 ρ 〉) (snocmap (λ x → x 〈 ρ 〉) NN)
 APPl-rep {NN = []} = refl
 APPl-rep {NN = NN snoc N} {ρ} = cong (λ x → appT x (N 〈 ρ 〉)) (APPl-rep {NN = NN} {ρ})
 
@@ -332,3 +333,4 @@ sub↗-• {σ = σ} {ρ} (↑ x) = let open ≡-Reasoning in
   ≡⟨ sub-•SR (ρ _ x) ⟩
     ρ _ x ⇑ ⟦ sub↗ σ ⟧
   ∎
+

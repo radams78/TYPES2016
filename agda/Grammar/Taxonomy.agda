@@ -1,5 +1,6 @@
 module Grammar.Taxonomy where
 open import Data.List
+open import Prelims
 
 record Taxonomy : Set₁ where
   field
@@ -18,6 +19,10 @@ record Taxonomy : Set₁ where
   extend : Alphabet → List VarKind → Alphabet
   extend V [] = V
   extend V (K ∷ KK) = extend (V , K) KK
+
+  snoc-extend : Alphabet → snocList VarKind → Alphabet
+  snoc-extend V [] = V
+  snoc-extend V (KK snoc K) = snoc-extend V KK , K
 
   data Var : Alphabet → VarKind → Set where
     x₀ : ∀ {V} {K} → Var (V , K) K
@@ -53,3 +58,4 @@ record Taxonomy : Set₁ where
   Kind : KindClass → Set
   Kind -Expression = ExpKind
   Kind -ListAbs = List AbsKind
+
