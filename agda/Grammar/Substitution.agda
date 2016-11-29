@@ -7,4 +7,3 @@ open import Grammar.Substitution.RepSub G public
 open import Grammar.Substitution.LiftFamily G public
 open import Grammar.Substitution.OpFamily G public
 open import Grammar.Substitution.Botsub G public
-

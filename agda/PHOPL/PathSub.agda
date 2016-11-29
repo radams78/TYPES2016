@@ -127,4 +127,3 @@ extendPS τ P (↑ x) = τ x
 •PS-botsub : ∀ {U V} {τ : PathSub U V} {ρ σ N} → (τ ∶ ρ ≡ σ •PS (x₀:= N)) ∼∼ extendPS τ (N ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧)
 •PS-botsub x₀ = refl
 •PS-botsub (↑ _) = refl
-

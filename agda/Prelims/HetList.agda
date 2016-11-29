@@ -5,9 +5,7 @@ open import Relation.Binary.PropositionalEquality
 open import Data.Unit hiding (setoid)
 open import Data.Product hiding (zip)
 open import Data.List hiding (zip;all)
-open import Prelims.Setoid
 open import Prelims.Snoclist
---open import Prelims.Functor
 
 data HetList {A : Set} (B : A → Set) : List A → Set where
   [] : HetList B []
