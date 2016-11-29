@@ -279,7 +279,6 @@ INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmss8.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmss8.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/lm/ec-lmr6.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/lm/ec-lmri9.tfm
-INPUT /usr/share/texmf/fonts/tfm/public/lm/ec-lmbx9.tfm
 INPUT main.bbl
 INPUT main.bbl
 INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmbx10.tfm

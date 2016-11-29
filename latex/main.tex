@@ -517,9 +517,10 @@ The result follows from the Church-Rosser theorem for $\beta$-reduction, and the
 \item
 A \emph{neutral} term is one of the form $x M_1 \cdots M_n$.
 \item
-A \emph{neutral} proof is one of the form $p \delta_1 \cdots \delta_n$.
-\item
 A \emph{neutral} path is one of the form $e_{M_1 N_1} P_1 \cdots_{M_n N_n} P_n$.
+\item
+A \emph{neutral} proof is either one of the form $p \delta_1 \cdots \delta_n$, or of the form $P^+ \delta_1 \cdots \delta_n$ or
+$P^- \delta_1 \cdots \delta_n$ where $P$ is a neutral path.
 \end{itemize}
 \end{definition}
 
@@ -530,6 +531,8 @@ A term in head normal form is either a neutral term, a canonical proposition, or
 \begin{proof}
 An easy proof by case analysis.
 \end{proof}
+
+\section{Example}
 
 \section{Computable Expressions}
 
@@ -548,7 +551,7 @@ If $\phi$ reduces to the canonical proposition $\psi$, then $\Gamma \models \del
 \item
 $\Gamma \models P : \phi =_\Omega \psi$ iff $\Gamma \models P^+ : \phi \supset \psi$ and $\Gamma \models P^- : \psi \supset \phi$.
 \item
-$\Gamma \models P : M =_{A \rightarrow B} M'$ iff, for all $Q$, $N$, $N'$ such that $\Gamma \models Q : N =_A N'$, we have $\Gamma \models P_{NN'}Q : MN =_B M'N'$.
+$\Gamma \models P : M =_{A \rightarrow B} M'$ iff, for all $Q$, $N$, $N'$ such that $\Gamma \models N : A$ and $\Gamma models N' : A$ and $\Gamma \models Q : N =_A N'$, then we have $\Gamma \models P_{NN'}Q : MN =_B M'N'$.
 \end{itemize}
 \end{definition}
 
@@ -611,6 +614,46 @@ For any term $\phi$, we have $\Gamma \models \reff{\phi} : \phi =_\Omega \phi$.
 \begin{proof}
 We must show that $\Gamma \models \reff{\phi}^+ : \phi \supset \phi$ and $\Gamma \models \reff{\phi}^- : \phi \supset \phi$.  So let $\Gamma \models \delta : \phi$.
 Then $\Gamma \models \reff{\phi}^+ \delta : \phi$ and $\Gamma \models \reff{\phi}^- \delta : \phi$ by well-typed expansion, as required.
+\end{proof}
+
+\begin{lemma}
+$\Gamma \models \phi : \Omega$ if and only if $\phi$ head reduces to a canonical proposition.
+\end{lemma}
+
+\begin{proof}
+If $\Gamma \models \phi : \Omega$ then $\Gamma \models \phi \{\}^+ : \phi \supset \phi$.  Therefore $\phi \supset \phi$ reduces to a canonical proposition,
+and so $\phi$ must reduce to a canonical proposition.
+
+Conversely, suppose $\phi$ reduces to a canonical proposition $\phi'$.  We have $\phi \{\} \twoheadrightarrow \phi' \{\} \twoheadrightarrow \reff{\phi'}$, and so $\Gamma \models \phi \{\} : \phi =_\Omega \phi$ by well-typed expansion.  Hence $\Gamma \models \phi : \Omega$.
+\end{proof}
+
+\begin{lemma}
+\label{lm:neutral-proof}
+If $\delta$ is a neutral proof and $\phi$ head reduces to a canonical proposition, then $\Gamma \models \delta : \phi$.
+\end{lemma}
+
+\begin{proof}
+It is sufficient to prove the case where $\phi$ is a canonical proposition.  The proof is by induction on $\phi$.
+
+If $\phi \equiv \bot$, then $\Gamma \models \delta : \bot$ immediately from the definition.
+
+If $\phi \equiv \psi \supset \chi$, then let $\Gamma \models \epsilon : \psi$.  We have that $\delta \epsilon$ is neutral,
+hence $\Gamma \models \delta \epsilon : \chi$ by the induction hypothesis.
+\end{proof}
+
+\begin{lemma}
+\label{lm:neutral-path}
+Let $\Gamma \models M : A$ and $\Gamma \models N : A$.  If $P$ is a neutral path, then $\Gamma \models P : M =_A N$.
+\end{lemma}
+
+\begin{proof}
+The proof is by induction on $A$.
+
+For $A \equiv \Omega$: we have that $P^+$ and $P^-$ are neutral proofs, and $M$ and $N$ head reduce to canonical propositions, so $\Gamma \models P^+ : M \supset N$ and
+$\Gamma \models P^- : N \supset M$ by the previous lemma, as required.
+
+For $A \equiv B \rightarrow C$: let $\Gamma \models L : B$, $\Gamma \models L' : B$ and $\Gamma \models Q : L =_B L'$.  Then we have $\Gamma \models ML : C$, $\Gamma \models NL' : C$ and
+$P_{LL'} Q$ is a neutral path, hence $\Gamma \models P_{L L'} Q : ML =_C NL'$ as required.
 \end{proof}
 
 \begin{lemma}
@@ -712,7 +755,33 @@ by well-typed expansion, as required.
 \end{enumerate}
 \end{proof}
 
-\section{Example}
+\begin{corollary}
+If $\Gamma \vdash E : T$ then $E$ head reduces to a head normal form.
+\end{corollary}
+
+\begin{proof}
+For every context $\Gamma$, we shall define a term-variableless context $\overline{\Gamma}$ and a computable substitution $\sigma_\Gamma : \Gamma \rightarrow_C \overline{\Gamma}$.
+It shall follow by the theorem that $\overline{\Gamma} \models E [ \sigma_\Gamma ] : T [ \sigma_\Gamma ]$, hence $E [ \sigma_\Gamma ]$ head reduces to a head normal form, and hence
+so does $E$ because head reduction respects substitution.
+
+First, for every type $A$, define a term $c_A$ such that $\vdash c_A : A$ as follows.
+\[ c_\Omega \eqdef \bot \qquad c_{A \rightarrow B} \equiv \lambda x:A.c_B \enspace . \]
+Note that, for every term-variableless context $\Gamma$, we have $\Gamma \models c_A : A$.
+
+Now we define
+\begin{align*}
+\overline{\langle \rangle} & \eqdef \langle \rangle \\
+\overline{\Gamma, x : A} & \eqdef \overline{\Gamma} & \sigma_{\Gamma, x : A} & \eqdef \sigma_\Gamma, x := c_A \\
+\overline{\Gamma, p : \phi} & \eqdef \overline{\Gamma}, p : \phi [ \sigma_\Gamma ] & \sigma_{\Gamma, p : \phi} & \eqdef \sigma_\Gamma, p := p \\
+\overline{\Gamma, e : M =_A N} & \eqdef \overline{\Gamma}, e : M [ \sigma_\Gamma ] =_A N [ \sigma_\Gamma ] & \sigma_{\Gamma, e : M =_A N} & \eqdef \sigma_\Gamma, e := e
+\end{align*}
+
+We prove that, if $\Gamma \vald$, then $\sigma_\Gamma$ is computable; the proof is by induction on derivations, and uses Lemmas \ref{lm:neutral-proof} and \ref{lm:neutral-path}.
+\end{proof}
+
+\begin{corollary}[Canonicity]
+If $\vdash E : T$ then $E$ head reduces to a canonical form.
+\end{corollary}
 
 \section{Conclusion}
 

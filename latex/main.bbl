@@ -1,5 +1,18 @@
 \begin{thebibliography}{1}
 
+\bibitem{cchm:cubical}
+Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M\"{o}rtberg.
+\newblock Cubical type theory: a constructive interpretation of the univalence
+  axiom.
+\newblock Preprint
+  \url{http://www.math.ias.edu/$\sim$amortberg/papers/cubicaltt.pdf}, 2015.
+
+\bibitem{Hofmann97syntaxand}
+Martin Hofmann.
+\newblock Syntax and semantics of dependent types.
+\newblock In {\em Semantics and Logics of Computation}, pages 79--130.
+  Cambridge University Press, 1997.
+
 \bibitem{ML:ITT}
 Per Martin-L{\"o}f.
 \newblock {\em Intuitionistic Type Theory}.
@@ -8,7 +21,12 @@ Per Martin-L{\"o}f.
 \bibitem{Polonsky14a}
 Andrew Polonsky.
 \newblock Internalization of extensional equality.
-\newblock {\em CoRR}, abs/1401.1148, 2014.
-\newblock URL: \url{http://arxiv.org/abs/1401.1148}.
+\newblock Preprint \url{http://arxiv.org/abs/1401.1148}, 2014.
+
+\bibitem{hottbook}
+The {Univalent Foundations Program}.
+\newblock {\em Homotopy Type Theory: Univalent Foundations of Mathematics}.
+\newblock \url{https://homotopytypetheory.org/book}, Institute for Advanced
+  Study, 2013.
 
 \end{thebibliography}

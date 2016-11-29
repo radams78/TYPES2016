@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  29 NOV 2016 12:50
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  29 NOV 2016 18:01
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -927,17 +927,11 @@ File: lipics-logo-bw.pdf Graphic file (type pdf)
 <use lipics-logo-bw.pdf> [1
 
 {/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map} <./cc-by.pdf> <./lipics-l
-ogo-bw.pdf>]
-
-LaTeX Warning: Citation `hottbook' on page 2 undefined on input line 89.
-
-
-LaTeX Warning: Citation `cchm:cubical' on page 2 undefined on input line 96.
-
-[2]
+ogo-bw.pdf>] [2]
 LaTeX Font Info:    Try loading font information for OT1+lmss on input line 154
 .
- (/usr/share/texmf/tex/latex/lm/ot1lmss.fd
+
+(/usr/share/texmf/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2007/01/14 v1.3 Font defs for Latin Modern
 ) [3]
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
@@ -975,12 +969,8 @@ LaTeX Font Warning: Font shape `U/msb/m/n' in size <8.5> not available
 LaTeX Font Warning: Font shape `U/msb/m/n' in size <4.25> not available
 (Font)              size <5> substituted on input line 375.
 
-
-LaTeX Warning: Citation `Hofmann97syntaxand' on page 5 undefined on input line 
-375.
-
 [5] [6] [7] [8] [9] [10]
-Overfull \hbox (6.56285pt too wide) detected at line 710
+Overfull \hbox (6.56285pt too wide) detected at line 753
   $\OT1/lmr/m/n/10 ^^A \OMS/lmsy/m/n/10 j[]\OT1/lmr/m/n/10 = (\OML/lmm/m/it/10 
 ^^U  ^^U  ^^Ue \OT1/lmr/m/n/10 : \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 =[] \OML/lm
 m/m/it/10 y:M\OMS/lmsy/m/n/10 f\OML/lmm/m/it/10 ^^\ \OT1/lmr/m/n/10 : \OML/lmm/
@@ -993,21 +983,18 @@ it/10 y\OMS/lmsy/m/n/10 g\OT1/lmr/m/n/10 )[]\OML/lmm/m/it/10 P \OT1/lmr/m/n/10
 ML/lmm/m/it/10 ^^[\OT1/lmr/m/n/10 ])\OML/lmm/m/it/10 N[]$ 
  []
 
-(./main.bbl) AED: lastpage setting LastPage [11] (./main.aux)
+[11] (./main.bbl) AED: lastpage setting LastPage [12] (./main.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.75pt have occurred.
 
-
-LaTeX Warning: There were undefined references.
-
  ) 
 Here is how much of TeX's memory you used:
- 9497 strings out of 256214
- 137119 string characters out of 1917001
- 233115 words of memory out of 1500000
- 12343 multiletter control sequences out of 10000+200000
- 223346 words of font info for 184 fonts, out of 1200000 for 2000
+ 9506 strings out of 256214
+ 137251 string characters out of 1917001
+ 233319 words of memory out of 1500000
+ 12344 multiletter control sequences out of 10000+200000
+ 220306 words of font info for 183 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
  43i,17n,44p,908b,469s stack positions out of 5000i,500n,6000p,200000b,15000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/en
@@ -1015,24 +1002,23 @@ c/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share
 /texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm
 -ts1.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx8.p
-fb></usr/share/texmf/fonts/type1/public/lm/lmbx9.pfb></usr/share/texmf/fonts/ty
-pe1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi5.pfb></us
-r/share/texmf/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/pub
-lic/lm/lmmi9.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/
-texmf/fonts/type1/public/lm/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm/lm
-r6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts
-/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></
-usr/share/texmf/fonts/type1/public/lm/lmri9.pfb></usr/share/texmf/fonts/type1/p
-ublic/lm/lmss10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbo10.pfb></usr/
-share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/pu
-blic/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy5.pfb></usr/shar
-e/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm
-/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texm
-f/fonts/type1/bluesky/ams/msam10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/
-msbm10.pfb>
-Output written on main.pdf (11 pages, 539771 bytes).
+fb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/t
+ype1/public/lm/lmmi5.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb></us
+r/share/texmf/fonts/type1/public/lm/lmmi9.pfb></usr/share/texmf/fonts/type1/pub
+lic/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr5.pfb></usr/share/t
+exmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr
+7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/
+type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri9.pfb></
+usr/share/texmf/fonts/type1/public/lm/lmss10.pfb></usr/share/texmf/fonts/type1/
+public/lm/lmssbo10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></u
+sr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/p
+ublic/lm/lmsy5.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/shar
+e/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/l
+m/lmtt10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msam10.pfb></usr/share/t
+exmf/fonts/type1/bluesky/ams/msbm10.pfb>
+Output written on main.pdf (12 pages, 531295 bytes).
 PDF statistics:
- 361 PDF objects out of 1000 (max. 8388607)
- 91 named destinations out of 1000 (max. 131072)
- 61073 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 379 PDF objects out of 1000 (max. 8388607)
+ 100 named destinations out of 1000 (max. 131072)
+ 60561 words of extra memory for PDF output out of 61914 (max. 10000000)
 
