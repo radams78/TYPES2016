@@ -1,13 +1,14 @@
-\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Predicative Higher-Order Minimal Logic with Extensional Equality}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Syntax}{section.2}% 3
-\BOOKMARK [2][-]{subsection.2.2}{Path Substitution}{section.2}% 4
-\BOOKMARK [2][-]{subsection.2.3}{Rules of Deduction}{section.2}% 5
-\BOOKMARK [2][-]{subsection.2.4}{Metatheorems}{section.2}% 6
-\BOOKMARK [3][-]{subsubsection.2.4.1}{Substitutions}{subsection.2.4}% 7
-\BOOKMARK [3][-]{subsubsection.2.4.2}{Canonicity}{subsection.2.4}% 8
-\BOOKMARK [1][-]{section.3}{Head Reduction}{}% 9
-\BOOKMARK [1][-]{section.4}{Computable Expressions}{}% 10
-\BOOKMARK [1][-]{section.5}{Proof of Canonicity}{}% 11
-\BOOKMARK [1][-]{section.6}{Example}{}% 12
-\BOOKMARK [1][-]{section.7}{Conclusion}{}% 13
+\BOOKMARK [1][-]{section.1}{Introduction}{}
+\BOOKMARK [1][-]{section.2}{Predicative Higher-Order Minimal Logic with Extensional Equality}{}
+\BOOKMARK [2][-]{subsection.2.1}{Syntax}{section.2}
+\BOOKMARK [2][-]{subsection.2.2}{Path Substitution}{section.2}
+\BOOKMARK [2][-]{subsection.2.3}{Rules of Deduction}{section.2}
+\BOOKMARK [2][-]{subsection.2.4}{Metatheorems}{section.2}
+\BOOKMARK [3][-]{subsubsection.2.4.1}{Substitutions}{subsection.2.4}
+\BOOKMARK [3][-]{subsubsection.2.4.2}{Canonicity}{subsection.2.4}
+\BOOKMARK [1][-]{section.3}{Head Reduction}{}
+\BOOKMARK [2][-]{subsection.3.1}{Neutral Expressions}{section.3}
+\BOOKMARK [1][-]{section.4}{Computable Expressions}{}
+\BOOKMARK [1][-]{section.5}{Proof of Canonicity}{}
+\BOOKMARK [1][-]{section.6}{Example}{}
+\BOOKMARK [1][-]{section.7}{Conclusion}{}

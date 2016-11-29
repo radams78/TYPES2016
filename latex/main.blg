@@ -1,50 +1,49 @@
-This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
-Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+This is BibTeX, Version 0.99c (Web2C 7.5.6)
 The top-level auxiliary file: main.aux
 The style file: plainurl.bst
-Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
-Reallocated global_strs (elt_size=20001) to 20 items from 10.
-Reallocated glb_str_end (elt_size=4) to 20 items from 10.
-Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: ../../../../type.bib
-You've used 5 entries,
-            2849 wiz_defined-function locations,
-            646 strings with 5791 characters,
-and the built_in function-call counts, 1809 in all, are:
-= -- 185
-> -- 56
-< -- 1
-+ -- 21
-- -- 16
-* -- 64
-:= -- 294
-add.period$ -- 16
-call.type$ -- 5
-change.case$ -- 21
+Warning--I didn't find a database entry for "hottbook"
+Warning--I didn't find a database entry for "cchm:cubical"
+Warning--I didn't find a database entry for "Hofmann97syntaxand"
+You've used 2 entries,
+            2361 wiz_defined-function locations,
+            554 strings with 4565 characters,
+and the built_in function-call counts, 552 in all, are:
+= -- 67
+> -- 14
+< -- 0
++ -- 6
+- -- 4
+* -- 21
+:= -- 108
+add.period$ -- 7
+call.type$ -- 2
+change.case$ -- 7
 chr.to.int$ -- 0
-cite$ -- 5
-duplicate$ -- 57
-empty$ -- 174
-format.name$ -- 16
-if$ -- 472
+cite$ -- 2
+duplicate$ -- 24
+empty$ -- 46
+format.name$ -- 4
+if$ -- 122
 int.to.chr$ -- 0
-int.to.str$ -- 5
-missing$ -- 5
-newline$ -- 28
-num.names$ -- 10
-pop$ -- 46
+int.to.str$ -- 2
+missing$ -- 3
+newline$ -- 14
+num.names$ -- 4
+pop$ -- 11
 preamble$ -- 1
-purify$ -- 18
+purify$ -- 6
 quote$ -- 0
-skip$ -- 139
+skip$ -- 27
 stack$ -- 0
-substring$ -- 52
-swap$ -- 11
-text.length$ -- 1
+substring$ -- 10
+swap$ -- 2
+text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 16
+type$ -- 6
 warning$ -- 0
-while$ -- 13
-width$ -- 6
-write$ -- 55
+while$ -- 4
+width$ -- 3
+write$ -- 25
+(There were 3 warnings)

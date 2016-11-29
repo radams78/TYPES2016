@@ -231,6 +231,7 @@ Given substitutions $\sigma$, $\rho$, $\rho'$ and a path substitution $\tau$, le
 \end{definition}
 
 \begin{lemma}
+\label{lm:pathsubsub}
 $M[\sigma]\{ \tau : \rho \sim \rho' \} \equiv
 M\{ \tau \bullet_{\rho \rho'} \sigma : \rho \circ \sigma \sim \rho' \circ \sigma \}$
 \end{lemma}
@@ -261,27 +262,27 @@ The rules of deduction of $\lambda o e$ are given in Figure \ref{fig:lambdaoe}. 
 (\lambda_T) \quad \infer{\Gamma \vdash \lambda x:A.M : A \rightarrow B}{\Gamma, x : A \vdash M : B} \]
 
 \paragraph*{Proofs}
-\[ (\mathrm{app}_P) \infer{\Gamma \vdash \delta \epsilon : \psi} {\Gamma \vdash \delta : \phi \supset \psi \quad \Gamma \vdash \epsilon : \phi} \qquad
-(\lambda_P) \infer{\Gamma \vdash \lambda p : \phi . \delta : \phi \supset \psi}{\Gamma, p : \phi \vdash \delta : \psi} \]
-\[ \infer[(\phi \simeq_\beta \psi)]{\Gamma \vdash \delta : \psi}{\Gamma \vdash \delta : \phi \quad \Gamma \vdash \psi : \Omega} \]
+\[ (\mathrm{app}_P) \quad \infer{\Gamma \vdash \delta \epsilon : \psi} {\Gamma \vdash \delta : \phi \supset \psi \quad \Gamma \vdash \epsilon : \phi} \qquad
+(\lambda_P) \quad \infer{\Gamma \vdash \lambda p : \phi . \delta : \phi \supset \psi}{\Gamma, p : \phi \vdash \delta : \psi} \]
+\[ (\mathrm{conv}_P) \quad \infer[(\phi \simeq_\beta \psi)]{\Gamma \vdash \delta : \psi}{\Gamma \vdash \delta : \phi \quad \Gamma \vdash \psi : \Omega} \]
 
 \paragraph*{Paths}
-\[ \infer{\Gamma \vdash \reff{M} : M =_A M}{\Gamma \vdash M : A}
+\[ (\mathrm{ref}) \quad \infer{\Gamma \vdash \reff{M} : M =_A M}{\Gamma \vdash M : A}
 \qquad
-\infer{\Gamma \vdash P \supset^* Q : \phi \supset \psi =_\Omega \phi' \supset \psi'}{\Gamma \vdash P : \phi =_\Omega \phi' \quad \Gamma \vdash Q : \psi =_\Omega \psi'} \]
-\[ \infer{\Gamma \vdash \univ{\phi}{\psi}{\delta}{\epsilon} : \phi =_\Omega \psi}{\Gamma \vdash \delta : \phi \supset \psi \quad \Gamma \vdash \epsilon : \psi \supset \phi} 
+(\supset^*) \quad \infer{\Gamma \vdash P \supset^* Q : \phi \supset \psi =_\Omega \phi' \supset \psi'}{\Gamma \vdash P : \phi =_\Omega \phi' \quad \Gamma \vdash Q : \psi =_\Omega \psi'} \]
+\[ (\mathrm{univ}) \quad \infer{\Gamma \vdash \univ{\phi}{\psi}{\delta}{\epsilon} : \phi =_\Omega \psi}{\Gamma \vdash \delta : \phi \supset \psi \quad \Gamma \vdash \epsilon : \psi \supset \phi} 
 \qquad
-\infer{\Gamma \vdash P^+ : \phi \supset \psi}{\Gamma \vdash P : \phi =_\Omega \psi}
+(\mathrm{plus}) \quad \infer{\Gamma \vdash P^+ : \phi \supset \psi}{\Gamma \vdash P : \phi =_\Omega \psi}
 \qquad
-\infer{\Gamma \vdash P^- : \psi \supset \phi}{\Gamma \vdash P : \psi =_\Omega \psi} \]
-\[ \infer{\Gamma \vdash \triplelambda e : x =_A y . P : M =_{A \rightarrow B} N}
+(\mathrm{minus}) \quad \infer{\Gamma \vdash P^- : \psi \supset \phi}{\Gamma \vdash P : \psi =_\Omega \psi} \]
+\[ (\triplelambda) \quad \infer{\Gamma \vdash \triplelambda e : x =_A y . P : M =_{A \rightarrow B} N}
   {\begin{array}{c}
      \Gamma, x : A, y : A, e : x =_A y \vdash P : M x =_B N y \\
      \Gamma \vdash M : A \rightarrow B \quad
 \Gamma \vdash N : A \rightarrow B
      \end{array}} \]
-\[ \infer{\Gamma \vdash P_{NN'}Q : MN =_B M' N'}{\Gamma \vdash P : M =_{A \rightarrow B} M' \quad \Gamma \vdash Q : N =_A N' \quad \Gamma \vdash N : A \quad \Gamma \vdash N' : A} \]
-\[ \infer[(M \simeq_\beta M', N \simeq_\beta N')]{\Gamma \vdash P : M' =_A N'}{\Gamma \vdash P : M =_A N \quad \Gamma \vdash M' : A \quad \Gamma \vdash N' : A} \]
+\[ (\mathrm{app}_E) \quad \infer{\Gamma \vdash P_{NN'}Q : MN =_B M' N'}{\Gamma \vdash P : M =_{A \rightarrow B} M' \quad \Gamma \vdash Q : N =_A N' \quad \Gamma \vdash N : A \quad \Gamma \vdash N' : A} \]
+\[ (\mathrm{conv}_E) \quad \infer[(M \simeq_\beta M', N \simeq_\beta N')]{\Gamma \vdash P : M' =_A N'}{\Gamma \vdash P : M =_A N \quad \Gamma \vdash M' : A \quad \Gamma \vdash N' : A} \]
 \caption{Rules of Deduction of $\lambda oe$}
 \label{fig:lambdaoe}
 \end{figure}
@@ -465,11 +466,39 @@ $(\lambda x:A.M)N \rightarrow M[x:=N]$.
 \item
 If $M \rightarrow M'$ then $MN \rightarrow M'N$.
 \item
-If $\phi \rightarrow \phi'$ and $\psi \rightarrow \psi'$ then $\phi \sup \psi \rightarrow \phi' \sup \psi'$.
+If $\phi \rightarrow \phi'$ and $\psi \rightarrow \psi'$ then $\phi \supset \psi \rightarrow \phi' \supset \psi'$.
+\item
+$\reff{\phi}^+ \delta \rightarrow \delta$ and $\reff{\phi}^- \delta \rightarrow \delta$.
+\item
+If $P \rightarrow P'$ and $Q \rightarrow Q'$ then $P \supset^* Q \rightarrow P' \supset^* Q'$.
+\item
+$\reff{\phi} \supset^* \reff{\psi} \rightarrow \reff{\phi \supset \psi}$.
+\item
+$(\triplelambda e : x =_A y . P)_{MN} Q \rightarrow P [ x := M, y := N, e := Q ]$
+\item
+$\reff{M}_{N N'} P \rightarrow M \{ x:= P : N = N' \}$.
+\item
+If $P \rightarrow Q$ then $P^+ \rightarrow Q^+$ and $P^- \rightarrow Q^-$.
+\item
+If $P \rightarrow P'$ then $P_{MN} Q \rightarrow P'_{MN} Q$.
 \end{itemize}
 \end{definition}
 
 Note that this relation is \emph{deterministic}: i.e. for any $E$, there is at most one $F$ such that $E \rightarrow F$.
+
+\begin{lemma}[Head reduction respects path substitution]
+If $M \rightarrow N$ then $M \{ \tau : \rho = \sigma \} \rightarrow N \{ \tau : \rho = \sigma \}$.
+\end{lemma}
+
+\begin{proof}
+Induction on $M \rightarrow N$.  The only difficult case is $\beta$-reduction.  We have
+\begin{align*}
+& ((\lambda x:A.M)N)\{ \tau : \rho = \sigma \} \\
+\equiv & (\triplelambda e : x =_A x' . M \{ \tau : \rho = \sigma, x := e : x = x' \})_{N [ \rho ] N [ \sigma ]} N \{ \tau : \rho = \sigma \} \\
+\rightarrow & M \{ \tau : \rho = \sigma, x := N \{ \tau \} : N [ \rho ] = N [ \sigma ] \} \\
+\equiv & M [ x := N ] \{ \tau : \rho = \sigma \} & (\text{Lemma \ref{lm:pathsubsub}})
+\end{align*}
+\end{proof}
 
 \begin{lemma}
 \label{lm:compat-beta}
@@ -481,6 +510,27 @@ Note that on terms, our head reduction is $\beta$-reduction; that is, if $\phi$ 
 The result follows from the Church-Rosser theorem for $\beta$-reduction, and the fact that every canonical proposition is a $\beta$-normal form.
 \end{proof}
 
+\subsection{Neutral Expressions}
+
+\begin{definition}[Neutral]$ $
+\begin{itemize}
+\item
+A \emph{neutral} term is one of the form $x M_1 \cdots M_n$.
+\item
+A \emph{neutral} proof is one of the form $p \delta_1 \cdots \delta_n$.
+\item
+A \emph{neutral} path is one of the form $e_{M_1 N_1} P_1 \cdots_{M_n N_n} P_n$.
+\end{itemize}
+\end{definition}
+
+\begin{lemma}
+A term in head normal form is either a neutral term, a canonical proposition, or a $\lambda$-term.
+\end{lemma}
+
+\begin{proof}
+An easy proof by case analysis.
+\end{proof}
+
 \section{Computable Expressions}
 
 \begin{definition}[Computable Expression]
@@ -488,13 +538,17 @@ Let $\Gamma$ be a context in which term variables do not occur.
 We define the relation $\Gamma \models E : T$, read '$E$ is a computable expression of type $T$ under $\Gamma$', as follows.
 \begin{itemize}
 \item
-$\Gamma \models \phi : \Omega$ iff $\phi$ reduces to a canonical proposition.
+$\Gamma \models M : A$ iff $\Gamma \vdash M : A$ and $\Gamma \models M \{\} : M =_A M$.
 \item
-$\Gamma \models M : A \rightarrow B$ iff, for all $N$ such that $\Gamma \models N : A$, we have $\Gamma \models MN : B$.
+$\Gamma \models \delta : \bot$ iff $\delta$ reduces to a neutral proof.
 \item
 For $\phi$ and $\psi$ canonical propositions, $\Gamma \models \delta : \phi \supset \psi$ iff, for all $\epsilon$ such that $\Gamma \models \epsilon : \phi$, we have $\Gamma \models \delta \epsilon : \psi$.
 \item
 If $\phi$ reduces to the canonical proposition $\psi$, then $\Gamma \models \delta : \phi$ iff $\Gamma \models \delta : \psi$.
+\item
+$\Gamma \models P : \phi =_\Omega \psi$ iff $\Gamma \models P^+ : \phi \supset \psi$ and $\Gamma \models P^- : \psi \supset \phi$.
+\item
+$\Gamma \models P : M =_{A \rightarrow B} M'$ iff, for all $Q$, $N$, $N'$ such that $\Gamma \models Q : N =_A N'$, we have $\Gamma \models P_{NN'}Q : MN =_B M'N'$.
 \end{itemize}
 \end{definition}
 
@@ -504,31 +558,91 @@ We write $\sigma : \Gamma \rightarrow_C \Delta$, and say $\sigma$ is a \emph{com
 We write $\tau : \rho = \sigma : \Gamma \rightarrow_C \Delta$, and say $\tau$ is a \emph{computable} path substitution between $\rho$ and $\sigma$, iff, for every term variable entry $x : A$ in $\Gamma$, we have $\Delta \models \tau(x) : \rho(x) =_A \sigma(x)$.
 \end{definition}
 
-\begin{lemma}[Well-typed Expansion]
-If $\Gamma \models F : T$ and $E \rightarrow F$ then $\Gamma \models E : T$.
-\end{lemma}
-
-\begin{proof}
-Easy induction.
-\end{proof}
-
-\begin{lemma}
-\label{lm:compute-supset}
-If $\Gamma \models \phi : \Omega$ and $\Gamma \models \psi : \Omega$ then $\Gamma \models \phi \supset \psi : \Omega$.
-\end{lemma}
-
-\begin{proof}
-If $\phi$ reduces to the canonical proposition $\phi'$ and $\psi$ reduces to $\psi'$ then $\phi \supset \psi$ reduces to $\phi' \supset \psi'$.
-\end{proof}
-
 \begin{lemma}
 \label{lm:conv-compute}
-If $\Gamma \models \delta : \phi$ and $\phi \simeq_\beta \psi$, 
-then $\Gamma \models \delta : \psi$.
+If $\Gamma \models E : S$ and $S \simeq_\beta T$ then $\Gamma \models E : T$.
 \end{lemma}
 
 \begin{proof}
-This follows from the definitions and Lemma \ref{lm:compat-beta}.
+This follows easily from the definition and Lemma \ref{lm:compat-beta}.
+\end{proof}
+
+\begin{lemma}[Well-typed Expansion]
+If $\Gamma \models F : T$ and $E \rightarrow F$ and $\Gamma \vdash E : T$ then $\Gamma \models E : T$.
+\end{lemma}
+
+\begin{proof}
+An easy induction, using the fact that head reduction respects path substitution.
+\end{proof}
+
+\begin{lemma}[Reduction]
+If $\Gamma \models E : T$ and $E \rightarrow F$ then $\Gamma \models F : T$.
+\end{lemma}
+
+\begin{proof}
+An easy induction, using the fact that head reduction is deterministic.
+\end{proof}
+
+\begin{lemma}
+If $\Gamma \models E : T$ then $E$ head reduces to a head normal form.
+\end{lemma}
+
+\begin{proof}
+Induction on $\Gamma \models E : T$.
+\end{proof}
+%Note about Markov's principle?
+
+\begin{lemma}
+\label{lm:compute-lambda}
+If $\Gamma \models M : A \rightarrow B$ then $M$ head reduces to a $\lambda$-term.
+\end{lemma}
+
+\begin{proof}
+We have that $M$ reduces to a head normal form $M'$, and $\Gamma \vdash M' : A \rightarrow B$ by Subject Reduction.
+$M'$ cannot be a neutral term as $\Gamma$ has no term variables, and it cannot be $\bot$ or a $\supset$-term by Generation,
+so it must be a $\lambda$-term.
+\end{proof}
+
+\begin{lemma}
+\label{lm:ref-compute-Omega}
+For any term $\phi$, we have $\Gamma \models \reff{\phi} : \phi =_\Omega \phi$.
+\end{lemma}
+
+\begin{proof}
+We must show that $\Gamma \models \reff{\phi}^+ : \phi \supset \phi$ and $\Gamma \models \reff{\phi}^- : \phi \supset \phi$.  So let $\Gamma \models \delta : \phi$.
+Then $\Gamma \models \reff{\phi}^+ \delta : \phi$ and $\Gamma \models \reff{\phi}^- \delta : \phi$ by well-typed expansion, as required.
+\end{proof}
+
+\begin{lemma}
+\label{lm:ref-compute}
+If $\Gamma \models M : A$ then $\Gamma \models \reff{M} : M =_A M$.
+\end{lemma}
+
+\begin{proof}
+If $A \equiv \Omega$, this is just Lemma \ref{lm:ref-compute-Omega}.
+
+So suppose $A \equiv B \rightarrow C$.  By Lemma \ref{lm:compute-lambda}, we have that $M \twoheadrightarrow \lambda x:A.M'$.  So by well-typed expansion, it is sufficient to prove that
+\[ \Gamma \models \reff{\lambda x:A.M'} : \lambda x:A.M' =_{B \rightarrow C} \lambda x:A.M' \enspace . \]
+Let $\Gamma \models P : N =_B N'$.  We must show that
+\[ \Gamma \models \reff{\lambda x:A.M'}_{N N'} P : M' [x:= N] =_C M' [x:=N'] \enspace . \]
+By well-typed expansion, it is sufficient to prove
+\[ \Gamma \models M' \{ x:= P : N = N' \} : M' [x:=N] =_C M' [x:= N'] \enspace . \]
+Now, we have that $\Gamma \models M \{\} : M =_{B \rightarrow C} M$, and so
+\[ \Gamma \models \triplelambda e : x =_A x' . M' \{ x := e : x = x' \} : \lambda x:A.M' =_{B \rightarrow C} \lambda x:A.M' \enspace . \]
+Therefore,
+\[ \Gamma \models (\triplelambda e : x=_A x' . M' \{ x := e : x = x' \})_{N N'} P : (\lambda x:A.M') N =_C (\lambda x:A.M') N' \enspace , \]
+and the result follows by Reduction.
+\end{proof}
+
+\begin{lemma}
+\label{lm:compute-supset*}
+If $\Gamma \vdash P : \phi =_\Omega \phi'$ and $\Gamma \vdash Q : \psi =_\Omega \psi'$ then $\Gamma \vdash P \supset^* Q : \phi \supset \psi =_\Omega \phi' \supset \psi'$.
+\end{lemma}
+
+\begin{proof}
+%WATCH
+We have that $\phi \equiv \phi'$ and $\psi \equiv \psi'$.  Also, we have $P \twoheadrightarrow \reff{\phi}$ and $Q \twoheadrightarrow \reff{\psi}$, hence
+$P \supset^* Q \twoheadrightarrow \reff{\phi} \supset^* \reff{\psi} \rightarrow \reff{\phi \supset \psi}$.
 \end{proof}
 
 \section{Proof of Canonicity}
@@ -546,9 +660,11 @@ If $\Gamma \vdash M : A$ and $\tau : \rho = \sigma : \Gamma \rightarrow_C \Delta
 The proof is by induction on derivations.
 \begin{enumerate}
 \item
-For the (var) rules, the result is immediate from the hypothesis.  The case ($\bot$) is trivial.
+For the (var) rules, the result is immediate from the hypothesis.  
 
-For the rule ($\supset$), we use Lemma \ref{lm:compute-supset}.
+The case ($\bot$) follows from Lemma \ref{lm:ref-compute-Omega}.
+
+For the rule ($\supset$), we use Lemma \ref{lm:compute-supset*}.
 
 The case (app$_T$) is trivial.
 
@@ -564,8 +680,35 @@ The case (app$_P$) is trivial.
 
 The case ($\lambda_P$) is similar to ($\lambda_T$), also making use of Lemma \ref{lm:conv-compute}.
 
+The case (conv$_P$) follows immediately from Lemma \ref{lm:conv-compute}.
 
+The case (ref) is immediate from Lemma \ref{lm:ref-compute}.
+
+The cases (plus) and (minus) are trivial.
+
+For the rule ($\triplelambda$), let $\Delta \models Q : L =_A L'$.  Then the induction hypothesis gives
+\[ \Delta \models P [ \sigma, x := L, y := L', e := Q ] : M [\sigma] L =_B N [\sigma] L' \]
+and hence well-typed expansion gives
+\[ \Delta \models (\triplelambda e:x =_A y.P [ \sigma ])_{L L'} Q : M[\sigma] L =_B N[\sigma] L' \]
+as required.
+
+The case (app$_E$) is trivial.  The case (conv$_E$) follows immediately from Lemma \ref{lm:conv-compute}.
 \item
+The case (var$_T$) is immediate from hypothesis.
+
+The case ($\bot$) follows from Lemma \ref{lm:ref-compute-Omega}.
+
+The case ($\supset$) follows from Lemma \ref{lm:compute-supset*}.
+
+The case (app$_T$) is trivial.
+
+For the case ($\lambda$), we must show that
+\[ \Delta \models \triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y \} : \lambda x:A.M [ \rho ] =_{A \rightarrow B} \lambda x:A.M [ \sigma ] \enspace . \]
+So let $\Delta \models P : N =_A N'$.  The induction hypothesis gives
+\[ \Delta \models M \{ \tau : \rho = \sigma, x := P : N = N' \} : M [\rho, x := N] =_B M [\sigma, x := N'] \enspace , \]
+and so we have
+\[ \Delta \models (\triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y \})_{N N'} P : (\lambda x:A.M [ \rho ])N =_B (\lambda x:A.M [ \sigma ])N'\]
+by well-typed expansion, as required.
 \end{enumerate}
 \end{proof}
 
