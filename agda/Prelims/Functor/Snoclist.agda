@@ -7,7 +7,6 @@ open import Algebra
 open import Data.Nat
 open import Data.Fin hiding (lift)
 open import Prelims.Endo
-open import Prelims.Functor.Foldable
 
 infixl 20 _snoc_
 data snocList (A : Set) : Set where
@@ -84,23 +83,6 @@ snocdepfoldl₂-resp : ∀ {A : Set} {B : Set₁} {f g : B → A → B} {b₁ b�
       R c c' → R (snocdepfoldl₂ {aa = aa} h c) (snocdepfoldl₂ {aa = aa} h c')
 snocdepfoldl₂-resp {aa = []} _ Rcc' = Rcc'
 snocdepfoldl₂-resp {aa = aa snoc a} {h = h} {c} {c'} hyp Rcc' = hyp (snocfoldl _ _ aa) (snocfoldl _ _ aa) a (snocdepfoldl₂ {aa = aa} h c) (snocdepfoldl₂ {aa = aa} h c') (snocdepfoldl₂-resp {aa = aa} hyp Rcc')
-
-SNOCLIST : FoldFunc
-SNOCLIST = record { 
-  functor = record {
-    F = snocList ; 
-    map = snocmap ;
-    map-cong = snocmapcong ;
-    map-id = snocmap-id ;
-    map-comp = snocmap-comp } ;
-  isFoldable = record {
-    foldl = snocfoldl ;
-    foldl-cong = snocfoldl-cong ;
-    foldl-nat = snocfoldl-nat ;
-    depfoldl = λ {_} {_} {_} {_} {aa} → snocdepfoldl {aa = aa} ;
-    depfoldl₂ = λ {_} {_} {_} {_} {_} {_} {aa} → snocdepfoldl₂ {aa = aa} ;
-    depfoldl₂-resp = λ {_} {_} {_} {_} {_} {_} {aa} → snocdepfoldl₂-resp {aa = aa}
-  } }
 
 replicate : ∀ {A} → ℕ → A → snocList A
 replicate zero _ = []
