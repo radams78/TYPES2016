@@ -43,13 +43,16 @@
 \ArticleNo{23}
 % Editor-only macros::end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\usepackage{suffix}
 \newcommand*{\eqdef}{\mathrel{\smash{\stackrel{\text{def}}{=}}}}
 \newcommand*{\isotoid}{\ensuremath{\mathrm{isotoid}}}
 \newcommand*{\reff}[1]{\ensuremath{\mathrm{ref} \left( {#1} \right)}}
 \newcommand*{\univ}[4]{\ensuremath{\mathrm{univ}_{{#1}, {#2}} \left({#3} , {#4} \right)}}
+\WithSuffix\newcommand\univ*[2]{\ensuremath{\mathsf{univ} \left( {#1} , {#2} \right)}}
 \newcommand*{\triplelambda}{\ensuremath{\lambda \!\! \lambda \!\! \lambda}}
 \newcommand*{\vald}{\ensuremath{\vdash \mathrm{valid}}}
 \newcommand*{\dom}{\ensuremath{\operatorname{dom}}}
+\newcommand{\Path}[3]{\ensuremath{\mathrm{Path} \, {#1} \, {#2} \, {#3}}}
 
 \theoremstyle{plain}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -160,20 +163,20 @@ Finally, if $P$ is a path of type $F =_{A \rightarrow B} G$, and $Q$ is a path $
 \subsection{Path Substitution}
 
 Intuitively, if $N$ and $N'$ are equal then $M[x:=N]$ and $M[x:=N']$ should be equal.  To handle this syntactically,
-we introduce a notion of \emph{path substitution}.  If $N$, $M$ and $M'$ are terms, $x$ a term variable, and $P$ a path, then we shall define a path $N \{ x := P : M \sim M' \}$.  The intention is that, if
-$\Gamma \vdash P : M =_A M'$ and $\Gamma, x : A \vdash N : B$ then $\Gamma \vdash N \{ x := P : M \sim M' \} : N [ x:= M ] =_B N [ x := M' ]$ (see Lemma \ref{lm:pathsub}). 
+we introduce a notion of \emph{path substitution}.  If $N$, $M$ and $M'$ are terms, $x$ a term variable, and $P$ a path, then we shall define a path $N \{ x := P : M = M' \}$.  The intention is that, if
+$\Gamma \vdash P : M =_A M'$ and $\Gamma, x : A \vdash N : B$ then $\Gamma \vdash N \{ x := P : M = M' \} : N [ x:= M ] =_B N [ x := M' ]$ (see Lemma \ref{lm:pathsub}). 
 
 \begin{definition}[Path Substitution]
-Given terms $M_1$, \ldots, $M_n$ and $N_1$, \ldots, $N_n$; paths $P_1$, \ldots, $P_n$; term variables $x_1$, \ldots, $x_n$; and a term $L$, define the path $L \{ x_1 := P_1 : M_1 \sim N_1 , \ldots, x_n := P_n : M_n \sim N_n \}$ as follows.
+Given terms $M_1$, \ldots, $M_n$ and $N_1$, \ldots, $N_n$; paths $P_1$, \ldots, $P_n$; term variables $x_1$, \ldots, $x_n$; and a term $L$, define the path $L \{ x_1 := P_1 : M_1 = N_1 , \ldots, x_n := P_n : M_n = N_n \}$ as follows.
 \begin{align*}
-x_i \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \} & \eqdef P_i \\
-y \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \} & \eqdef \reff{y} \qquad (y \not\equiv x_1, \ldots, x_n) \\
-\bot \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \} & \eqdef \reff{\bot} \\
-(LL') \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \} \\
-\omit\rlap{\qquad \qquad $\eqdef L \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \}_{L' [\vec{x} := \vec{M}] L' [\vec{x} := \vec{N}]} L' \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \}$} \\
-(\lambda y:A.L) \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \} & \\
-\omit\rlap{\qquad\qquad $\eqdef \triplelambda e : a =_A a' . L \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} , y := e : a \sim a' \}$} \\
-(\phi \supset \psi) \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \} & \eqdef \phi \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \} \supset^* \psi \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \}
+x_i \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \} & \eqdef P_i \\
+y \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \} & \eqdef \reff{y} \qquad (y \not\equiv x_1, \ldots, x_n) \\
+\bot \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \} & \eqdef \reff{\bot} \\
+(LL') \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \} \\
+\omit\rlap{\qquad \qquad $\eqdef L \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \}_{L' [\vec{x} := \vec{M}] L' [\vec{x} := \vec{N}]} L' \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \}$} \\
+(\lambda y:A.L) \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \} & \\
+\omit\rlap{\qquad\qquad $\eqdef \triplelambda e : a =_A a' . L \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} , y := e : a = a' \}$} \\
+(\phi \supset \psi) \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \} & \eqdef \phi \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \} \supset^* \psi \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \}
 \end{align*}
 \end{definition}
 
@@ -183,7 +186,7 @@ We shall often omit the endpoints $\vec{M}$ and $\vec{N}$.
 The case $n = 0$ is permitted, and we shall have that, if $\Gamma \vdash M : A$ then $\Gamma \vdash M \{\} : M =_A M$.  There are thus two paths from a term $M$ to itself: $\reff{M}$ and $M \{\}$.  There are not always equal; for example, $(\lambda x:A.x) \{\} \equiv \triplelambda e : x =_A y. e$, which (after we define the reduction relation) will not be convertible with $\reff{\lambda x:A.x}$.
 
 \begin{lemma}
-\[ M \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N} \} \equiv M \{ \vec{x} := \vec{P} : \vec{M} \sim \vec{N}, y := \reff{y} : y \sim y \} \]
+\[ M \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \} \equiv M \{ \vec{x} := \vec{P} : \vec{M} = \vec{N}, y := \reff{y} : y = y \} \]
 \end{lemma}
 
 \begin{proof}
@@ -199,14 +202,14 @@ Let $\vec{x}$ and $\vec{y}$ be a disjoint sequences of variables.  Then
 \item
 \label{lm:subpathsubi}
 $ \begin{aligned}[t]
-& M [ x:= N ] \{ \vec{y} := \vec{P} : \vec{L} \sim \vec{L'} \} \\
-& \equiv M \{ x := N \{ \vec{y} := \vec{P} : \vec{L} \sim \vec{L'} \} : N [ \vec{y}:= \vec{L} ] \sim N [ \vec{y} := \vec{L'} ], \vec{y} := \vec{P} : \vec{L} \sim \vec{L'} \}
+& M [ x:= N ] \{ \vec{y} := \vec{P} : \vec{L} = \vec{L'} \} \\
+& \equiv M \{ x := N \{ \vec{y} := \vec{P} : \vec{L} = \vec{L'} \} : N [ \vec{y}:= \vec{L} ] = N [ \vec{y} := \vec{L'} ], \vec{y} := \vec{P} : \vec{L} = \vec{L'} \}
 \end{aligned} $
 \item
 \label{lm:subpathsubii}
 $ \begin{aligned}[t]
-& M \{ \vec{y} := \vec{P} : \vec{L} \sim \vec{L'} \} [ x := N ] \\
-& \equiv M \{ \vec{y} := \vec{P} [x := N] : \vec{L} [x := N] \sim \vec{L'} [x := N], x := \reff{N} : N \sim N \}
+& M \{ \vec{y} := \vec{P} : \vec{L} = \vec{L'} \} [ x := N ] \\
+& \equiv M \{ \vec{y} := \vec{P} [x := N] : \vec{L} [x := N] = \vec{L'} [x := N], x := \reff{N} : N = N \}
 \end{aligned} $
 \end{enumerate}
 \end{lemma}
@@ -224,16 +227,16 @@ $M \{ \vec{x} := \vec{P} \}$ is a path, and path substitution can only be applie
 A \emph{path substitution} $\tau$ is a function whose domain is a finite set of term variables,
 and which maps each term variable to a path.  Given a path substitution $\tau$ and substitutions $\rho$, $\sigma$
 with the same domain $\{ x_1, \ldots, x_n \}$, we write
-\[ M \{ \tau : \rho \sim \sigma \} \text{ for } M \{ x_1 := \tau(x_1) : \rho(x_1) \sim \sigma(x_1), \ldots, \tau(x_n) : \rho(x_n) \sim \sigma(x_n) \} \enspace . \]
+\[ M \{ \tau : \rho = \sigma \} \text{ for } M \{ x_1 := \tau(x_1) : \rho(x_1) = \sigma(x_1), \ldots, \tau(x_n) : \rho(x_n) = \sigma(x_n) \} \enspace . \]
 
 Given substitutions $\sigma$, $\rho$, $\rho'$ and a path substitution $\tau$, let $\tau \bullet_{\rho, \rho'} \sigma$ be the path substitution defined by
-\[ (\tau \bullet_{\rho, \rho'} \sigma)(x) \eqdef \sigma(x)\{ \tau : \rho \sim \rho' \} \]
+\[ (\tau \bullet_{\rho, \rho'} \sigma)(x) \eqdef \sigma(x)\{ \tau : \rho = \rho' \} \]
 \end{definition}
 
 \begin{lemma}
 \label{lm:pathsubsub}
-$M[\sigma]\{ \tau : \rho \sim \rho' \} \equiv
-M\{ \tau \bullet_{\rho \rho'} \sigma : \rho \circ \sigma \sim \rho' \circ \sigma \}$
+$M[\sigma]\{ \tau : \rho = \rho' \} \equiv
+M\{ \tau \bullet_{\rho \rho'} \sigma : \rho \circ \sigma = \rho' \circ \sigma \}$
 \end{lemma}
 
 \begin{proof}
@@ -395,14 +398,14 @@ Induction on derivations.
 \begin{definition}
 If $\rho, \sigma : \Gamma \rightarrow \Delta$ and $\tau$ is a path substitution whose domain
 is the term variables in $\dom \Gamma$, then we write
-$\tau : \sigma \sim \rho : \Gamma \rightarrow \Delta$ iff, for each variable $x : A \in \Gamma$, we have
+$\tau : \sigma = \rho : \Gamma \rightarrow \Delta$ iff, for each variable $x : A \in \Gamma$, we have
 $\Delta \vdash \tau(x) : \sigma(x) =_A \rho(x)$.
 \end{definition}
 
 \begin{lemma}[Path Substitution]
 \label{lm:pathsub}
-If $\tau : \sigma \sim \rho : \Gamma \rightarrow \Delta$ and $\Gamma \vdash M : A$ and $\Delta \vald$,
-then $\Delta \vdash M \{ \tau : \sigma \sim \rho \} : M [ \sigma ] =_A M [ \rho ]$.
+If $\tau : \sigma = \rho : \Gamma \rightarrow \Delta$ and $\Gamma \vdash M : A$ and $\Delta \vald$,
+then $\Delta \vdash M \{ \tau : \sigma = \rho \} : M [ \sigma ] =_A M [ \rho ]$.
 \end{lemma}
 
 \begin{proof}
@@ -411,12 +414,12 @@ Induction on derivations.
 
 \begin{lemma}
 \label{lm:pathsubcomp}
-If $\sigma : \Gamma \rightarrow \Delta$ and $\tau : \rho \sim \rho' : \Delta \rightarrow \Theta$ then $\tau \bullet_{\rho, \rho'} \sigma : \rho \circ \sigma \sim \rho' \circ \sigma : \Gamma \rightarrow \Theta$.
+If $\sigma : \Gamma \rightarrow \Delta$ and $\tau : \rho = \rho' : \Delta \rightarrow \Theta$ then $\tau \bullet_{\rho, \rho'} \sigma : \rho \circ \sigma = \rho' \circ \sigma : \Gamma \rightarrow \Theta$.
 \end{lemma}
 
 \begin{proof}
 Let $x : A \in \Gamma$.
-We have $\Delta \vdash \sigma(x) : A$, hence $\Theta \vdash \sigma(x) \{ \tau : \rho \sim \rho' \} : \sigma(x) [ \rho ] =_A \sigma(x) [ \rho' ]$.
+We have $\Delta \vdash \sigma(x) : A$, hence $\Theta \vdash \sigma(x) \{ \tau : \rho = \rho' \} : \sigma(x) [ \rho ] =_A \sigma(x) [ \rho' ]$.
 \end{proof}
 
 \begin{proposition}[Subject Reduction]
@@ -534,36 +537,162 @@ An easy proof by case analysis.
 
 \section{Example}
 
+Using univalence, we can construct a path of type $\top = \top \rightarrow \top$, and thence a proof of $\top \rightarrow \top \rightarrow \top$.
+But which of the canonical proofs of $\top \rightarrow \top \rightarrow \top$ have we constructed?
+
+
+We define
+\[ \top := \bot \rightarrow \bot, \quad I_\bot := \lambda p:\bot.p, \quad I_\Omega := \lambda x:\Omega.x, \quad F := \lambda x:\Omega.\top \rightarrow x, \quad H := \lambda h.h \top \enspace . \]
+
+Now, we have
+\begin{align*}
+x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \lambda p:\top \rightarrow x. e^+ (p I) & : (\top \rightarrow x) \rightarrow y \\
+x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \lambda m : y. \lambda n : \top. e^- m & : y \rightarrow \top \rightarrow x \\
+x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \univ*{\lambda p:\top \rightarrow x. e^- m}{\lambda m:y. \lambda n:\top. e^- m} & : \top \rightarrow x =_\Omega y
+\end{align*}
+
+Let $P \equiv \univ*{\lambda p:\top \rightarrow x. e^+ (pI)}{\lambda m:y. \lambda n:\top. e^- m}$.  Then
+
+\begin{align*}
+\therefore & \vdash \triplelambda e:x =_\Omega y. P & : F =_{\Omega \rightarrow \Omega} I_\Omega \\
+\therefore & (\reff{H})_{FI}(\triplelambda e:x =_\Omega y. P) & : \top \rightarrow \top =_\Omega \top \\
+\therefore & ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- & : \top \rightarrow \top \rightarrow \top
+\end{align*}
+
+And now we compute:
+
+\begin{align*}
+((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^-
+& \rightarrow ((h \top) \{ h := \triplelambda e : x =_\Omega y.P : F = I \})^- \\
+& \equiv ((\triplelambda e : x =_\Omega y.P)_{\top \top} (\reff{\top}))^- \\
+& \rightarrow (P [ x := \top, y := \top, e := \reff{\top} ])^- \\
+& \equiv \univ*{\lambda p : \top \rightarrow \top. \reff{\top}^+ (p I)}{\lambda m:\top. \lambda n:\top. \reff{\top}^- m}^- \\
+& \rightarrow \univ*{\lambda p:\top \rightarrow \top. (\lambda q:\top.q)(p I)}{\lambda m:\top. \lambda n:\top. (\lambda q:\top.q) m}^- \\
+& \rightarrow \univ*{\lambda p:\top \rightarrow \top. pI}{\lambda m:\top. \lambda n:\top. m}^- \\
+& \rightarrow \lambda m:\top. \lambda n:\top. n
+\end{align*}
+
+\subsection{Comparison with Cubical Type Theory}
+
+In cubical type theory, let $\bot$ be any type in $U$ (possibly the empty type, but we do not require this in what follows).  Define
+\[ \top := \bot \rightarrow \bot, \quad I_\bot := \lambda p:\bot.p, \quad I_U := \lambda x:U.x, \quad F := \lambda x:U.\top \rightarrow x, \quad H := \lambda h.h \top \enspace . \]
+Then we have
+\begin{align*}
+& \vdash \top & : U \\
+& \vdash I_\bot & : \bot \rightarrow \bot \\
+& \vdash I_U & : U \rightarrow U \\
+& \vdash F & : U \rightarrow U \\
+& \vdash H & : (U \rightarrow U) \rightarrow U
+\end{align*}
+
+In cubical type theory, let $\bot$ be any type in $U$ (possibly the empty type, but we do not require this in what follows).  Define
+\[ \top := \bot \rightarrow \bot, \quad I_\bot := \lambda p:\bot.p, \quad I_U := \lambda x:U.x, \quad F := \lambda x:U.\top \rightarrow x, \quad H := \lambda h.h \top \enspace . \]
+Then we have
+\begin{align*}
+& \vdash \top & : U \\
+& \vdash I_\bot & : \bot \rightarrow \bot \\
+& \vdash I_U & : U \rightarrow U \\
+& \vdash F & : U \rightarrow U \\
+& \vdash H & : (U \rightarrow U) \rightarrow U
+\end{align*}
+
+We can prove the type $\Sigma f:\top \rightarrow X. Path \, X \, x \, (f I)$ in contractible (we omit the details).  Let $e[X, x, p]$ be the term such that
+\begin{align*} & X : U, x : X, p : \Sigma f:\top \rightarrow X. \Path{X}{x}{(fI)} \\
+\vdash & e[X, x, p] : \Path{(\Sigma f:\top \rightarrow X. \Path{X}{x}{(f I)})}{\langle \lambda t : \top . x, 1_x \rangle}{p}
+\end{align*}
+
+Let
+\[ step2[X,x] \equiv \langle \langle \lambda t : T.x, 1_x \rangle,
+\lambda p : \Sigma f : T \rightarrow X. \Path{X}{x}{(fI)}. e[X, x, p] \rangle \]
+Then
+\[ X : U, x : X \vdash step2[X, x] : isContr(\Sigma f:T \rightarrow X. \Path{X}{x}{(fI)}) \]
+
+Let
+\[ step3[X] \equiv \lambda x : X. step2[X, x] \]
+Then
+\[X : U \vdash step3[X] : isEquiv \, (T \rightarrow X) \, X \, (\lambda f : T \rightarrow X. f I) \]
+
+Let
+\[ E[X] \equiv \langle \lambda f : \top \rightarrow X. f I, step3[X] \rangle \]
+Then
+\[ X : U \vdash E[X] : Equiv \, (\top \rightarrow X) \, X \]
+
+From this equivalence, we want to get a path from $\top \rightarrow X$ to $X$ in $U$.  We apply the proof of univalence in \cite{cchm:cubical}
+
+Let
+\[ P[X] \equiv \langle i \rangle Glue [(i = 0) \mapsto (\top \rightarrow X, E[X]), (i = 1) \mapsto (X, equiv^k X)] X \]
+Then
+\[ X : U \vdash P[X] : \Path{U}{(\top \rightarrow X)}{X} \]
+
+Let
+\[ P_2 \equiv \langle i \rangle \lambda x : U. P[X] i \]
+Then
+\[ \vdash P_2 : \Path{(U \rightarrow U)}{F}{I} \]
+\[ \vdash \langle i \rangle H (P_2 i) : \Path{(U \rightarrow U)}{\top \rightarrow \top}{\top} \]
+\[ \vdash \langle i \rangle H (P_2 (1 - i)) : \Path{(U \rightarrow U)}{\top}{\top \rightarrow \top} \]
+
+Now we apply transport to this term:
+\[ \vdash \lambda x : \top. comp^i (H (P_2 (1 - i))) [] x : \top \rightarrow \top \rightarrow \top \]
+and we calculate:
+\begin{align*}
+output & \equiv \lambda x : \top. comp^i (H (P_2 (1 - i))) [] x
+& = \lambda x : \top. comp^i (P_2 (1 - i) \top) [] x \\
+& = \lambda x : \top. comp^i (P[\top] (1 - i)) [] x \\
+& = \lambda x : \top. comp^i (Glue[(i = 1) \mapsto (\top \rightarrow \top, E[\top]), (i = 0) \mapsto (\top, equiv^k \top)] \top) [] x \\
+& = \lambda x : \top. glue [ 1_\mathbb{F} \mapsto t_1 ] a_1 \\
+\end{align*}
+
+(using the notation from \cite{cchm:cubical} section 6.2)
+
+\begin{align*}
+& = \lambda x : \top. t_1
+& = \lambda x : \top. (equiv \, E[\top] \, [] \, mapid_\top(x)).1 \\
+& = \lambda x : \top. (contr (step2[\top, mapid_\top(x)]) []).1 \\
+& = \lambda x : \top. (comp^i (\Sigma f : \top \rightarrow \top. \Path{\top}{mapid_\top(x)}{(fI)}) [] \langle \lambda t : \top. mapid_\top(x), 1_{mapid_\top(x)} \rangle).1 \\
+& = \lambda x : \top. mapid_{\top \rightarrow \top}(\lambda _ : \top. mapid_\top(x)) \\
+\therefore output \, m \, n & = mapid_{\top \rightarrow \top}(\lambda _ : \top. mapid_\top(m)) n \\
+& \equiv (comp^i (\top \rightarrow \top) [] (\lambda _ : \top. mapid_\top(m))) n \\
+& = mapid_\top(mapid_\top(m))
+\end{align*}
+
+This term does not compute any farther.
+
+If we add to cubical type theory the rule $mapid_A(t) = t$, then we have that $output$ reduces to $\lambda m : \top. \lambda n : \top. m$ as in $\lambda o e$.
+
+In the reduction relation given in `Canonicity for Cubical Type Theory', we have
+\[ mapid_{\bot \rightarrow \bot}(m) \succ \lambda x : \bot. mapid_\bot(m mapid_\bot(x)) \]
+and so if we add $mapid_\bot(t) \succ t$ we obtain $output \succ \lambda mn.m$.
+
 \section{Computable Expressions}
 
 \begin{definition}[Computable Expression]
-Let $\Gamma$ be a context in which term variables do not occur.
-We define the relation $\Gamma \models E : T$, read '$E$ is a computable expression of type $T$ under $\Gamma$', as follows.
+We define the relation $\models E : T$, read '$E$ is a computable expression of type $T$', as follows.
 \begin{itemize}
 \item
-$\Gamma \models M : A$ iff $\Gamma \vdash M : A$ and $\Gamma \models M \{\} : M =_A M$.
+$\models M : A$ iff $\models M \{\} : M =_A M$.
 \item
-$\Gamma \models \delta : \bot$ iff $\delta$ reduces to a neutral proof.
+$\models \delta : \bot$ iff $\delta$ reduces to a neutral proof.
 \item
-For $\phi$ and $\psi$ canonical propositions, $\Gamma \models \delta : \phi \supset \psi$ iff, for all $\epsilon$ such that $\Gamma \models \epsilon : \phi$, we have $\Gamma \models \delta \epsilon : \psi$.
+For $\phi$ and $\psi$ canonical propositions, $\models \delta : \phi \supset \psi$ iff, for all $\epsilon$ such that $\models \epsilon : \phi$, we have $\models \delta \epsilon : \psi$.
 \item
-If $\phi$ reduces to the canonical proposition $\psi$, then $\Gamma \models \delta : \phi$ iff $\Gamma \models \delta : \psi$.
+If $\phi$ reduces to the canonical proposition $\psi$, then $\models \delta : \phi$ iff $\models \delta : \psi$.
 \item
-$\Gamma \models P : \phi =_\Omega \psi$ iff $\Gamma \models P^+ : \phi \supset \psi$ and $\Gamma \models P^- : \psi \supset \phi$.
+$\models P : \phi =_\Omega \psi$ iff $\models P^+ : \phi \supset \psi$ and $\models P^- : \psi \supset \phi$.
 \item
-$\Gamma \models P : M =_{A \rightarrow B} M'$ iff, for all $Q$, $N$, $N'$ such that $\Gamma \models N : A$ and $\Gamma models N' : A$ and $\Gamma \models Q : N =_A N'$, then we have $\Gamma \models P_{NN'}Q : MN =_B M'N'$.
+$\models P : M =_{A \rightarrow B} M'$ iff, for all $Q$, $N$, $N'$ such that $\models N : A$ and $\models N' : A$ and $\models Q : N =_A N'$, then we have $\models P_{NN'}Q : MN =_B M'N'$.
 \end{itemize}
 \end{definition}
 
 \begin{definition}[Computable Substitution]
-We write $\sigma : \Gamma \rightarrow_C \Delta$, and say $\sigma$ is a \emph{computable} substitution from $\Gamma$ to $\Delta$, iff, for every entry $z : T$ in $\Gamma$, we have $\Delta \models \sigma(z) : T [ \sigma ]$.
+Let $\sigma$ be a substitution with domain $\dom \Gamma$.  We write $\models \sigma : \Gamma$ and say that
+$\sigma$ is a \emph{computable} substitution on $\Gamma$ iff, for every entry $z : T$ in $\Gamma$, we have $\models \sigma(z) : T [ \sigma ]$.
 
-We write $\tau : \rho = \sigma : \Gamma \rightarrow_C \Delta$, and say $\tau$ is a \emph{computable} path substitution between $\rho$ and $\sigma$, iff, for every term variable entry $x : A$ in $\Gamma$, we have $\Delta \models \tau(x) : \rho(x) =_A \sigma(x)$.
+We write $\models \tau : \rho = \sigma : \Gamma $, and say $\tau$ is a \emph{computable} path substitution between $\rho$ and $\sigma$, iff, for every term variable entry $x : A$ in $\Gamma$, we have $\models \tau(x) : \rho(x) =_A \sigma(x)$.
 \end{definition}
 
 \begin{lemma}
 \label{lm:conv-compute}
-If $\Gamma \models E : S$ and $S \simeq_\beta T$ then $\Gamma \models E : T$.
+If $\models E : S$ and $S \simeq_\beta T$ then $\models E : T$.
 \end{lemma}
 
 \begin{proof}
@@ -571,7 +700,7 @@ This follows easily from the definition and Lemma \ref{lm:compat-beta}.
 \end{proof}
 
 \begin{lemma}[Well-typed Expansion]
-If $\Gamma \models F : T$ and $E \rightarrow F$ and $\Gamma \vdash E : T$ then $\Gamma \models E : T$.
+If $\models F : T$ and $E \rightarrow F$ then $\models E : T$.
 \end{lemma}
 
 \begin{proof}
@@ -579,7 +708,7 @@ An easy induction, using the fact that head reduction respects path substitution
 \end{proof}
 
 \begin{lemma}[Reduction]
-If $\Gamma \models E : T$ and $E \rightarrow F$ then $\Gamma \models F : T$.
+If $\models E : T$ and $E \rightarrow F$ then $\models F : T$.
 \end{lemma}
 
 \begin{proof}
@@ -587,17 +716,17 @@ An easy induction, using the fact that head reduction is deterministic.
 \end{proof}
 
 \begin{lemma}
-If $\Gamma \models E : T$ then $E$ head reduces to a head normal form.
+If $\models E : T$ then $E$ head reduces to a head normal form.
 \end{lemma}
 
 \begin{proof}
-Induction on $\Gamma \models E : T$.
+Induction on $\models E : T$.
 \end{proof}
 %Note about Markov's principle?
 
 \begin{lemma}
 \label{lm:compute-lambda}
-If $\Gamma \models M : A \rightarrow B$ then $M$ head reduces to a $\lambda$-term.
+If $\models M : A \rightarrow B$ then $M$ head reduces to a $\lambda$-term.
 \end{lemma}
 
 \begin{proof}
@@ -608,84 +737,84 @@ so it must be a $\lambda$-term.
 
 \begin{lemma}
 \label{lm:ref-compute-Omega}
-For any term $\phi$, we have $\Gamma \models \reff{\phi} : \phi =_\Omega \phi$.
+For any term $\phi$, we have $\models \reff{\phi} : \phi =_\Omega \phi$.
 \end{lemma}
 
 \begin{proof}
-We must show that $\Gamma \models \reff{\phi}^+ : \phi \supset \phi$ and $\Gamma \models \reff{\phi}^- : \phi \supset \phi$.  So let $\Gamma \models \delta : \phi$.
-Then $\Gamma \models \reff{\phi}^+ \delta : \phi$ and $\Gamma \models \reff{\phi}^- \delta : \phi$ by well-typed expansion, as required.
+We must show that $\models \reff{\phi}^+ : \phi \supset \phi$ and $\models \reff{\phi}^- : \phi \supset \phi$.  So let $\models \delta : \phi$.
+Then $\models \reff{\phi}^+ \delta : \phi$ and $\models \reff{\phi}^- \delta : \phi$ by well-typed expansion, as required.
 \end{proof}
 
 \begin{lemma}
-$\Gamma \models \phi : \Omega$ if and only if $\phi$ head reduces to a canonical proposition.
+$\models \phi : \Omega$ if and only if $\phi$ head reduces to a canonical proposition.
 \end{lemma}
 
 \begin{proof}
-If $\Gamma \models \phi : \Omega$ then $\Gamma \models \phi \{\}^+ : \phi \supset \phi$.  Therefore $\phi \supset \phi$ reduces to a canonical proposition,
+If $\models \phi : \Omega$ then $\models \phi \{\}^+ : \phi \supset \phi$.  Therefore $\phi \supset \phi$ reduces to a canonical proposition,
 and so $\phi$ must reduce to a canonical proposition.
 
-Conversely, suppose $\phi$ reduces to a canonical proposition $\phi'$.  We have $\phi \{\} \twoheadrightarrow \phi' \{\} \twoheadrightarrow \reff{\phi'}$, and so $\Gamma \models \phi \{\} : \phi =_\Omega \phi$ by well-typed expansion.  Hence $\Gamma \models \phi : \Omega$.
+Conversely, suppose $\phi$ reduces to a canonical proposition $\phi'$.  We have $\phi \{\} \twoheadrightarrow \phi' \{\} \twoheadrightarrow \reff{\phi'}$, and so $\models \phi \{\} : \phi =_\Omega \phi$ by well-typed expansion.  Hence $\models \phi : \Omega$.
 \end{proof}
 
 \begin{lemma}
 \label{lm:neutral-proof}
-If $\delta$ is a neutral proof and $\phi$ head reduces to a canonical proposition, then $\Gamma \models \delta : \phi$.
+If $\delta$ is a neutral proof and $\phi$ head reduces to a canonical proposition, then $\models \delta : \phi$.
 \end{lemma}
 
 \begin{proof}
 It is sufficient to prove the case where $\phi$ is a canonical proposition.  The proof is by induction on $\phi$.
 
-If $\phi \equiv \bot$, then $\Gamma \models \delta : \bot$ immediately from the definition.
+If $\phi \equiv \bot$, then $\models \delta : \bot$ immediately from the definition.
 
-If $\phi \equiv \psi \supset \chi$, then let $\Gamma \models \epsilon : \psi$.  We have that $\delta \epsilon$ is neutral,
-hence $\Gamma \models \delta \epsilon : \chi$ by the induction hypothesis.
+If $\phi \equiv \psi \supset \chi$, then let $\models \epsilon : \psi$.  We have that $\delta \epsilon$ is neutral,
+hence $\models \delta \epsilon : \chi$ by the induction hypothesis.
 \end{proof}
 
 \begin{lemma}
 \label{lm:neutral-path}
-Let $\Gamma \models M : A$ and $\Gamma \models N : A$.  If $P$ is a neutral path, then $\Gamma \models P : M =_A N$.
+Let $\models M : A$ and $\models N : A$.  If $P$ is a neutral path, then $\models P : M =_A N$.
 \end{lemma}
 
 \begin{proof}
 The proof is by induction on $A$.
 
-For $A \equiv \Omega$: we have that $P^+$ and $P^-$ are neutral proofs, and $M$ and $N$ head reduce to canonical propositions, so $\Gamma \models P^+ : M \supset N$ and
-$\Gamma \models P^- : N \supset M$ by the previous lemma, as required.
+For $A \equiv \Omega$: we have that $P^+$ and $P^-$ are neutral proofs, and $M$ and $N$ head reduce to canonical propositions, so $\models P^+ : M \supset N$ and
+$\models P^- : N \supset M$ by the previous lemma, as required.
 
-For $A \equiv B \rightarrow C$: let $\Gamma \models L : B$, $\Gamma \models L' : B$ and $\Gamma \models Q : L =_B L'$.  Then we have $\Gamma \models ML : C$, $\Gamma \models NL' : C$ and
-$P_{LL'} Q$ is a neutral path, hence $\Gamma \models P_{L L'} Q : ML =_C NL'$ as required.
+For $A \equiv B \rightarrow C$: let $\models L : B$, $\models L' : B$ and $\models Q : L =_B L'$.  Then we have $\models ML : C$, $\models NL' : C$ and
+$P_{LL'} Q$ is a neutral path, hence $\models P_{L L'} Q : ML =_C NL'$ as required.
 \end{proof}
 
 \begin{lemma}
 \label{lm:ref-compute}
-If $\Gamma \models M : A$ then $\Gamma \models \reff{M} : M =_A M$.
+If $\models M : A$ then $\models \reff{M} : M =_A M$.
 \end{lemma}
 
 \begin{proof}
 If $A \equiv \Omega$, this is just Lemma \ref{lm:ref-compute-Omega}.
 
 So suppose $A \equiv B \rightarrow C$.  By Lemma \ref{lm:compute-lambda}, we have that $M \twoheadrightarrow \lambda x:A.M'$.  So by well-typed expansion, it is sufficient to prove that
-\[ \Gamma \models \reff{\lambda x:A.M'} : \lambda x:A.M' =_{B \rightarrow C} \lambda x:A.M' \enspace . \]
-Let $\Gamma \models P : N =_B N'$.  We must show that
-\[ \Gamma \models \reff{\lambda x:A.M'}_{N N'} P : M' [x:= N] =_C M' [x:=N'] \enspace . \]
+\[ \models \reff{\lambda x:A.M'} : \lambda x:A.M' =_{B \rightarrow C} \lambda x:A.M' \enspace . \]
+Let $\models P : N =_B N'$.  We must show that
+\[ \models \reff{\lambda x:A.M'}_{N N'} P : M' [x:= N] =_C M' [x:=N'] \enspace . \]
 By well-typed expansion, it is sufficient to prove
-\[ \Gamma \models M' \{ x:= P : N = N' \} : M' [x:=N] =_C M' [x:= N'] \enspace . \]
-Now, we have that $\Gamma \models M \{\} : M =_{B \rightarrow C} M$, and so
-\[ \Gamma \models \triplelambda e : x =_A x' . M' \{ x := e : x = x' \} : \lambda x:A.M' =_{B \rightarrow C} \lambda x:A.M' \enspace . \]
+\[ \models M' \{ x:= P : N = N' \} : M' [x:=N] =_C M' [x:= N'] \enspace . \]
+Now, we have that $\models M \{\} : M =_{B \rightarrow C} M$, and so
+\[ \models \triplelambda e : x =_A x' . M' \{ x := e : x = x' \} : \lambda x:A.M' =_{B \rightarrow C} \lambda x:A.M' \enspace . \]
 Therefore,
-\[ \Gamma \models (\triplelambda e : x=_A x' . M' \{ x := e : x = x' \})_{N N'} P : (\lambda x:A.M') N =_C (\lambda x:A.M') N' \enspace , \]
+\[ \models (\triplelambda e : x=_A x' . M' \{ x := e : x = x' \})_{N N'} P : (\lambda x:A.M') N =_C (\lambda x:A.M') N' \enspace , \]
 and the result follows by Reduction.
 \end{proof}
 
 \begin{lemma}
 \label{lm:compute-supset*}
-If $\Gamma \vdash P : \phi =_\Omega \phi'$ and $\Gamma \vdash Q : \psi =_\Omega \psi'$ then $\Gamma \vdash P \supset^* Q : \phi \supset \psi =_\Omega \phi' \supset \psi'$.
+If $\models P : \phi =_\Omega \phi'$ and $\models Q : \psi =_\Omega \psi'$ then $\models  P \supset^* Q : \phi \supset \psi =_\Omega \phi' \supset \psi'$.
 \end{lemma}
 
 \begin{proof}
 %WATCH
 We have that $\phi \equiv \phi'$ and $\psi \equiv \psi'$.  Also, we have $P \twoheadrightarrow \reff{\phi}$ and $Q \twoheadrightarrow \reff{\psi}$, hence
-$P \supset^* Q \twoheadrightarrow \reff{\phi} \supset^* \reff{\psi} \rightarrow \reff{\phi \supset \psi}$.
+$P \supset^* Q \twoheadrightarrow \reff{\phi} \supset^* \reff{\psi} \rightarrow \reff{\phi \supset \psi}$. %TODO univ
 \end{proof}
 
 \section{Proof of Canonicity}
@@ -693,9 +822,9 @@ $P \supset^* Q \twoheadrightarrow \reff{\phi} \supset^* \reff{\psi} \rightarrow 
 \begin{theorem}
 \begin{enumerate}
 \item
-If $\Gamma \vdash \mathcal{J}$ and $\sigma : \Gamma \rightarrow_C \Delta$, then $\Delta \models \mathcal{J} [ \sigma ]$.
+If $\Gamma \vdash \mathcal{J}$ and $\models \sigma : \Gamma$, then $\models \mathcal{J} [ \sigma ]$.
 \item
-If $\Gamma \vdash M : A$ and $\tau : \rho = \sigma : \Gamma \rightarrow_C \Delta$, then $\Delta \vdash M \{ \tau : \rho = \sigma \} : M [ \rho ] =_A M [ \sigma ]$.
+If $\Gamma \vdash M : A$ and $\models \tau : \rho = \sigma : \Gamma$, then $\models M \{ \tau : \rho = \sigma \} : M [ \rho ] =_A M [ \sigma ]$.
 \end{enumerate}
 \end{theorem}
 
@@ -760,23 +889,8 @@ If $\Gamma \vdash E : T$ then $E$ head reduces to a head normal form.
 \end{corollary}
 
 \begin{proof}
-For every context $\Gamma$, we shall define a term-variableless context $\overline{\Gamma}$ and a computable substitution $\sigma_\Gamma : \Gamma \rightarrow_C \overline{\Gamma}$.
-It shall follow by the theorem that $\overline{\Gamma} \models E [ \sigma_\Gamma ] : T [ \sigma_\Gamma ]$, hence $E [ \sigma_\Gamma ]$ head reduces to a head normal form, and hence
-so does $E$ because head reduction respects substitution.
-
-First, for every type $A$, define a term $c_A$ such that $\vdash c_A : A$ as follows.
-\[ c_\Omega \eqdef \bot \qquad c_{A \rightarrow B} \equiv \lambda x:A.c_B \enspace . \]
-Note that, for every term-variableless context $\Gamma$, we have $\Gamma \models c_A : A$.
-
-Now we define
-\begin{align*}
-\overline{\langle \rangle} & \eqdef \langle \rangle \\
-\overline{\Gamma, x : A} & \eqdef \overline{\Gamma} & \sigma_{\Gamma, x : A} & \eqdef \sigma_\Gamma, x := c_A \\
-\overline{\Gamma, p : \phi} & \eqdef \overline{\Gamma}, p : \phi [ \sigma_\Gamma ] & \sigma_{\Gamma, p : \phi} & \eqdef \sigma_\Gamma, p := p \\
-\overline{\Gamma, e : M =_A N} & \eqdef \overline{\Gamma}, e : M [ \sigma_\Gamma ] =_A N [ \sigma_\Gamma ] & \sigma_{\Gamma, e : M =_A N} & \eqdef \sigma_\Gamma, e := e
-\end{align*}
-
-We prove that, if $\Gamma \vald$, then $\sigma_\Gamma$ is computable; the proof is by induction on derivations, and uses Lemmas \ref{lm:neutral-proof} and \ref{lm:neutral-path}.
+Let $\mathrm{id}_\Gamma$ be the substitution on $\dom \Gamma$ that maps a variable to itself.
+We prove that, if $\Gamma \vald$, then $\models \mathrm{id}_\Gamma : \Gamma$; the proof is by induction on derivations, and uses Lemmas \ref{lm:neutral-proof} and \ref{lm:neutral-path}.
 \end{proof}
 
 \begin{corollary}[Canonicity]

@@ -123,6 +123,8 @@ INPUT /usr/share/texmf/tex/latex/microtype/microtype.sty
 INPUT /usr/share/texmf/tex/latex/microtype/microtype.cfg
 INPUT /usr/share/texmf/tex/latex/microtype/microtype.cfg
 INPUT /usr/share/texmf/tex/latex/microtype/microtype.cfg
+INPUT /usr/share/texmf/tex/latex/bigfoot/suffix.sty
+INPUT /usr/share/texmf/tex/latex/bigfoot/suffix.sty
 INPUT /usr/share/texmf/tex/latex/lkproof/proof.sty
 INPUT /usr/share/texmf/tex/latex/lkproof/proof.sty
 INPUT main.aux
@@ -288,6 +290,7 @@ INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmss10.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmss8.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmss8.tfm
 INPUT main.aux
+INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc
 INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc
 INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc
 INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc

@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex main"] 1480438901 "main.aux" "main.bbl" "main" 1480438902
+["bibtex main"] 1480507865 "main.aux" "main.bbl" "main" 1480526046
   "../../../../type.bib" 1480434911 256436 19a911d726bbfaec6790061f0bd9e69d ""
   "/usr/share/texmf/bibtex/bst/plainurl/plainurl.bst" 1480006159 23633 0605c9c538b27adaa6aa4c7ec71944c1 ""
-  "main.aux" 1480434915 3529 a60f7d861cb6e07e07ab52537cfb99ad ""
+  "main.aux" 1480522059 3699 fcb3136db6822314144e1dfbdd7480e3 ""
   "main.bcf" 0 -1 0 ""
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1480438901 "main.tex" "main.pdf" "main" 1480438902
+["pdflatex"] 1480526045 "main.tex" "main.pdf" "main" 1480526046
   "/usr/share/texmf/tex/generic/babel/babel.def" 1156702963 29121 e77b4424f08be0203e3344877c6692b1 ""
   "/usr/share/texmf/tex/generic/babel/babel.sty" 1156702963 9003 27e67bc37e2b812bf4e1bf4d9fe3489b ""
   "/usr/share/texmf/tex/generic/babel/english.ldf" 1137109563 6608 fe33acefb75a26ad10c2c6f09d423415 ""
@@ -37,6 +37,7 @@
   "/usr/share/texmf/tex/latex/base/ts1enc.def" 1156702582 7615 2d12ae8e98a3170f97729f3b9f11532d ""
   "/usr/share/texmf/tex/latex/base/ts1enc.dfu" 1156702582 4783 299c00b3ef6cea47d37e57d6b6e3a89e ""
   "/usr/share/texmf/tex/latex/base/utf8.def" 1156702582 6306 e45a0aa76bb98a7d8c51e50357b12900 ""
+  "/usr/share/texmf/tex/latex/bigfoot/suffix.sty" 1153176982 3097 2dff3f11a61182b0df43010ba0d47eaa ""
   "/usr/share/texmf/tex/latex/caption/caption.sty" 1480005427 66233 8b81cfab95a1f8fc2f0f6c89415b087a ""
   "/usr/share/texmf/tex/latex/caption/caption3.sty" 1480005427 64866 1ea74c5f2d1685881497f021b8f186b2 ""
   "/usr/share/texmf/tex/latex/caption/subcaption.sty" 1480005427 5038 413302044f9700cf65465d590c2f4ad1 ""
@@ -87,10 +88,10 @@
   "/usr/share/texmf/tex/latex/tools/tabularx.sty" 1156702393 6063 3d2a3e9625d00889b0c7fca1acdadfba ""
   "cc-by.pdf" 1480346093 59879 b534039833ae0720e95faf00c3f48850 ""
   "lipics-logo-bw.pdf" 1480346093 13746 f468fb282d86ba458872de888bef15fe ""
-  "main.aux" 1480434915 3529 a60f7d861cb6e07e07ab52537cfb99ad ""
-  "main.bbl" 1480434915 1018 57a5b637ad820b0506ba05b7cb81128c "bibtex main"
-  "main.out" 1480434915 809 25b0287f1dae0307cbe2c35ce075948e ""
-  "main.tex" 1480434355 42625 bdc633d8eec5997928fc5a58b513dc9e ""
+  "main.aux" 1480522059 3699 fcb3136db6822314144e1dfbdd7480e3 ""
+  "main.bbl" 1480503878 1018 57a5b637ad820b0506ba05b7cb81128c "bibtex main"
+  "main.out" 1480522059 890 c7ae2a3a04abac0c9fadece52669cede ""
+  "main.tex" 1480522050 47563 15c0970b656df706462f529b6bc31a79 ""
   (generated)
   "main.out"
   "main.log"
