@@ -245,12 +245,22 @@ $$ \infer{\varphi \supset \psi \rightarrow \varphi \supset \psi'}{\psi \rightarr
 $$ \infer{(\lambda p : \varphi . \delta)\epsilon \rightarrow \delta [ p := \epsilon ]}{} $$
 $$ \infer{\reff{\varphi}^+ \delta \rightarrow \delta}{} $$
 $$ \infer{\reff{\varphi}^- \delta \rightarrow \delta}{} $$
+$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rightarrow \delta}{} $$
+$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^- \rightarrow \epsilon}{} $$
+$$ \infer{\delta \epsilon \rightarrow \delta' \epsilon}{\delta \rightarrow \delta'} $$
 $$ \infer{P^+ \rightarrow Q^+}{P \rightarrow Q} $$
 $$ \infer{P^- \rightarrow Q^-}{P \rightarrow Q} $$
 $$ \infer{(\triplelambda e:x =_A y.P)_{MN} Q \rightarrow P [x := M, y := N, e := Q]}{} $$
 $$ \infer{\reff{\lambda x:A.M}_{N N'} P \rightarrow M \{ x:=P : N = N' \}}{} $$
 $$ \infer{\reff{M} \rightarrow \reff{N}}{M \rightarrow N} $$
 $$ \infer{P_{MN} Q \rightarrow P'_{MN} Q}{P \rightarrow P'} $$
+$$ \infer{\reff{\varphi} \supset^* \reff{\psi} \rightarrow \reff{\varphi \supset \psi}}{} $$
+$$ \infer{\reff{\varphi} \supset^* \univ{\psi}{\chi}{\delta}{\epsilon} \rightarrow 
+\univ{\varphi \supset \psi}{\varphi \supset \chi}{\lambda p:\varphi \supset \psi. \lambda q : \varphi. \delta (pq)}{\lambda p : \varphi \supset \chi. \lambda q : \varphi. \epsilon (pq)}}{} $$
+$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon} \supset^* \reff{\chi} \rightarrow
+\univ{\varphi \supset \chi}{\psi \supset \chi}{\lambda p : \varphi \supset \chi. \lambda q : \psi. p (\epsilon q)}{\lambda p:\psi \supset \chi. \lambda q : \varphi. p(\delta q)}}{} $$
+$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon} \supset^* \univ{\varphi'}{\psi'}{\delta'}{\epsilon'} \rightarrow
+\univ{\varphi \supset \varphi'}{\psi \supset \psi'}{\lambda p : \varphi \supset \varphi'. \lambda q : \psi. \delta' (p(\epsilon q))}{\lambda p : \psi \supset \psi'. \lambda q : \varphi. \epsilon' (p (\delta q))}}{} $$
 $$ \infer{P \supset^* Q \rightarrow P' \supset^* Q}{P \rightarrow P'} $$
 $$ \infer{P \supset^* Q \rightarrow P \supset^* Q'}{Q \rightarrow Q'} $$
 \end{definition}
@@ -705,7 +715,7 @@ Let $M$ reduce to the head normal form $N$.
 
 Let $B \equiv B_1 \rightarrow \cdots \rightarrow B_n \rightarrow \Omega$ where $n \geq 0$.  We have that
 \[ \models N \{\}_{xx} \reff{x}_{y_1 y_1} \reff{y_1} \cdots_{y_n y_n} \reff{y_n} : N x y_1 \cdots y_n =_\Omega N x y_1 \cdots y_n \]
-and so $N x y_1 \cdots y_n$ reduces to a canonical proposition.  Therefore $N$ cannot be a neutral term, $\bot$ or $\phi \supset \psi$,
+and so $N x y_1 \cdots y_n$ reduces to a canonical proposition.  Therefore $N$ cannot be a neutral term, $\bot$ or $\varphi \supset \psi$,
 so it must be a $\lambda$-term.
 \end{proof}
 
@@ -899,6 +909,18 @@ There is no proof $\delta$ such that $\vdash \delta : \bot$.
 \end{corollary}
 
 \section{Conclusion}
+
+We have presented a system with propositional extensionality, and shown that it satisfies the property of canonicity.
+We now intend to do the same for stronger and stronger systems, getting
+ever closer to full homotopy type theory.  The next steps will be:
+
+\begin{itemize}
+\item
+a system where the equations $M =_A N$ are objects of $\Omega$, allowing us to form propositions such as $M =_A N \supset N =_A M$.
+\item
+a system with universal quantification over the types $A$, allowing us to form propositions such as $\forall x:A. x =_A x$ and
+$\forall x,y : A. x =_A y \supset y =_A x$
+\end{itemize}
 
 \bibliography{../../../../type}
 
