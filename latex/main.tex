@@ -238,34 +238,38 @@ with the same domain $\{ x_1, \ldots, x_n \}$, we write
 
 \begin{definition}[Call-By-Need Reduction]
 Define the relation of \emph{call-by-need reduction} $\rightarrow$ on the expressions as follows:
-$$ \infer{(\lambda x:A.M)N \rightarrow M[x:=N]}{} $$
-$$ \infer{MN \rightarrow M'N}{M \rightarrow M'} $$
-$$ \infer{\varphi \supset \psi \rightarrow \varphi' \supset \psi}{\varphi \rightarrow \varphi'} $$
-$$ \infer{\varphi \supset \psi \rightarrow \varphi \supset \psi'}{\psi \rightarrow \psi'} $$
-$$ \infer{(\lambda p : \varphi . \delta)\epsilon \rightarrow \delta [ p := \epsilon ]}{} $$
-$$ \infer{\reff{\varphi}^+ \delta \rightarrow \delta}{} $$
-$$ \infer{\reff{\varphi}^- \delta \rightarrow \delta}{} $$
-$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rightarrow \delta}{} $$
-$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^- \rightarrow \epsilon}{} $$
-$$ \infer{\delta \epsilon \rightarrow \delta' \epsilon}{\delta \rightarrow \delta'} $$
-$$ \infer{P^+ \rightarrow Q^+}{P \rightarrow Q} $$
-$$ \infer{P^- \rightarrow Q^-}{P \rightarrow Q} $$
-$$ \infer{(\triplelambda e:x =_A y.P)_{MN} Q \rightarrow P [x := M, y := N, e := Q]}{} $$
+$$ \infer{(\lambda x:A.M)N \rightarrow M[x:=N]}{} \quad
+\infer{MN \rightarrow M'N}{M \rightarrow M'} \quad
+\infer{\varphi \supset \psi \rightarrow \varphi' \supset \psi}{\varphi \rightarrow \varphi'} $$
+$$ \infer{\varphi \supset \psi \rightarrow \varphi \supset \psi'}{\psi \rightarrow \psi'} \quad
+\infer{(\lambda p : \varphi . \delta)\epsilon \rightarrow \delta [ p := \epsilon ]}{} \quad
+\infer{\reff{\varphi}^+ \delta \rightarrow \delta}{} \quad
+\infer{\reff{\varphi}^- \delta \rightarrow \delta}{} $$
+$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rightarrow \delta}{} \quad
+\infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^- \rightarrow \epsilon}{} \quad
+\infer{\delta \epsilon \rightarrow \delta' \epsilon}{\delta \rightarrow \delta'} $$
+$$ \infer{P^+ \rightarrow Q^+}{P \rightarrow Q} \quad
+\infer{P^- \rightarrow Q^-}{P \rightarrow Q} \quad
+\infer{(\triplelambda e:x =_A y.P)_{MN} Q \rightarrow P [x := M, y := N, e := Q]}{} $$
 $$ \infer{\reff{\lambda x:A.M}_{N N'} P \rightarrow M \{ x:=P : N = N' \}}{} $$
-$$ \infer{\reff{M} \rightarrow \reff{N}}{M \rightarrow N} $$
-$$ \infer{P_{MN} Q \rightarrow P'_{MN} Q}{P \rightarrow P'} $$
-$$ \infer{\reff{\varphi} \supset^* \reff{\psi} \rightarrow \reff{\varphi \supset \psi}}{} $$
+$$ \infer{\reff{M} \rightarrow \reff{N}}{M \rightarrow N} \quad
+\infer{P_{MN} Q \rightarrow P'_{MN} Q}{P \rightarrow P'} \quad
+\infer{\reff{\varphi} \supset^* \reff{\psi} \rightarrow \reff{\varphi \supset \psi}}{} $$
 $$ \infer{\reff{\varphi} \supset^* \univ{\psi}{\chi}{\delta}{\epsilon} \rightarrow 
 \univ{\varphi \supset \psi}{\varphi \supset \chi}{\lambda p:\varphi \supset \psi. \lambda q : \varphi. \delta (pq)}{\lambda p : \varphi \supset \chi. \lambda q : \varphi. \epsilon (pq)}}{} $$
 $$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon} \supset^* \reff{\chi} \rightarrow
 \univ{\varphi \supset \chi}{\psi \supset \chi}{\lambda p : \varphi \supset \chi. \lambda q : \psi. p (\epsilon q)}{\lambda p:\psi \supset \chi. \lambda q : \varphi. p(\delta q)}}{} $$
-$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon} \supset^* \univ{\varphi'}{\psi'}{\delta'}{\epsilon'} \rightarrow
-\univ{\varphi \supset \varphi'}{\psi \supset \psi'}{\lambda p : \varphi \supset \varphi'. \lambda q : \psi. \delta' (p(\epsilon q))}{\lambda p : \psi \supset \psi'. \lambda q : \varphi. \epsilon' (p (\delta q))}}{} $$
-$$ \infer{P \supset^* Q \rightarrow P' \supset^* Q}{P \rightarrow P'} $$
-$$ \infer{P \supset^* Q \rightarrow P \supset^* Q'}{Q \rightarrow Q'} $$
+$$ \infer{\begin{array}{l}
+\univ{\varphi}{\psi}{\delta}{\epsilon} \supset^* \univ{\varphi'}{\psi'}{\delta'}{\epsilon'} \\
+ \rightarrow
+\univ{\varphi \supset \varphi'}{\psi \supset \psi'}{\lambda p : \varphi \supset \varphi'. \lambda q : \psi. \delta' (p(\epsilon q))}{\lambda p : \psi \supset \psi'. \lambda q : \varphi. \epsilon' (p (\delta q))}
+\end{array}}{} $$
+$$ \infer{P \supset^* Q \rightarrow P' \supset^* Q}{P \rightarrow P'} \quad
+\infer{P \supset^* Q \rightarrow P \supset^* Q'}{Q \rightarrow Q'} $$
 \end{definition}
 
 \begin{lemma}[Diamond Property]
+\label{lm:diamond}
 If $E \rightarrow F$ and $E \rightarrow G$, then there exists $H$ such that $F \rightarrow H$ and $G \rightarrow H$.
 \end{lemma}
 
@@ -273,7 +277,8 @@ If $E \rightarrow F$ and $E \rightarrow G$, then there exists $H$ such that $F \
 This is easily proven by induction on the hypotheses.  The critical pairs are as follows: \textbf{TODO}
 \end{proof}
 
-\begin{lemma}[call-by-need reduction respects path substitution]
+\begin{lemma}[Reduction respects path substitution]
+\label{lm:resp-sub}
 If $M \rightarrow N$ then $M \{ \tau : \rho = \sigma \} \rightarrow N \{ \tau : \rho = \sigma \}$.
 \end{lemma}
 
@@ -331,15 +336,12 @@ This follows from the fact that $\rightarrow$ satisfies the diamond property, an
 \subsubsection{Neutral Expressions}
 
 \begin{definition}[Neutral]$ $
-\begin{itemize}
-\item
-A \emph{neutral} term is one of the form $x M_1 \cdots M_n$.
-\item
-A \emph{neutral} path is one of the form $e_{M_1 N_1} P_1 \cdots_{M_n N_n} P_n$.
-\item
-A \emph{neutral} proof is either one of the form $p \delta_1 \cdots \delta_n$, or of the form $P^+ \delta_1 \cdots \delta_n$ or
-$P^- \delta_1 \cdots \delta_n$ where $P$ is a neutral path.
-\end{itemize}
+The \emph{neutral} terms, paths and proofs are given by the grammar
+\[ \begin{array}{lrcl}
+\text{Neutral term} & M_n & ::= & x \mid M_n N \\
+\text{Neutral proof} & \delta_n & ::= & p \mid P_n^+ \mid P_n^- \mid \delta_n \epsilon \\
+\text{Neutral path} & P_n & ::= & e \mid P_n \supset^* Q \mid Q \supset^* P_n \mid (P_n)_{MN} Q
+\end{array} \]
 \end{definition}
 
 \begin{lemma}
@@ -352,7 +354,7 @@ An easy proof by case analysis.
 
 \subsection{Rules of Deduction}
 
-The rules of deduction of $\lambda o e$ are given in Figure \ref{fig:lambdaoe}.  In these rules, $\simeq$ denotes the usual relation of $\beta$-convertibility between terms.
+The rules of deduction of $\lambda o e$ are given in Figure \ref{fig:lambdaoe}.
 
 \newcommand{\RvarT}{\ensuremath(\mathsf{varT})}
 \begin{figure}
@@ -396,7 +398,7 @@ The rules of deduction of $\lambda o e$ are given in Figure \ref{fig:lambdaoe}. 
 \label{fig:lambdaoe}
 \end{figure}
 
-\subsection{Metatheorems}
+\subsubsection{Metatheorems}
 
 \label{section:meta}
 
@@ -528,7 +530,7 @@ Induction on derivations.
 
 \section{Example}
 
-Using univalence, we can construct a path of type $\top = \top \rightarrow \top$, and thence a proof of $\top \rightarrow \top \rightarrow \top$.
+Using propositional extensionality, we can construct a path of type $\top = \top \rightarrow \top$, and thence a proof of $\top \rightarrow \top \rightarrow \top$.
 But which of the canonical proofs of $\top \rightarrow \top \rightarrow \top$ have we constructed?
 
 
@@ -537,31 +539,32 @@ We define
 
 Now, we have
 \begin{align*}
-x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \lambda p:\top \rightarrow x. e^+ (p I) & : (\top \rightarrow x) \rightarrow y \\
-x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \lambda m : y. \lambda n : \top. e^- m & : y \rightarrow \top \rightarrow x \\
-x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \univ*{\lambda p:\top \rightarrow x. e^- m}{\lambda m:y. \lambda n:\top. e^- m} & : \top \rightarrow x =_\Omega y
+x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \lambda p:\top \rightarrow x. e^+ (p I) & : & (\top \rightarrow x) \rightarrow y \\
+x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \lambda m : y. \lambda n : \top. e^- m & : & y \rightarrow \top \rightarrow x \\
+x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \univ*{\lambda p:\top \rightarrow x. e^- m}{\lambda m:y. \lambda n:\top. e^- m} & : & \top \rightarrow x =_\Omega y
 \end{align*}
 
 Let $P \equiv \univ*{\lambda p:\top \rightarrow x. e^+ (pI)}{\lambda m:y. \lambda n:\top. e^- m}$.  Then
 
 \begin{align*}
-\therefore & \vdash \triplelambda e:x =_\Omega y. P & : F =_{\Omega \rightarrow \Omega} I_\Omega \\
-\therefore & (\reff{H})_{FI}(\triplelambda e:x =_\Omega y. P) & : \top \rightarrow \top =_\Omega \top \\
-\therefore & ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- & : \top \rightarrow \top \rightarrow \top
+\therefore & \vdash \triplelambda e:x =_\Omega y. P & : & F =_{\Omega \rightarrow \Omega} I_\Omega \\
+\therefore & \vdash (\reff{H})_{FI}(\triplelambda e:x =_\Omega y. P) & : & \top \rightarrow \top =_\Omega \top \\
+\therefore & \vdash ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- & : & \top \rightarrow \top \rightarrow \top
 \end{align*}
 
 And now we compute:
 
 \begin{align*}
-((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^-
-& \rightarrow ((h \top) \{ h := \triplelambda e : x =_\Omega y.P : F = I \})^- \\
-& \equiv ((\triplelambda e : x =_\Omega y.P)_{\top \top} (\reff{\top}))^- \\
-& \rightarrow (P [ x := \top, y := \top, e := \reff{\top} ])^- \\
-& \equiv \univ*{\lambda p : \top \rightarrow \top. \reff{\top}^+ (p I)}{\lambda m:\top. \lambda n:\top. \reff{\top}^- m}^- \\
-& \rightarrow \univ*{\lambda p:\top \rightarrow \top. (\lambda q:\top.q)(p I)}{\lambda m:\top. \lambda n:\top. (\lambda q:\top.q) m}^- \\
-& \rightarrow \univ*{\lambda p:\top \rightarrow \top. pI}{\lambda m:\top. \lambda n:\top. m}^- \\
-& \rightarrow \lambda m:\top. \lambda n:\top. n
+& ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- \\
+\rightarrow & ((h \top) \{ h := \triplelambda e : x =_\Omega y.P : F = I \})^- \\
+\equiv & ((\triplelambda e : x =_\Omega y.P)_{\top \top} (\reff{\top}))^- \\
+\rightarrow & (P [ x := \top, y := \top, e := \reff{\top} ])^- \\
+\equiv & \univ*{\lambda p : \top \rightarrow \top. \reff{\top}^+ (p I)}{\lambda m:\top. \lambda n:\top. \reff{\top}^- m}^- \\
+\rightarrow & \lambda m : \top. \lambda n : \top. \reff{\top}^- m
 \end{align*}
+
+Therefore, given proofs $\delta, \epsilon : \top$, we have
+\[ ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- \delta \epsilon \rightarrow \delta \enspace . \]
 
 \subsection{Comparison with Cubical Type Theory}
 
@@ -644,7 +647,7 @@ and so if we add $mapid_\bot(t) \succ t$ we obtain $output \succ \lambda mn.m$.
 \section{Computable Expressions}
 
 \begin{definition}[Computable Expression]
-We define the relation $\models E : T$, read '$E$ is a computable expression of type $T$', as follows.
+We define the relation $\models E : T$, read `$E$ is a computable expression of type $T$', as follows.
 \begin{itemize}
 \item
 $\models M : A$ iff $\models M \{\} : M =_A M$.
@@ -678,19 +681,21 @@ This follows easily from the definition and Lemma \ref{lm:compat-beta}.
 \end{proof}
 
 \begin{lemma}[Expansion]
+\label{lm:expansion}
 If $\models F : T$ and $E \rightarrow F$ then $\models E : T$.
 \end{lemma}
 
 \begin{proof}
-An easy induction, using the fact that call-by-need reduction respects path substitution.
+An easy induction, using the fact that call-by-need reduction respects path substitution (Lemma \ref{lm:resp-sub}).
 \end{proof}
 
 \begin{lemma}[Reduction]
+\label{lm:reduction}
 If $\models E : T$ and $E \rightarrow F$ then $\models F : T$.
 \end{lemma}
 
 \begin{proof}
-An easy induction, using the fact that call-by-need reduction is confluent.
+An easy induction, using the fact that call-by-need reduction is confluent (Lemma \ref{lm:diamond}).
 \end{proof}
 
 \begin{lemma}
@@ -700,7 +705,7 @@ If $\models E : T$ then $E$ reduces to a normal form.
 
 \begin{proof}
 Induction on $\models E : T$.  Note that, if $M \{\}$ reduces to a normal form, then
-it is impossible for there to be an infinite reduction sequence starting from $M$, hence $M$ must
+it is impossible for there to be an infinite reduction sequence starting from $M$ (Lemma \ref{lm:resp-sub}), hence $M$ must
 reduce to a normal form.
 \end{proof}
 %Note about Markov's principle?
@@ -726,7 +731,7 @@ For any term $\varphi$, we have $\models \reff{\varphi} : \varphi =_\Omega \varp
 
 \begin{proof}
 We must show that $\models \reff{\varphi}^+ : \varphi \supset \varphi$ and $\models \reff{\varphi}^- : \varphi \supset \varphi$.  So let $\models \delta : \varphi$.
-Then $\models \reff{\varphi}^+ \delta : \varphi$ and $\models \reff{\varphi}^- \delta : \varphi$ by well-typed expansion, as required.
+Then $\models \reff{\varphi}^+ \delta : \varphi$ and $\models \reff{\varphi}^- \delta : \varphi$ by Expansion (Lemma \ref{lm:expansion}), as required.
 \end{proof}
 
 \begin{lemma}
@@ -737,7 +742,7 @@ $\models \varphi : \Omega$ if and only if $\varphi$ reduces to a canonical propo
 If $\models \varphi : \Omega$ then $\models \varphi \{\}^+ : \varphi \supset \varphi$.  Therefore $\varphi \supset \varphi$ reduces to a canonical proposition,
 and so $\varphi$ must reduce to a canonical proposition.
 
-Conversely, suppose $\varphi$ reduces to a canonical proposition $\theta$.  We have $\varphi \{\} \twoheadrightarrow \theta \{\} \twoheadrightarrow \reff{\theta}$, and so $\models \varphi \{\} : \varphi =_\Omega \varphi$ by well-typed expansion.  Hence $\models \varphi : \Omega$.
+Conversely, suppose $\varphi$ reduces to a canonical proposition $\theta$.  We have $\varphi \{\} \twoheadrightarrow \theta \{\} \twoheadrightarrow \reff{\theta}$, and so $\models \varphi \{\} : \varphi =_\Omega \varphi$ by Expansion (Lemma \ref{lm:expansion}).  Hence $\models \varphi : \Omega$.
 \end{proof}
 
 \begin{lemma}
@@ -766,7 +771,7 @@ For $A \equiv \Omega$: we have that $P^+$ and $P^-$ are neutral proofs, and $M$ 
 $\models P^- : N \supset M$ by the previous lemma, as required.
 
 For $A \equiv B \rightarrow C$: let $\models L : B$, $\models L' : B$ and $\models Q : L =_B L'$.  Then we have $\models ML : C$, $\models NL' : C$ and
-$P_{LL'} Q$ is a neutral path, hence $\models P_{L L'} Q : ML =_C NL'$ as required.
+$P_{LL'} Q$ is a neutral path, hence $\models P_{L L'} Q : ML =_C NL'$ by the induction hypothesis, as required.
 \end{proof}
 
 \begin{lemma}
@@ -777,7 +782,7 @@ If $\models M : A$ then $\models \reff{M} : M =_A M$.
 \begin{proof}
 If $A \equiv \Omega$, this is just Lemma \ref{lm:ref-compute-Omega}.
 
-So suppose $A \equiv B \rightarrow C$.  Using Lemma \ref{lm:pre-ref-compute}, Reduction and Expansion,
+So suppose $A \equiv B \rightarrow C$.  Using Lemma \ref{lm:pre-ref-compute}, Reduction (Lemma \ref{lm:reduction}) and Expansion (Lemma \ref{lm:expansion}),
 we may assume that $M$ is a $\lambda$-term.  Let $M \equiv \lambda y:D.N$.
 
 Let $\models L : B$ and $\models L' : B$ and $\models P : L =_B L'$.  We must show that
@@ -796,7 +801,7 @@ If $\models P : \varphi =_\Omega \varphi'$ and $\models Q : \psi =_\Omega \psi'$
 
 \begin{proof}
 %Extract as lemma
-By reduction and expansion, we may assume that $P$ and $Q$ are normal forms.  We also have that $\varphi'$ reduces to a canonical proposition
+By Reduction (Lemma \ref{lm:reduction}) and Expansion (Lemma \ref{lm:expansion}), we may assume that $P$ and $Q$ are normal forms.  We also have that $\varphi'$ reduces to a canonical proposition
 $\theta_1 \supset \cdots \supset \theta_n \supset \bot$, say, and $P^+ p q_1 \cdots q_n$ reduces to a neutral proof.  Therefore, $P$ must be either a neutral path or have the form $\reff{-}$ or
 $\univ*{-}{-}$.
 
@@ -805,10 +810,7 @@ If either $P$ or $Q$ is neutral then $P \supset^* Q$ is neutral, and the result 
 Otherwise, let $\models \delta : \varphi \supset \psi$ and $\epsilon \models \varphi'$.  We must show that $\models (P \supset^* Q)^+ \delta \epsilon : \psi'$.
 
 If $P \equiv \reff{M}$ and $Q \equiv \reff{N}$, then we have
-\begin{align*}
-(P \supset^* Q)^+ \delta \epsilon & \rightarrow \reff{M \supset N}^+ \delta \epsilon \\
-& \rightarrow \delta \epsilon
-\end{align*}
+\[ (P \supset^* Q)^+ \delta \epsilon \rightarrow \reff{M \supset N}^+ \delta \epsilon \rightarrow \delta \epsilon \enspace . \]
 Now, $\models P^- \epsilon : \varphi$, hence $\models \epsilon : \varphi$ by Reduction, and so $\models \delta \epsilon : \psi$.  Therefore, $\models Q^+ (\delta \epsilon) : \psi'$,
 and hence by Reduction $\models \delta \epsilon : \psi'$ as required.
 
@@ -822,6 +824,16 @@ We have $\models P^- \epsilon : \varphi$, hence $\models \epsilon : \varphi$ by 
 $\models Q^+ (\delta \epsilon) : \psi'$, and hence by Reduction $\models \chi (\delta \epsilon) : \psi'$ as required.
 
 The other two cases are similar.
+\end{proof}
+
+\begin{lemma}
+\label{lm:univ-compute}
+If $\models \delta : \phi \supset \psi$ and $\models \epsilon : \psi \supset \phi$ then $\models \univ{\phi}{\psi}{\delta}{\epsilon} : \phi =_\Omega \psi$.
+\end{lemma}
+
+\begin{proof}
+We must show that $\models \univ{\phi}{\psi}{\delta}{\epsilon}^+ : \phi \supset \psi$ and $\models \univ{\phi}{\psi}{\delta}{\epsilon}^- : \psi \supset \phi$.
+These follow from the hypotheses, using Expansion (Lemma \ref{lm:expansion}).
 \end{proof}
 
 \section{Proof of Canonicity}
@@ -851,7 +863,7 @@ For the rule ($\lambda_T$), we must show that
 \[ \Delta \models \lambda x:A.M[\sigma] : A \rightarrow B \enspace . \]
 So let $\Delta \models N : A$.  Then the induction hypothesis gives
 \[ \Delta \models M[\sigma, x:=N] : B \]
-and so by well-typed expansion we have
+and so by Expansion (Lemma \ref{lm:expansion}) we have
 \[ \Delta \models (\lambda x:A.M[\sigma])N : B \]
 as required.
 
@@ -861,13 +873,13 @@ The case ($\lambda_P$) is similar to ($\lambda_T$), also making use of Lemma \re
 
 The case (conv$_P$) follows immediately from Lemma \ref{lm:conv-compute}.
 
-The case (ref) is immediate from Lemma \ref{lm:ref-compute}.
+The case (ref) is immediate from Lemma \ref{lm:ref-compute}.  The case (univ) is immediate from Lemma \ref{lm:univ-compute}.
 
 The cases (plus) and (minus) are trivial.
 
 For the rule ($\triplelambda$), let $\Delta \models Q : L =_A L'$.  Then the induction hypothesis gives
 \[ \Delta \models P [ \sigma, x := L, y := L', e := Q ] : M [\sigma] L =_B N [\sigma] L' \]
-and hence well-typed expansion gives
+and hence Expansion gives
 \[ \Delta \models (\triplelambda e:x =_A y.P [ \sigma ])_{L L'} Q : M[\sigma] L =_B N[\sigma] L' \]
 as required.
 
@@ -887,7 +899,7 @@ So let $\Delta \models P : N =_A N'$.  The induction hypothesis gives
 \[ \Delta \models M \{ \tau : \rho = \sigma, x := P : N = N' \} : M [\rho, x := N] =_B M [\sigma, x := N'] \enspace , \]
 and so we have
 \[ \Delta \models (\triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y \})_{N N'} P : (\lambda x:A.M [ \rho ])N =_B (\lambda x:A.M [ \sigma ])N'\]
-by well-typed expansion, as required.
+by Expansion, as required.
 \end{enumerate}
 \end{proof}
 

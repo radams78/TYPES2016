@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  2 DEC 2016 16:47
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  2 DEC 2016 17:52
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -942,56 +942,46 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
 LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <10> not available
 (Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 201.
 
- [4]
-Overfull \hbox (66.73074pt too wide) detected at line 263
-[]
- []
-
-[5]
+ [4] [5]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 395.
+(Font)              <9> on input line 397.
  [6] [7]
-LaTeX Font Info:    Calculating math sizes for size <8.5> on input line 492.
+LaTeX Font Info:    Calculating math sizes for size <8.5> on input line 494.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8.5> on input line 492.
+(Font)              <8.5> on input line 494.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5.94997> on input line 492.
+(Font)              <5.94997> on input line 494.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <4.25> on input line 492.
+(Font)              <4.25> on input line 494.
 
 
 LaTeX Font Warning: Font shape `U/msa/m/n' in size <8.5> not available
-(Font)              size <8> substituted on input line 492.
+(Font)              size <8> substituted on input line 494.
 
 
 LaTeX Font Warning: Font shape `U/msa/m/n' in size <4.25> not available
-(Font)              size <5> substituted on input line 492.
+(Font)              size <5> substituted on input line 494.
 
 
 LaTeX Font Warning: Font shape `U/msb/m/n' in size <8.5> not available
-(Font)              size <8> substituted on input line 492.
+(Font)              size <8> substituted on input line 494.
 
 
 LaTeX Font Warning: Font shape `U/msb/m/n' in size <4.25> not available
-(Font)              size <5> substituted on input line 492.
+(Font)              size <5> substituted on input line 494.
 
-[8]
-Overfull \hbox (35.21843pt too wide) in paragraph at lines 564--564
-[] 
- []
-
-[9] [10]
-Overfull \hbox (128.63664pt too wide) in paragraph at lines 621--621
+[8] [9]
+Overfull \hbox (128.63664pt too wide) in paragraph at lines 624--624
 [] 
  []
 
 
-Overfull \hbox (231.59383pt too wide) in paragraph at lines 634--634
+Overfull \hbox (231.59383pt too wide) in paragraph at lines 637--637
 [] 
  []
 
-[11] [12] [13] [14]
-Overfull \hbox (6.56285pt too wide) detected at line 889
+[10] [11] [12] [13]
+Overfull \hbox (6.56285pt too wide) detected at line 901
   $\OT1/lmr/m/n/10 ^^A \OMS/lmsy/m/n/10 j[]\OT1/lmr/m/n/10 = (\OML/lmm/m/it/10 
 ^^U  ^^U  ^^Ue \OT1/lmr/m/n/10 : \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 =[] \OML/lm
 m/m/it/10 y:M\OMS/lmsy/m/n/10 f\OML/lmm/m/it/10 ^^\ \OT1/lmr/m/n/10 : \OML/lmm/
@@ -1004,23 +994,23 @@ it/10 y\OMS/lmsy/m/n/10 g\OT1/lmr/m/n/10 )[]\OML/lmm/m/it/10 P \OT1/lmr/m/n/10
 ML/lmm/m/it/10 ^^[\OT1/lmr/m/n/10 ])\OML/lmm/m/it/10 N[]$ 
  []
 
-(./main.bbl) AED: lastpage setting LastPage [15] (./main.aux)
+[14] (./main.bbl) AED: lastpage setting LastPage [15] (./main.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.75pt have occurred.
 
  ) 
 Here is how much of TeX's memory you used:
- 9549 strings out of 256214
- 137938 string characters out of 1917001
- 231899 words of memory out of 1500000
- 12375 multiletter control sequences out of 10000+200000
- 220566 words of font info for 185 fonts, out of 1200000 for 2000
+ 9559 strings out of 256214
+ 138074 string characters out of 1917001
+ 232155 words of memory out of 1500000
+ 12380 multiletter control sequences out of 10000+200000
+ 220770 words of font info for 187 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 43i,17n,44p,941b,470s stack positions out of 5000i,500n,6000p,200000b,15000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dv
-ips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share
-/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm
+ 43i,17n,44p,941b,485s stack positions out of 5000i,500n,6000p,200000b,15000s
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/en
+c/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/s
+hare/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm
 -mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}</usr/share/texmf/f
 onts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.
 pfb></usr/share/texmf/fonts/type1/public/lm/lmbx8.pfb></usr/share/texmf/fonts/t
@@ -1039,9 +1029,9 @@ lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/tex
 mf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/m
 sam10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm10.pfb></usr/share/texm
 f/fonts/type1/bluesky/ams/msbm7.pfb>
-Output written on main.pdf (15 pages, 556321 bytes).
+Output written on main.pdf (15 pages, 559192 bytes).
 PDF statistics:
- 410 PDF objects out of 1000 (max. 8388607)
- 104 named destinations out of 1000 (max. 131072)
+ 423 PDF objects out of 1000 (max. 8388607)
+ 105 named destinations out of 1000 (max. 131072)
  60569 words of extra memory for PDF output out of 61914 (max. 10000000)
 
