@@ -71,7 +71,7 @@ The univalence axiom expresses the principle of extensionality for dependent typ
 
 As a first step, we present here a system of higher-order minimal propositional logic, with a universe $\Omega$ of propositions closed under implication. We add a type $M =_A N$ for any terms $M$, $N$ of type $A$, and two ways to prove an equality: reflexivity, and \emph{propositional extensionality} --- logically equivalent propositions are equal.  This system allows for some definitional equalities that are not present in cubical type theory, namely that transport along the trivial path is identity.
 
-We present a head reduction relation for this system, and prove that the system satisfies canonicity: every closed typable term head-reduces to a canonical form.  This work has been formalised in Agda.
+We present a call-by-need reduction relation for this system, and prove that the system satisfies canonicity: every closed typable term head-reduces to a canonical form.  This work has been formalised in Agda.
  \end{abstract}
 
 %\item Fill out the \verb+\subjclass+ and \verb+\keywords+ macros. For the \verb+\subjclass+, please refer to the ACM classification at \url{http://www.acm.org/about/class/ccs98-html}.
@@ -113,7 +113,7 @@ any type $A$ and terms $M : A$ and $N : A$.  The types include $\Omega$ itself a
 There are two canonical forms for proofs of $M =_\Omega N$.  For any term $M : \Omega$, we have $\reff{M} : M =_\Omega M$.  We also add univalence for this system, in this form:
 if $\delta : \varphi \supset \psi$ and $\epsilon : \psi \supset\varphi$, then $\univ{\varphi}{\psi}{\delta}{\epsilon} : \varphi =_\Omega \psi$.  
 
-We present a deteriministic head reduction relation for this system, and prove that every typable term head reduces to a canonical form.  From this, it follows that the system is consistent.  In the appendix, we present a proof of strong normalization for a different reduction relation.
+We present a deteriministic call-by-need reduction relation for this system, and prove that every typable term reduces to a canonical form.  From this, it follows that the system is consistent.  In the appendix, we present a proof of strong normalization for a different reduction relation.
 %confluence (Corollary \ref{cor:confluence}), strong normalization (Corollary \ref{cor:SN}) and canonicity (Corollary \ref{cor:canon}).
 
 For the future, we wish to expand the system with universal quantification, and expand it to a 2-dimensional system (with equations between proofs).
@@ -234,10 +234,10 @@ with the same domain $\{ x_1, \ldots, x_n \}$, we write
 \[ M \{ \tau : \rho = \sigma \} \text{ for } M \{ x_1 := \tau(x_1) : \rho(x_1) = \sigma(x_1), \ldots, \tau(x_n) : \rho(x_n) = \sigma(x_n) \} \enspace . \]
 \end{definition}
 
-\subsubsection{Head Reduction}
+\subsubsection{Call-By-Need Reduction}
 
-\begin{definition}[Head Reduction]
-Define the relation of \emph{head reduction} $\rightarrow$ on the expressions as follows:
+\begin{definition}[Call-By-Need Reduction]
+Define the relation of \emph{call-by-need reduction} $\rightarrow$ on the expressions as follows:
 $$ \infer{(\lambda x:A.M)N \rightarrow M[x:=N]}{} $$
 $$ \infer{MN \rightarrow M'N}{M \rightarrow M'} $$
 $$ \infer{\varphi \supset \psi \rightarrow \varphi' \supset \psi}{\varphi \rightarrow \varphi'} $$
@@ -273,7 +273,7 @@ If $E \rightarrow F$ and $E \rightarrow G$, then there exists $H$ such that $F \
 This is easily proven by induction on the hypotheses.  The critical pairs are as follows: \textbf{TODO}
 \end{proof}
 
-\begin{lemma}[Head reduction respects path substitution]
+\begin{lemma}[call-by-need reduction respects path substitution]
 If $M \rightarrow N$ then $M \{ \tau : \rho = \sigma \} \rightarrow N \{ \tau : \rho = \sigma \}$.
 \end{lemma}
 
@@ -288,7 +288,7 @@ Induction on $M \rightarrow N$.  The only difficult case is $\beta$-contraction.
 \end{proof}
 
 We write $\twoheadrightarrow$ for the reflexive transitive closure of $\rightarrow$, and $\simeq$ for the reflexive symmetric transitive closure of $\rightarrow$.
-We say an expression $E$ is in \emph{head normal form} iff there is no expression $F$ such that $E \rightarrow F$.
+We say an expression $E$ is in \emph{normal form} iff there is no expression $F$ such that $E \rightarrow F$.
 
 \subsubsection{Canonicity}
 
@@ -315,7 +315,7 @@ We define the \emph{canonical paths} of an equation $M =_A N$, where $M$ and $N$
 A canonical path of $\varphi =_\Omega \psi$ is either $\reff{\varphi}$ if $\varphi \simeq \psi$, or $\univ{\varphi}{\psi}{\delta}{\epsilon}$, where $\delta$ is a canonical
 proof of $\varphi \supset \psi$ and $\epsilon$ is a canonical proof of $\psi \supset \varphi$.
 \item
-A canonical path of $F =_{A \rightarrow B} G$ is either $\reff{F}$ if $F \simeq G$, or $\triplelambda e:x =_A y.P$ where $x : A, y : A, e : x =_A y \vdash P : Fx =_B Gy$ and $P$ is in head normal form.
+A canonical path of $F =_{A \rightarrow B} G$ is either $\reff{F}$ if $F \simeq G$, or $\triplelambda e:x =_A y.P$ where $x : A, y : A, e : x =_A y \vdash P : Fx =_B Gy$ and $P$ is in normal form.
 \end{itemize}
 \end{definition}
 
@@ -325,7 +325,7 @@ Suppose $\varphi$ reduces to a canonical proposition $\theta$, and $\varphi \sim
 \end{lemma}
 
 \begin{proof}
-This follows from the fact that $\rightarrow$ satisfies the diamond property, and every canonical proposition $\theta$ is a head normal form.
+This follows from the fact that $\rightarrow$ satisfies the diamond property, and every canonical proposition $\theta$ is a normal form.
 \end{proof}
 
 \subsubsection{Neutral Expressions}
@@ -343,7 +343,7 @@ $P^- \delta_1 \cdots \delta_n$ where $P$ is a neutral path.
 \end{definition}
 
 \begin{lemma}
-A term in head normal form is either a neutral term, a canonical proposition, or a $\lambda$-term.
+A term in normal form is either a neutral term, a canonical proposition, or a $\lambda$-term.
 \end{lemma}
 
 \begin{proof}
@@ -682,7 +682,7 @@ If $\models F : T$ and $E \rightarrow F$ then $\models E : T$.
 \end{lemma}
 
 \begin{proof}
-An easy induction, using the fact that head reduction respects path substitution.
+An easy induction, using the fact that call-by-need reduction respects path substitution.
 \end{proof}
 
 \begin{lemma}[Reduction]
@@ -690,28 +690,28 @@ If $\models E : T$ and $E \rightarrow F$ then $\models F : T$.
 \end{lemma}
 
 \begin{proof}
-An easy induction, using the fact that head reduction is confluent.
+An easy induction, using the fact that call-by-need reduction is confluent.
 \end{proof}
 
 \begin{lemma}
 \label{lm:compute-SN}
-If $\models E : T$ then $E$ head reduces to a head normal form.
+If $\models E : T$ then $E$ reduces to a normal form.
 \end{lemma}
 
 \begin{proof}
-Induction on $\models E : T$.  Note that, if $M \{\}$ reduces to a head normal form, then
+Induction on $\models E : T$.  Note that, if $M \{\}$ reduces to a normal form, then
 it is impossible for there to be an infinite reduction sequence starting from $M$, hence $M$ must
-reduce to a head normal form.
+reduce to a normal form.
 \end{proof}
 %Note about Markov's principle?
 
 \begin{lemma}
 \label{lm:pre-ref-compute}
-If $\models M : A \rightarrow B$ then $M$ head reduces to a $\lambda$-expression.
+If $\models M : A \rightarrow B$ then $M$ reduces to a $\lambda$-expression.
 \end{lemma}
 
 \begin{proof}
-Let $M$ reduce to the head normal form $N$.
+Let $M$ reduce to the normal form $N$.
 
 Let $B \equiv B_1 \rightarrow \cdots \rightarrow B_n \rightarrow \Omega$ where $n \geq 0$.  We have that
 \[ \models N \{\}_{xx} \reff{x}_{y_1 y_1} \reff{y_1} \cdots_{y_n y_n} \reff{y_n} : N x y_1 \cdots y_n =_\Omega N x y_1 \cdots y_n \]
@@ -730,7 +730,7 @@ Then $\models \reff{\varphi}^+ \delta : \varphi$ and $\models \reff{\varphi}^- \
 \end{proof}
 
 \begin{lemma}
-$\models \varphi : \Omega$ if and only if $\varphi$ head reduces to a canonical proposition.
+$\models \varphi : \Omega$ if and only if $\varphi$ reduces to a canonical proposition.
 \end{lemma}
 
 \begin{proof}
@@ -742,7 +742,7 @@ Conversely, suppose $\varphi$ reduces to a canonical proposition $\theta$.  We h
 
 \begin{lemma}
 \label{lm:neutral-proof}
-If $\delta$ is a neutral proof and $\varphi$ head reduces to a canonical proposition, then $\models \delta : \varphi$.
+If $\delta$ is a neutral proof and $\varphi$ reduces to a canonical proposition, then $\models \delta : \varphi$.
 \end{lemma}
 
 \begin{proof}
@@ -796,8 +796,8 @@ If $\models P : \varphi =_\Omega \varphi'$ and $\models Q : \psi =_\Omega \psi'$
 
 \begin{proof}
 %Extract as lemma
-By reduction and expansion, we may assume that $P$ and $Q$ are head normal forms.  We also have that $\varphi'$ reduces to a canonical proposition
-$\theta_1 \supset \cdots \supset \theta_n \supset \bot$, say, and $P^+ p q_1 \cdots q_n$ head reduces to a neutral proof.  Therefore, $P$ must be either a neutral path or have the form $\reff{-}$ or
+By reduction and expansion, we may assume that $P$ and $Q$ are normal forms.  We also have that $\varphi'$ reduces to a canonical proposition
+$\theta_1 \supset \cdots \supset \theta_n \supset \bot$, say, and $P^+ p q_1 \cdots q_n$ reduces to a neutral proof.  Therefore, $P$ must be either a neutral path or have the form $\reff{-}$ or
 $\univ*{-}{-}$.
 
 If either $P$ or $Q$ is neutral then $P \supset^* Q$ is neutral, and the result follows from Lemma \ref{lm:neutral-path}.
@@ -892,7 +892,7 @@ by well-typed expansion, as required.
 \end{proof}
 
 \begin{corollary}
-If $\Gamma \vdash E : T$ then $E$ head reduces to a head normal form.
+If $\Gamma \vdash E : T$ then $E$ reduces to a normal form.
 \end{corollary}
 
 \begin{proof}
@@ -901,7 +901,7 @@ We prove that, if $\Gamma \vald$, then $\models \mathrm{id}_\Gamma : \Gamma$; th
 \end{proof}
 
 \begin{corollary}[Canonicity]
-If $\vdash E : T$ then $E$ head reduces to a canonical form.
+If $\vdash E : T$ then $E$ reduces to a canonical form.
 \end{corollary}
 
 \begin{corollary}[Consistency]
