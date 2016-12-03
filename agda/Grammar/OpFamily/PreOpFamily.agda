@@ -20,10 +20,10 @@ record PreOpFamily : Set₂ where
   ∼-refl _ = refl
     
   ∼-sym : ∀ {U} {V} {σ τ : Op U V} → σ ∼op τ → τ ∼op σ
-  ∼-sym σ-is-τ x = sym (σ-is-τ x)
+  ∼-sym σ-is-τ x = ≡-sym (σ-is-τ x)
 
   ∼-trans : ∀ {U} {V} {ρ σ τ : Op U V} → ρ ∼op σ → σ ∼op τ → ρ ∼op τ
-  ∼-trans ρ-is-σ σ-is-τ x = trans (ρ-is-σ x) (σ-is-τ x)
+  ∼-trans ρ-is-σ σ-is-τ x = ≡-trans (ρ-is-σ x) (σ-is-τ x)
 
   OP : Alphabet → Alphabet → Setoid _ _
   OP U V = record { 

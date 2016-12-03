@@ -2,7 +2,7 @@ module Prelims.EqReasoning where
 open import Relation.Binary public hiding (_⇒_)
 import Relation.Binary.PreorderReasoning
 import Relation.Binary.EqReasoning
-open import Relation.Binary.PropositionalEquality public using (_≡_;refl;cong;cong₂;sym;trans;subst;subst₂)
+open import Relation.Binary.PropositionalEquality public using (_≡_;refl;cong;cong₂;subst;subst₂) renaming (sym to ≡-sym;trans to ≡-trans)
 
 module PreorderReasoning {p₁ p₂ p₃} (P : Preorder p₁ p₂ p₃) where
   open Relation.Binary.PreorderReasoning P public

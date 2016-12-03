@@ -52,12 +52,6 @@ record Grammar : Set₁ where
   var-inj : ∀ {V} {K} {x y : Var V K} → var x ≡ var y → x ≡ y
   var-inj refl = refl
 
-  Rewrite : Set₁
-  Rewrite = ∀ {V C K} → Rel (Subexp V C K) zero
-
-  Reduction : Set₁
-  Reduction = ∀ {V} {AA} {K} → Con (SK AA K) → ListAbs V AA → Expression V K → Set
-
   ListExp : Alphabet → List VarKind → Set
   ListExp V = HetList (VExpression V)
 

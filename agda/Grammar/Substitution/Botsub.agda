@@ -138,7 +138,7 @@ botSub-upRep : ∀ {U} {C} {K} {L}
 botSub-upRep _ = botSub-up COMPSR
 
 botSub-botSub' : ∀ {V} {K} {L} (N : Expression V (varKind K)) (N' : Expression V (varKind L)) → x₀:= N' • liftSub L (x₀:= N) ∼ x₀:= N • x₀:= (N' ⇑)
-botSub-botSub' N N' x₀ = sym (botSub-upRep N')
+botSub-botSub' N N' x₀ = ≡-sym (botSub-upRep N')
 botSub-botSub' N N' (↑ x₀) = botSub-upRep N
 botSub-botSub' N N' (↑ (↑ x)) = refl
 

@@ -75,7 +75,7 @@ pathSub-•PR (app (-lamTerm A) (M ∷ [])) {ρ} {τ} {σ} {σ'} =
   ≡⟨⟨ pathSub-cong M liftPathSub-•PR sub↖-•SR sub↗-•SR ⟩⟩
     M ⟦⟦ liftPathSub (τ •PR ρ) ∶ sub↖ (σ •SR ρ) ∼ sub↗ (σ' •SR ρ) ⟧⟧
   ∎)
-pathSub-•PR (app -appTerm (M ∷ N ∷ [])) = cong₄ app* (sym (sub-•SR N)) (sym (sub-•SR N)) (pathSub-•PR M) (pathSub-•PR N)
+pathSub-•PR (app -appTerm (M ∷ N ∷ [])) = cong₄ app* (≡-sym (sub-•SR N)) (≡-sym (sub-•SR N)) (pathSub-•PR M) (pathSub-•PR N)
 
 _∶_≡_•PS_ : ∀ {U V W} → PathSub V W → Sub V W → Sub V W → Sub U V → PathSub U W
 (τ ∶ σ ≡ σ' •PS ρ) x = ρ _ x ⟦⟦ τ ∶ σ ∼ σ' ⟧⟧
@@ -118,7 +118,7 @@ pathsub-sub (app (-lamTerm A) (M ∷ [])) {σ} {τ} {ρ} {ρ'} = cong (λλλ A)
   ≡⟨⟨ pathSub-cong M liftPathSub-PS sub↖-• sub↗-• ⟩⟩
     M ⟦⟦ liftPathSub (τ ∶ ρ ≡ ρ' •PS σ) ∶ sub↖ (ρ • σ) ∼ sub↗ (ρ' • σ) ⟧⟧
   ∎)
-pathsub-sub (app -appTerm (M ∷ N ∷ [])) = cong₄ app* (sym (sub-comp N)) (sym (sub-comp N)) (pathsub-sub M) (pathsub-sub N)
+pathsub-sub (app -appTerm (M ∷ N ∷ [])) = cong₄ app* (≡-sym (sub-comp N)) (≡-sym (sub-comp N)) (pathsub-sub M) (pathsub-sub N)
 
 extendPS : ∀ {U} {V} → PathSub U V → Path V → PathSub (U , -Term) V
 extendPS τ P x₀ = P

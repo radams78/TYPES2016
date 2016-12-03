@@ -61,7 +61,7 @@ sub-•SR E = Composition.ap-comp COMPSR E
 
 liftSub-upRep : ∀ {U} {V} {C} {K} {L} (E : Subexp U C K) {σ : Sub U V} →
   E 〈 upRep 〉 ⟦ liftSub L σ ⟧ ≡ E ⟦ σ ⟧ 〈 upRep 〉
-liftSub-upRep E = liftOp-up-mixed COMPSR COMPRS (λ {_} {_} {_} {_} {E} → sym (up-is-up' {E = E})) {E}
+liftSub-upRep E = liftOp-up-mixed COMPSR COMPRS (λ {_} {_} {_} {_} {E} → ≡-sym (up-is-up' {E = E})) {E}
 
 infixl 60 _•_
 _•_ : ∀ {U} {V} {W} → Sub V W → Sub U V → Sub U W
@@ -70,7 +70,7 @@ _•_ : ∀ {U} {V} {W} → Sub V W → Sub U V → Sub U W
 liftSub-comp : ∀ {U} {V} {W} {ρ : Sub U V} {σ : Sub V W} {K} → 
   liftSub K (σ • ρ) ∼ liftSub K σ • liftSub K ρ
 liftSub-comp x₀ = refl
-liftSub-comp {W = W} {ρ = ρ} {σ = σ} {K = K} {L} (↑ x) = sym (liftSub-upRep (ρ L x))
+liftSub-comp {W = W} {ρ = ρ} {σ = σ} {K = K} {L} (↑ x) = ≡-sym (liftSub-upRep (ρ L x))
 
 liftSub-upRep₂ : ∀ {U} {V} {C} {K} {L} {M} (E : Subexp U C M) {σ : Sub U V} → E ⇑ ⇑ ⟦ liftSub K (liftSub L σ) ⟧ ≡ E ⟦ σ ⟧ ⇑ ⇑
 liftSub-upRep₂ {U} {V} {C} {K} {L} {M} E {σ} = let open ≡-Reasoning in 
@@ -97,11 +97,11 @@ liftRep-liftSub-upRep₃ : ∀ {U} {V} {W} {K1} {K2} {K3} {C} {K4}
                    (σ : Sub U V) (ρ : Rep V W) →
                     M ⇑ ⇑ ⇑ ⟦ liftSub K1 (liftSub K2 (liftSub K3 σ)) ⟧ 〈 liftRep K1 (liftRep K2 (liftRep K3 ρ)) 〉
                     ≡ M ⟦ σ ⟧ 〈 ρ 〉 ⇑ ⇑ ⇑
-liftRep-liftSub-upRep₃ M σ ρ = trans (rep-congl (liftSub-upRep₃ M {σ})) (liftRep-upRep₃ (M ⟦ σ ⟧))
+liftRep-liftSub-upRep₃ M σ ρ = ≡-trans (rep-congl (liftSub-upRep₃ M {σ})) (liftRep-upRep₃ (M ⟦ σ ⟧))
 
 assocRSSR : ∀ {U} {V} {W} {X} {ρ : Sub W X} {σ : Rep V W} {τ : Sub U V} →
             ρ • (σ •RS τ) ∼ (ρ •SR σ) • τ
-assocRSSR {ρ = ρ} {σ} {τ} x = sym (sub-•SR (τ _ x))
+assocRSSR {ρ = ρ} {σ} {τ} x = ≡-sym (sub-•SR (τ _ x))
 
 SUB : OpFamily
 SUB = record { 

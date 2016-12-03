@@ -40,14 +40,14 @@ _,,,_ : ∀ {V AA} → Context V → snocTypes V AA → Context (extend SNOCLIST
 Γ ,,, (AA snoc A) = (Γ ,,, AA) , A -}
 
 idRep-typed : ∀ {V} {Γ : Context V} → idRep V ∶ Γ ⇒R Γ
-idRep-typed _ = sym rep-idRep
+idRep-typed _ = ≡-sym rep-idRep
 
 ↑-typed : ∀ {V Γ K} {A : Expression V (parent K)} → upRep ∶ Γ ⇒R (Γ , A)
 ↑-typed _ = refl
 
 liftRep-typed : ∀ {U V ρ K} {Γ : Context U} {Δ : Context V} {A : Expression U (parent K)} → 
   ρ ∶ Γ ⇒R Δ → liftRep K ρ ∶ (Γ , A) ⇒R (Δ , A 〈 ρ 〉)
-liftRep-typed {A = A} ρ∶Γ⇒Δ x₀ = sym (liftRep-upRep A)
+liftRep-typed {A = A} ρ∶Γ⇒Δ x₀ = ≡-sym (liftRep-upRep A)
 liftRep-typed {ρ = ρ} {K} {Γ} {Δ} {A} ρ∶Γ⇒Δ {L} (↑ x) = let open ≡-Reasoning in 
   begin
     typeof (ρ L x) Δ ⇑
