@@ -28,6 +28,10 @@ unhet : ∀ {A B aa} → K A B aa → List B
 unhet [] = []
 unhet (b ∷ bb) = b ∷ unhet bb
 
+hetmap : ∀ {A : Set} {B C : A → Set} {aa : List A} → (∀ a → B a → C a) → HetList B aa → HetList C aa
+hetmap _ [] = []
+hetmap f (b ∷ bb) = f _ b ∷ hetmap f bb
+
 infixl 20 _snoc_
 data HetsnocList {A} (B : A → Set) : snocList A → Set where
   [] : HetsnocList B []

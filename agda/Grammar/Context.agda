@@ -29,12 +29,12 @@ typeof {_ , _} x Γ = pretypeof x Γ ⇑
 _∶_⇒R_ : ∀ {U} {V} → Rep U V → Context U → Context V → Set
 ρ ∶ Γ ⇒R Δ = ∀ {K} x → typeof (ρ K x) Δ ≡ typeof x Γ 〈 ρ 〉
 
-{- infix 25 _,,_
-_,,_ : ∀ {V} {AA} → Context V → Types V AA → Context (extend LIST V AA)
+infix 25 _,,_
+_,,_ : ∀ {V} {AA} → Context V → Types V AA → Context (extend V AA)
 Γ ,, [] = Γ
 Γ ,, (A , AA) = (Γ , A) ,, AA
 
-infix 25 _,,,_
+{- infix 25 _,,,_
 _,,,_ : ∀ {V AA} → Context V → snocTypes V AA → Context (extend SNOCLIST V AA)
 Γ ,,, [] = Γ
 Γ ,,, (AA snoc A) = (Γ ,,, AA) , A -}
@@ -56,6 +56,11 @@ liftRep-typed {ρ = ρ} {K} {Γ} {Δ} {A} ρ∶Γ⇒Δ {L} (↑ x) = let open �
   ≡⟨⟨ liftRep-upRep (typeof x Γ) ⟩⟩
     (typeof x Γ ⇑) 〈 liftRep K ρ 〉
   ∎
+
+liftsRep-typed : ∀ {U V ρ KK} {Γ : Context U} {Δ : Context V} {AA : Types U KK} →
+  ρ ∶ Γ ⇒R Δ → liftsRep KK ρ ∶ (Γ ,, AA) ⇒R (Δ ,, Types-rep AA ρ)
+liftsRep-typed {AA = []} ρ∶Γ⇒RΔ = ρ∶Γ⇒RΔ
+liftsRep-typed {AA = A , AA} ρ∶Γ⇒RΔ = liftsRep-typed {AA = AA} (liftRep-typed ρ∶Γ⇒RΔ)
 
 •R-typed : ∀ {U V W} {σ : Rep V W} {ρ : Rep U V} {Γ} {Δ} {Θ} → 
   σ ∶ Δ ⇒R Θ → ρ ∶ Γ ⇒R Δ → (σ •R ρ) ∶ Γ ⇒R Θ

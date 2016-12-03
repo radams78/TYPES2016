@@ -4,6 +4,10 @@ import Relation.Binary.PropositionalEquality.Core
 open import Relation.Binary
 open import Data.Product renaming (_,_ to _,p_)
 
+Respects : ∀ {i} {A : Set} {B : A → Set} (R : ∀ a → Rel (B a) i) {a b : A}
+  (f : B a → B b) → Set i
+Respects R {a} {b} f = ∀ x y → R a x y → R b (f x) (f y)
+
 record Common-Reduct {i} {A : Set} (R S : Rel A i) (x y : A) : Set i where
   constructor cr
   field
@@ -89,6 +93,13 @@ sub-RT-RST : ∀ {i A} {R : Rel A i} {x y} → RTClose {A = A} R x y → RSTClos
 sub-RT-RST (inc xRy) = inc xRy
 sub-RT-RST ref = ref
 sub-RT-RST (trans xRTy yRTz) = trans (sub-RT-RST xRTy) (sub-RT-RST yRTz)
+
+respects-RST : ∀ {i} {A : Set} {B : A → Set} (R : ∀ a → Rel (B a) i) {a b : A}
+  (f : B a → B b) → Respects R f → Respects (λ a → RSTClose (R a)) f
+respects-RST R f R-respects-f x y (inc xRy) = inc (R-respects-f x y xRy)
+respects-RST R f R-respects-f y .y ref = ref
+respects-RST R f R-respects-f x x₁ (sym xRSTy) = sym (respects-RST R f R-respects-f _ _ xRSTy)
+respects-RST R f R-respects-f x y (trans xRSTy yRSTz) = trans (respects-RST R f R-respects-f _ _ xRSTy) (respects-RST R f R-respects-f _ _ yRSTz)
 
 Church-Rosser : ∀ {i A} → Rel A i → Set i
 Church-Rosser R = ∀ x y → RSTClose R x y → Common-Reduct (RTClose R) (RTClose R) x y

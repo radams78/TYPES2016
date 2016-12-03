@@ -9,18 +9,15 @@ open import PHOPL.Red
 open import PHOPL.Rules
 open import PHOPL.PathSub
 
-postulate valid-addpath : ∀ {V} {Γ : Context V} {A} → valid Γ → valid (addpath Γ A)
---valid-addpath validΓ = ctxER (varR x₁ (ctxTR (ctxTR validΓ))) (varR x₀ (ctxTR (ctxTR validΓ)))
+valid-addpath : ∀ {V} {Γ : Context V} {A} → valid Γ → valid (addpath Γ A)
+valid-addpath validΓ = ctxER (varR x₁ (ctxTR (ctxTR validΓ))) (varR x₀ (ctxTR (ctxTR validΓ)))
 
-postulate context-validity' : ∀ {V} {Γ : Context V} {A} → valid (addpath Γ A) → valid Γ
---context-validity' (ctxER (varR _ (ctxTR (ctxTR validΓ))) _) = validΓ
+context-validity' : ∀ {V} {Γ : Context V} {A} → valid (addpath Γ A) → valid Γ
+context-validity' (ctxER (varR _ (ctxTR (ctxTR validΓ))) _) = validΓ
 
 change-type : ∀ {V} {Γ} {K} {M : Expression V (varKind K)} {A} {B} → 
   Γ ⊢ M ∶ A → A ≡ B → Γ ⊢ M ∶ B
 change-type {Γ = Γ} {M = M} Γ⊢M∶A A≡B = subst (λ x → Γ ⊢ M ∶ x) A≡B Γ⊢M∶A
-
-postulate liftsRep-typed : ∀ {U} {V} {ρ : Rep U V} {Γ} {Δ} {A} →
-                           ρ ∶ Γ ⇒R Δ → liftsRep pathDom ρ ∶ addpath Γ A ⇒R addpath Δ A
 
 context-validity : ∀ {V} {Γ} {K} {M : Expression V (varKind K)} {A} →
                    Γ ⊢ M ∶ A → valid Γ
@@ -57,7 +54,7 @@ weakening {ρ = ρ} {Δ = Δ} (ΛPR {φ = φ} {ψ} Γ⊢φ∶Ω Γ⊢ψ∶Ω Γ,
   ΛPR Δ⊢φ∶Ω
       (weakening Γ⊢ψ∶Ω validΔ ρ∶Γ⇒RΔ) 
       (change-type (weakening Γ,φ⊢δ∶ψ (ctxPR Δ⊢φ∶Ω) (liftRep-typed ρ∶Γ⇒RΔ)) (liftRep-upRep ψ))
-weakening (convR Γ⊢δ∶φ Γ⊢ψ∶Ω φ≃ψ) validΔ ρ∶Γ⇒RΔ = convR (weakening Γ⊢δ∶φ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢ψ∶Ω validΔ ρ∶Γ⇒RΔ) (conv-rep φ≃ψ)
+weakening (convR Γ⊢δ∶φ Γ⊢ψ∶Ω φ≃ψ) validΔ ρ∶Γ⇒RΔ = convR (weakening Γ⊢δ∶φ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢ψ∶Ω validΔ ρ∶Γ⇒RΔ) {!≃-resp-rep!}
 weakening (refR Γ⊢M∶A) validΔ ρ∶Γ⇒RΔ = refR (weakening Γ⊢M∶A validΔ ρ∶Γ⇒RΔ)
 weakening (⊃*R Γ⊢P∶φ≡φ' Γ⊢Q∶ψ≡ψ') validΔ ρ∶Γ⇒RΔ = ⊃*R (weakening Γ⊢P∶φ≡φ' validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢Q∶ψ≡ψ' validΔ ρ∶Γ⇒RΔ)
 weakening (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) validΔ ρ∶Γ⇒RΔ = univR (weakening Γ⊢δ∶φ⊃ψ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢ε∶ψ⊃φ validΔ ρ∶Γ⇒RΔ)
@@ -68,7 +65,7 @@ weakening (lllR {B = B} {M = M} {N} ΓAAE⊢P∶Mx≡Ny) validΔ ρ∶Γ⇒RΔ =
 weakening (app*R Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') validΔ ρ∶Γ⇒RΔ = app*R (weakening Γ⊢N∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N'∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢P∶M≡M' validΔ ρ∶Γ⇒RΔ) 
   (weakening Γ⊢Q∶N≡N' validΔ ρ∶Γ⇒RΔ)
 weakening (convER Γ⊢M∶N₁≡N₂ Γ⊢N₁'∶A Γ⊢N₂'∶A N₁≃N₁' N₂≃N₂') validΔ ρ∶Γ⇒RΔ =
-  convER (weakening Γ⊢M∶N₁≡N₂ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N₁'∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N₂'∶A validΔ ρ∶Γ⇒RΔ) (conv-rep N₁≃N₁') (conv-rep N₂≃N₂')
+  convER (weakening Γ⊢M∶N₁≡N₂ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N₁'∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N₂'∶A validΔ ρ∶Γ⇒RΔ) {!!} {!!} --(conv-rep N₁≃N₁') (conv-rep N₂≃N₂')
 
 postulate Prop-Validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → 
                         Γ ⊢ δ ∶ φ → Γ ⊢ φ ∶ ty Ω
@@ -170,7 +167,7 @@ liftPathSub-typed : ∀ {U} {V} {τ : PathSub U V} {ρ} {σ} {Γ} {A} {Δ} →
   τ ∶ ρ ∼ σ ∶ Γ ⇒ Δ → valid Δ → liftPathSub τ ∶ sub↖ ρ ∼ sub↗ σ ∶ Γ ,T A ⇒ Δ ,T  A ,T  A ,E var x₁ ≡〈 A 〉 var x₀
 liftPathSub-typed _ validΔ x₀ = varR x₀ (valid-addpath validΔ)
 liftPathSub-typed {U} {Γ = Γ} {A} {Δ = Δ} τ∶ρ∼σ validΔ (↑ x) = change-type (weakening-addpath (τ∶ρ∼σ x)) 
-  (cong₃ _≡〈_〉_ refl (Prelims.sym (typeof'-up {U} {Γ = Γ} {A} {x = x})) refl)
+  (cong₃ _≡〈_〉_ refl (≡-sym (typeof'-up {U} {Γ = Γ} {A} {x = x})) refl)
 
 postulate sub↖-decomp : ∀ {U} {V} {C} {K} (M : Subexp (U , -Term) C K) {ρ : Sub U V} → 
                      M ⟦ liftSub _ ρ ⟧ 〈 liftRep _ upRep 〉 〈 liftRep _ upRep 〉 〈 liftRep _ upRep 〉 ⟦ x₀:= var x₂ ⟧ ≡ M ⟦ sub↖ ρ ⟧
@@ -201,13 +198,14 @@ path-substitution {U} {V} {Γ} {Δ} {ρ} {σ} {τ} (ΛR .{U} .{Γ} {A} {M} {B} �
   let step1 : Δ ,T A ,T A ,E var x₁ ≡〈 A 〉 var x₀ ⊢ 
               M ⟦⟦ liftPathSub τ ∶ sub↖ ρ ∼ sub↗ σ ⟧⟧ ∶ 
               appT ((ΛT A M) ⟦ ρ ⟧ ⇑ ⇑ ⇑) (var x₂) ≡〈 B 〉 appT ((ΛT A M) ⟦ σ ⟧ ⇑ ⇑ ⇑) (var x₁)
-      step1 = convER 
+      step1 = {!!}
+{- convER 
                (path-substitution Γ,A⊢M∶B 
                  (liftPathSub-typed τ∶σ∼σ' validΔ) (sub↖-typed ρ∶Γ⇒Δ) (sub↗-typed σ∶Γ⇒Δ) 
                  validΔAAE)
                  (Mσ-typed ρ∶Γ⇒Δ refl)
                  (Mσ-typed σ∶Γ⇒Δ refl)
-                 (RSTClose.sym (redex-conv (subst (R -appTerm ((ΛT A M ⟦ ρ ⟧) ⇑ ⇑ ⇑ ∷ var x₂ ∷ [])) (sub↖-decomp M) (βR βT)))) (RSTClose.sym (redex-conv (subst (R -appTerm ((ΛT A M ⟦ σ ⟧) ⇑ ⇑ ⇑ ∷ var x₁ ∷ [])) (sub↗-decomp M) (βR βT))))
+                 (RSTClose.sym (redex-conv (subst (R -appTerm ((ΛT A M ⟦ ρ ⟧) ⇑ ⇑ ⇑ ∷ var x₂ ∷ [])) (sub↖-decomp M) (βR βT)))) (RSTClose.sym (redex-conv (subst (R -appTerm ((ΛT A M ⟦ σ ⟧) ⇑ ⇑ ⇑ ∷ var x₁ ∷ [])) (sub↗-decomp M) (βR βT)))) -}
   in lllR step1
 
 postulate idPathSub : ∀ V → PathSub V V
@@ -243,9 +241,8 @@ postulate sub↗-compRP : ∀ {U} {V} {W} {σ : Sub U V} {ρ : Rep V W} →
 postulate ⋆-typed : ∀ {V} {M : Term V} {P N N' Γ A B} → 
                   Γ ⊢ M ∶ ty (A ⇛ B) → Γ ⊢ P ∶ N ≡〈 A 〉 N' → Γ ⊢ M ⋆[ P ∶ N ∼ N' ] ∶ appT M N ≡〈 B 〉 appT M N'
 
-postulate Subject-Reduction-R : ∀ {V} {K} {C} 
-                              {c : Con (SK C (varKind K))} {E : ListAbs V C} {F : Expression V (varKind K)} {Γ} {A} →
-                              Γ ⊢ app c E ∶ A → β c E F → Γ ⊢ F ∶ A
+postulate Subject-Reduction-R : ∀ {V} {K} {E F : Expression V (varKind K)} {Γ} {A} →
+                              Γ ⊢ E ∶ A → E ⇒ F → Γ ⊢ F ∶ A
 
 {-Subject-Reduction-R : ∀ {V} {K} {C} 
   {c : Constructor C} {E : ListAbs V C} {F : Expression V (varKind K)} {Γ} {A} →
