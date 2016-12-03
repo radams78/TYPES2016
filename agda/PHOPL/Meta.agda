@@ -54,7 +54,7 @@ weakening {ρ = ρ} {Δ = Δ} (ΛPR {φ = φ} {ψ} Γ⊢φ∶Ω Γ⊢ψ∶Ω Γ,
   ΛPR Δ⊢φ∶Ω
       (weakening Γ⊢ψ∶Ω validΔ ρ∶Γ⇒RΔ) 
       (change-type (weakening Γ,φ⊢δ∶ψ (ctxPR Δ⊢φ∶Ω) (liftRep-typed ρ∶Γ⇒RΔ)) (liftRep-upRep ψ))
-weakening (convR Γ⊢δ∶φ Γ⊢ψ∶Ω φ≃ψ) validΔ ρ∶Γ⇒RΔ = convR (weakening Γ⊢δ∶φ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢ψ∶Ω validΔ ρ∶Γ⇒RΔ) {!≃-resp-rep!}
+weakening {ρ = ρ} (convR Γ⊢δ∶φ Γ⊢ψ∶Ω φ≃ψ) validΔ ρ∶Γ⇒RΔ = convR (weakening Γ⊢δ∶φ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢ψ∶Ω validΔ ρ∶Γ⇒RΔ) (≃-resp-rep φ≃ψ)
 weakening (refR Γ⊢M∶A) validΔ ρ∶Γ⇒RΔ = refR (weakening Γ⊢M∶A validΔ ρ∶Γ⇒RΔ)
 weakening (⊃*R Γ⊢P∶φ≡φ' Γ⊢Q∶ψ≡ψ') validΔ ρ∶Γ⇒RΔ = ⊃*R (weakening Γ⊢P∶φ≡φ' validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢Q∶ψ≡ψ' validΔ ρ∶Γ⇒RΔ)
 weakening (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) validΔ ρ∶Γ⇒RΔ = univR (weakening Γ⊢δ∶φ⊃ψ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢ε∶ψ⊃φ validΔ ρ∶Γ⇒RΔ)
@@ -65,7 +65,7 @@ weakening (lllR {B = B} {M = M} {N} ΓAAE⊢P∶Mx≡Ny) validΔ ρ∶Γ⇒RΔ =
 weakening (app*R Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') validΔ ρ∶Γ⇒RΔ = app*R (weakening Γ⊢N∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N'∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢P∶M≡M' validΔ ρ∶Γ⇒RΔ) 
   (weakening Γ⊢Q∶N≡N' validΔ ρ∶Γ⇒RΔ)
 weakening (convER Γ⊢M∶N₁≡N₂ Γ⊢N₁'∶A Γ⊢N₂'∶A N₁≃N₁' N₂≃N₂') validΔ ρ∶Γ⇒RΔ =
-  convER (weakening Γ⊢M∶N₁≡N₂ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N₁'∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N₂'∶A validΔ ρ∶Γ⇒RΔ) {!!} {!!} --(conv-rep N₁≃N₁') (conv-rep N₂≃N₂')
+  convER (weakening Γ⊢M∶N₁≡N₂ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N₁'∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N₂'∶A validΔ ρ∶Γ⇒RΔ) (≃-resp-rep N₁≃N₁') (≃-resp-rep N₂≃N₂')
 
 postulate Prop-Validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → 
                         Γ ⊢ δ ∶ φ → Γ ⊢ φ ∶ ty Ω
@@ -198,7 +198,12 @@ path-substitution {U} {V} {Γ} {Δ} {ρ} {σ} {τ} (ΛR .{U} .{Γ} {A} {M} {B} �
   let step1 : Δ ,T A ,T A ,E var x₁ ≡〈 A 〉 var x₀ ⊢ 
               M ⟦⟦ liftPathSub τ ∶ sub↖ ρ ∼ sub↗ σ ⟧⟧ ∶ 
               appT ((ΛT A M) ⟦ ρ ⟧ ⇑ ⇑ ⇑) (var x₂) ≡〈 B 〉 appT ((ΛT A M) ⟦ σ ⟧ ⇑ ⇑ ⇑) (var x₁)
-      step1 = {!!}
+      step1 = convER 
+              (path-substitution Γ,A⊢M∶B 
+                (liftPathSub-typed τ∶σ∼σ' validΔ) 
+                (sub↖-typed ρ∶Γ⇒Δ) (sub↗-typed σ∶Γ⇒Δ) validΔAAE) 
+                (Mσ-typed ρ∶Γ⇒Δ refl) (Mσ-typed σ∶Γ⇒Δ refl) 
+                (sym (inc (subst (λ x → appT ((ΛT A M ⟦ ρ ⟧) ⇑ ⇑ ⇑) (var x₂) ⇒ x) {!!} {!!}))) {!!}
 {- convER 
                (path-substitution Γ,A⊢M∶B 
                  (liftPathSub-typed τ∶σ∼σ' validΔ) (sub↖-typed ρ∶Γ⇒Δ) (sub↗-typed σ∶Γ⇒Δ) 

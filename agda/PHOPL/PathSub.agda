@@ -127,3 +127,14 @@ extendPS τ P (↑ x) = τ x
 •PS-botsub : ∀ {U V} {τ : PathSub U V} {ρ σ N} → (τ ∶ ρ ≡ σ •PS (x₀:= N)) ∼∼ extendPS τ (N ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧)
 •PS-botsub x₀ = refl
 •PS-botsub (↑ _) = refl
+
+_•SP_ : ∀ {U V W} → Sub V W → PathSub U V → PathSub U W
+(σ •SP τ) x = τ x ⟦ σ ⟧
+
+•SP-comp : ∀ {U V W} {E : Term U} {τ : PathSub U V} {ρ σ} {μ : Sub V W} →
+  E ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ ⟦ μ ⟧ ≡ E ⟦⟦ μ •SP τ ∶ μ • ρ ∼ μ • σ ⟧⟧
+•SP-comp {E = var _} = refl
+•SP-comp {E = app -bot []} = refl
+•SP-comp {E = app -imp (φ ∷ ψ ∷ [])} = cong₂ _⊃*_ (•SP-comp {E = φ}) (•SP-comp {E = ψ})
+•SP-comp {E = app (-lamTerm x) EE} = {!!}
+•SP-comp {E = app -appTerm EE} = {!!}
