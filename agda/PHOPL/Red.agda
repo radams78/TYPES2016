@@ -21,6 +21,14 @@ diamond βE βE = cr _ ref ref
   βT
 ⇒-resp-rep {ρ = ρ} (βE {V} {A} {M} {N} {P} {Q}) = subst (λ x → (app* M N (λλλ A P) Q 〈 ρ 〉) ⇒ x) (botSub₃-liftRep₃ P) βE
 
+sub↖-botSub : ∀ {U V} {σ : Sub U V} {M N P} → σ • (x₀:= M) ∼ (x₂:= M ⟦ σ ⟧ ,x₁:= N ,x₀:= P) • sub↖ σ
+sub↖-botSub x₀ = refl
+sub↖-botSub {σ = σ} {M} {N} {P} (↑ x) = ≡-sym botSub-upRep₃
+
+sub↗-botSub : ∀ {U V} {σ : Sub U V} {M N P} → σ • (x₀:= M) ∼ (x₂:= N ,x₁:= M ⟦ σ ⟧ ,x₀:= P) • sub↗ σ
+sub↗-botSub x₀ = refl
+sub↗-botSub {σ = σ} {M} {N} {P} (↑ x) = ≡-sym botSub-upRep₃
+
 ⇒-resp-ps : ∀ {U V} {M N : Term U} {τ : PathSub U V} {ρ σ} → M ⇒ N → M ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ ⇒ N ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧
 ⇒-resp-ps {V = V} {τ = τ} {ρ} {σ} (βT {U} {A} {M} {N}) = 
   let μ : Sub (extend V pathDom) V
@@ -32,7 +40,7 @@ diamond βE βE = cr _ ref ref
     M ⟦⟦ liftPathSub τ ∶ sub↖ ρ ∼ sub↗ σ ⟧⟧ ⟦ μ ⟧
   ≡⟨⟨ pathSub-•SP M ⟩⟩
     M ⟦⟦ μ •SP liftPathSub τ ∶ μ • sub↖ ρ ∼ μ • sub↗ σ ⟧⟧
-  ≡⟨ pathSub-cong M {!!} {!!} {!!} ⟩
+  ≡⟨⟨ pathSub-cong M •SP-botSub sub↖-botSub sub↗-botSub ⟩⟩
     M ⟦⟦ τ ∶ ρ ≡ σ •PS (x₀:= N) ∶ ρ • (x₀:= N) ∼ σ • (x₀:= N) ⟧⟧
   ≡⟨ {!!} ⟩
     (M ⟦ x₀:= N ⟧) ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧
