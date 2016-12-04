@@ -30,11 +30,11 @@ diamond βE βE = cr _ ref ref
   (let open ≡-Reasoning in 
   begin
     M ⟦⟦ liftPathSub τ ∶ sub↖ ρ ∼ sub↗ σ ⟧⟧ ⟦ μ ⟧
-  ≡⟨ {!!} ⟩
+  ≡⟨⟨ pathSub-•SP M ⟩⟩
     M ⟦⟦ μ •SP liftPathSub τ ∶ μ • sub↖ ρ ∼ μ • sub↗ σ ⟧⟧
-  ≡⟨ {!!} ⟩
+  ≡⟨ pathSub-cong M {!!} {!!} {!!} ⟩
     M ⟦⟦ τ ∶ ρ ≡ σ •PS (x₀:= N) ∶ ρ • (x₀:= N) ∼ σ • (x₀:= N) ⟧⟧
-  ≡⟨ ? ⟩
+  ≡⟨ {!!} ⟩
     (M ⟦ x₀:= N ⟧) ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧
   ∎) 
   βE

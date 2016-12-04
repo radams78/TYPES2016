@@ -148,11 +148,18 @@ botSub-botSub {V} {K} {L} {M} E F G = let COMP = OpFamily.comp SUB in ap-comp-si
 x₂:=_,x₁:=_,x₀:=_ : ∀ {V} {K1} {K2} {K3} → Expression V (varKind K1) → Expression V (varKind K2) → Expression V (varKind K3) → Sub (V , K1 , K2 , K3) V
 x₂:=_,x₁:=_,x₀:=_ M1 M2 M3 = botSub ([] snoc M1 snoc M2 snoc M3)
 
+botSub₃-upRep₃' : ∀ {V K₁ K₂ K₃ L} {M : Expression V L} {N₁ : VExpression V K₁} {N₂ : VExpression V K₂} {N₃ : VExpression V K₃} →
+  (x₂:= N₁ ,x₁:= N₂ ,x₀:= N₃) •SR upRep •SR upRep  •SR upRep ∼ idSub V
+botSub₃-upRep₃' x₀ = refl
+botSub₃-upRep₃' (↑ x₀) = refl
+botSub₃-upRep₃' (↑ (↑ x₀)) = refl
+botSub₃-upRep₃' (↑ (↑ (↑ _))) = refl
+
 postulate botSub-upRep₃ : ∀ {V} {K1} {K2} {K3} {L} {M : Expression V L} 
                           {N1 : Expression V (varKind K1)} {N2 : Expression V (varKind K2)} {N3 : Expression V (varKind K3)} →
                           M ⇑ ⇑ ⇑ ⟦ x₂:= N1 ,x₁:= N2 ,x₀:= N3 ⟧ ≡ M
 
---TODO Definition for Expression varKind
+--TODO Definition for Expression varKind*
 botSub₃-liftRep₃' : ∀ {U} {V} {K2} {K1} {K0}
   {M2 : Expression U (varKind K1)} {M1 : Expression U (varKind K2)} {M0 : Expression U (varKind K0)} {ρ : Rep U V} →
   (x₂:= M2 〈 ρ 〉 ,x₁:= M1 〈 ρ 〉 ,x₀:= M0 〈 ρ 〉) •SR liftRep _ (liftRep _ (liftRep _ ρ))

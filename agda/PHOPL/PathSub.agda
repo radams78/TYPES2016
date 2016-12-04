@@ -12,11 +12,15 @@ _∼∼_ : ∀ {U} {V} → PathSub U V → PathSub U V → Set
 ∼∼-refl : ∀ {U} {V} {τ : PathSub U V} → τ ∼∼ τ
 ∼∼-refl _ = refl
 
+∼∼-sym : ∀ {U V} {τ τ' : PathSub U V} → τ ∼∼ τ' → τ' ∼∼ τ
+∼∼-sym τ∼∼τ' x = ≡-sym (τ∼∼τ' x)
+
 liftPathSub : ∀ {U} {V} → PathSub U V → PathSub (U , -Term) (V , -Term , -Term , -Path)
 liftPathSub τ x₀ = var x₀
 liftPathSub τ (↑ x) = τ x ⇑ ⇑ ⇑
 
-liftPathSub-cong : ∀ {U} {V} {τ τ' : PathSub U V} → τ ∼∼ τ' → liftPathSub τ ∼∼ liftPathSub τ'
+liftPathSub-cong : ∀ {U} {V} {τ τ' : PathSub U V} → 
+  τ ∼∼ τ' → liftPathSub τ ∼∼ liftPathSub τ'
 liftPathSub-cong _ x₀ = refl
 liftPathSub-cong τ∼∼τ' (↑ x) = rep-congl (rep-congl (rep-congl (τ∼∼τ' x)))
 
@@ -26,11 +30,12 @@ _⟦⟦_∶_∼_⟧⟧ : ∀ {U} {V} → Term U → PathSub U V →
 var x ⟦⟦ τ ∶ _ ∼ _ ⟧⟧ = τ x
 app -bot [] ⟦⟦ τ ∶ _ ∼ _ ⟧⟧ = reff ⊥
 app -imp (φ ∷ ψ ∷ []) ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ = φ ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ ⊃* ψ ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧
-app -appTerm (M ∷ N ∷ []) ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ = app* (N ⟦ ρ ⟧) (N ⟦ σ ⟧) (M ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧) (N ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧)
+app -appTerm (M ∷ N ∷ []) ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ = 
+  app* (N ⟦ ρ ⟧) (N ⟦ σ ⟧) (M ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧) (N ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧)
 app (-lamTerm A) (M ∷ []) ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ = λλλ A (M ⟦⟦ liftPathSub τ ∶ sub↖ ρ ∼ sub↗ σ ⟧⟧)
 
 pathSub-cong : ∀ {U} {V} M {τ τ' : PathSub U V} {ρ} {ρ'} {σ} {σ'} →
-               τ ∼∼ τ' → ρ ∼ ρ' → σ ∼ σ' → M ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ ≡ M ⟦⟦ τ' ∶ ρ' ∼ σ' ⟧⟧
+  τ ∼∼ τ' → ρ ∼ ρ' → σ ∼ σ' → M ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ ≡ M ⟦⟦ τ' ∶ ρ' ∼ σ' ⟧⟧
 pathSub-cong (var x) τ∼∼τ' _ _ = τ∼∼τ' x
 pathSub-cong (app -bot []) _ _ _ = refl
 pathSub-cong (app -imp (φ ∷ ψ ∷ [])) τ∼∼τ' ρ∼ρ' σ∼σ' = 
@@ -47,9 +52,6 @@ pathSub-cong (app (-lamTerm A) (M ∷ [])) τ∼∼τ' ρ∼ρ' σ∼σ' =
 x₀::= : ∀ {V} → Path V → PathSub (V , -Term) V
 (x₀::= P) x₀ = P
 (x₀::= P) (↑ x) = reff (var x)
-
-_⋆[_∶_∼_] : ∀ {V} → Term V → Path V → Term V → Term V → Path V
-M ⋆[ P ∶ N ∼ N' ] = app* N N' (reff M) P
 
 refSub : ∀ {V} → PathSub V V
 refSub x = reff (var x)
@@ -77,15 +79,38 @@ pathSub-•PR (app (-lamTerm A) (M ∷ [])) {ρ} {τ} {σ} {σ'} =
   ∎)
 pathSub-•PR (app -appTerm (M ∷ N ∷ [])) = cong₄ app* (≡-sym (sub-•SR N)) (≡-sym (sub-•SR N)) (pathSub-•PR M) (pathSub-•PR N)
 
-_∶_≡_•PS_ : ∀ {U V W} → PathSub V W → Sub V W → Sub V W → Sub U V → PathSub U W
-(τ ∶ σ ≡ σ' •PS ρ) x = ρ _ x ⟦⟦ τ ∶ σ ∼ σ' ⟧⟧
-
 infixr 75 _•RP_
 _•RP_ : ∀ {U} {V} {W} → Rep V W → PathSub U V → PathSub U W
 (ρ •RP τ) x = τ x 〈 ρ 〉
 
-postulate pathSub-•RP : ∀ {U} {V} {W} M {ρ : Rep V W} {τ : PathSub U V} {σ σ' : Sub U V} →
-                         M ⟦⟦ ρ •RP τ ∶ ρ •RS σ ∼ ρ •RS σ' ⟧⟧ ≡ M ⟦⟦ τ ∶ σ ∼ σ' ⟧⟧ 〈 ρ 〉
+liftPathSub-RP : ∀ {U V W} {τ : PathSub U V} {ρ : Rep V W} →
+  liftPathSub (ρ •RP τ) ∼∼ liftsRep pathDom ρ •RP liftPathSub τ
+liftPathSub-RP x₀ = refl
+liftPathSub-RP {τ = τ} {ρ} (↑ x) = let open ≡-Reasoning in 
+  begin
+    τ x 〈 ρ 〉 ⇑ ⇑ ⇑
+  ≡⟨⟨ liftRep-upRep₃ (τ x) ⟩⟩
+    τ x ⇑ ⇑ ⇑ 〈 liftsRep pathDom ρ 〉
+  ∎
+
+pathSub-•RP : ∀ {U} {V} {W} M {ρ : Rep V W} {τ : PathSub U V} {σ σ' : Sub U V} →
+  M ⟦⟦ ρ •RP τ ∶ ρ •RS σ ∼ ρ •RS σ' ⟧⟧ ≡ M ⟦⟦ τ ∶ σ ∼ σ' ⟧⟧ 〈 ρ 〉
+pathSub-•RP (var x) = refl
+pathSub-•RP (app -bot []) = refl
+pathSub-•RP (app -imp (φ ∷ ψ ∷ [])) = cong₂ _⊃*_ (pathSub-•RP φ) (pathSub-•RP ψ)
+pathSub-•RP (app (-lamTerm A) (M ∷ [])) {ρ} {τ} {σ} {σ'} = cong (λλλ A) 
+  (let open ≡-Reasoning in
+  begin
+    M ⟦⟦ liftPathSub (ρ •RP τ) ∶ sub↖ (ρ •RS σ) ∼ sub↗ (ρ •RS σ') ⟧⟧
+  ≡⟨ pathSub-cong M liftPathSub-RP sub↖-RS sub↗-comp₁ ⟩
+    M ⟦⟦ liftsRep pathDom ρ •RP liftPathSub τ ∶ liftsRep pathDom ρ •RS sub↖ σ ∼ liftsRep pathDom ρ •RS sub↗ σ' ⟧⟧
+  ≡⟨ pathSub-•RP M ⟩
+    M ⟦⟦ liftPathSub τ ∶ sub↖ σ ∼ sub↗ σ' ⟧⟧ 〈 liftsRep pathDom ρ 〉
+  ∎)
+pathSub-•RP (app -appTerm (M ∷ N ∷ [])) = cong₄ app* (sub-•RS N) (sub-•RS N) (pathSub-•RP M) (pathSub-•RP N)
+
+_∶_≡_•PS_ : ∀ {U V W} → PathSub V W → Sub V W → Sub V W → Sub U V → PathSub U W
+(τ ∶ σ ≡ σ' •PS ρ) x = ρ _ x ⟦⟦ τ ∶ σ ∼ σ' ⟧⟧
 
 liftPathSub-PS : ∀ {U V W} {τ : PathSub V W} {ρ ρ' : Sub V W} {σ : Sub U V} →
   liftPathSub (τ ∶ ρ ≡ ρ' •PS σ) ∼∼ (liftPathSub τ ∶ sub↖ ρ ≡ sub↗ ρ' •PS liftSub _ σ)
@@ -128,13 +153,34 @@ extendPS τ P (↑ x) = τ x
 •PS-botsub x₀ = refl
 •PS-botsub (↑ _) = refl
 
+infix 25 _•SP_
 _•SP_ : ∀ {U V W} → Sub V W → PathSub U V → PathSub U W
 (σ •SP τ) x = τ x ⟦ σ ⟧
 
-•SP-comp : ∀ {U V W} {E : Term U} {τ : PathSub U V} {ρ σ} {μ : Sub V W} →
-  E ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ ⟦ μ ⟧ ≡ E ⟦⟦ μ •SP τ ∶ μ • ρ ∼ μ • σ ⟧⟧
-•SP-comp {E = var _} = refl
-•SP-comp {E = app -bot []} = refl
-•SP-comp {E = app -imp (φ ∷ ψ ∷ [])} = cong₂ _⊃*_ (•SP-comp {E = φ}) (•SP-comp {E = ψ})
-•SP-comp {E = app (-lamTerm x) EE} = {!!}
-•SP-comp {E = app -appTerm EE} = {!!}
+liftPathSub-SP : ∀ {U V W} {τ : PathSub U V} {μ : Sub V W} → liftPathSub (μ •SP τ) ∼∼ liftsSub pathDom μ •SP liftPathSub τ
+liftPathSub-SP x₀ = refl
+liftPathSub-SP {τ = τ} (↑ x) = ≡-sym (liftSub-upRep₃ (τ x))
+
+pathSub-•SP : ∀ {U V W} (E : Term U) {τ : PathSub U V} {ρ σ} {μ : Sub V W} →
+  E ⟦⟦ μ •SP τ ∶ μ • ρ ∼ μ • σ ⟧⟧ ≡ E ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ ⟦ μ ⟧
+pathSub-•SP (var _) = refl
+pathSub-•SP (app -bot []) = refl
+pathSub-•SP (app -imp (φ ∷ ψ ∷ [])) = cong₂ _⊃*_ (pathSub-•SP φ) (pathSub-•SP ψ)
+pathSub-•SP (app (-lamTerm A) (M ∷ [])) {τ} {ρ} {σ} {μ} = cong (λλλ A) (let open ≡-Reasoning in 
+  begin
+    M ⟦⟦ liftPathSub (μ •SP τ) ∶ sub↖ (μ • ρ) ∼ sub↗ (μ • σ) ⟧⟧
+  ≡⟨ pathSub-cong M liftPathSub-SP sub↖-comp sub↗-comp ⟩
+    M ⟦⟦ liftsSub pathDom μ •SP liftPathSub τ ∶ liftsSub pathDom μ • sub↖ ρ ∼ liftsSub pathDom μ • sub↗ σ ⟧⟧
+  ≡⟨ pathSub-•SP M ⟩
+    M ⟦⟦ liftPathSub τ ∶ sub↖ ρ ∼ sub↗ σ ⟧⟧ ⟦ liftsSub pathDom μ ⟧
+  ∎)
+pathSub-•SP (app -appTerm (M ∷ N ∷ [])) = cong₄ app* (sub-comp N) (sub-comp N) (pathSub-•SP M) (pathSub-•SP N)
+
+•SP-botSub : ∀ {U V} {τ : PathSub U V} {ρ σ M} → (τ ∶ ρ ≡ σ •PS (x₀:= M)) ∼∼ ((x₂:= M ⟦ ρ ⟧ ,x₁:= M ⟦ σ ⟧ ,x₀:= M ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧) •SP liftPathSub τ)
+•SP-botSub x₀ = refl
+•SP-botSub {τ = τ} {ρ} {σ} {M} (↑ x) = let open ≡-Reasoning in
+  begin
+    τ x
+  ≡⟨⟨ botSub-upRep₃ ⟩⟩
+    τ x ⇑ ⇑ ⇑ ⟦ x₂:= M ⟦ ρ ⟧ ,x₁:= M ⟦ σ ⟧ ,x₀:= M ⟦⟦ τ ∶ ρ ∼ σ ⟧⟧ ⟧
+  ∎
