@@ -18,7 +18,7 @@ sub↖ σ _ (↑ x) = σ _ x ⇑ ⇑ ⇑
 
 postulate sub↖-cong : ∀ {U} {V} {ρ σ : Sub U V} → ρ ∼ σ → sub↖ ρ ∼ sub↖ σ
 
-postulate sub↖-RS : ∀ {U} {V} {W} {ρ : Rep V W} {σ : Sub U V} →
+postulate sub↖-•RS : ∀ {U} {V} {W} {ρ : Rep V W} {σ : Sub U V} →
                   sub↖ (ρ •RS σ) ∼ liftRep -Path (liftRep -Term (liftRep -Term ρ)) •RS sub↖ σ
 
 sub↖-comp : ∀ {U V W} {σ : Sub V W} {ρ : Sub U V} → sub↖ (σ • ρ) ∼ liftsSub pathDom σ • sub↖ ρ
@@ -31,10 +31,10 @@ sub↗ σ _ (↑ x) = σ _ x ⇑ ⇑ ⇑
 
 postulate sub↗-cong : ∀ {U} {V} {ρ σ : Sub U V} → ρ ∼ σ → sub↗ ρ ∼ sub↗ σ
 
-sub↗-RS : ∀ {U} {V} {W} {ρ : Rep V W} {σ : Sub U V} →
+sub↗-•RS : ∀ {U} {V} {W} {ρ : Rep V W} {σ : Sub U V} →
   sub↗ (ρ •RS σ) ∼ liftRep -Path (liftRep -Term (liftRep -Term ρ)) •RS sub↗ σ
-sub↗-RS x₀ = refl
-sub↗-RS {ρ = ρ} {σ} (↑ x) = let open ≡-Reasoning in 
+sub↗-•RS x₀ = refl
+sub↗-•RS {ρ = ρ} {σ} (↑ x) = let open ≡-Reasoning in 
   begin
     σ _ x 〈 ρ 〉 ⇑ ⇑ ⇑
   ≡⟨⟨ liftRep-upRep₃ (σ _ x) ⟩⟩
