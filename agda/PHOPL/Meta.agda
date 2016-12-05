@@ -203,7 +203,12 @@ path-substitution {U} {V} {Γ} {Δ} {ρ} {σ} {τ} (ΛR .{U} .{Γ} {A} {M} {B} �
                 (liftPathSub-typed τ∶σ≡σ' validΔ) 
                 (sub↖-typed ρ∶Γ⇒Δ) (sub↗-typed σ∶Γ⇒Δ) validΔAAE) 
                 (Mσ-typed ρ∶Γ⇒Δ refl) (Mσ-typed σ∶Γ⇒Δ refl) 
-                (sym (inc (subst (λ x → appT ((ΛT A M ⟦ ρ ⟧) ⇑ ⇑ ⇑) (var x₂) ⇒ x) {!!} βT))) {!!}
+                (sym (inc (subst (λ x → appT ((ΛT A M ⟦ ρ ⟧) ⇑ ⇑ ⇑) (var x₂) ⇒ x) (let open ≡-Reasoning in 
+              begin
+                M ⟦ liftSub _ ρ ⟧ 〈 liftRep _ upRep 〉 〈 liftRep _ upRep 〉 〈 liftRep _ upRep 〉 ⟦ x₀:= var x₂ ⟧
+              ≡⟨ sub↖-decomp M ⟩
+                M ⟦ sub↖ ρ ⟧
+              ∎) βT))) {!!}
 {- convER 
                (path-substitution Γ,A⊢M∶B 
                  (liftPathSub-typed τ∶σ≡σ' validΔ) (sub↖-typed ρ∶Γ⇒Δ) (sub↗-typed σ∶Γ⇒Δ) 
