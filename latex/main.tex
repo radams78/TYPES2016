@@ -54,6 +54,8 @@
 \newcommand*{\dom}{\ensuremath{\operatorname{dom}}}
 \newcommand{\Path}[3]{\ensuremath{\mathrm{Path} \, {#1} \, {#2} \, {#3}}}
 \newcommand{\nf}{\ensuremath{\ \mathrm{nf}}}
+\newcommand{\Prop}{\mathbf{Prop}}
+\newcommand{\outputt}{\mathrm{output}}
 
 \theoremstyle{plain}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -546,11 +548,11 @@ x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \univ*{\lambda p:\top \rightar
 
 Let $P \equiv \univ*{\lambda p:\top \rightarrow x. e^+ (pI)}{\lambda m:y. \lambda n:\top. e^- m}$.  Then
 
-\begin{align*}
-\therefore & \vdash \triplelambda e:x =_\Omega y. P & : & F =_{\Omega \rightarrow \Omega} I_\Omega \\
-\therefore & \vdash (\reff{H})_{FI}(\triplelambda e:x =_\Omega y. P) & : & \top \rightarrow \top =_\Omega \top \\
-\therefore & \vdash ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- & : & \top \rightarrow \top \rightarrow \top
-\end{align*}
+\begin{align}
+\therefore & \vdash \triplelambda e:x =_\Omega y. P & : & F =_{\Omega \rightarrow \Omega} I_\Omega \label{eq:llleP} \\
+\therefore & \vdash (\reff{H})_{FI}(\triplelambda e:x =_\Omega y. P) & : & \top \rightarrow \top =_\Omega \top \label{eq:llleP2} \\
+\therefore & \vdash ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- & : & \top \rightarrow \top \rightarrow \top \label{eq:llleP3}
+\end{align}
 
 And now we compute:
 
@@ -568,82 +570,76 @@ Therefore, given proofs $\delta, \epsilon : \top$, we have
 
 \subsection{Comparison with Cubical Type Theory}
 
-In cubical type theory, let $\bot$ be any type in $U$ (possibly the empty type, but we do not require this in what follows).  Define
-\[ \top := \bot \rightarrow \bot, \quad I_\bot := \lambda p:\bot.p, \quad I_U := \lambda x:U.x, \quad F := \lambda x:U.\top \rightarrow x, \quad H := \lambda h.h \top \enspace . \]
+In cubical type theory, let $\bot$ be any type in $U$ that is a proposition; that is, there exists a term of type $\Pi x,y:\bot. \Path{\bot}{x}{y}$.  ($\bot$ could be the empty type, but we do not require this in what follows).  Let $\Prop$ be the type of all propositions:
+\[ \Prop \eqdef \Sigma X : U. \Pi x,y : X. \Path{\bot}{X}{x}{y} \enspace . \]
+
+Define
+\[ \top := \bot \rightarrow \bot, \quad I := \lambda X:\Prop.X.1, \quad F := \lambda X : \Prop.\top \rightarrow X.1, \quad H := \lambda h.h \top \enspace . \]
 Then we have
 \[ \vdash \top : U \quad
-\vdash I_\bot  : \bot \rightarrow \bot \quad
-\vdash I_U  : U \rightarrow U \quad
-\vdash F  : U \rightarrow U \quad
-\vdash H  : (U \rightarrow U) \rightarrow U \]
+\vdash I  : \Prop \rightarrow U \quad
+\vdash F  : \Prop \rightarrow U \quad
+\vdash H  : (\Prop \rightarrow U) \rightarrow U \]
 
-We can prove the type $\Sigma f:\top \rightarrow X. Path \, X \, x \, (f I)$ in contractible (we omit the details).  Let $e[X, x, p]$ be the term such that
-\begin{align*} & X : U, x : X, p : \Sigma f:\top \rightarrow X. \Path{X}{x}{(fI)} \\
-\vdash & e[X, x, p] : \Path{(\Sigma f:\top \rightarrow X. \Path{X}{x}{(f I)})}{\langle \lambda t : \top . x, 1_x \rangle}{p}
+We can prove that, if $X$ is a proposition, then the type $\Sigma f:\top \rightarrow X. Path \, X \, x \, (f I)$ is contractible (we omit the details).  Let $e[X, x, p]$ be the term such that
+\begin{align*} & X : \Prop, x : X.1, p : \Sigma f:\top \rightarrow X.1. \Path{X.1}{x}{(fI)} \\
+\vdash & e[X, x, p] : \Path{(\Sigma f:\top \rightarrow X.1. \Path{X.1}{x}{(f I)})}{\langle \lambda t : \top . x, 1_{X.1} \rangle}{p}
 \end{align*}
 
 Let
-\[ step2[X,x] \equiv \langle \langle \lambda t : T.x, 1_x \rangle,
-\lambda p : \Sigma f : T \rightarrow X. \Path{X}{x}{(fI)}. e[X, x, p] \rangle \]
+\[ step2[X,x] \equiv \langle \langle \lambda t : T.x, 1_{X.1} \rangle,
+\lambda p : \Sigma f : T \rightarrow X.1. \Path{X.1}{x}{(fI)}. e[X, x, p] \rangle \]
 Then
-\[ X : U, x : X \vdash step2[X, x] : isContr(\Sigma f:T \rightarrow X. \Path{X}{x}{(fI)}) \]
+\[ X : \Prop, x : X.1 \vdash step2[X, x] : isContr(\Sigma f:T \rightarrow X.1. \Path{X.1}{x}{(fI)}) \]
 
 Let
-\[ step3[X] \equiv \lambda x : X. step2[X, x] \]
+\[ step3[X] \equiv \lambda x : X.1. step2[X, x] \]
 Then
-\[X : U \vdash step3[X] : isEquiv \, (T \rightarrow X) \, X \, (\lambda f : T \rightarrow X. f I) \]
+\[X : \Prop \vdash step3[X] : isEquiv \, (T \rightarrow X.1) \, X.1 \, (\lambda f : T \rightarrow X.1. f I) \]
 
 Let
-\[ E[X] \equiv \langle \lambda f : \top \rightarrow X. f I, step3[X] \rangle \]
+\[ E[X] \equiv \langle \lambda f : \top \rightarrow X.1. f I, step3[X] \rangle \]
 Then
-\[ X : U \vdash E[X] : Equiv \, (\top \rightarrow X) \, X \]
+\[ X : \Prop \vdash E[X] : Equiv \, (\top \rightarrow X.1) \, X.1 \]
 
-From this equivalence, we want to get a path from $\top \rightarrow X$ to $X$ in $U$.  We apply the proof of univalence in \cite{cchm:cubical}
+From this equivalence, we want to get a path from $\top \rightarrow X.1$ to $X.1$ in $U$.  We apply the proof of univalence in \cite{cchm:cubical}
 
 Let
-\[ P[X] \equiv \langle i \rangle Glue [(i = 0) \mapsto (\top \rightarrow X, E[X]), (i = 1) \mapsto (X, equiv^k X)] X \]
+\[ P[X] \equiv \langle i \rangle Glue [(i = 0) \mapsto (\top \rightarrow X.1, E[X]), (i = 1) \mapsto (X.1, equiv^k X.1)] X.1 \]
 Then
-\[ X : U \vdash P[X] : \Path{U}{(\top \rightarrow X)}{X} \]
+\[ X : \Prop \vdash P[X] : \Path{U}{(\top \rightarrow X.1)}{X.1} \]
 
 Let
-\[ P_2 \equiv \langle i \rangle \lambda x : U. P[X] i \]
+\[ P_2 \equiv \langle i \rangle \lambda x : \Prop. P[X] i \]
 Then
-\[ \vdash P_2 : \Path{(U \rightarrow U)}{F}{I} \]
-\[ \vdash \langle i \rangle H (P_2 i) : \Path{(U \rightarrow U)}{\top \rightarrow \top}{\top} \]
-\[ \vdash \langle i \rangle H (P_2 (1 - i)) : \Path{(U \rightarrow U)}{\top}{\top \rightarrow \top} \]
-
-Now we apply transport to this term:
+\[ \vdash P_2 : \Path{(\Prop \rightarrow U)}{F}{I} \]
+This is the term in cubical type theory that corresponds to $\triplelambda e : x =_\Omega y.P$ in HOML (formula \ref{eq:llleP}).  We now construct
+terms corresponding to formulas (\ref{eq:llleP2}) and (\ref{eq:llleP3}):
+\[ \vdash \langle i \rangle H (P_2 i) : \Path{U}{(\top \rightarrow \top)}{\top} \]
 \[ \vdash \lambda x : \top. comp^i (H (P_2 (1 - i))) [] x : \top \rightarrow \top \rightarrow \top \]
-and we calculate:
-\begin{align*}
-output & \equiv \lambda x : \top. comp^i (H (P_2 (1 - i))) [] x
-& = \lambda x : \top. comp^i (P_2 (1 - i) \top) [] x \\
-& = \lambda x : \top. comp^i (P[\top] (1 - i)) [] x \\
-& = \lambda x : \top. comp^i (Glue[(i = 1) \mapsto (\top \rightarrow \top, E[\top]), (i = 0) \mapsto (\top, equiv^k \top)] \top) [] x \\
-& = \lambda x : \top. glue [ 1_\mathbb{F} \mapsto t_1 ] a_1 \\
-\end{align*}
 
-(using the notation from \cite{cchm:cubical} section 6.2)
-
+Let us write $\outputt$ for this term:
+\[ \outputt \eqdef \lambda x : \top. comp^i (H (P_2 (1 - i))) [] x \enspace . \]
+And we calculate (using the notation from \cite{cchm:cubical} section 6.2):
 \begin{align*}
-& = \lambda x : \top. t_1
-& = \lambda x : \top. (equiv \, E[\top] \, [] \, mapid_\top(x)).1 \\
-& = \lambda x : \top. (contr (step2[\top, mapid_\top(x)]) []).1 \\
-& = \lambda x : \top. (comp^i (\Sigma f : \top \rightarrow \top. \Path{\top}{mapid_\top(x)}{(fI)}) [] \langle \lambda t : \top. mapid_\top(x), 1_{mapid_\top(x)} \rangle).1 \\
-& = \lambda x : \top. mapid_{\top \rightarrow \top}(\lambda _ : \top. mapid_\top(x)) \\
-\therefore output \, m \, n & = mapid_{\top \rightarrow \top}(\lambda _ : \top. mapid_\top(m)) n \\
-& \equiv (comp^i (\top \rightarrow \top) [] (\lambda _ : \top. mapid_\top(m))) n \\
-& = mapid_\top(mapid_\top(m))
+& \outputt \\
+= & \lambda x : \top. comp^i (P_2 (1 - i) \top) [] x \\
+= & \lambda x : \top. comp^i (P[\top] (1 - i)) [] x \\
+= & \lambda x : \top. comp^i (Glue[(i = 1) \mapsto (\top \rightarrow \top, E[\top]), (i = 0) \mapsto (\top, equiv^k \top)] \top) [] x \\
+= & \lambda x : \top. glue [ 1_\mathbb{F} \mapsto t_1 ] a_1 \\
+= & \lambda x : \top. t_1 \\
+= & \lambda x : \top. (equiv \, E[\top] \, [] \, mapid_\top(x)).1 \\
+= & \lambda x : \top. (contr (step2[\top, mapid_\top(x)]) []).1 \\
+= & \lambda x : \top. (comp^i (\Sigma f : \top \rightarrow \top. \Path{\top}{mapid_\top(x)}{(fI)}) [] \langle \lambda t : \top. mapid_\top(x), 1_{mapid_\top(x)} \rangle).1 \\
+= & \lambda x : \top. mapid_{\top \rightarrow \top}(\lambda _ : \top. mapid_\top(x)) \\
+\therefore \outputt \, m \, n = & mapid_{\top \rightarrow \top}(\lambda _ : \top. mapid_\top(m)) n \\
+\equiv & (comp^i (\top \rightarrow \top) [] (\lambda _ : \top. mapid_\top(m))) n \\
+= & mapid_\top(mapid_\top(m))
 \end{align*}
 
 This term does not compute any farther.
 
-If we add to cubical type theory the rule $mapid_A(t) = t$, then we have that $output$ reduces to $\lambda m : \top. \lambda n : \top. m$ as in $\lambda o e$.
-
-In the reduction relation given in \cite{huber:canonicity}, we have
-\[ mapid_{\bot \rightarrow \bot}(m) \succ \lambda x : \bot. mapid_\bot(m mapid_\bot(x)) \]
-and so if we add $mapid_\bot(t) \succ t$ we obtain $output \succ \lambda mn.m$.
-
+If we could add to cubical type theory the rule $mapid_A(t) = t$, then we would have that $\outputt$ reduces to $\lambda m : \top. \lambda n : \top. m$ as in $\lambda o e$.
 \section{Computable Expressions}
 
 \begin{definition}[Computable Expression]

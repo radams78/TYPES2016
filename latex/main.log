@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  2 DEC 2016 17:52
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  5 DEC 2016 17:08
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -777,33 +777,33 @@ Package: suffix 2006/07/15 1.5 Variant command support
 ) (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 65.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 65.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 67.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 67.
 
 (/usr/share/texmf/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 65.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 67.
 
 (/usr/share/texmf/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2007/01/14 v1.3 Font defs for Latin Modern
 )
-Package hyperref Info: Link coloring OFF on input line 65.
+Package hyperref Info: Link coloring OFF on input line 67.
 
 (/usr/share/texmf/tex/latex/hyperref/nameref.sty
 Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
@@ -813,8 +813,8 @@ Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
 )
 \c@section@level=\count126
 )
-LaTeX Info: Redefining \ref on input line 65.
-LaTeX Info: Redefining \pageref on input line 65.
+LaTeX Info: Redefining \ref on input line 67.
+LaTeX Info: Redefining \pageref on input line 67.
  (./main.out) (./main.out)
 \@outlinefile=\write4
 \openout4 = `main.out'.
@@ -836,40 +836,40 @@ Package microtype Info: No adjustment of character kerning.
 File: mt-cmr.cfg 2005/11/07 v1.9 microtype config. file: Computer Modern Roman 
 (RS)
 )
-LaTeX Font Info:    Try loading font information for T1+lmss on input line 67.
+LaTeX Font Info:    Try loading font information for T1+lmss on input line 69.
 
 (/usr/share/texmf/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2007/01/14 v1.3 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 67.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 69.
 
 (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2007/01/14 v1.3 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 67.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 69.
 
 (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2007/01/14 v1.3 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 67.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 69.
 
 
 (/usr/share/texmf/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2007/01/14 v1.3 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 67.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 69.
 
 
 (/usr/share/texmf/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2007/01/14 v1.3 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 67.
+(Font)              <10> on input line 69.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 67.
+(Font)              <7> on input line 69.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 67.
-LaTeX Font Info:    Try loading font information for U+msa on input line 67.
+(Font)              <5> on input line 69.
+LaTeX Font Info:    Try loading font information for U+msa on input line 69.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
@@ -877,7 +877,7 @@ File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 (/usr/share/texmf/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 67.
+LaTeX Font Info:    Try loading font information for U+msb on input line 69.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
@@ -886,40 +886,40 @@ File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 67.
+(Font)              <12> on input line 69.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 67.
+(Font)              <8> on input line 69.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 67.
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 67.
+(Font)              <6> on input line 69.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 69.
 
 (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2007/01/14 v1.3 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <9.5> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 67.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 69.
 \openout3 = `main.vtc'.
 
-LaTeX Font Info:    Calculating math sizes for size <9.5> on input line 72.
+LaTeX Font Info:    Calculating math sizes for size <9.5> on input line 74.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9.5> on input line 72.
+(Font)              <9.5> on input line 74.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6.64996> on input line 72.
+(Font)              <6.64996> on input line 74.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <4.75> on input line 72.
+(Font)              <4.75> on input line 74.
 
 
 LaTeX Font Warning: Font shape `U/msa/m/n' in size <9.5> not available
-(Font)              size <9> substituted on input line 72.
+(Font)              size <9> substituted on input line 74.
 
 
 LaTeX Font Warning: Font shape `U/msb/m/n' in size <9.5> not available
-(Font)              size <9> substituted on input line 72.
+(Font)              size <9> substituted on input line 74.
 
 <cc-by.pdf, id=69, 88.33pt x 31.11626pt>
 File: cc-by.pdf Graphic file (type pdf)
  <use cc-by.pdf>
-LaTeX Font Info:    Try loading font information for TS1+lmr on input line 95.
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 97.
 
 (/usr/share/texmf/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2007/01/14 v1.3 Font defs for Latin Modern
@@ -931,57 +931,52 @@ File: lipics-logo-bw.pdf Graphic file (type pdf)
 
 {/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map} <./cc-by.pdf> <./lipics-l
 ogo-bw.pdf>] [2]
-LaTeX Font Info:    Try loading font information for OT1+lmss on input line 161
+LaTeX Font Info:    Try loading font information for OT1+lmss on input line 163
 .
 
 (/usr/share/texmf/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2007/01/14 v1.3 Font defs for Latin Modern
 ) [3]
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 201.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 203.
 LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <10> not available
-(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 201.
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 203.
 
  [4] [5]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 397.
+(Font)              <9> on input line 399.
  [6] [7]
-LaTeX Font Info:    Calculating math sizes for size <8.5> on input line 494.
+LaTeX Font Info:    Calculating math sizes for size <8.5> on input line 496.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8.5> on input line 494.
+(Font)              <8.5> on input line 496.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5.94997> on input line 494.
+(Font)              <5.94997> on input line 496.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <4.25> on input line 494.
+(Font)              <4.25> on input line 496.
 
 
 LaTeX Font Warning: Font shape `U/msa/m/n' in size <8.5> not available
-(Font)              size <8> substituted on input line 494.
+(Font)              size <8> substituted on input line 496.
 
 
 LaTeX Font Warning: Font shape `U/msa/m/n' in size <4.25> not available
-(Font)              size <5> substituted on input line 494.
+(Font)              size <5> substituted on input line 496.
 
 
 LaTeX Font Warning: Font shape `U/msb/m/n' in size <8.5> not available
-(Font)              size <8> substituted on input line 494.
+(Font)              size <8> substituted on input line 496.
 
 
 LaTeX Font Warning: Font shape `U/msb/m/n' in size <4.25> not available
-(Font)              size <5> substituted on input line 494.
+(Font)              size <5> substituted on input line 496.
 
 [8] [9]
-Overfull \hbox (128.63664pt too wide) in paragraph at lines 624--624
-[] 
- []
-
-
-Overfull \hbox (231.59383pt too wide) in paragraph at lines 637--637
+Overfull \hbox (59.36942pt too wide) in paragraph at lines 638--638
 [] 
  []
 
 [10] [11] [12] [13]
-Overfull \hbox (6.56285pt too wide) detected at line 901
+Overfull \hbox (6.56285pt too wide) detected at line 897
   $\OT1/lmr/m/n/10 ^^A \OMS/lmsy/m/n/10 j[]\OT1/lmr/m/n/10 = (\OML/lmm/m/it/10 
 ^^U  ^^U  ^^Ue \OT1/lmr/m/n/10 : \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 =[] \OML/lm
 m/m/it/10 y:M\OMS/lmsy/m/n/10 f\OML/lmm/m/it/10 ^^\ \OT1/lmr/m/n/10 : \OML/lmm/
@@ -1001,10 +996,10 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 9559 strings out of 256214
- 138074 string characters out of 1917001
- 232155 words of memory out of 1500000
- 12380 multiletter control sequences out of 10000+200000
+ 9565 strings out of 256214
+ 138108 string characters out of 1917001
+ 232234 words of memory out of 1500000
+ 12384 multiletter control sequences out of 10000+200000
  220770 words of font info for 187 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
  43i,17n,44p,941b,485s stack positions out of 5000i,500n,6000p,200000b,15000s
@@ -1029,9 +1024,9 @@ lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/tex
 mf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/m
 sam10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm10.pfb></usr/share/texm
 f/fonts/type1/bluesky/ams/msbm7.pfb>
-Output written on main.pdf (15 pages, 559192 bytes).
+Output written on main.pdf (15 pages, 560239 bytes).
 PDF statistics:
- 423 PDF objects out of 1000 (max. 8388607)
- 105 named destinations out of 1000 (max. 131072)
+ 427 PDF objects out of 1000 (max. 8388607)
+ 107 named destinations out of 1000 (max. 131072)
  60569 words of extra memory for PDF output out of 61914 (max. 10000000)
 

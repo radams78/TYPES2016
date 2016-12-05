@@ -13,11 +13,6 @@ Martin Hofmann.
 \newblock In {\em Semantics and Logics of Computation}, pages 79--130.
   Cambridge University Press, 1997.
 
-\bibitem{huber:canonicity}
-Simon Huber.
-\newblock Canonicity for cubical type theory.
-\newblock \texttt{arXiv:1607.04156}, 2016.
-
 \bibitem{ML:ITT}
 Per Martin-L{\"o}f.
 \newblock {\em Intuitionistic Type Theory}.
