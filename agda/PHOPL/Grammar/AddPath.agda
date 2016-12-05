@@ -123,3 +123,10 @@ sub↗-• {σ = σ} {ρ} (↑ x) = let open ≡-Reasoning in
     ρ _ x ⇑ ⟦ sub↗ σ ⟧
   ∎
 
+sub↖-botSub : ∀ {U V} {σ : Sub U V} {M N P} → σ • (x₀:= M) ∼ (x₂:= M ⟦ σ ⟧ ,x₁:= N ,x₀:= P) • sub↖ σ
+sub↖-botSub x₀ = refl
+sub↖-botSub {σ = σ} {M} {N} {P} (↑ x) = ≡-sym botSub-upRep₃
+
+sub↗-botSub : ∀ {U V} {σ : Sub U V} {M N P} → σ • (x₀:= M) ∼ (x₂:= N ,x₁:= M ⟦ σ ⟧ ,x₀:= P) • sub↗ σ
+sub↗-botSub x₀ = refl
+sub↗-botSub {σ = σ} {M} {N} {P} (↑ x) = ≡-sym botSub-upRep₃
