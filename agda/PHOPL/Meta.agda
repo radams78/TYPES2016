@@ -67,13 +67,24 @@ weakening (app*R Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') validΔ
 weakening (convER Γ⊢M∶N₁≡N₂ Γ⊢N₁'∶A Γ⊢N₂'∶A N₁≃N₁' N₂≃N₂') validΔ ρ∶Γ⇒RΔ =
   convER (weakening Γ⊢M∶N₁≡N₂ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N₁'∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N₂'∶A validΔ ρ∶Γ⇒RΔ) (≃-resp-rep N₁≃N₁') (≃-resp-rep N₂≃N₂')
 
-postulate Prop-Validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → 
-                        Γ ⊢ δ ∶ φ → Γ ⊢ φ ∶ ty Ω
+context-validity-Prop : ∀ {V} {Γ : Context V} {p : Var V -Proof} →
+  valid Γ → Γ ⊢ typeof p Γ ∶ ty Ω
+context-validity-Prop {p = ()} empR
+context-validity-Prop {p = ↑ p} (ctxTR validΓ) = weakening (context-validity-Prop validΓ) (ctxTR validΓ) {!!}
+context-validity-Prop {p = p} (ctxPR x) = {!!}
+context-validity-Prop (ctxER x x₁) = {!!}
+
+Prop-Validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → 
+  Γ ⊢ δ ∶ φ → Γ ⊢ φ ∶ ty Ω
+Prop-Validity (varR x validΓ) = {!!}
+Prop-Validity (appPR Γ⊢δ∶φ Γ⊢δ∶φ₁) = {!!}
+Prop-Validity (ΛPR Γ⊢δ∶φ Γ⊢δ∶φ₁ Γ⊢δ∶φ₂) = {!!}
+Prop-Validity (convR Γ⊢δ∶φ Γ⊢δ∶φ₁ x) = {!!}
+Prop-Validity (plusR Γ⊢δ∶φ) = {!!}
+Prop-Validity (minusR Γ⊢δ∶φ) = {!!}
 
 postulate change-codR : ∀ {U} {V} {ρ : Rep U V} {Γ : Context U} {Δ Δ' : Context V} →
                       ρ ∶ Γ ⇒R Δ → Δ ≡ Δ' → ρ ∶ Γ ⇒R Δ'
-
-postulate upRep-typed : ∀ {V} {Γ : Context V} {K} A → upRep ∶ Γ ⇒R _,_ {K = K} Γ A
 
 postulate Generation-ΛP : ∀ {V} {Γ : Context V} {φ} {δ} {ε} {ψ} →
                           Γ ⊢ appP (ΛP φ δ) ε ∶ ψ →
@@ -161,7 +172,7 @@ postulate rep-comp₃ : ∀ {U V₁ V₂ V₃ C K} (E : Subexp U C K) {ρ₃ : R
 
 weakening-addpath : ∀ {V} {Γ : Context V} {K} {E : Expression V (varKind K)} {T : Expression V (parent K)} {A} → Γ ⊢ E ∶ T → addpath Γ A ⊢ E ⇑ ⇑ ⇑ ∶ T ⇑ ⇑ ⇑
 weakening-addpath {Γ = Γ} {E = E} {T} {A = A} Γ⊢T∶E = subst₂ (λ t e → addpath Γ A ⊢ t ∶ e) (rep-comp₃ E) (rep-comp₃ T) (weakening Γ⊢T∶E (valid-addpath (context-validity Γ⊢T∶E)) 
-  (•R-typed {Θ = addpath Γ A} (•R-typed {Θ = addpath Γ A} (upRep-typed (var x₁ ≡〈 A 〉 var x₀)) (upRep-typed (ty A))) (upRep-typed (ty A))))
+  (•R-typed {Θ = addpath Γ A} (•R-typed {Θ = addpath Γ A} upRep-typed upRep-typed) upRep-typed))
 
 liftPathSub-typed : ∀ {U} {V} {τ : PathSub U V} {ρ} {σ} {Γ} {A} {Δ} → 
   τ ∶ ρ ≡ σ ∶ Γ ⇒ Δ → valid Δ → liftPathSub τ ∶ sub↖ ρ ≡ sub↗ σ ∶ Γ ,T A ⇒ Δ ,T  A ,T  A ,E var x₁ ≡〈 A 〉 var x₀
