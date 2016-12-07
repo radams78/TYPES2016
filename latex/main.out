@@ -8,8 +8,10 @@
 \BOOKMARK [2][-]{subsection.2.2}{Rules of Deduction}{section.2}
 \BOOKMARK [3][-]{subsubsection.2.2.1}{Metatheorems}{subsection.2.2}
 \BOOKMARK [3][-]{subsubsection.2.2.2}{Substitutions}{subsection.2.2}
-\BOOKMARK [1][-]{section.3}{Example}{}
+\BOOKMARK [1][-]{section.3}{Examples}{}
 \BOOKMARK [2][-]{subsection.3.1}{Comparison with Cubical Type Theory}{section.3}
+\BOOKMARK [2][-]{subsection.3.2}{Provable Parametricity}{section.3}
 \BOOKMARK [1][-]{section.4}{Computable Expressions}{}
 \BOOKMARK [1][-]{section.5}{Proof of Canonicity}{}
 \BOOKMARK [1][-]{section.6}{Conclusion}{}
+\BOOKMARK [1][-]{appendix.A}{Calculation in Cubical Type Theory}{}
