@@ -70,16 +70,46 @@ weakening (convER Γ⊢M∶N₁≡N₂ Γ⊢N₁'∶A Γ⊢N₂'∶A N₁≃N₁
 context-validity-Prop : ∀ {V} {Γ : Context V} {p : Var V -Proof} →
   valid Γ → Γ ⊢ typeof p Γ ∶ ty Ω
 context-validity-Prop {p = ()} empR
-context-validity-Prop {p = ↑ p} (ctxTR validΓ) = weakening (context-validity-Prop validΓ) (ctxTR validΓ) {!!}
-context-validity-Prop {p = p} (ctxPR x) = {!!}
-context-validity-Prop (ctxER x x₁) = {!!}
+context-validity-Prop {p = ↑ p} (ctxTR {A = A} validΓ) = weakening (context-validity-Prop validΓ) (ctxTR validΓ) (upRep-typed (ty A))
+context-validity-Prop {p = x₀} (ctxPR {φ = φ} Γ⊢φ∶Ω) = weakening Γ⊢φ∶Ω (ctxPR Γ⊢φ∶Ω) (upRep-typed φ)
+context-validity-Prop {p = ↑ p} (ctxPR {φ = φ} Γ⊢φ∶Ω) = weakening (context-validity-Prop (context-validity Γ⊢φ∶Ω)) (ctxPR Γ⊢φ∶Ω) (upRep-typed φ)
+context-validity-Prop {p = ↑ p} (ctxER {M = M} {N} {A} Γ⊢M∶A Γ⊢N∶A) = weakening (context-validity-Prop (context-validity Γ⊢M∶A)) (ctxER Γ⊢M∶A Γ⊢N∶A) (upRep-typed (M ≡〈 A 〉 N))
+--TODO Refactor - general ctx rule
+
+type : ∀ {V} → Equation V → Type
+type (app (-eq A) _) = A
+
+type-rep : ∀ {U V} {E : Equation U} {ρ : Rep U V} → type (E 〈 ρ 〉) ≡ type E
+type-rep {E = app (-eq _) _} = refl
+
+left : ∀ {V} → Equation V → Term V
+left (app (-eq _) (M ∷ _ ∷ [])) = M
+
+context-validity-Eq₁ : ∀ {V} {Γ : Context V} {e : Var V -Path} → valid Γ → Γ ⊢ left (typeof e Γ) ∶ ty (type (typeof e Γ))
+context-validity-Eq₁ {e = ()} empR
+context-validity-Eq₁ {e = ↑ e} (ctxTR {Γ = Γ} {A = A} validΓ) = subst₂ (λ x y → Γ ,T A ⊢ x ∶ y) {!!} {!refl!} (weakening (context-validity-Eq₁ {e = e} validΓ) (ctxTR validΓ) (upRep-typed (ty A)))
+context-validity-Eq₁ {e = ↑ e} (ctxPR x) = {!!}
+context-validity-Eq₁ {e = e} (ctxER x x₁) = {!!}
+--TODO Duplication
+
+⊃-gen₂ : ∀ {V} {Γ : Context V} {φ} {ψ} {A} → Γ ⊢ φ ⊃ ψ ∶ A → Γ ⊢ ψ ∶ ty Ω
+⊃-gen₂ (⊃R _ Γ⊢ψ∶Ω) = Γ⊢ψ∶Ω
+
+Eq-Validity₁ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P ∶ E → E ≡ M ≡〈 A 〉 N → Γ ⊢ M ∶ ty A
+Eq-Validity₁ (varR x validΓ) E≡M≡N = {!!}
+Eq-Validity₁ (refR Γ⊢P∶M≡N) E≡M≡N = {!!}
+Eq-Validity₁ (⊃*R Γ⊢P∶M≡N Γ⊢P∶M≡N₁) E≡M≡N = {!!}
+Eq-Validity₁ (univR Γ⊢P∶M≡N Γ⊢P∶M≡N₁) E≡M≡N = {!!}
+Eq-Validity₁ (lllR Γ⊢P∶M≡N) E≡M≡N = {!!}
+Eq-Validity₁ (app*R Γ⊢P∶M≡N Γ⊢P∶M≡N₁ Γ⊢P∶M≡N₂ Γ⊢P∶M≡N₃) E≡M≡N = {!!}
+Eq-Validity₁ (convER Γ⊢P∶M≡N Γ⊢P∶M≡N₁ Γ⊢P∶M≡N₂ M≃M' N≃N') E≡M≡N = {!!}
 
 Prop-Validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → 
   Γ ⊢ δ ∶ φ → Γ ⊢ φ ∶ ty Ω
-Prop-Validity (varR x validΓ) = {!!}
-Prop-Validity (appPR Γ⊢δ∶φ Γ⊢δ∶φ₁) = {!!}
-Prop-Validity (ΛPR Γ⊢δ∶φ Γ⊢δ∶φ₁ Γ⊢δ∶φ₂) = {!!}
-Prop-Validity (convR Γ⊢δ∶φ Γ⊢δ∶φ₁ x) = {!!}
+Prop-Validity (varR _ validΓ) = context-validity-Prop validΓ
+Prop-Validity (appPR Γ⊢δ∶φ⊃ψ _) = ⊃-gen₂ (Prop-Validity Γ⊢δ∶φ⊃ψ)
+Prop-Validity (ΛPR Γ⊢φ∶Ω Γ⊢ψ∶Ω _) = ⊃R Γ⊢φ∶Ω Γ⊢ψ∶Ω
+Prop-Validity (convR _ Γ⊢φ∶Ω _) = Γ⊢φ∶Ω
 Prop-Validity (plusR Γ⊢δ∶φ) = {!!}
 Prop-Validity (minusR Γ⊢δ∶φ) = {!!}
 
@@ -148,8 +178,6 @@ postulate extendSub-upRep : ∀ {U} {V} {σ : Sub U V} {K} {M : Expression V (va
 
 postulate ⊃-gen₁ : ∀ {V} {Γ : Context V} {φ} {ψ} → Γ ⊢ φ ⊃ ψ ∶ ty Ω → Γ ⊢ φ ∶ ty Ω
 
-postulate ⊃-gen₂ : ∀ {V} {Γ : Context V} {φ} {ψ} → Γ ⊢ φ ⊃ ψ ∶ ty Ω → Γ ⊢ ψ ∶ ty Ω
-
 postulate Type-Reduction : ∀ {V} {Γ : Context V} {K} {M : Expression V (varKind K)} {A} {B} →
                          Γ ⊢ M ∶ A → A ↠ B → Γ ⊢ M ∶ B
 
@@ -172,7 +200,7 @@ postulate rep-comp₃ : ∀ {U V₁ V₂ V₃ C K} (E : Subexp U C K) {ρ₃ : R
 
 weakening-addpath : ∀ {V} {Γ : Context V} {K} {E : Expression V (varKind K)} {T : Expression V (parent K)} {A} → Γ ⊢ E ∶ T → addpath Γ A ⊢ E ⇑ ⇑ ⇑ ∶ T ⇑ ⇑ ⇑
 weakening-addpath {Γ = Γ} {E = E} {T} {A = A} Γ⊢T∶E = subst₂ (λ t e → addpath Γ A ⊢ t ∶ e) (rep-comp₃ E) (rep-comp₃ T) (weakening Γ⊢T∶E (valid-addpath (context-validity Γ⊢T∶E)) 
-  (•R-typed {Θ = addpath Γ A} (•R-typed {Θ = addpath Γ A} upRep-typed upRep-typed) upRep-typed))
+  (•R-typed {Θ = addpath Γ A} (•R-typed {Θ = addpath Γ A} (upRep-typed _) (upRep-typed _)) (upRep-typed _)))
 
 liftPathSub-typed : ∀ {U} {V} {τ : PathSub U V} {ρ} {σ} {Γ} {A} {Δ} → 
   τ ∶ ρ ≡ σ ∶ Γ ⇒ Δ → valid Δ → liftPathSub τ ∶ sub↖ ρ ≡ sub↗ σ ∶ Γ ,T A ⇒ Δ ,T  A ,T  A ,E var x₁ ≡〈 A 〉 var x₀

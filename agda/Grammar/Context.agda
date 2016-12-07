@@ -42,8 +42,8 @@ _,,,_ : ∀ {V AA} → Context V → snocTypes V AA → Context (extend SNOCLIST
 idRep-typed : ∀ {V} {Γ : Context V} → idRep V ∶ Γ ⇒R Γ
 idRep-typed _ = ≡-sym rep-idRep
 
-upRep-typed : ∀ {V Γ K} {A : Expression V (parent K)} → upRep ∶ Γ ⇒R (Γ , A)
-upRep-typed _ = refl
+upRep-typed : ∀ {V Γ K} (A : Expression V (parent K)) → upRep ∶ Γ ⇒R (Γ , A)
+upRep-typed _ _ = refl
 
 liftRep-typed : ∀ {U V ρ K} {Γ : Context U} {Δ : Context V} {A : Expression U (parent K)} → 
   ρ ∶ Γ ⇒R Δ → liftRep K ρ ∶ (Γ , A) ⇒R (Δ , A 〈 ρ 〉)
