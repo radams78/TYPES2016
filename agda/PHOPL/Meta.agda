@@ -70,7 +70,7 @@ weakening (convER Γ⊢M∶N₁≡N₂ Γ⊢N₁'∶A Γ⊢N₂'∶A N₁≃N₁
 context-validity-Prop : ∀ {V} {Γ : Context V} {p : Var V -Proof} →
   valid Γ → Γ ⊢ typeof p Γ ∶ ty Ω
 context-validity-Prop {p = ()} empR
-context-validity-Prop {p = ↑ p} (ctxTR validΓ) = weakening (context-validity-Prop validΓ) (ctxTR validΓ) {!!}
+context-validity-Prop {p = ↑ p} (ctxTR {A = A} validΓ) = weakening (context-validity-Prop validΓ) (ctxTR validΓ) {!upRep-typed A!}
 context-validity-Prop {p = p} (ctxPR x) = {!!}
 context-validity-Prop (ctxER x x₁) = {!!}
 
