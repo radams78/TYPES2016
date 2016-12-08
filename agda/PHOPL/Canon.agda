@@ -29,3 +29,16 @@ red-canon : ∀ {V} {φ ψ : Term V} {θ : CanonProp} →
 red-canon {V} {φ} {ψ} {θ} φ↠θ φ≃ψ = 
   let cr χ θ↠χ ψ↠χ = diamond-CR (λ _ _ _ → diamond) (decode θ) ψ (trans (sym (sub-RT-RST φ↠θ)) φ≃ψ) in 
   subst (λ x → ψ ↠ x) (≡-sym (canon-nf' θ θ↠χ refl)) ψ↠χ
+
+data is-⊃ {V} : Term V → Set where
+  ⊃I : ∀ {φ} {ψ} → is-⊃ (φ ⊃ ψ)
+
+imp-red-imp : ∀ {V} {E F : Term V} → E ↠ F → is-⊃ E → is-⊃ F
+imp-red-imp (inc (impl _)) ⊃I = ⊃I
+imp-red-imp (inc (impr _)) ⊃I = ⊃I
+imp-red-imp ref is⊃E = is⊃E
+imp-red-imp (trans E↠F F↠G) is⊃E = imp-red-imp F↠G (imp-red-imp E↠F is⊃E)
+
+imp-not-red-bot : ∀ {V} {φ ψ : Term V} → φ ⊃ ψ ↠ ⊥ → Empty
+imp-not-red-bot φ⊃ψ↠⊥ with imp-red-imp φ⊃ψ↠⊥ ⊃I
+imp-not-red-bot φ⊃ψ↠⊥ | ()

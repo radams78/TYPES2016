@@ -1,4 +1,5 @@
 module PHOPL.Compute where
+open import Data.Empty hiding (⊥)
 open import Data.Unit
 open import Data.Product renaming (_,_ to _,p_)
 open import Prelims
@@ -53,3 +54,32 @@ expansionT ⊧N∶A M⇒N = conversionE (expansionE ⊧N∶A (⇒-resp-ps M⇒N)
 expansionE {A = Ω} (⊧Q+∶φ⊃ψ ,p ⊧Q-∶ψ⊃φ) P⇒Q = 
   expansionP ⊧Q+∶φ⊃ψ (plusR P⇒Q) ,p expansionP ⊧Q-∶ψ⊃φ (minusR P⇒Q)
 expansionE {A = A ⇛ B} ⊧Q∶M≡M' P⇒Q N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N' = expansionE (⊧Q∶M≡M' N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N') (app*l P⇒Q)
+
+reductionPC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC δ ∶ θ → δ ⇒ ε → ⊧PC ε ∶ θ
+reductionPC {V} {ε = ε} {θ = bot} (ν ,p δ↠ν) δ⇒ε = 
+  let cr μ ε↠μ ν⇒?μ = diamond-R-RT (λ _ _ _ → diamond) _ _ _ (inc δ⇒ε) δ↠ν in 
+  let μ' ,p μ≡μ' = neutralP-red ν⇒?μ in 
+  μ' ,p subst (λ x → ε ↠ x) μ≡μ' ε↠μ
+reductionPC {θ = imp θ θ'} ⊧δ∶θ⊃θ' δ⇒δ' ε ⊧ε∶θ = reductionPC (⊧δ∶θ⊃θ' ε ⊧ε∶θ) (appPl δ⇒δ')
+
+reductionP : ∀ {V} {δ ε : Proof V} {φ} → ⊧P δ ∶ φ → δ ⇒ ε → ⊧P ε ∶ φ
+reductionP (θ ,p φ↠θ ,p ⊧ε∶θ) δ⇒ε = θ ,p φ↠θ ,p reductionPC ⊧ε∶θ δ⇒ε
+
+reductionT : ∀ {V} {M N : Term V} {A} → ⊧T M ∶ A → M ⇒ N → ⊧T N ∶ A
+reductionE : ∀ {V} {P Q : Path V} {M A N} → ⊧E P ∶ M ≡〈 A 〉 N → P ⇒ Q → ⊧E Q ∶ M ≡〈 A 〉 N
+
+reductionT ⊧N∶A M⇒N = conversionE (reductionE ⊧N∶A (⇒-resp-ps M⇒N)) (inc M⇒N) (inc M⇒N)
+
+reductionE {A = Ω} (⊧Q+∶φ⊃ψ ,p ⊧Q-∶ψ⊃φ) P⇒Q = 
+  reductionP ⊧Q+∶φ⊃ψ (plusR P⇒Q) ,p reductionP ⊧Q-∶ψ⊃φ (minusR P⇒Q)
+reductionE {A = A ⇛ B} ⊧Q∶M≡M' P⇒Q N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N' = reductionE (⊧Q∶M≡M' N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N') (app*l P⇒Q)
+--TODO Duplication
+
+postulate Lemma29 : ∀ {V} {M : Term V} {A B} → ⊧T M ∶ A ⇛ B → Σ[ N ∈ Term (V , -Term) ] M ↠ ΛT A N
+{- Prove this without using Lemma 28.
+Sketch: We have M{}: M = M.  Let B = B1 -> ... -> Bn.  Then M{} ref(x) ref(y1) ... ref(yn) : M x y1 ... yn = M x y1 ... yn.
+Therefore, M x y1 ... yn reduces to a canonical proposition.  Therefore M reduces to a lambda-term. -}
+
+⊧refPC : ∀ {V} {φ : Term V} → ⊧T φ ∶ Ω → ⊧E reff φ ∶ φ ≡〈 Ω 〉 φ
+⊧refPC ((bot ,p φ⊃φ↠θ ,p proj₂) ,p proj₃) = ⊥-elim (imp-not-red-bot φ⊃φ↠θ)
+⊧refPC {V} {φ} ((imp θ θ₁ ,p φ⊃φ↠θ ,p proj₂) ,p proj₃) = {!!}

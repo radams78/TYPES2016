@@ -35,6 +35,7 @@ module PHOPLgrammar where
   -nvEq : ExpKind
   -nvEq = nonVarKind -Equation
 
+  infix 25 _⇛_
   data Type : Set where
     Ω : Type
     _⇛_ : Type → Type → Type

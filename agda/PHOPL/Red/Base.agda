@@ -21,32 +21,36 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒ Q' → P ⊃* Q ⇒ P ⊃* Q'
   app*l : ∀ {V} {M N : Term V} {P P' Q} → P ⇒ P' → app* M N P Q ⇒ app* M N P' Q
 
+infix 10 _⇒?_
+_⇒?_ : ∀ {V K} → VExpression V K → VExpression V K → Set
+_⇒?_ = RClose _⇒_
+
 --TODO Duplication below
-⇒?-appTl : ∀ {V} {M M' N : Term V} → RClose _⇒_ M M' → RClose _⇒_ (appT M N) (appT M' N)
+⇒?-appTl : ∀ {V} {M M' N : Term V} → M ⇒? M' → appT M N ⇒? appT M' N
 ⇒?-appTl = respects-R' _ _⇒_ (λ _ _ → appTl) _ _
 
-⇒?-impl : ∀ {V} {φ φ' ψ : Term V} → RClose _⇒_ φ φ' → RClose _⇒_ (φ ⊃ ψ) (φ' ⊃ ψ)
+⇒?-impl : ∀ {V} {φ φ' ψ : Term V} → φ ⇒? φ' → φ ⊃ ψ ⇒? φ' ⊃ ψ
 ⇒?-impl = respects-R' _ _⇒_ (λ _ _ → impl) _ _
 
-⇒?-impr : ∀ {V} {φ ψ ψ' : Term V} → RClose _⇒_ ψ ψ' → RClose _⇒_ (φ ⊃ ψ) (φ ⊃ ψ')
+⇒?-impr : ∀ {V} {φ ψ ψ' : Term V} → ψ ⇒? ψ' → φ ⊃ ψ ⇒? φ ⊃ ψ'
 ⇒?-impr = respects-R' _ _⇒_ (λ _ _ → impr) _ _
 
-⇒?-imp*l : ∀ {V} {P P' Q : Path V} → RClose _⇒_ P P' → RClose _⇒_ (P ⊃* Q) (P' ⊃* Q)
+⇒?-imp*l : ∀ {V} {P P' Q : Path V} → P ⇒? P' → P ⊃* Q ⇒? P' ⊃* Q
 ⇒?-imp*l = respects-R' _ _⇒_ (λ _ _ → imp*l) _ _
 
-⇒?-imp*r : ∀ {V} {P Q Q' : Path V} → RClose _⇒_ Q Q' → RClose _⇒_ (P ⊃* Q) (P ⊃* Q')
+⇒?-imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒? Q' → P ⊃* Q ⇒? P ⊃* Q'
 ⇒?-imp*r = respects-R' _ _⇒_ (λ _ _ → imp*r) _ _
 
-⇒?-app*l : ∀ {V} {M N : Term V} {P P' Q} → RClose _⇒_ P P' → RClose _⇒_ (app* M N P Q) (app* M N P' Q)
+⇒?-app*l : ∀ {V} {M N : Term V} {P P' Q} → P ⇒? P' → app* M N P Q ⇒? app* M N P' Q
 ⇒?-app*l = respects-R' _ _⇒_ (λ _ _ → app*l) _ _
 
-⇒?-appPl : ∀ {V} {δ δ' ε : Proof V} → RClose _⇒_ δ δ' → RClose _⇒_ (appP δ ε) (appP δ' ε)
+⇒?-appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒? δ' → appP δ ε ⇒? appP δ' ε
 ⇒?-appPl = respects-R' _ _⇒_ (λ _ _ → appPl) _ _
 
-⇒?-plus : ∀ {V} {P Q : Path V} → RClose _⇒_ P Q → RClose _⇒_ (plus P) (plus Q)
+⇒?-plus : ∀ {V} {P Q : Path V} → P ⇒? Q → plus P ⇒? plus Q
 ⇒?-plus {V} = respects-R {A = Bool} {B = λ b → VExpression V (if b then -Path else -Proof)} (λ _ → _⇒_ ) {true} {false} plus (λ x y → plusR) _ _
 
-⇒?-minus : ∀ {V} {P Q : Path V} → RClose _⇒_ P Q → RClose _⇒_ (minus P) (minus Q)
+⇒?-minus : ∀ {V} {P Q : Path V} → P ⇒? Q → minus P ⇒? minus Q
 ⇒?-minus {V} = respects-R {A = Bool} {B = λ b → VExpression V (if b then -Path else -Proof)} (λ _ → _⇒_ ) {true} {false} minus (λ x y → minusR) _ _
 
 ⇒-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ⇒ F → E 〈 ρ 〉 ⇒ F 〈 ρ 〉

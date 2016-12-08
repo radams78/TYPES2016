@@ -19,6 +19,11 @@ respects-R' : ∀ {i A} (f : A → A) (R : Rel A i) → Respects f R → Respect
 respects-R' _ _ hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
 respects-R' _ _ _ _ _ ref = ref
 
+respects-R₂ : ∀ {i j} {A B : Set} {f : A → B} {R : Rel A i} {S : Rel B j} →
+  Respects₂ f R S → Respects₂ f (RClose R) (RClose S)
+respects-R₂ hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
+respects-R₂ _ _ _ ref = ref
+
 data TClose {i} {A : Set} (R : Rel A i) : Rel A i where
   inc : ∀ {x} {y} → R x y → TClose R x y
   trans : ∀ {x} {y} {z} → TClose R x y → TClose R y z → TClose R x z
