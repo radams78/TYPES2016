@@ -70,6 +70,7 @@ weakening (convER Γ⊢M∶N₁≡N₂ Γ⊢N₁'∶A Γ⊢N₂'∶A N₁≃N₁
 context-validity-Prop : ∀ {V} {Γ : Context V} {p : Var V -Proof} →
   valid Γ → Γ ⊢ typeof p Γ ∶ ty Ω
 context-validity-Prop {p = ()} empR
+<<<<<<< HEAD
 context-validity-Prop {p = ↑ p} (ctxTR {A = A} validΓ) = weakening (context-validity-Prop validΓ) (ctxTR validΓ) (upRep-typed (ty A))
 context-validity-Prop {p = x₀} (ctxPR {φ = φ} Γ⊢φ∶Ω) = weakening Γ⊢φ∶Ω (ctxPR Γ⊢φ∶Ω) (upRep-typed φ)
 context-validity-Prop {p = ↑ p} (ctxPR {φ = φ} Γ⊢φ∶Ω) = weakening (context-validity-Prop (context-validity Γ⊢φ∶Ω)) (ctxPR Γ⊢φ∶Ω) (upRep-typed φ)
@@ -103,6 +104,11 @@ Eq-Validity₁ (univR Γ⊢P∶M≡N Γ⊢P∶M≡N₁) E≡M≡N = {!!}
 Eq-Validity₁ (lllR Γ⊢P∶M≡N) E≡M≡N = {!!}
 Eq-Validity₁ (app*R Γ⊢P∶M≡N Γ⊢P∶M≡N₁ Γ⊢P∶M≡N₂ Γ⊢P∶M≡N₃) E≡M≡N = {!!}
 Eq-Validity₁ (convER Γ⊢P∶M≡N Γ⊢P∶M≡N₁ Γ⊢P∶M≡N₂ M≃M' N≃N') E≡M≡N = {!!}
+
+context-validity-Prop {p = ↑ p} (ctxTR {A = A} validΓ) = weakening (context-validity-Prop validΓ) (ctxTR validΓ) {!upRep-typed A!}
+context-validity-Prop {p = p} (ctxPR x) = {!!}
+context-validity-Prop (ctxER x x₁) = {!!}
+
 
 Prop-Validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → 
   Γ ⊢ δ ∶ φ → Γ ⊢ φ ∶ ty Ω

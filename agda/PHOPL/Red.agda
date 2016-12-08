@@ -9,17 +9,30 @@ open import PHOPL.PathSub
 data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   βT : ∀ {V A M} {N : Term V} → appT (ΛT A M) N ⇒ M ⟦ x₀:= N ⟧
   βE : ∀ {V A M N P} {Q : Path V} → app* M N (λλλ A P) Q ⇒ P ⟦ x₂:= M ,x₁:= N ,x₀:= Q ⟧
+  impl : ∀ {V} {φ φ' ψ : Term V} → φ ⇒ φ' → φ ⊃ ψ ⇒ φ' ⊃ ψ
+  impr : ∀ {V} {φ ψ ψ' : Term V} → ψ ⇒ ψ' → φ ⊃ ψ ⇒ φ ⊃ ψ'
+
+⇒?-impl : ∀ {V} {φ φ' ψ : Term V} → RClose _⇒_ φ φ' → RClose _⇒_ (φ ⊃ ψ) (φ' ⊃ ψ)
+⇒?-impl (inc φ⇒φ') = inc (impl φ⇒φ')
+⇒?-impl ref = ref
 
 diamond : ∀ {V K} {E F G : Expression V K} → E ⇒ F → E ⇒ G →
   Common-Reduct (RClose (_⇒_ {V})) (RClose _⇒_) F G
 diamond βT βT = cr _ ref ref
 diamond βE βE = cr _ ref ref
+diamond (impl {ψ = ψ} φ⇒φ') (impl φ⇒φ'') = let cr φ₀ φ'⇒?φ₀ φ''⇒?φ₀ = diamond φ⇒φ' φ⇒φ'' in 
+  cr (φ₀ ⊃ ψ) {!!} {!!}
+diamond (impl φ⇒φ') (impr ψ⇒ψ'') = {!!}
+diamond (impr ψ⇒ψ') (impl φ⇒φ'') = {!!}
+diamond (impr ψ⇒ψ') (impr ψ⇒ψ'') = {!!}
 
 ⇒-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ⇒ F → E 〈 ρ 〉 ⇒ F 〈 ρ 〉
 ⇒-resp-rep {ρ = ρ} (βT {V} {A} {M} {N}) = subst (λ x → (appT (ΛT A M) N 〈 ρ 〉) ⇒ x) 
   (≡-sym (compRS-botSub M))
   βT
 ⇒-resp-rep {ρ = ρ} (βE {V} {A} {M} {N} {P} {Q}) = subst (λ x → (app* M N (λλλ A P) Q 〈 ρ 〉) ⇒ x) (botSub₃-liftRep₃ P) βE
+⇒-resp-rep (impl φ⇒φ') = {!!}
+⇒-resp-rep (impr ψ⇒ψ') = {!!}
 
 ⇒-resp-ps : ∀ {U V} {M N : Term U} {τ : PathSub U V} {ρ σ} → M ⇒ N → M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ⇒ N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧
 ⇒-resp-ps {V = V} {τ = τ} {ρ} {σ} (βT {U} {A} {M} {N}) = 
@@ -38,6 +51,8 @@ diamond βE βE = cr _ ref ref
     (M ⟦ x₀:= N ⟧) ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧
   ∎) 
   βE
+⇒-resp-ps (impl φ⇒φ') = {!!}
+⇒-resp-ps (impr ψ⇒ψ') = {!!}
 
 _↠_ : ∀ {V K} → Expression V K → Expression V K → Set
 _↠_ {V} {K} = RTClose (_⇒_ {V} {K})

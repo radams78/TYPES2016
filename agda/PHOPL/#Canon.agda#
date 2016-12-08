@@ -18,7 +18,7 @@ canon-nf : ∀ {V θ} {φ : Term V} → decode θ ⇒ φ → Empty
 canon-nf {θ = bot} ()
 canon-nf {θ = imp _ _} ()
 
-canon-nf' : ∀ {V} θ {φ ψ : Term V} → φ ↠ ψ → decode θ ≡ φ → decode θ ≡ ψ
+canon-nf' : ∀ {V} θ {φ ψ : Term V} → φ ↠ ψ → decode θ ≡ φ → decode θ ≡ ψ.
 canon-nf' θ (inc φ⇒ψ) θ≡φ = ⊥-elim (canon-nf {θ = θ} (subst (λ x → x ⇒ _) (≡-sym θ≡φ) φ⇒ψ))
 canon-nf' _ ref θ≡φ = θ≡φ
 canon-nf' θ (trans φ↠ψ ψ↠ψ') θ≡φ = canon-nf' θ ψ↠ψ' (canon-nf' θ φ↠ψ θ≡φ)

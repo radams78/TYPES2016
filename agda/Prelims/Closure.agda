@@ -117,3 +117,32 @@ diamondRT-CR diamond x z (trans x≃y y≃z) =
 
 diamond-CR : ∀ {i A} {R : Rel A i} → Diamond R R → Church-Rosser R
 diamond-CR diamond = diamondRT-CR (diamondRTRT diamond)
+
+diamond-R-RT : ∀ {i A} {R : Rel A i} →
+  (∀ x y z → R x y → R x z → Common-Reduct (RClose R) (RClose R) y z) →
+  Diamond (RClose R) (RTClose R)
+diamond-R-RT hyp x y z (inc x⇒y) (inc x⇒z) = let cr w y⇒?w z⇒?w = hyp x y z x⇒y x⇒z in 
+  cr w (sub-R-RT y⇒?w) z⇒?w
+diamond-R-RT hyp x .x z ref (inc x⇒z) = cr z (inc x⇒z) ref
+diamond-R-RT hyp x y .x x⇒?y ref = cr y ref x⇒?y
+diamond-R-RT hyp x y z' x⇒?y (trans x↠z z↠z') =
+  let cr a y↠a z⇒?a = diamond-R-RT hyp x y _ x⇒?y x↠z in 
+  let cr b a↠b z'⇒?b = diamond-R-RT hyp _ a z' z⇒?a z↠z' in 
+  cr b (trans y↠a a↠b) z'⇒?b
+
+diamond-RT-RT : ∀ {i A} {R : Rel A i} →
+  (∀ x y z → R x y → R x z → Common-Reduct (RClose R) (RClose R) y z) →
+  Diamond (RTClose R) (RTClose R)
+diamond-RT-RT hyp x y z (inc x⇒y) x↠z = 
+  let cr a y↠a z⇒?a = diamond-R-RT hyp x y z (inc x⇒y) x↠z in 
+  cr a y↠a (sub-R-RT z⇒?a)
+diamond-RT-RT hyp x .x z ref x↠z = cr z x↠z ref
+diamond-RT-RT hyp x y' z (trans x↠y y↠y') x↠z = 
+  let cr a y↠a z↠a = diamond-RT-RT hyp x _ z x↠y x↠z in 
+  let cr b y'↠b a↠b = diamond-RT-RT hyp _ y' a y↠y' y↠a in 
+  cr b y'↠b (trans z↠a a↠b)
+
+diamond-CR' :  ∀ {i A} {R : Rel A i} →
+  (∀ x y z → R x y → R x z → Common-Reduct (RClose R) (RClose R) y z) →
+  Church-Rosser R
+diamond-CR' hyp = diamondRT-CR (diamond-RT-RT hyp)
