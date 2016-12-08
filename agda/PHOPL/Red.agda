@@ -16,23 +16,30 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒?-impl (inc φ⇒φ') = inc (impl φ⇒φ')
 ⇒?-impl ref = ref
 
+⇒?-impr : ∀ {V} {φ ψ ψ' : Term V} → RClose _⇒_ ψ ψ' → RClose _⇒_ (φ ⊃ ψ) (φ ⊃ ψ')
+⇒?-impr (inc ψ⇒ψ') = inc (impr ψ⇒ψ')
+⇒?-impr ref = ref
+
 diamond : ∀ {V K} {E F G : Expression V K} → E ⇒ F → E ⇒ G →
   Common-Reduct (RClose (_⇒_ {V})) (RClose _⇒_) F G
 diamond βT βT = cr _ ref ref
 diamond βE βE = cr _ ref ref
-diamond (impl {ψ = ψ} φ⇒φ') (impl φ⇒φ'') = let cr φ₀ φ'⇒?φ₀ φ''⇒?φ₀ = diamond φ⇒φ' φ⇒φ'' in 
-  cr (φ₀ ⊃ ψ) {!!} {!!}
-diamond (impl φ⇒φ') (impr ψ⇒ψ'') = {!!}
-diamond (impr ψ⇒ψ') (impl φ⇒φ'') = {!!}
-diamond (impr ψ⇒ψ') (impr ψ⇒ψ'') = {!!}
+diamond (impl {ψ = ψ} φ⇒φ') (impl φ⇒φ'') = 
+  let cr φ₀ φ'⇒?φ₀ φ''⇒?φ₀ = diamond φ⇒φ' φ⇒φ'' in 
+  cr (φ₀ ⊃ ψ) (⇒?-impl φ'⇒?φ₀) (⇒?-impl φ''⇒?φ₀)
+diamond (impl {φ' = φ'} φ⇒φ') (impr {ψ' = ψ'} ψ⇒ψ') = cr (φ' ⊃ ψ') (inc (impr ψ⇒ψ')) (inc (impl φ⇒φ'))
+diamond (impr {ψ' = ψ'} ψ⇒ψ') (impl {φ' = φ'} φ⇒φ') = cr (φ' ⊃ ψ') (inc (impl φ⇒φ')) (inc (impr ψ⇒ψ'))
+diamond (impr {φ = φ} ψ⇒ψ') (impr ψ⇒ψ'') = 
+  let cr ψ₀ ψ'⇒?ψ₀ ψ''⇒?ψ₀ = diamond ψ⇒ψ' ψ⇒ψ'' in 
+  cr (φ ⊃ ψ₀) (⇒?-impr ψ'⇒?ψ₀) (⇒?-impr ψ''⇒?ψ₀)
 
 ⇒-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ⇒ F → E 〈 ρ 〉 ⇒ F 〈 ρ 〉
 ⇒-resp-rep {ρ = ρ} (βT {V} {A} {M} {N}) = subst (λ x → (appT (ΛT A M) N 〈 ρ 〉) ⇒ x) 
   (≡-sym (compRS-botSub M))
   βT
 ⇒-resp-rep {ρ = ρ} (βE {V} {A} {M} {N} {P} {Q}) = subst (λ x → (app* M N (λλλ A P) Q 〈 ρ 〉) ⇒ x) (botSub₃-liftRep₃ P) βE
-⇒-resp-rep (impl φ⇒φ') = {!!}
-⇒-resp-rep (impr ψ⇒ψ') = {!!}
+⇒-resp-rep (impl φ⇒φ') = impl (⇒-resp-rep φ⇒φ')
+⇒-resp-rep (impr ψ⇒ψ') = impr (⇒-resp-rep ψ⇒ψ')
 
 ⇒-resp-ps : ∀ {U V} {M N : Term U} {τ : PathSub U V} {ρ σ} → M ⇒ N → M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ⇒ N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧
 ⇒-resp-ps {V = V} {τ = τ} {ρ} {σ} (βT {U} {A} {M} {N}) = 
