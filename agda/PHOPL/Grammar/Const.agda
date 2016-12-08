@@ -156,3 +156,15 @@ APP*-rep : ∀ {U V n} MM {NN : snocVec (Term U) n} {P QQ} {ρ : Rep U V} →
 APP*-rep [] {[]} {QQ = []} = refl
 APP*-rep (MM snoc M) {NN snoc N} {QQ = QQ snoc Q} {ρ = ρ} = 
   cong (λ x → app* (M 〈 ρ 〉) (N 〈 ρ 〉) x (Q 〈 ρ 〉)) (APP*-rep MM)
+
+type : ∀ {V} → Equation V → Type
+type (app (-eq A) _) = A
+
+type-rep : ∀ {U V} (E : Equation U) {ρ : Rep U V} → type (E 〈 ρ 〉) ≡ type E
+type-rep (app (-eq _) _) = refl
+
+left : ∀ {V} → Equation V → Term V
+left (app (-eq _) (M ∷ _ ∷ [])) = M
+
+left-rep : ∀ {U V} (E : Equation U) {ρ : Rep U V} → left E 〈 ρ 〉 ≡ left (E 〈 ρ 〉)
+left-rep (app (-eq _) (_ ∷ _ ∷ [])) = refl

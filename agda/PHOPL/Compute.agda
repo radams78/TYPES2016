@@ -1,4 +1,5 @@
 module PHOPL.Compute where
+open import Data.Unit
 open import Data.Product renaming (_,_ to _,p_)
 open import Prelims
 open import PHOPL.Grammar
@@ -9,7 +10,7 @@ open import PHOPL.Neutral
 
 ⊧PC_∶_ : ∀ {V} → Proof V → CanonProp → Set
 ⊧PC_∶_ {V} δ bot = Σ[ ε ∈ NeutralP V ] δ ↠ decode-NeutralP ε
-⊧PC δ ∶ imp φ ψ = ∀ ε → ⊧PC ε ∶ φ → ⊧PC appP δ ε ∶ ψ
+⊧PC δ ∶ imp φ ψ = ∀ ε (⊧ε∶φ : ⊧PC ε ∶ φ) → ⊧PC appP δ ε ∶ ψ
 
 ⊧P_∶_ : ∀ {V} → Proof V → Term V → Set
 ⊧P δ ∶ φ = Σ[ ψ ∈ CanonProp ] φ ↠ decode ψ × ⊧PC δ ∶ ψ
@@ -30,16 +31,25 @@ open import PHOPL.Neutral
 conversionP : ∀ {V} {δ : Proof V} {φ ψ} → ⊧P δ ∶ φ → φ ≃ ψ → ⊧P δ ∶ ψ
 conversionP (θ ,p φ↠θ ,p ⊧δ∶θ) φ≃ψ = θ ,p red-canon {θ = θ} φ↠θ φ≃ψ ,p ⊧δ∶θ
 
-conv-⊃ : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ≃ φ' → ψ ≃ ψ' → φ ⊃ ψ ≃ φ' ⊃ ψ'
-conv-⊃ (inc φ⇒φ') (inc ψ⇒ψ') = inc {!!}
-conv-⊃ (inc φ⇒φ') ref = {!!}
-conv-⊃ (inc φ⇒φ') (sym ψ≃ψ') = {!!}
-conv-⊃ (inc φ⇒φ') (trans ψ≃ψ' ψ≃ψ'') = {!!}
-conv-⊃ ref ψ≃ψ' = {!!}
-conv-⊃ (sym φ≃φ') ψ≃ψ' = {!!}
-conv-⊃ (trans φ≃φ' φ≃φ'') ψ≃ψ' = {!!}
-
 conversionE : ∀ {V} {P : Path V} {M M' N N' A} → ⊧E P ∶ M ≡〈 A 〉 N → M ≃ M' → N ≃ N' →
   ⊧E P ∶ M' ≡〈 A 〉 N'
-conversionE {A = Ω} (⊧P+∶φ⊃ψ ,p ⊧P-∶ψ⊃φ) φ≃φ' ψ≃ψ' = conversionP ⊧P+∶φ⊃ψ {!!} ,p {!!}
-conversionE {A = A ⇛ A₁} ⊧P∶M≡N M≃M' N≃N' N₁ N'' Q x x₁ x₂ = {!!}
+conversionE {A = Ω} (⊧P+∶φ⊃ψ ,p ⊧P-∶ψ⊃φ) φ≃φ' ψ≃ψ' =
+  conversionP ⊧P+∶φ⊃ψ (≃-imp φ≃φ' ψ≃ψ') ,p conversionP ⊧P-∶ψ⊃φ (≃-imp ψ≃ψ' φ≃φ')
+conversionE {A = A ⇛ B} ⊧P∶M≡N M≃M' N≃N' L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L' = 
+  conversionE {A = B} (⊧P∶M≡N L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L') (≃-appTl M≃M') (≃-appTl N≃N')
+
+expansionPC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC ε ∶ θ → δ ⇒ ε → ⊧PC δ ∶ θ
+expansionPC {θ = bot} (χ ,p ε↠χ) δ⇒ε = χ ,p (trans (inc δ⇒ε) ε↠χ)
+expansionPC {θ = imp θ θ'} ⊧ε∶θ⊃θ' δ⇒ε χ ⊧χ∶θ = expansionPC (⊧ε∶θ⊃θ' χ ⊧χ∶θ) (appPl δ⇒ε)
+
+expansionP : ∀ {V} {δ ε : Proof V} {φ} → ⊧P ε ∶ φ → δ ⇒ ε → ⊧P δ ∶ φ
+expansionP (θ ,p φ↠θ ,p ⊧ε∶θ) δ⇒ε = θ ,p φ↠θ ,p expansionPC ⊧ε∶θ δ⇒ε
+
+expansionT : ∀ {V} {M N : Term V} {A} → ⊧T N ∶ A → M ⇒ N → ⊧T M ∶ A
+expansionE : ∀ {V} {P Q : Path V} {M A N} → ⊧E Q ∶ M ≡〈 A 〉 N → P ⇒ Q → ⊧E P ∶ M ≡〈 A 〉 N
+
+expansionT ⊧N∶A M⇒N = conversionE (expansionE ⊧N∶A (⇒-resp-ps M⇒N)) (sym (inc M⇒N)) (sym (inc M⇒N))
+
+expansionE {A = Ω} (⊧Q+∶φ⊃ψ ,p ⊧Q-∶ψ⊃φ) P⇒Q = 
+  expansionP ⊧Q+∶φ⊃ψ (plusR P⇒Q) ,p expansionP ⊧Q-∶ψ⊃φ (minusR P⇒Q)
+expansionE {A = A ⇛ B} ⊧Q∶M≡M' P⇒Q N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N' = expansionE (⊧Q∶M≡M' N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N') (app*l P⇒Q)

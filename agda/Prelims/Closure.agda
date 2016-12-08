@@ -3,30 +3,21 @@ open import Relation.Binary.PropositionalEquality hiding (sym;trans)
 import Relation.Binary.PropositionalEquality.Core
 open import Relation.Binary
 open import Data.Product renaming (_,_ to _,p_)
-
-Respects : ∀ {i} {A : Set} {B : A → Set} (R : ∀ a → Rel (B a) i) {a b : A}
-  (f : B a → B b) → Set i
-Respects R {a} {b} f = ∀ x y → R a x y → R b (f x) (f y)
-
-record Common-Reduct {i} {A : Set} (R S : Rel A i) (x y : A) : Set i where
-  constructor cr
-  field
-    reduct : A
-    left   : R x reduct
-    right  : S y reduct
-
-cr-sym : ∀ {i A R S x y} → Common-Reduct {i} {A} R S x y → Common-Reduct S R y x
-cr-sym (cr z xRz ySz) = cr z ySz xRz
-
-Diamond : ∀ {i} {A} → Rel A i → Rel A i → Set i
-Diamond R S = ∀ x y z → R x y → S x z → Common-Reduct S R y z
-
-diamond-sym : ∀ {i A} {R S : Rel A i} → Diamond R S → Diamond S R
-diamond-sym diamond x y z xSy xRz = cr-sym (diamond x z y xRz xSy)
+open import Prelims.Respect
+open import Prelims.Red
 
 data RClose {i} {A : Set} (R : Rel A i) : Rel A i where
   inc : ∀ {x} {y} → R x y → RClose R x y
   ref : ∀ {x} → RClose R x x
+
+respects-R : ∀ {i} {A : Set} {B : A → Set} (R : ∀ a → Rel (B a) i) {a b : A}
+  (f : B a → B b) → Respects-dep R f → Respects-dep (λ a → RClose (R a)) f
+respects-R _ _ hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
+respects-R _ _ _ _ _ ref = ref
+
+respects-R' : ∀ {i A} (f : A → A) (R : Rel A i) → Respects f R → Respects f (RClose R)
+respects-R' _ _ hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
+respects-R' _ _ _ _ _ ref = ref
 
 data TClose {i} {A : Set} (R : Rel A i) : Rel A i where
   inc : ∀ {x} {y} → R x y → TClose R x y
@@ -60,19 +51,11 @@ sub-T-RT : ∀ {i} {A} {R : Rel A i} {x} {y} → TClose {A = A} R x y → RTClos
 sub-T-RT (inc xRy) = inc xRy
 sub-T-RT (trans xRy yRz) = trans (sub-T-RT xRy) (sub-T-RT yRz)
 
-diamondRT : ∀ {i A} {R S : Rel A i} →
-  Diamond R S → Diamond R (RTClose S)
-diamondRT diamond x y z xRy (inc xSz) =
-  let cr w ySw zRw = diamond x y z xRy xSz in 
-  cr w (inc ySw) zRw
-diamondRT diamond x y .x xRy ref = cr y ref xRy
-diamondRT diamond x y z' xRy (trans xRTz zRTz') = 
-  let cr w yRTw zRw = diamondRT diamond x y _ xRy xRTz in 
-  let cr w' wRTw' z'Rw' = diamondRT diamond _ w z' zRw zRTz' in 
-  cr w' (trans yRTw wRTw') z'Rw'
-
-diamondRTRT : ∀ {i A} {R S : Rel A i} → Diamond R S → Diamond (RTClose R) (RTClose S)
-diamondRTRT diamond = diamondRT (diamond-sym (diamondRT (diamond-sym diamond)))
+respects-RT : ∀ {i} {A : Set} {B : A → Set} (R : ∀ a → Rel (B a) i) {a b : A}
+  (f : B a → B b) → Respects-dep R f → Respects-dep (λ a → RTClose (R a)) f
+respects-RT _ _ hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
+respects-RT _ _ _ _ _ ref = ref
+respects-RT R f hyp x z (trans x↠y y↠z) = trans (respects-RT R f hyp x _ x↠y) (respects-RT R f hyp _ z y↠z)
 
 data RSTClose {i} {A : Set} (R : Rel A i) : Rel A i where
   inc : ∀ {x y} → R x y → RSTClose R x y
@@ -95,11 +78,18 @@ sub-RT-RST ref = ref
 sub-RT-RST (trans xRTy yRTz) = trans (sub-RT-RST xRTy) (sub-RT-RST yRTz)
 
 respects-RST : ∀ {i} {A : Set} {B : A → Set} (R : ∀ a → Rel (B a) i) {a b : A}
-  (f : B a → B b) → Respects R f → Respects (λ a → RSTClose (R a)) f
+  (f : B a → B b) → Respects-dep R f → Respects-dep (λ a → RSTClose (R a)) f
 respects-RST R f R-respects-f x y (inc xRy) = inc (R-respects-f x y xRy)
 respects-RST R f R-respects-f y .y ref = ref
 respects-RST R f R-respects-f x x₁ (sym xRSTy) = sym (respects-RST R f R-respects-f _ _ xRSTy)
 respects-RST R f R-respects-f x y (trans xRSTy yRSTz) = trans (respects-RST R f R-respects-f _ _ xRSTy) (respects-RST R f R-respects-f _ _ yRSTz)
+--TODO Common pattern with other respects lemmas
+
+respects-RST' : ∀ {i A} {f : A → A} {R : Rel A i} → Respects f R → Respects f (RSTClose R)
+respects-RST' hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
+respects-RST' _ _ _ ref = ref
+respects-RST' hyp x y (sym y≃x) = sym (respects-RST' hyp y x y≃x)
+respects-RST' hyp x z (trans x≃y y≃z) = trans (respects-RST' hyp x _ x≃y) (respects-RST' hyp _ z y≃z)
 
 Church-Rosser : ∀ {i A} → Rel A i → Set i
 Church-Rosser R = ∀ x y → RSTClose R x y → Common-Reduct (RTClose R) (RTClose R) x y
@@ -114,9 +104,6 @@ diamondRT-CR diamond x z (trans x≃y y≃z) =
   let cr b y↠b z↠b = diamondRT-CR diamond _ z y≃z in 
   let cr c a↠c b↠c = diamond _ a b y↠a y↠b in 
   cr c (trans x↠a a↠c) (trans z↠b b↠c)
-
-diamond-CR : ∀ {i A} {R : Rel A i} → Diamond R R → Church-Rosser R
-diamond-CR diamond = diamondRT-CR (diamondRTRT diamond)
 
 diamond-R-RT : ∀ {i A} {R : Rel A i} →
   (∀ x y z → R x y → R x z → Common-Reduct (RClose R) (RClose R) y z) →
@@ -142,7 +129,7 @@ diamond-RT-RT hyp x y' z (trans x↠y y↠y') x↠z =
   let cr b y'↠b a↠b = diamond-RT-RT hyp _ y' a y↠y' y↠a in 
   cr b y'↠b (trans z↠a a↠b)
 
-diamond-CR' :  ∀ {i A} {R : Rel A i} →
+diamond-CR :  ∀ {i A} {R : Rel A i} →
   (∀ x y z → R x y → R x z → Common-Reduct (RClose R) (RClose R) y z) →
   Church-Rosser R
-diamond-CR' hyp = diamondRT-CR (diamond-RT-RT hyp)
+diamond-CR hyp = diamondRT-CR (diamond-RT-RT hyp)

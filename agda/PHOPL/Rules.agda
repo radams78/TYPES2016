@@ -1,6 +1,6 @@
 module PHOPL.Rules where
 open import Data.Product using (_×_)
-open import Prelims.Snoclist
+open import Prelims
 open import PHOPL.Grammar
 open import PHOPL.Red
 
@@ -120,6 +120,10 @@ data _⊢_∶_ where
                                            (Γ⊢P∶M≡N : Γ ⊢ P ∶ M ≡〈 A 〉 N)   (Γ⊢M':A : Γ ⊢ M' ∶ ty A)   (Γ⊢N'∶A : Γ ⊢ N' ∶ ty A)
          (M≃M' : M ≃ M') (N≃N' : N ≃ N') → ------------------------------------------------------------------------------------
                                                                              Γ ⊢ P ∶ M' ≡〈 A 〉 N'
+
+change-type : ∀ {V} {Γ} {K} {M : Expression V (varKind K)} {A} {B} → 
+  Γ ⊢ M ∶ A → A ≡ B → Γ ⊢ M ∶ B
+change-type {Γ = Γ} {M = M} Γ⊢M∶A A≡B = subst (λ x → Γ ⊢ M ∶ x) A≡B Γ⊢M∶A
 
 infix 10 _⊩_∶_
 _⊩_∶_ : ∀ {V n} → Context V → snocVec (Term V) n → snocVec Type n → Set
