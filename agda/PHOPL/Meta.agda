@@ -13,14 +13,14 @@ open import PHOPL.Meta.ConVal
 ⊃-gen₂ : ∀ {V} {Γ : Context V} {φ} {ψ} {A} → Γ ⊢ φ ⊃ ψ ∶ A → Γ ⊢ ψ ∶ ty Ω
 ⊃-gen₂ (⊃R _ Γ⊢ψ∶Ω) = Γ⊢ψ∶Ω
 
-postulate Eq-Validity₁ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P ∶ E → E ≡ M ≡〈 A 〉 N → Γ ⊢ M ∶ ty A
-{- Eq-Validity₁ (varR {Γ = Γ} _ validΓ) E≡M≡N = subst (λ E → Γ ⊢ left E ∶ ty (type E)) E≡M≡N (context-validity-Eq₁ validΓ)
-Eq-Validity₁ (refR Γ⊢P∶M≡N) E≡M≡N = {!!}
-Eq-Validity₁ (⊃*R Γ⊢P∶M≡N Γ⊢P∶M≡N₁) E≡M≡N = {!!}
-Eq-Validity₁ (univR Γ⊢P∶M≡N Γ⊢P∶M≡N₁) E≡M≡N = {!!}
-Eq-Validity₁ (lllR Γ⊢P∶M≡N) E≡M≡N = {!!}
-Eq-Validity₁ (app*R Γ⊢P∶M≡N Γ⊢P∶M≡N₁ Γ⊢P∶M≡N₂ Γ⊢P∶M≡N₃) E≡M≡N = {!!}
-Eq-Validity₁ (convER Γ⊢P∶M≡N Γ⊢P∶M≡N₁ Γ⊢P∶M≡N₂ M≃M' N≃N') E≡M≡N = {!!} -}
+eq-validity₁ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P ∶ E → E ≡ M ≡〈 A 〉 N → Γ ⊢ M ∶ ty A
+eq-validity₁ (varR {Γ = Γ} _ validΓ) E≡M≡N = subst (λ E → Γ ⊢ left E ∶ ty (type E)) E≡M≡N (context-validity-Eq₁ validΓ)
+eq-validity₁ {Γ = Γ} (refR Γ⊢P∶M≡N) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ y) {!eq-inj₁!} {!!} {!!}
+eq-validity₁ (⊃*R Γ⊢P∶M≡N Γ⊢P∶M≡N₁) E≡M≡N = {!!}
+eq-validity₁ (univR Γ⊢P∶M≡N Γ⊢P∶M≡N₁) E≡M≡N = {!!}
+eq-validity₁ (lllR Γ⊢P∶M≡N) E≡M≡N = {!!}
+eq-validity₁ (app*R Γ⊢P∶M≡N Γ⊢P∶M≡N₁ Γ⊢P∶M≡N₂ Γ⊢P∶M≡N₃) E≡M≡N = {!!}
+eq-validity₁ (convER Γ⊢P∶M≡N Γ⊢P∶M≡N₁ Γ⊢P∶M≡N₂ M≃M' N≃N') E≡M≡N = {!!}
 
 postulate Prop-Validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → 
                         Γ ⊢ δ ∶ φ → Γ ⊢ φ ∶ ty Ω
@@ -241,20 +241,3 @@ app*R' : ∀ {V} {Γ : Context V} {P Q : Path V} {M M' N N' : Term V} {A B : Typ
   -------------------------------------------------
     Γ ⊢ app* N N' P Q ∶ appT M N ≡〈 B 〉 appT M' N'
 app*R' Γ⊢P∶M≡M' Γ⊢Q∶N≡N' = app*R (equation-validity₁ Γ⊢Q∶N≡N') (equation-validity₂ Γ⊢Q∶N≡N') Γ⊢P∶M≡M' Γ⊢Q∶N≡N'
-
-APP*-typed : ∀ {n} {V} {Γ : Context V} {MM NN : snocVec (Term V) n} {P QQ M N AA B} →
-  Γ ⊢ P ∶ M ≡〈 Pi AA B 〉 N → (∀ i → Γ ⊢ lookup i QQ ∶ lookup i MM ≡〈 lookup i AA 〉 lookup i NN ) →
-  Γ ⊢ APP* MM NN P QQ ∶ APP M MM ≡〈 B 〉 APP N NN
-APP*-typed {MM = []} {[]} {QQ = []} {AA = []} Γ⊢P∶M≡N _ = Γ⊢P∶M≡N
-APP*-typed {MM = MM snoc M} {NN = NN snoc N} {QQ = QQ snoc Q} {AA = AA snoc A} Γ⊢P∶M≡N Γ⊢QQ∶MM≡NN = 
-  app*R' (APP*-typed Γ⊢P∶M≡N (λ i → Γ⊢QQ∶MM≡NN (suc i))) (Γ⊢QQ∶MM≡NN zero)
-
-Generation-APP : ∀ {V n} {Γ : Context V} {M : Term V} {NN : snocVec (Term V) n} {B} → Γ ⊢ APP M NN ∶ ty B → Σ[ AA ∈ snocVec Type n ] Γ ⊢ M ∶ ty (Pi AA B) × Γ ⊩ NN ∶ AA
-Generation-APP {NN = []} Γ⊢M∶B = [] ,p Γ⊢M∶B ,p context-validity Γ⊢M∶B
-Generation-APP {NN = NN snoc N} (appR {A = A} Γ⊢MNN∶A⇛B Γ⊢N∶A) = let AA ,p Γ⊢M∶AAAB ,p Γ⊩NN∶AA = Generation-APP Γ⊢MNN∶A⇛B in AA snoc A ,p Γ⊢M∶AAAB ,p Γ⊩NN∶AA ,p Γ⊢N∶A
-
-not-⊥MMM-typed : ∀ {V} {Γ : Context V} {NN : snocList (Term V)} {N A} → 
-  Γ ⊢ appT (APPl ⊥ NN) N ∶ A → Empty
-not-⊥MMM-typed {NN = []} (appR () _)
-not-⊥MMM-typed {NN = NN snoc N} (appR Γ⊢⊥NN∶A _) = not-⊥MMM-typed {NN = NN} Γ⊢⊥NN∶A
-

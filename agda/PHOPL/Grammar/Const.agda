@@ -1,4 +1,5 @@
 module PHOPL.Grammar.Const where
+open import Data.Empty renaming (⊥ to Empty)
 open import Data.List
 open import Prelims
 open import PHOPL.Grammar.Base
@@ -26,6 +27,9 @@ ty A = app (-ty A) []
 infix 65 _⊃_
 _⊃_ : ∀ {V} → Term V → Term V → Term V
 φ ⊃ ψ = app -imp (φ ∷ ψ ∷ [])
+
+data Is-⊃ {V} : Term V → Set where
+  is-⊃ : ∀ {φ} {ψ} → Is-⊃ (φ ⊃ ψ)
 
 ΛT : ∀ {V} → Type → Term (V , -Term) → Term V
 ΛT A M = app (-lamTerm A) (M ∷ [])
@@ -98,24 +102,8 @@ appT-injl refl = refl
 appT-injr : ∀ {V} {M N P Q : Term V} → appT M N ≡ appT P Q → N ≡ Q
 appT-injr refl = refl
 
-Pi : ∀ {n} → snocVec Type n → Type → Type
-Pi [] B = B
-Pi (AA snoc A) B = Pi AA (A ⇛ B)
-
---APPF : ∀ {F V} → Term V → FoldFunc.F F (Term V) → Term V
---APPF {F} {V} = FoldFunc.foldl₀ F appT
-
---APPF-rep : ∀ {F U V} (M : Term U) (NN : FoldFunc.F F (Term U)) (ρ : Rep U V) →
---  (APPF {F} M NN) 〈 ρ 〉 ≡ APPF {F} (M 〈 ρ 〉) (FoldFunc.map F (λ N → N 〈 ρ 〉) NN)
---TODO
-
-APP' : ∀ {V} → Term V → List (Term V) → Term V
-APP' M [] = M
-APP' M (N ∷ NN) = APP' (appT M N) NN
-
-APP'-rep : ∀ {U V} (M : Term U) (NN : List (Term U)) (ρ : Rep U V) → (APP' M NN) 〈 ρ 〉 ≡ APP' (M 〈 ρ 〉) (Data.List.map (λ x → x 〈 ρ 〉) NN)
-APP'-rep M [] ρ = refl
-APP'-rep M (N ∷ NN) ρ = APP'-rep (appT M N) NN ρ
+eq-inj₁ : ∀ {V A A'} {M M' N N' : Term V} → M ≡〈 A 〉 N ≡ M' ≡〈 A' 〉 N' → M ≡ M'
+eq-inj₁ refl = refl
 
 APPl : ∀ {V} → Term V → snocList (Term V) → Term V
 APPl M [] = M
@@ -124,38 +112,6 @@ APPl M (NN snoc N) = appT (APPl M NN) N
 APPl-rep : ∀ {U V} {M : Term U} {NN : snocList (Term U)} {ρ : Rep U V} → (APPl M NN) 〈 ρ 〉 ≡ APPl (M 〈 ρ 〉) (snocmap (λ x → x 〈 ρ 〉) NN)
 APPl-rep {NN = []} = refl
 APPl-rep {NN = NN snoc N} {ρ} = cong (λ x → appT x (N 〈 ρ 〉)) (APPl-rep {NN = NN} {ρ})
-
-APP : ∀ {V n} → Term V → snocVec (Term V) n → Term V
-APP M [] = M
-APP M (NN snoc N) = appT (APP M NN) N
-
-APP-rep : ∀ {U V n M} (NN : snocVec (Term U) n) {ρ : Rep U V} →
-  (APP M NN) 〈 ρ 〉 ≡ APP (M 〈 ρ 〉) (snocVec-rep NN ρ)
-APP-rep [] = refl
-APP-rep (NN snoc N) {ρ} = cong (λ x → appT x (N 〈 ρ 〉)) (APP-rep NN)
-
-APPP : ∀ {V} {n} → Proof V → snocVec (Proof V) n → Proof V
-APPP δ [] = δ
-APPP δ (εε snoc ε) = appP (APPP δ εε) ε
-
-APPP-rep : ∀ {U V n δ} (εε : snocVec (Proof U) n) {ρ : Rep U V} →
-  (APPP δ εε) 〈 ρ 〉 ≡ APPP (δ 〈 ρ 〉) (snocVec-rep εε ρ)
-APPP-rep [] = refl
-APPP-rep (εε snoc ε) {ρ} = cong (λ x → appP x (ε 〈 ρ 〉)) (APPP-rep εε)
-
-APPP' : ∀ {V} → Proof V → List (Proof V) → Proof V
-APPP' δ [] = δ
-APPP' δ (ε ∷ εε) = APPP' (appP δ ε) εε
-
-APP* : ∀ {V n} → snocVec (Term V) n → snocVec (Term V) n → Path V → snocVec (Path V) n → Path V
-APP* [] [] P [] = P
-APP* (MM snoc M) (NN snoc N) P (QQ snoc Q) = app* M N (APP* MM NN P QQ) Q
-
-APP*-rep : ∀ {U V n} MM {NN : snocVec (Term U) n} {P QQ} {ρ : Rep U V} →
-  (APP* MM NN P QQ) 〈 ρ 〉 ≡ APP* (snocVec-rep MM ρ) (snocVec-rep NN ρ) (P 〈 ρ 〉) (snocVec-rep QQ ρ)
-APP*-rep [] {[]} {QQ = []} = refl
-APP*-rep (MM snoc M) {NN snoc N} {QQ = QQ snoc Q} {ρ = ρ} = 
-  cong (λ x → app* (M 〈 ρ 〉) (N 〈 ρ 〉) x (Q 〈 ρ 〉)) (APP*-rep MM)
 
 type : ∀ {V} → Equation V → Type
 type (app (-eq A) _) = A
@@ -168,3 +124,14 @@ left (app (-eq _) (M ∷ _ ∷ [])) = M
 
 left-rep : ∀ {U V} (E : Equation U) {ρ : Rep U V} → left E 〈 ρ 〉 ≡ left (E 〈 ρ 〉)
 left-rep (app (-eq _) (_ ∷ _ ∷ [])) = refl
+
+-- Mx1...xn =/= Λ M' for n >= 1
+APPl-not-Λ : ∀ {V M N} {NN : snocList (Term V)} {A M'} → APPl (appT M N) NN ≡ ΛT A M' → Empty
+APPl-not-Λ {NN = []} ()
+APPl-not-Λ {NN = _ snoc _} ()
+
+-- If Mx1...xn = (Λ M') N with n >= 1 then M = Λ M'
+APPl-Λ : ∀ {V M N} {NN : snocList (Term V)} {A M' N'} →
+  APPl (appT M N) NN ≡ appT (ΛT A M') N' → M ≡ ΛT A M'
+APPl-Λ {NN = []} Mx≡ΛM'N = appT-injl Mx≡ΛM'N
+APPl-Λ {NN = NN snoc _} Mx≡ΛM'N = ⊥-elim (APPl-not-Λ {NN = NN} (appT-injl Mx≡ΛM'N))

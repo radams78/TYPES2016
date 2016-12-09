@@ -2,7 +2,8 @@ module PHOPL.Red.Base where
 
 open import Level
 open import Data.Bool
-open import Data.Product
+open import Data.Product renaming (_,_ to _,p_)
+open import Data.Sum
 open import Prelims
 open import PHOPL.Grammar
 open import PHOPL.PathSub
@@ -14,44 +15,14 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   impl : ∀ {V} {φ φ' ψ : Term V} → φ ⇒ φ' → φ ⊃ ψ ⇒ φ' ⊃ ψ
   impr : ∀ {V} {φ ψ ψ' : Term V} → ψ ⇒ ψ' → φ ⊃ ψ ⇒ φ ⊃ ψ'
   appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒ δ' → appP δ ε ⇒ appP δ' ε
+  refplus : ∀ {V} {φ : Term V} {δ} → appP (plus (reff φ)) δ ⇒ δ
+  refminus : ∀ {V} {φ : Term V} {δ} → appP (minus (reff φ)) δ ⇒ δ
   plusR : ∀ {V} {P Q : Path V} → P ⇒ Q → plus P ⇒ plus Q
   minusR : ∀ {V} {P Q : Path V} → P ⇒ Q → minus P ⇒ minus Q
   βE : ∀ {V A M N P} {Q : Path V} → app* M N (λλλ A P) Q ⇒ P ⟦ x₂:= M ,x₁:= N ,x₀:= Q ⟧
   imp*l : ∀ {V} {P P' Q : Path V} → P ⇒ P' → P ⊃* Q ⇒ P' ⊃* Q
   imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒ Q' → P ⊃* Q ⇒ P ⊃* Q'
   app*l : ∀ {V} {M N : Term V} {P P' Q} → P ⇒ P' → app* M N P Q ⇒ app* M N P' Q
-
-infix 10 _⇒?_
-_⇒?_ : ∀ {V K} → VExpression V K → VExpression V K → Set
-_⇒?_ = RClose _⇒_
-
---TODO Duplication below
-⇒?-appTl : ∀ {V} {M M' N : Term V} → M ⇒? M' → appT M N ⇒? appT M' N
-⇒?-appTl = respects-R' _ _⇒_ (λ _ _ → appTl) _ _
-
-⇒?-impl : ∀ {V} {φ φ' ψ : Term V} → φ ⇒? φ' → φ ⊃ ψ ⇒? φ' ⊃ ψ
-⇒?-impl = respects-R' _ _⇒_ (λ _ _ → impl) _ _
-
-⇒?-impr : ∀ {V} {φ ψ ψ' : Term V} → ψ ⇒? ψ' → φ ⊃ ψ ⇒? φ ⊃ ψ'
-⇒?-impr = respects-R' _ _⇒_ (λ _ _ → impr) _ _
-
-⇒?-imp*l : ∀ {V} {P P' Q : Path V} → P ⇒? P' → P ⊃* Q ⇒? P' ⊃* Q
-⇒?-imp*l = respects-R' _ _⇒_ (λ _ _ → imp*l) _ _
-
-⇒?-imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒? Q' → P ⊃* Q ⇒? P ⊃* Q'
-⇒?-imp*r = respects-R' _ _⇒_ (λ _ _ → imp*r) _ _
-
-⇒?-app*l : ∀ {V} {M N : Term V} {P P' Q} → P ⇒? P' → app* M N P Q ⇒? app* M N P' Q
-⇒?-app*l = respects-R' _ _⇒_ (λ _ _ → app*l) _ _
-
-⇒?-appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒? δ' → appP δ ε ⇒? appP δ' ε
-⇒?-appPl = respects-R' _ _⇒_ (λ _ _ → appPl) _ _
-
-⇒?-plus : ∀ {V} {P Q : Path V} → P ⇒? Q → plus P ⇒? plus Q
-⇒?-plus {V} = respects-R {A = Bool} {B = λ b → VExpression V (if b then -Path else -Proof)} (λ _ → _⇒_ ) {true} {false} plus (λ x y → plusR) _ _
-
-⇒?-minus : ∀ {V} {P Q : Path V} → P ⇒? Q → minus P ⇒? minus Q
-⇒?-minus {V} = respects-R {A = Bool} {B = λ b → VExpression V (if b then -Path else -Proof)} (λ _ → _⇒_ ) {true} {false} minus (λ x y → minusR) _ _
 
 ⇒-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ⇒ F → E 〈 ρ 〉 ⇒ F 〈 ρ 〉
 ⇒-resp-rep {ρ = ρ} (βT {V} {A} {M} {N}) = subst (λ x → (appT (ΛT A M) N 〈 ρ 〉) ⇒ x) 
@@ -61,6 +32,8 @@ _⇒?_ = RClose _⇒_
 ⇒-resp-rep (impl φ⇒φ') = impl (⇒-resp-rep φ⇒φ')
 ⇒-resp-rep (impr ψ⇒ψ') = impr (⇒-resp-rep ψ⇒ψ')
 ⇒-resp-rep (appPl δ⇒δ') = appPl (⇒-resp-rep δ⇒δ')
+⇒-resp-rep refplus = refplus
+⇒-resp-rep refminus = refminus
 ⇒-resp-rep (plusR P⇒Q) = plusR (⇒-resp-rep P⇒Q)
 ⇒-resp-rep (minusR P⇒Q) = minusR (⇒-resp-rep P⇒Q)
 ⇒-resp-rep {ρ = ρ} (βE {V} {A} {M} {N} {P} {Q}) = subst (λ x → (app* M N (λλλ A P) Q 〈 ρ 〉) ⇒ x) (botSub₃-liftRep₃ P) βE
@@ -88,3 +61,17 @@ _⇒?_ = RClose _⇒_
 ⇒-resp-ps (appTl M⇒M') = app*l (⇒-resp-ps M⇒M')
 ⇒-resp-ps (impl φ⇒φ') = imp*l (⇒-resp-ps φ⇒φ')
 ⇒-resp-ps (impr ψ⇒ψ') = imp*r (⇒-resp-ps ψ⇒ψ')
+
+-- If MN1...Nn -> N with n >= 1 then either N = M'N1...Nn where M -> M', or M is a lambda-term
+APPl-⇒ : ∀ {V M N M' N'} (NN : snocList (Term V)) →
+  M ⇒ N → M ≡ APPl (appT M' N') NN → Σ[ M'' ∈ Term V ] M' ⇒ M'' × N ≡ APPl (appT M'' N') NN ⊎ Σ[ A ∈ Type ] Σ[ M'' ∈ Term (V , -Term) ] M' ≡ ΛT A M''
+APPl-⇒ NN βT M≡M'NN = inj₂ (_ ,p _ ,p (APPl-Λ {NN = NN} (≡-sym M≡M'NN)))
+APPl-⇒ [] (appTl {M' = M''} M⇒N) M≡M'NN = inj₁ (M'' ,p subst (λ x → x ⇒ M'') (appT-injl M≡M'NN) M⇒N ,p cong (appT M'') (appT-injr M≡M'NN))
+APPl-⇒ (NN snoc _) (appTl M⇒N) M≡M'NN with APPl-⇒ NN M⇒N (appT-injl M≡M'NN)
+APPl-⇒ (_ snoc _) (appTl _) M≡M'NN | inj₁ (M'' ,p M'⇒M'' ,p M₀≡M''NN) = inj₁ (M'' ,p M'⇒M'' ,p cong₂ appT M₀≡M''NN (appT-injr M≡M'NN))
+APPl-⇒ (_ snoc _) (appTl _) _ | inj₂ M'isΛ = inj₂ M'isΛ
+APPl-⇒ [] (impl _) ()
+APPl-⇒ (_ snoc _) (impl _) ()
+APPl-⇒ [] (impr _) ()
+APPl-⇒ (_ snoc _) (impr _) ()
+

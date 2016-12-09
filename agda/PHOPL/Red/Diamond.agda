@@ -2,9 +2,10 @@ module PHOPL.Red.Diamond where
 open import Prelims
 open import PHOPL.Grammar
 open import PHOPL.Red.Base
+open import PHOPL.Red.RRed
 
 diamond : ∀ {V K} {E F G : Expression V K} → E ⇒ F → E ⇒ G →
-  Common-Reduct (RClose (_⇒_ {V})) (RClose _⇒_) F G
+  Common-Reduct (_⇒?_ {V} {K}) (RClose _⇒_) F G
 diamond βT βT = cr _ ref ref
 diamond (appTl ()) βT
 diamond βT (appTl ())
@@ -22,6 +23,12 @@ diamond (impr {φ = φ} ψ⇒ψ') (impr ψ⇒ψ'') =
 diamond (appPl {ε = ε} δ⇒δ') (appPl δ⇒δ'') = 
   let cr δ₀ δ'⇒?δ₀ δ''⇒?δ₀ = diamond δ⇒δ' δ⇒δ'' in 
   cr (appP δ₀ ε) (⇒?-appPl δ'⇒?δ₀) (⇒?-appPl δ''⇒?δ₀)
+diamond refplus (appPl (plusR ()))
+diamond refminus (appPl (minusR ()))
+diamond (appPl (plusR ())) refplus
+diamond refplus refplus = cr _ ref ref
+diamond (appPl (minusR ())) refminus
+diamond refminus refminus = cr _ ref ref
 diamond (plusR P⇒P') (plusR P⇒P'') = 
   let cr P₀ P'⇒?P₀ P''⇒?P₀ = diamond P⇒P' P⇒P'' in 
   cr (plus P₀) (⇒?-plus P'⇒?P₀) (⇒?-plus P''⇒?P₀)
