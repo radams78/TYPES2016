@@ -3,6 +3,7 @@ open import Data.Empty renaming (⊥ to Empty)
 open import Data.Product renaming (_,_ to _,p_)
 open import Data.Sum
 open import Prelims
+open import Prelims.Closure.RST
 open import PHOPL.Grammar
 open import PHOPL.Red
 
@@ -24,8 +25,7 @@ canon-nf' θ (inc φ⇒ψ) θ≡φ = ⊥-elim (canon-nf {θ = θ} (subst (λ x �
 canon-nf' _ ref θ≡φ = θ≡φ
 canon-nf' θ (trans φ↠ψ ψ↠ψ') θ≡φ = canon-nf' θ ψ↠ψ' (canon-nf' θ φ↠ψ θ≡φ)
 
-red-canon : ∀ {V} {φ ψ : Term V} {θ : CanonProp} →
-  φ ↠ decode θ → φ ≃ ψ → ψ ↠ decode θ
+red-canon : ∀ {V} {φ ψ : Term V} {θ : CanonProp} → φ ↠ decode θ → φ ≃ ψ → ψ ↠ decode θ
 red-canon {V} {φ} {ψ} {θ} φ↠θ φ≃ψ = 
   let cr χ θ↠χ ψ↠χ = diamond-CR (λ _ _ _ → diamond) (decode θ) ψ (trans (sym (sub-RT-RST φ↠θ)) φ≃ψ) in 
   subst (λ x → ψ ↠ x) (≡-sym (canon-nf' θ θ↠χ refl)) ψ↠χ
@@ -47,4 +47,3 @@ APPl-red-canon {NN = _ snoc _} {θ = bot} _ | inj₁ (_ ,p _ ,p ())
 APPl-red-canon {NN = []} {θ = imp _ _} _ | inj₁ (_ ,p _ ,p ())
 APPl-red-canon {NN = _ snoc _} {θ = imp _ _} _ | inj₁ (_ ,p _ ,p ())
 APPl-red-canon _ | inj₂ MrtΛ = MrtΛ
-

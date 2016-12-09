@@ -681,17 +681,21 @@ If $\models E : T$ and $E \rightarrow F$ then $\models F : T$.
 An easy induction, using the fact that call-by-need reduction is confluent (Lemma \ref{lm:diamond}).
 \end{proof}
 
+\begin{definition}
+We introduce a closed term $c_A$ for every type $A$ such that $\models c_A : A$.
+\begin{align*}
+c_\Omega & \eqdef \bot \\
+c_{A \rightarrow B} & \eqdef \lambda x:A.c_B
+\end{align*}
+\end{definition}
+
 \begin{lemma}
-\label{lm:compute-SN}
-If $\models E : T$ then $E$ reduces to a normal form.
+$\models c_A : A$
 \end{lemma}
 
 \begin{proof}
-Induction on $\models E : T$.  Note that, if $M \{\}$ reduces to a normal form, then
-it is impossible for there to be an infinite reduction sequence starting from $M$ (Lemma \ref{lm:resp-sub}), hence $M$ must
-reduce to a normal form.
+An easy induction on $A$.
 \end{proof}
-%Note about Markov's principle?
 
 \begin{lemma}
 \label{lm:pre-ref-compute}
@@ -699,22 +703,24 @@ If $\models M : A \rightarrow B$ then $M$ reduces to a $\lambda$-expression.
 \end{lemma}
 
 \begin{proof}
-Let $M$ reduce to the normal form $N$.
-
 Let $B \equiv B_1 \rightarrow \cdots \rightarrow B_n \rightarrow \Omega$ where $n \geq 0$.  We have that
-\[ \models N \{\}_{xx} \reff{x}_{y_1 y_1} \reff{y_1} \cdots_{y_n y_n} \reff{y_n} : N x y_1 \cdots y_n =_\Omega N x y_1 \cdots y_n \]
-and so $N x y_1 \cdots y_n$ reduces to a canonical proposition.  Therefore $N$ cannot be a neutral term, $\bot$ or $\varphi \supset \psi$,
-so it must be a $\lambda$-term.
+\[ \models M \{\}_{c_Ac_A} c_A \{\}_{c_{B_1} c_{B_1}} c_{B_1} \{\} \cdots c_{B_n} \{\} : M c_{A} c_{B_1} \cdots c_{B_n} =_\Omega M c_{A} c_{B_1} \cdots c_{B_n} \]
+and so $M c_A c_{B_1} \cdots c_{B_n}$ reduces to a canonical proposition.  This reduction must proceed by reducing to $M' c_A c_{B_1} \cdots c_{B_n}$ by reducing $M$,
+then applying a $\beta$-reduction.  Therefore, $M$ reduces to a $\lambda$-expression
 \end{proof}
 
 \begin{lemma}
 \label{lm:ref-compute-Omega}
-For any term $\varphi$, we have $\models \reff{\varphi} : \varphi =_\Omega \varphi$.
+For any term $\varphi$ that reduces to a canonical proposition, we have $\models \reff{\varphi} : \varphi =_\Omega \varphi$.
 \end{lemma}
 
 \begin{proof}
-We must show that $\models \reff{\varphi}^+ : \varphi \supset \varphi$ and $\models \reff{\varphi}^- : \varphi \supset \varphi$.  So let $\models \delta : \varphi$.
-Then $\models \reff{\varphi}^+ \delta : \varphi$ and $\models \reff{\varphi}^- \delta : \varphi$ by Expansion (Lemma \ref{lm:expansion}), as required.
+In fact we prove that, for any terms $M$ and $\varphi$ such that $\varphi$ reduces to a canonical proposition, we have
+$\models \reff{M} : \varphi =_\Omega \varphi$.
+
+It is sufficient to prove the case where $\varphi$ is a canonical proposition.
+We must show that $\models \reff{M}^+ : \varphi \supset \varphi$ and $\models \reff{M}^- : \varphi \supset \varphi$.  So let $\models \delta : \varphi$.
+Then $\models \reff{M}^+ \delta : \varphi$ and $\models \reff{M}^- \delta : \varphi$ by Expansion (Lemma \ref{lm:expansion}), as required.
 \end{proof}
 
 \begin{lemma}

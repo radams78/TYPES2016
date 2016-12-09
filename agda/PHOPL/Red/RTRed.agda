@@ -1,4 +1,6 @@
 module PHOPL.Red.RTRed where
+open import Data.Unit
+open import Data.Bool
 open import Data.Product renaming (_,_ to _,p_)
 open import Data.Sum
 open import Prelims
@@ -10,9 +12,22 @@ _↠_ : ∀ {V K} → Expression V K → Expression V K → Set
 _↠_ {V} {K} = RTClose (_⇒_ {V} {K})
 
 ↠-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ↠ F → E 〈 ρ 〉 ↠ F 〈 ρ 〉
-↠-resp-rep (inc E⇒F) = inc (⇒-resp-rep E⇒F)
-↠-resp-rep ref = ref
-↠-resp-rep (trans E↠F F↠G) = trans (↠-resp-rep E↠F) (↠-resp-rep F↠G)
+↠-resp-rep = respects-RT₂ (λ _ _ → ⇒-resp-rep) _ _
+
+↠-impl : ∀ {V} {φ φ' ψ : Term V} → φ ↠ φ' → φ ⊃ ψ ↠ φ' ⊃ ψ
+↠-impl = respects-RT {A = ⊤} (λ _ → _⇒_) _ (λ _ _ → impl) _ _
+
+↠-impr : ∀ {V} {φ ψ ψ' : Term V} → ψ ↠ ψ' → φ ⊃ ψ ↠ φ ⊃ ψ'
+↠-impr = respects-RT {A = ⊤} (λ _ → _⇒_) _ (λ _ _ → impr) _ _
+
+↠-imp : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ↠ φ' → ψ ↠ ψ' → φ ⊃ ψ ↠ φ' ⊃ ψ'
+↠-imp φ↠φ' ψ↠ψ' = trans (↠-impl φ↠φ') (↠-impr ψ↠ψ')
+
+↠-appP : ∀ {V} {δ δ' ε : Proof V} → δ ↠ δ' → appP δ ε ↠ appP δ' ε
+↠-appP = respects-RT {A = ⊤} (λ _ → _⇒_) _ (λ _ _ → appPl) _ _
+
+↠-plus : ∀ {V} {P Q : Path V} → P ↠ Q → plus P ↠ plus Q
+↠-plus {V} = respects-RT₂ (λ x y → plusR) _ _
 
 data Reduces-to-Λ {V} (M : Term V) : Set where
   reduces-to-Λ : ∀ {A N} → M ↠ ΛT A N → Reduces-to-Λ M
@@ -42,4 +57,3 @@ imp-red-inj₁' (trans χ₁↠χ₂ χ₂↠χ₃) χ₁≡φ⊃ψ | φ' ,p ψ'
 imp-red-inj₁ : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ↠ φ' ⊃ ψ' → φ ↠ φ'
 imp-red-inj₁ φ⊃ψ↠φ'⊃ψ' with imp-red-inj₁' φ⊃ψ↠φ'⊃ψ' refl
 imp-red-inj₁ {φ = φ} φ⊃ψ↠φ'⊃ψ' | φ'' ,p ψ'' ,p φ'⊃ψ'≡φ''⊃ψ'' ,p φ↠φ'' = subst (λ x → φ ↠ x) (⊃-injl (≡-sym φ'⊃ψ'≡φ''⊃ψ'')) φ↠φ''
-

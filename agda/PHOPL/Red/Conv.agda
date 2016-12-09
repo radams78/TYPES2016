@@ -1,6 +1,7 @@
 module PHOPL.Red.Conv where
 open import Data.Unit
 open import Prelims
+open import Prelims.Closure.RST
 open import PHOPL.Grammar
 open import PHOPL.Red.Base
 

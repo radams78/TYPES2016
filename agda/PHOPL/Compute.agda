@@ -1,9 +1,11 @@
 module PHOPL.Compute where
 open import Data.Empty renaming (⊥ to Empty)
 open import Data.Unit
+open import Data.Bool
 open import Data.Product hiding (map) renaming (_,_ to _,p_)
 open import Data.Sum hiding (map)
 open import Prelims
+open import Prelims.Closure.RST
 open import PHOPL.Grammar
 open import PHOPL.PathSub
 open import PHOPL.Red
@@ -55,6 +57,11 @@ expansionT ⊧N∶A M⇒N = conversionE (expansionE ⊧N∶A (⇒-resp-ps M⇒N)
 expansionE {A = Ω} (⊧Q+∶φ⊃ψ ,p ⊧Q-∶ψ⊃φ) P⇒Q = 
   expansionP ⊧Q+∶φ⊃ψ (plusR P⇒Q) ,p expansionP ⊧Q-∶ψ⊃φ (minusR P⇒Q)
 expansionE {A = A ⇛ B} ⊧Q∶M≡M' P⇒Q N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N' = expansionE (⊧Q∶M≡M' N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N') (app*l P⇒Q)
+
+↞PC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC ε ∶ θ → δ ↠ ε → ⊧PC δ ∶ θ
+↞PC ⊧ε∶θ (inc δ⇒ε) = expansionPC ⊧ε∶θ δ⇒ε
+↞PC ⊧ε∶θ ref = ⊧ε∶θ
+↞PC ⊧ε'∶θ (trans δ↠ε ε↠ε') = ↞PC (↞PC ⊧ε'∶θ ε↠ε') δ↠ε
 
 reductionPC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC δ ∶ θ → δ ⇒ ε → ⊧PC ε ∶ θ
 reductionPC {V} {ε = ε} {θ = bot} (ν ,p δ↠ν) δ⇒ε = 
@@ -117,3 +124,23 @@ APPl-rtΛ {V} {P} {M} {N} {NN} {A ⇛ B} {L} ⊧P∶MNN≡N = APPl-rtΛ {V}
 
 Lemma29 : ∀ {V} {M : Term V} {A B} → ⊧T M ∶ A ⇛ B → Reduces-to-Λ M
 Lemma29 {V} {M} {A} {B} ⊧M∶A⇛B = ⊧E-rtΛ ⊧M∶A⇛B
+
+⊧ref : ∀ {V} {M φ : Term V} {θ} → φ ↠ decode θ → ⊧E reff M ∶ φ ≡〈 Ω 〉 φ
+⊧ref {V} {M} {φ} {θ} φ↠θ = (imp θ θ ,p ↠-imp φ↠θ φ↠θ ,p (λ ε ⊧ε∶φ → expansionPC ⊧ε∶φ refplus)) ,p imp θ θ ,p ↠-imp φ↠θ φ↠θ ,p (λ ε ⊧ε∶φ → expansionPC ⊧ε∶φ refminus)
+
+⊧canon : ∀ {V} {φ : Term V} → ⊧T φ ∶ Ω → Σ[ θ ∈ CanonProp ] φ ↠ decode θ
+⊧canon ((bot ,p φ⊃φ↠⊥ ,p _) ,p _) = ⊥-elim (imp-not-red-bot φ⊃φ↠⊥)
+⊧canon ((imp θ θ' ,p φ⊃φ↠θ⊃θ' ,p _) ,p _) = θ ,p (imp-red-inj₁ φ⊃φ↠θ⊃θ')
+
+respects-RST₂ : ∀ {i j A B} {f : A → B} {R : Rel A i} {S : Rel B j} →
+  Respects₂ f R S → Respects₂ f (RSTClose R) (RSTClose S)
+respects-RST₂ hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
+respects-RST₂ hyp y .y ref = {!!}
+respects-RST₂ hyp x x₁ (sym x↠y) = {!!}
+respects-RST₂ hyp x y (trans x↠y x↠y₁) = {!!}
+
+↠-resp-ps : ∀ {U V} {M N : Term U} {τ : PathSub U V} {ρ σ} → M ↠ N → M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ↠ N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧
+↠-resp-ps = {!respects-RST₂!}
+
+⊧canon' : ∀ {V} {φ : Term V} {θ : CanonProp} → φ ↠ decode θ → ⊧T φ ∶ Ω
+⊧canon' {V} {φ} {θ} φ↠θ = (imp θ θ ,p ↠-imp φ↠θ φ↠θ ,p λ ε ⊧ε∶φ → ↞PC (expansionPC ⊧ε∶φ refplus) (↠-appP (↠-plus (trans {!↠-resp-ps!} {!!})))) ,p {!!}
