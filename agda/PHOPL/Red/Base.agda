@@ -20,9 +20,12 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   plusR : ∀ {V} {P Q : Path V} → P ⇒ Q → plus P ⇒ plus Q
   minusR : ∀ {V} {P Q : Path V} → P ⇒ Q → minus P ⇒ minus Q
   βE : ∀ {V A M N P} {Q : Path V} → app* M N (λλλ A P) Q ⇒ P ⟦ x₂:= M ,x₁:= N ,x₀:= Q ⟧
+  βP : ∀ {V A M} {N N' : Term V} {P} → app* N N' (reff (ΛT A M)) P ⇒ M ⟦⟦ x₀::= P ∶ x₀:= N ≡ x₀:= N' ⟧⟧
+  ref⊃* : ∀ {V} {φ ψ : Term V} → reff φ ⊃* reff ψ ⇒ reff (φ ⊃ ψ)
   imp*l : ∀ {V} {P P' Q : Path V} → P ⇒ P' → P ⊃* Q ⇒ P' ⊃* Q
   imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒ Q' → P ⊃* Q ⇒ P ⊃* Q'
   app*l : ∀ {V} {M N : Term V} {P P' Q} → P ⇒ P' → app* M N P Q ⇒ app* M N P' Q
+  reffR : ∀ {V} {M N : Term V} → M ⇒ N → reff M ⇒ reff N
 
 ⇒-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ⇒ F → E 〈 ρ 〉 ⇒ F 〈 ρ 〉
 ⇒-resp-rep {ρ = ρ} (βT {V} {A} {M} {N}) = subst (λ x → (appT (ΛT A M) N 〈 ρ 〉) ⇒ x) 
@@ -36,10 +39,25 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-rep refminus = refminus
 ⇒-resp-rep (plusR P⇒Q) = plusR (⇒-resp-rep P⇒Q)
 ⇒-resp-rep (minusR P⇒Q) = minusR (⇒-resp-rep P⇒Q)
-⇒-resp-rep {ρ = ρ} (βE {V} {A} {M} {N} {P} {Q}) = subst (λ x → (app* M N (λλλ A P) Q 〈 ρ 〉) ⇒ x) (botSub₃-liftRep₃ P) βE
+⇒-resp-rep {ρ = ρ} (βE {A = A} {M} {N} {P} {Q}) = subst (λ x → (app* M N (λλλ A P) Q 〈 ρ 〉) ⇒ x) (botSub₃-liftRep₃ P) βE
+⇒-resp-rep {ρ = ρ} (βP {V} {A} {M} {N} {N'} {P}) = subst (λ x → (app* N N' (reff (ΛT A M)) P) 〈 ρ 〉 ⇒ x) 
+  (let open ≡-Reasoning in 
+  begin
+    M 〈 liftRep -Term ρ 〉 ⟦⟦ x₀::= (P 〈 ρ 〉) ∶ x₀:= N 〈 ρ 〉 ≡ x₀:= N' 〈 ρ 〉 ⟧⟧
+  ≡⟨ pathSub-•PR M ⟩
+    M ⟦⟦ x₀::= (P 〈 ρ 〉) •PR liftRep -Term ρ ∶ x₀:= N 〈 ρ 〉 •SR liftRep -Term ρ ≡
+         x₀:= N' 〈 ρ 〉 •SR liftRep -Term ρ ⟧⟧
+  ≡⟨⟨ pathSub-cong M botPathSub-liftRep (comp-botSub' COMPRS COMPSR) (comp-botSub' COMPRS COMPSR) ⟩⟩
+    M ⟦⟦ ρ •RP x₀::= P ∶ ρ •RS x₀:= N ≡ ρ •RS x₀:= N' ⟧⟧
+  ≡⟨ pathSub-•RP M ⟩
+    M ⟦⟦ x₀::= P ∶ x₀:= N ≡ x₀:= N' ⟧⟧ 〈 ρ 〉
+  ∎) 
+  βP
+⇒-resp-rep ref⊃* = ref⊃*
 ⇒-resp-rep (imp*l P⇒P') = imp*l (⇒-resp-rep P⇒P')
 ⇒-resp-rep (imp*r Q⇒Q') = imp*r (⇒-resp-rep Q⇒Q')
 ⇒-resp-rep (app*l P⇒P') = app*l (⇒-resp-rep P⇒P')
+⇒-resp-rep (reffR M⇒N) = reffR (⇒-resp-rep M⇒N)
 
 ⇒-resp-ps : ∀ {U V} {M N : Term U} {τ : PathSub U V} {ρ σ} → M ⇒ N → M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ⇒ N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧
 ⇒-resp-ps {V = V} {τ = τ} {ρ} {σ} (βT {U} {A} {M} {N}) = 
@@ -61,6 +79,10 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-ps (appTl M⇒M') = app*l (⇒-resp-ps M⇒M')
 ⇒-resp-ps (impl φ⇒φ') = imp*l (⇒-resp-ps φ⇒φ')
 ⇒-resp-ps (impr ψ⇒ψ') = imp*r (⇒-resp-ps ψ⇒ψ')
+
+⇒-APPP : ∀ {V} {δ δ' : Proof V} εε → δ ⇒ δ' → APPP δ εε ⇒ APPP δ' εε
+⇒-APPP [] δ⇒δ' = δ⇒δ'
+⇒-APPP (εε snoc ε) δ⇒δ' = appPl (⇒-APPP εε δ⇒δ')
 
 -- If MN1...Nn -> N with n >= 1 then either N = M'N1...Nn where M -> M', or M is a lambda-term
 APPl-⇒ : ∀ {V M N M' N'} (NN : snocList (Term V)) →

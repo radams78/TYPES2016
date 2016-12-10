@@ -5,6 +5,7 @@ open import Data.Sum
 open import Prelims
 open import Prelims.Closure.RST
 open import PHOPL.Grammar
+open import PHOPL.PathSub
 open import PHOPL.Red
 
 data CanonProp : Set where
@@ -47,3 +48,7 @@ APPl-red-canon {NN = _ snoc _} {θ = bot} _ | inj₁ (_ ,p _ ,p ())
 APPl-red-canon {NN = []} {θ = imp _ _} _ | inj₁ (_ ,p _ ,p ())
 APPl-red-canon {NN = _ snoc _} {θ = imp _ _} _ | inj₁ (_ ,p _ ,p ())
 APPl-red-canon _ | inj₂ MrtΛ = MrtΛ
+
+θps-red-ref : ∀ {V} (θ : CanonProp) → decode θ ⟦⟦ refSub ∶ idSub V ≡ idSub _ ⟧⟧ ↠ reff (decode θ)
+θps-red-ref bot = ref
+θps-red-ref (imp θ θ') = trans (↠-imp* (θps-red-ref θ) (θps-red-ref θ')) (inc ref⊃*)

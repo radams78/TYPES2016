@@ -49,13 +49,6 @@ pathSub-cong (app (-lamTerm A) (M ∷ [])) τ∼∼τ' ρ∼ρ' σ∼σ' =
   cong (λλλ A) (pathSub-cong M (liftPathSub-cong τ∼∼τ') 
                (sub↖-cong ρ∼ρ') (sub↗-cong σ∼σ'))
 
-x₀::= : ∀ {V} → Path V → PathSub (V , -Term) V
-(x₀::= P) x₀ = P
-(x₀::= P) (↑ x) = reff (var x)
-
-refSub : ∀ {V} → PathSub V V
-refSub x = reff (var x)
-
 _•PR_ : ∀ {U V W} → PathSub V W → Rep U V → PathSub U W
 (τ •PR ρ) x = τ (ρ -Term x)
 
@@ -145,14 +138,6 @@ pathSub-•PS (app (-lamTerm A) (M ∷ [])) {σ} {τ} {ρ} {ρ'} = cong (λλλ 
   ∎)
 pathSub-•PS (app -appTerm (M ∷ N ∷ [])) = cong₄ app* (sub-• N) (sub-• N) (pathSub-•PS M) (pathSub-•PS N)
 
-extendPS : ∀ {U} {V} → PathSub U V → Path V → PathSub (U , -Term) V
-extendPS τ P x₀ = P
-extendPS τ P (↑ x) = τ x
-
-•PS-botsub : ∀ {U V} {τ : PathSub U V} {ρ σ N} → (τ ∶ ρ ≡ σ •PS (x₀:= N)) ∼∼ extendPS τ (N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧)
-•PS-botsub x₀ = refl
-•PS-botsub (↑ _) = refl
-
 infix 25 _•SP_
 _•SP_ : ∀ {U V W} → Sub V W → PathSub U V → PathSub U W
 (σ •SP τ) x = τ x ⟦ σ ⟧
@@ -176,7 +161,33 @@ pathSub-•SP (app (-lamTerm A) (M ∷ [])) {τ} {ρ} {σ} {μ} = cong (λλλ A
   ∎)
 pathSub-•SP (app -appTerm (M ∷ N ∷ [])) = cong₄ app* (sub-• N) (sub-• N) (pathSub-•SP M) (pathSub-•SP N)
 
+extendPS : ∀ {U} {V} → PathSub U V → Path V → PathSub (U , -Term) V
+extendPS τ P x₀ = P
+extendPS τ P (↑ x) = τ x
+
+x₀::= : ∀ {V} → Path V → PathSub (V , -Term) V
+(x₀::= P) x₀ = P
+(x₀::= P) (↑ x) = reff (var x)
+
 •SP-botSub : ∀ {U V} {τ : PathSub U V} {ρ σ M} → 
   (τ ∶ ρ ≡ σ •PS (x₀:= M)) ∼∼ ((x₂:= M ⟦ ρ ⟧ ,x₁:= M ⟦ σ ⟧ ,x₀:= M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧) •SP liftPathSub τ)
 •SP-botSub x₀ = refl
 •SP-botSub {τ = τ} {ρ} {σ} {M} (↑ x) = ≡-sym botSub-upRep₃
+
+•PS-botsub : ∀ {U V} {τ : PathSub U V} {ρ σ N} → (τ ∶ ρ ≡ σ •PS (x₀:= N)) ∼∼ extendPS τ (N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧)
+•PS-botsub x₀ = refl
+•PS-botsub (↑ _) = refl
+
+botPathSub-liftRep : ∀ {U V} {ρ : Rep U V} {P : Path U} →
+  (ρ •RP x₀::= P) ∼∼ (x₀::= (P 〈 ρ 〉) •PR liftRep -Term ρ)
+botPathSub-liftRep x₀ = refl
+botPathSub-liftRep (↑ x) = refl
+
+refSub : ∀ {V} → PathSub V V
+refSub x = reff (var x)
+
+botSub₃-liftRefSub : ∀ {V} {M N : Term V} {P : Path V} →
+  (x₂:= M ,x₁:= N ,x₀:= P) •SP liftPathSub refSub ∼∼ x₀::= P
+botSub₃-liftRefSub x₀ = refl
+botSub₃-liftRefSub (↑ x) = refl
+

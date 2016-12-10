@@ -23,11 +23,11 @@ diamond (impr {φ = φ} ψ⇒ψ') (impr ψ⇒ψ'') =
 diamond (appPl {ε = ε} δ⇒δ') (appPl δ⇒δ'') = 
   let cr δ₀ δ'⇒?δ₀ δ''⇒?δ₀ = diamond δ⇒δ' δ⇒δ'' in 
   cr (appP δ₀ ε) (⇒?-appPl δ'⇒?δ₀) (⇒?-appPl δ''⇒?δ₀)
-diamond refplus (appPl (plusR ()))
-diamond refminus (appPl (minusR ()))
-diamond (appPl (plusR ())) refplus
+diamond refplus (appPl (plusR (reffR _))) = cr _ ref (inc refplus)
+diamond refminus (appPl (minusR (reffR _))) = cr _ ref (inc refminus)
+diamond (appPl (plusR (reffR _))) refplus = cr _ (inc refplus) ref
 diamond refplus refplus = cr _ ref ref
-diamond (appPl (minusR ())) refminus
+diamond (appPl (minusR (reffR _))) refminus = cr _ (inc refminus) ref
 diamond refminus refminus = cr _ ref ref
 diamond (plusR P⇒P') (plusR P⇒P'') = 
   let cr P₀ P'⇒?P₀ P''⇒?P₀ = diamond P⇒P' P⇒P'' in 
@@ -36,6 +36,11 @@ diamond (minusR P⇒P') (minusR P⇒P'') =
   let cr P₀ P'⇒?P₀ P''⇒?P₀ = diamond P⇒P' P⇒P'' in 
   cr (minus P₀) (⇒?-minus P'⇒?P₀) (⇒?-minus P''⇒?P₀)
 diamond βE βE = cr _ ref ref
+diamond ref⊃* ref⊃* = cr _ ref ref
+diamond (imp*l (reffR φ⇒φ')) ref⊃* = cr _ (inc ref⊃*) (inc (reffR (impl φ⇒φ')))
+diamond (imp*r (reffR φ⇒φ')) ref⊃* = cr _ (inc ref⊃*) (inc (reffR (impr φ⇒φ')))
+diamond ref⊃* (imp*l (reffR φ⇒φ')) = cr _ (inc (reffR (impl φ⇒φ'))) (inc ref⊃*)
+diamond ref⊃* (imp*r (reffR φ⇒φ')) = cr _ (inc (reffR (impr φ⇒φ'))) (inc ref⊃*)
 diamond (imp*l {Q = Q} P⇒P') (imp*l P⇒P'') = 
   let cr P₀ P'⇒?P₀ P''⇒?P₀ = diamond P⇒P' P⇒P'' in 
   cr (P₀ ⊃* Q) (⇒?-imp*l P'⇒?P₀) (⇒?-imp*l P''⇒?P₀)
@@ -45,8 +50,13 @@ diamond (imp*r {P = P} Q⇒Q') (imp*r Q⇒Q'') =
   let cr Q₀ Q'⇒?Q₀ Q''⇒?Q₀ = diamond Q⇒Q' Q⇒Q'' in 
   cr (P ⊃* Q₀) (⇒?-imp*r Q'⇒?Q₀) (⇒?-imp*r Q''⇒?Q₀)
 diamond (app*l ()) βE
+diamond βP βP = cr _ ref ref
+diamond (app*l (reffR ())) βP
+diamond βP (app*l (reffR ()))
 diamond βE (app*l ())
 diamond (app*l {M = M} {N = N} {Q = Q} P⇒P') (app*l P⇒P'') = 
   let cr P₀ P'⇒?P₀ P''⇒?P₀ = diamond P⇒P' P⇒P'' in 
   cr (app* M N P₀ Q) (⇒?-app*l P'⇒?P₀) (⇒?-app*l P''⇒?P₀)
-
+diamond (reffR M⇒N₁) (reffR M⇒N₂) = 
+  let cr L N₁⇒?L N₂⇒?L = diamond M⇒N₁ M⇒N₂ in 
+  cr (reff L) (⇒?-reff N₁⇒?L) (⇒?-reff N₂⇒?L)

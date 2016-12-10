@@ -37,7 +37,11 @@ _⇒?_ = RClose _⇒_
 ⇒?-minus : ∀ {V} {P Q : Path V} → P ⇒? Q → minus P ⇒? minus Q
 ⇒?-minus {V} = respects-R {A = Bool} {B = λ b → VExpression V (if b then -Path else -Proof)} (λ _ → _⇒_ ) {true} {false} minus (λ x y → minusR) _ _
 
+⇒?-reff : ∀ {V} {M N : Term V} → M ⇒? N → reff M ⇒? reff N
+⇒?-reff = respects-R₂ (λ _ _ → reffR) _ _
+
 imp-osr-inj₁ : ∀ {V} {φ ψ χ : Term V} → φ ⊃ ψ ⇒ χ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
   χ ≡ φ' ⊃ ψ' × φ ⇒? φ'
 imp-osr-inj₁ {ψ = ψ} (impl {φ' = φ'} φ⊃φ') = φ' ,p ψ ,p refl ,p inc φ⊃φ'
 imp-osr-inj₁ {φ = φ} (impr {ψ' = ψ'} _) = φ ,p ψ' ,p refl ,p ref
+

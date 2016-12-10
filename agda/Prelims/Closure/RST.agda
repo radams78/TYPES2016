@@ -37,3 +37,9 @@ respects-RST' _ _ _ ref = ref
 respects-RST' hyp x y (sym y≃x) = sym (respects-RST' hyp y x y≃x)
 respects-RST' hyp x z (trans x≃y y≃z) = trans (respects-RST' hyp x _ x≃y) (respects-RST' hyp _ z y≃z)
 
+respects-RST₂ : ∀ {i j A B} {f : A → B} {R : Rel A i} {S : Rel B j} →
+  Respects₂ f R S → Respects₂ f (RSTClose R) (RSTClose S)
+respects-RST₂ hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
+respects-RST₂ hyp y .y ref = ref
+respects-RST₂ hyp x y (sym y≃x) = sym (respects-RST₂ hyp y x y≃x)
+respects-RST₂ hyp x z (trans x≃y y≃z) = trans (respects-RST₂ hyp x _ x≃y) (respects-RST₂ hyp _ z y≃z)
