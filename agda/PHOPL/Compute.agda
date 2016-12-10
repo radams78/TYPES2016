@@ -151,7 +151,7 @@ Lemma29 {V} {M} {A} {B} ⊧M∶A⇛B = ⊧E-rtΛ ⊧M∶A⇛B
 
 ⊧neutralPC : ∀ {V} (δ : NeutralP V) {θ : CanonProp} → ⊧PC decode-NeutralP δ ∶ θ
 ⊧neutralPC δ {θ = bot} = δ ,p ref
-⊧neutralPC δ {θ = imp θ θ'} W ρ ε ⊧ε∶φ = subst (λ x → ⊧PC x ∶ θ') (cong (λ x → appP x ε) decode-nrepP) (⊧neutralPC (app (nrepP ρ δ) ε))
+⊧neutralPC δ {θ = imp θ θ'} W ρ ε ⊧ε∶φ = subst (λ x → ⊧PC x ∶ θ') {appP (decode-NeutralP (nrepP ρ δ)) ε} (cong (λ x → appP x ε) (decode-nrepP {ρ = ρ} {δ})) (⊧neutralPC (app (nrepP ρ δ) ε)) --subst (λ x → ⊧PC x ∶ θ') (cong (λ x → appP x ε) decode-nrepP) (⊧neutralPC (app (nrepP ρ δ) ε))
 
 ⊧neutralP : ∀ {V} {δ : NeutralP V} {φ : Term V} {θ : CanonProp} →
   φ ↠ decode θ → ⊧ decode-NeutralP δ ∶ φ
@@ -213,15 +213,29 @@ postulate ⊧ref : ∀ {V} {M : Term V} {A} → ⊧T M ∶ A → ⊧E reff M ∶
     (sym (sub-RT-RST (↠-appT M↠ΛCN))) -}
 
 ⊧PCrep : ∀ {U V} {δ : Proof U} {ρ : Rep U V} {θ} → ⊧PC δ ∶ θ → ⊧PC δ 〈 ρ 〉 ∶ θ
-⊧PCrep {δ = δ} {ρ = ρ} {θ = bot} (ν ,p δ↠ν) = nrepP ρ ν ,p subst (λ x → δ 〈 ρ 〉 ↠ x) decode-nrepP (↠-resp-rep δ↠ν)
-⊧PCrep {θ = imp θ θ₁} ⊧δ∶θ ε ⊧ε∶φ = {!!}
+⊧PCrep {δ = δ} {ρ = ρ} {θ = bot} (ν ,p δ↠ν) = nrepP ρ ν ,p subst (λ x → δ 〈 ρ 〉 ↠ x) (≡-sym (decode-nrepP {ρ = ρ} {ν})) (↠-resp-rep δ↠ν)
+⊧PCrep {δ = δ} {ρ = ρ} {θ = imp θ θ'} ⊧δ∶θ⊃θ' W σ ε ⊧ε∶θ = subst (λ x → ⊧PC appP x ε ∶ θ') (rep-comp δ) (⊧δ∶θ⊃θ' W (σ •R ρ) ε ⊧ε∶θ)
 
 Lemma35d : ∀ {V} {P : Path V} {pp θ} → ⊧PC APPP (plus P) (snocmap var pp) ∶ θ → Σ[ Q ∈ CanonE V ] P ↠ decode-CanonE Q
 Lemma35d {pp = pp} {θ = bot} (δ ,p P+pp↠δ) = Lemma35c pp δ P+pp↠δ
 Lemma35d {V} {P} {pp} {imp θ θ'} ⊧P+pp∶θ⊃θ' =
   let ⊧P⇑pp∶θ⊃θ' : ⊧PC APPP (plus (P ⇑)) (snocmap var (snocmap ↑ pp)) ∶ imp θ θ'
-      ⊧P⇑pp∶θ⊃θ' = {!!} in
-  let Q ,p P↠Q = Lemma35d {V , -Proof} {P ⇑} {snocmap ↑ pp snoc x₀} {θ'} {!!} in {!!}
+      ⊧P⇑pp∶θ⊃θ' = λ W ρ ε ⊧ε∶φ → subst (λ x → ⊧PC appP x ε ∶ θ') 
+        (let open ≡-Reasoning in 
+          begin
+            APPP (plus P) (snocmap var pp) 〈 ρ •R upRep 〉
+          ≡⟨ rep-comp (APPP (plus P) (snocmap var pp)) ⟩
+            APPP (plus P) (snocmap var pp) ⇑ 〈 ρ 〉
+          ≡⟨ rep-congl {!!} ⟩
+            APPP (plus (P ⇑)) (snocmap (λ E → E ⇑) (snocmap var pp)) 〈 ρ 〉
+          ≡⟨ cong (λ x → APPP (plus (P ⇑)) x 〈 ρ 〉) {!!} ⟩
+            APPP (plus (P ⇑)) (snocmap (λ x → var (↑ x)) pp) 〈 ρ 〉
+          ≡⟨ cong (λ x → APPP (plus (P ⇑)) x 〈 ρ 〉) {!!} ⟩
+            APPP (plus (P ⇑)) (snocmap var (snocmap ↑ pp)) 〈 ρ 〉
+          ∎) 
+        (⊧P+pp∶θ⊃θ' W (ρ •R upRep) ε ⊧ε∶φ) in
+  let Q ,p P↠Q = Lemma35d {V , -Proof} {P ⇑} {snocmap ↑ pp snoc x₀} {θ'} {!!} in 
+  {!!}
 
 ⊧⊃* : ∀ {V} {P : Path V} {φ φ' Q ψ ψ'} →
   ⊧E P ∶ φ ≡〈 Ω 〉 φ' → ⊧E Q ∶ ψ ≡〈 Ω 〉 ψ' → ⊧E P ⊃* Q ∶ φ ⊃ ψ ≡〈 Ω 〉 φ' ⊃ ψ'
