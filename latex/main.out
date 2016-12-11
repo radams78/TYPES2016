@@ -2,7 +2,7 @@
 \BOOKMARK [1][-]{section.2}{Predicative Higher-Order Minimal Logic with Extensional Equality}{}% 2
 \BOOKMARK [2][-]{subsection.2.1}{Syntax}{section.2}% 3
 \BOOKMARK [3][-]{subsubsection.2.1.1}{Substitution and Path Substitution}{subsection.2.1}% 4
-\BOOKMARK [3][-]{subsubsection.2.1.2}{Call-By-Need Reduction}{subsection.2.1}% 5
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Call-By-Name Reduction}{subsection.2.1}% 5
 \BOOKMARK [3][-]{subsubsection.2.1.3}{Canonicity}{subsection.2.1}% 6
 \BOOKMARK [3][-]{subsubsection.2.1.4}{Neutral Expressions}{subsection.2.1}% 7
 \BOOKMARK [2][-]{subsection.2.2}{Rules of Deduction}{section.2}% 8
