@@ -225,16 +225,33 @@ Lemma35d {V} {P} {pp} {imp θ θ'} {d} ⊧P+pp∶θ⊃θ' =
         (let open ≡-Reasoning in 
         begin
           APPP (dir d P) (snocmap var pp) ⇑
-        ≡⟨ APPP-rep ⟩
+        ≡⟨ APPP-rep {εε = snocmap var pp} ⟩
           APPP (dir d (P ⇑)) (snocmap (λ E → E ⇑) (snocmap var pp))
-        ≡⟨⟨ cong (APPP (dir d (P ⇑))) snocmap-comp ⟩⟩
+        ≡⟨⟨ cong (APPP (dir d (P ⇑))) (snocmap-comp pp) ⟩⟩
           APPP (dir d (P ⇑)) (snocmap (λ x → var (↑ x)) pp)
-        ≡⟨ cong (APPP (dir d (P ⇑))) snocmap-comp ⟩
+        ≡⟨ cong (APPP (dir d (P ⇑))) (snocmap-comp pp) ⟩
           APPP (dir d (P ⇑)) (snocmap var (snocmap ↑ pp))
         ∎)) 
-        (⊧P+pp∶θ⊃θ' (V , -Proof) upRep (var x₀) (⊧neutralPC (var x₀)))) in 
-  {!Q!} ,p {!!}
+        (⊧P+pp∶θ⊃θ' (V , -Proof) upRep (var x₀) (⊧neutralPC (var x₀)))) in
+  let Q' ,p P↠Q' ,p Q'≡Q = ↠-reflect-rep {E = P} {ρ = upRep} P↠Q refl in
+  let Q₀ ,p Q₀≡Q' = reflect-canonE {P = Q'} {Q = Q} {ρ = upRep} Q'≡Q in
+  Q₀ ,p subst (λ x → P ↠ x) Q₀≡Q' P↠Q'
+
+Lemma35e : ∀ {V} {P : Path V} {φ d} → ⊧P dir d P ∶ φ → Σ[ Q ∈ CanonE V ] P ↠ decode-CanonE Q
+Lemma35e (_ ,p _ ,p ⊧P+∶θ) = Lemma35d {pp = []} ⊧P+∶θ
+
+⊧E-valid₁ : ∀ {V} {P : Path V} {φ ψ : Term V} → ⊧E P ∶ φ ≡〈 Ω 〉 ψ → ⊧ φ ∶ ty Ω
+⊧E-valid₁ ((bot ,p φ⊃ψ↠⊥ ,p _) ,p _) = ⊥-elim (imp-not-red-bot φ⊃ψ↠⊥)
+⊧E-valid₁ ((imp θ θ' ,p φ⊃ψ↠θ⊃θ' ,p proj₂) ,p proj₄) = ⊧canon' {θ = θ} (imp-red-inj₁ φ⊃ψ↠θ⊃θ')
+
+⊧imp : ∀ {V} {φ ψ : Term V} → ⊧T φ ∶ ty Ω → ⊧T ψ ∶ ty Ω → ⊧T φ ⊃ ψ ∶ ty Ω
+⊧imp = {!!}
 
 ⊧⊃* : ∀ {V} {P : Path V} {φ φ' Q ψ ψ'} →
   ⊧E P ∶ φ ≡〈 Ω 〉 φ' → ⊧E Q ∶ ψ ≡〈 Ω 〉 ψ' → ⊧E P ⊃* Q ∶ φ ⊃ ψ ≡〈 Ω 〉 φ' ⊃ ψ'
-⊧⊃* ⊧P∶φ≡φ' ⊧Q∶ψ≡ψ' = {!!} ,p {!!}
+⊧⊃* (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) with Lemma35e ⊧P+∶φ⊃φ'
+⊧⊃* (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | Pcanon ,p P↠Pcanon with Lemma35e ⊧Q+∶ψ⊃ψ'
+⊧⊃* (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | neutral Pcanon ,p P↠Pcanon | Qcanon ,p Q↠Qcanon = 
+  expansionE (⊧neutralE {P = imp Pcanon Q} {!⊧imp!} {!!}) {!!}
+⊧⊃* (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | reffC x ,p P↠Pcanon | Qcanon ,p Q↠Qcanon = {!!}
+⊧⊃* (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | univC x x₁ x₂ x₃ ,p P↠Pcanon | Qcanon ,p Q↠Qcanon = {!!}

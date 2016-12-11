@@ -5,7 +5,7 @@ submitted to the Post-Proceedings of the TYPES 2016 conference.
 
 The following is a guide to which lemmas in the paper correspond to which terms in the Agda formalisation
 
-|---|---|---|
+
 | Lemma | File | Term |
 |---|---|---|
 | Lemma 3 | PHOPL / PathSub.agda | pathsub-•PS |

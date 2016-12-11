@@ -105,11 +105,24 @@ appT-injr refl = refl
 appP-injl : ∀ {V} {δ δ' ε ε' : Proof V} → appP δ ε ≡ appP δ' ε' → δ ≡ δ'
 appP-injl refl = refl
 
+app*-injl : ∀ {V} {M M' N N' : Term V} {P P' Q Q' : Path V} → app* M N P Q ≡ app* M' N' P' Q' → P ≡ P'
+app*-injl refl = refl
+
 eq-inj₁ : ∀ {V A A'} {M M' N N' : Term V} → M ≡〈 A 〉 N ≡ M' ≡〈 A' 〉 N' → M ≡ M'
 eq-inj₁ refl = refl
 
 dir-inj : ∀ {V} {P Q : Path V} {d} → dir d P ≡ dir d Q → P ≡ Q
 dir-inj refl = refl
+
+univ-injl : ∀ {V} {φ φ' ψ ψ' : Term V} {δ δ' ε ε' : Proof V} →
+  univ φ ψ δ ε ≡ univ φ' ψ' δ' ε' → δ ≡ δ'
+univ-injl refl = refl
+
+⊃*-injl : ∀ {V} {P P' Q Q' : Path V} → P ⊃* Q ≡ P' ⊃* Q' → P ≡ P'
+⊃*-injl refl = refl
+
+⊃*-injr : ∀ {V} {P P' Q Q' : Path V} → P ⊃* Q ≡ P' ⊃* Q' → Q ≡ Q'
+⊃*-injr refl = refl
 
 APPl : ∀ {V} → Term V → snocList (Term V) → Term V
 APPl M [] = M

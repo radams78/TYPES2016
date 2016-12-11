@@ -11,6 +11,8 @@ data NeutralT : Alphabet → Set where
 
 data NeutralE (V : Alphabet) : Set where
   app*N : Term V → Term V → NeutralE V → Path V → NeutralE V
+  imp*l : NeutralE V → Path V → NeutralE V
+  imp*r : Path V → NeutralE V → NeutralE V
 
 data NeutralP (V : Alphabet) : Set where
   var : Var V -Proof → NeutralP V
@@ -22,6 +24,8 @@ decode-NeutralT ()
 
 decode-NeutralE : ∀ {V} → NeutralE V → Path V
 decode-NeutralE (app*N M N P Q) = app* M N (decode-NeutralE P) Q
+decode-NeutralE (imp*l P Q) = decode-NeutralE P ⊃* Q
+decode-NeutralE (imp*r P Q) = P ⊃* decode-NeutralE Q
 
 decode-NeutralP : ∀ {V} → NeutralP V → Proof V
 decode-NeutralP (var p) = var p
@@ -30,9 +34,13 @@ decode-NeutralP (dirN d P) = dir d (decode-NeutralE P)
 
 nrepE : ∀ {U V} → Rep U V → NeutralE U → NeutralE V
 nrepE ρ (app*N M N ν P) = app*N (M 〈 ρ 〉) (N 〈 ρ 〉) (nrepE ρ ν) (P 〈 ρ 〉)
+nrepE ρ (imp*l P Q) = imp*l (nrepE ρ P) (Q 〈 ρ 〉)
+nrepE ρ (imp*r P Q) = imp*r (P 〈 ρ 〉) (nrepE ρ Q)
 
-decode-nrepE : ∀ {U V} {ρ : Rep U V} {ν : NeutralE U} → decode-NeutralE (nrepE ρ ν) ≡ decode-NeutralE ν 〈 ρ 〉
-decode-nrepE {ρ = ρ} {app*N M N ν P} = cong (λ x → app* (M 〈 ρ 〉) (N 〈 ρ 〉) x (P 〈 ρ 〉)) decode-nrepE
+decode-nrepE : ∀ {U V} {ρ : Rep U V} (ν : NeutralE U) → decode-NeutralE (nrepE ρ ν) ≡ decode-NeutralE ν 〈 ρ 〉
+decode-nrepE {ρ = ρ} {app*N M N ν P} = cong (λ x → app* (M 〈 ρ 〉) (N 〈 ρ 〉) x (P 〈 ρ 〉)) (decode-nrepE ν)
+decode-nrepE {ρ = ρ} {imp*l P Q} = cong (λ x → x ⊃* Q 〈 ρ 〉) (decode-nrepE P)
+decode-nrepE {ρ = ρ} {imp*r P Q} = cong (λ x → P 〈 ρ 〉 ⊃* x) (decode-nrepE Q)
 
 nrepP : ∀ {U V} → Rep U V → NeutralP U → NeutralP V
 nrepP ρ (var p) = var (ρ _ p)
@@ -42,13 +50,43 @@ nrepP ρ (dirN d P) = dirN d (nrepE ρ P)
 decode-nrepP : ∀ {U V} {ρ : Rep U V} {ν : NeutralP U} → decode-NeutralP (nrepP ρ ν) ≡ decode-NeutralP ν 〈 ρ 〉
 decode-nrepP {ρ = ρ} {ν = var p} = refl
 decode-nrepP {ρ = ρ} {ν = app ν δ} = cong (λ x → appP x (δ 〈 ρ 〉)) (decode-nrepP {ρ = ρ} {ν = ν})
-decode-nrepP {ν = dirN d P} = cong (dir d) decode-nrepE
+decode-nrepP {ν = dirN d P} = cong (dir d) (decode-nrepE P)
+
+reflect-neutralE : ∀ {U V} {P : Path U} {Q : NeutralE V} {ρ : Rep U V} →
+  P 〈 ρ 〉 ≡ decode-NeutralE Q → Σ[ P' ∈ NeutralE U ] P ≡ decode-NeutralE P'
+reflect-neutralE {P = var _} {app*N _ _ _ _} ()
+reflect-neutralE {P = var _} {imp*l _ _} ()
+reflect-neutralE {P = var _} {imp*r _ _} ()
+reflect-neutralE {P = app -ref _} {app*N _ _ _ _} ()
+reflect-neutralE {P = app -ref _} {imp*l _ _} ()
+reflect-neutralE {P = app -ref _} {imp*r _ _} ()
+reflect-neutralE {P = app -imp* _} {app*N _ _ _ _} ()
+reflect-neutralE {P = app -imp* (P ∷ Q ∷ [])} {imp*l P' Q'} Pρ≡Q = 
+  let P₀ ,p P₀≡P = reflect-neutralE {P = P} {P'} (⊃*-injl Pρ≡Q) in
+  imp*l P₀ Q ,p cong (λ x → x ⊃* Q) P₀≡P
+reflect-neutralE {P = app -imp* (P ∷ Q ∷ [])} {imp*r P' Q'} Pρ≡Q = 
+  let Q₀ ,p Q₀≡Q = reflect-neutralE {P = Q} {Q'} (⊃*-injr Pρ≡Q) in 
+  imp*r P Q₀ ,p cong (λ x → P ⊃* x) Q₀≡Q
+reflect-neutralE {P = app -univ _} {app*N _ _ _ _} ()
+reflect-neutralE {P = app -univ _} {imp*l P Q} ()
+reflect-neutralE {P = app -univ _} {imp*r P Q} ()
+reflect-neutralE {P = app (-lll _) _} {app*N _ _ _ _} ()
+reflect-neutralE {P = app (-lll _) _} {imp*l P Q} ()
+reflect-neutralE {P = app (-lll _) _} {imp*r P Q} ()
+reflect-neutralE {P = app -app* (M₁ ∷ M₂ ∷ P₁ ∷ P₂ ∷ [])} {app*N N₁ N₂ Q₁ Q₂} {ρ} Pρ≡Q = 
+  let P₁' ,p P₁≡P₁' = reflect-neutralE {P = P₁} {Q₁} {ρ = ρ} (app*-injl Pρ≡Q) in
+  (app*N M₁ M₂ P₁' P₂) ,p (cong (λ x → app* M₁ M₂ x P₂) P₁≡P₁')
+reflect-neutralE {P = app -app* _} {imp*l P Q} ()
+reflect-neutralE {P = app -app* _} {imp*r P Q} ()
 
 neutralE-osr : ∀ {V} {P : NeutralE V} {Q} → decode-NeutralE P ⇒ Q →
   Σ[ Q' ∈ NeutralE V ] Q ≡ decode-NeutralE Q'
-neutralE-osr {P = app*N M N (app*N L L' P P') Q} (app*l P⇒Q) = 
+neutralE-osr {P = app*N x x₁ P x₂} P⇒Q = {!!}
+neutralE-osr {P = imp*l P x} P⇒Q = {!!}
+neutralE-osr {P = imp*r x P} P⇒Q = {!!}
+{- neutralE-osr {P = app*N M N (app*N L L' P P') Q} (app*l P⇒Q) = 
   let Q' ,p Q≡Q' = neutralE-osr {P = app*N L L' P P'} P⇒Q in 
-  (app*N M N Q' Q) ,p (cong (λ x → app* M N x Q) Q≡Q')
+  (app*N M N Q' Q) ,p (cong (λ x → app* M N x Q) Q≡Q') -}
 
 neutralP-red : ∀ {V} (δ : NeutralP V) {ε} → RClose _⇒_ (decode-NeutralP δ) ε →
   Σ[ ε' ∈ NeutralP V ] ε ≡ decode-NeutralP ε'
@@ -60,6 +98,8 @@ neutralP-red (app (app δ ε) ε') (inc (appPl δε⇒χ)) =
 neutralP-red (app (dirN d (app*N M N P Q)) δ) (inc (appPl δ⇒χ)) = 
   let χ' ,p χ≡χ' = neutralP-red (dirN d (app*N M N P Q)) (inc δ⇒χ) in
   app χ' δ ,p cong (λ x → appP x δ) χ≡χ'
+neutralP-red (app (dirN _ (imp*l _ _)) _) (inc _) = {!!}
+neutralP-red (app (dirN _ (imp*r _ _)) _) (inc _) = {!!}
 neutralP-red (dirN d P) (inc (dirR P⇒Q)) = 
   let Q' ,p Q≡Q' = neutralE-osr P⇒Q in 
   dirN d Q' ,p cong (dir d) Q≡Q'
@@ -76,6 +116,25 @@ decode-CanonE : ∀ {V} → CanonE V → Path V
 decode-CanonE (neutral P) = decode-NeutralE P
 decode-CanonE (reffC M) = reff M
 decode-CanonE (univC φ ψ δ ε) = univ φ ψ δ ε
+
+reflect-canonE : ∀ {U V} {P : Path U} {Q : CanonE V} {ρ : Rep U V} →
+  P 〈 ρ 〉 ≡ decode-CanonE Q → Σ[ P' ∈ CanonE U ] P ≡ decode-CanonE P'
+reflect-canonE {P = P} {neutral Q} {ρ} Pρ≡Q = 
+  let P' ,p P≡P' = reflect-neutralE {P = P} {ρ = ρ} Pρ≡Q in
+  neutral P' ,p P≡P'
+reflect-canonE {P = var _} {reffC _} ()
+reflect-canonE {P = app -ref (M ∷ [])} {reffC N} Pρ≡refM = 
+  (reffC M) ,p refl
+reflect-canonE {P = app -imp* x₁} {reffC M} ()
+reflect-canonE {P = app -univ x₁} {reffC M} ()
+reflect-canonE {P = app (-lll x) x₁} {reffC M} ()
+reflect-canonE {P = app -app* x₁} {reffC M} ()
+reflect-canonE {P = var x} {univC x₁ x₂ x₃ x₄} ()
+reflect-canonE {P = app -ref x₁} {univC x₂ x₃ x₄ x₅} ()
+reflect-canonE {P = app -imp* x₁} {univC x₂ x₃ x₄ x₅} ()
+reflect-canonE {P = app -univ (M₁ ∷ M₂ ∷ δ₁ ∷ δ₂ ∷ [])} {univC N₁ N₂ Q₁ Q₂} Pρ≡Q = univC M₁ M₂ δ₁ δ₂ ,p refl
+reflect-canonE {P = app (-lll x) x₁} {univC x₂ x₃ x₄ x₅} ()
+reflect-canonE {P = app -app* x₁} {univC x₂ x₃ x₄ x₅} ()
 
 Lemma35a : ∀ {V} {P : Path V} {pp : snocList (Var V -Proof)} {δ d} →
   APPP (dir d P) (snocmap var pp) ⇒ δ →

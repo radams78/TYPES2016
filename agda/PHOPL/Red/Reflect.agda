@@ -4,6 +4,7 @@ open import Prelims
 open import PHOPL.Grammar
 open import PHOPL.PathSub
 open import PHOPL.Red.Base
+open import PHOPL.Red.RTRed
 
 ⇒-reflect-rep : ∀ {U V K} {E : VExpression U K} {ρ : Rep U V} {F} → E 〈 ρ 〉 ⇒ F → Σ[ F' ∈ VExpression U K ] E ⇒ F' × F ≡ F' 〈 ρ 〉
 ⇒-reflect-rep {E = var _} ()
@@ -160,3 +161,14 @@ open import PHOPL.Red.Base
 ⇒-reflect-rep {E = app -app* (M ∷ N ∷ app -app* x₁ ∷ Q ∷ [])} {ρ} (app*l Pρ⇒P'ρ) =
   let P' ,p P⇒P' ,p P'ρ≡P'ρ = ⇒-reflect-rep Pρ⇒P'ρ in
   app* M N P' Q ,p app*l P⇒P' ,p cong (λ x → app* (M 〈 ρ 〉) (N 〈 ρ 〉) x (Q 〈 ρ 〉)) P'ρ≡P'ρ
+
+↠-reflect-rep : ∀ {U V K} {E : VExpression U K} {ρ : Rep U V} {E' F'} → E' ↠ F' → E 〈 ρ 〉 ≡ E' → Σ[ F ∈ VExpression U K ] E ↠ F × F 〈 ρ 〉 ≡ F'
+↠-reflect-rep {F' = F'} (inc E'⇒F') Eρ≡E' = 
+  let F ,p E⇒F ,p F'≡Fρ = ⇒-reflect-rep (subst (λ x → x ⇒ F') (≡-sym Eρ≡E') E'⇒F') in
+  F ,p inc E⇒F ,p ≡-sym F'≡Fρ
+↠-reflect-rep ref Eρ≡E' = _ ,p ref ,p Eρ≡E'
+↠-reflect-rep (trans E'↠F' F'↠G') Eρ≡E' = 
+  let F ,p E↠F ,p Fρ≡F' = ↠-reflect-rep E'↠F' Eρ≡E' in
+  let G ,p F↠G ,p Gρ≡G' = ↠-reflect-rep F'↠G' Fρ≡F' in
+  G ,p trans E↠F F↠G ,p Gρ≡G'
+
