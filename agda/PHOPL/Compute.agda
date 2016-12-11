@@ -135,8 +135,8 @@ postulate ⊧E-rtΛ : ∀ {V} {P : Path V} {M N A B} → ⊧E P ∶ M ≡〈 A �
           (⊧P∶M≡N (c A) (c A) (c A ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧) ⊧c ⊧c ⊧c) -}
 --TODO Duplication
 
-postulate Lemma29 : ∀ {V} {M : Term V} {A B} → ⊧T M ∶ A ⇛ B → Reduces-to-Λ M
---Lemma29 {V} {M} {A} {B} ⊧M∶A⇛B = ⊧E-rtΛ ⊧M∶A⇛B
+postulate Lemma30 : ∀ {V} {M : Term V} {A B} → ⊧T M ∶ A ⇛ B → Reduces-to-Λ M
+--Lemma30 {V} {M} {A} {B} ⊧M∶A⇛B = ⊧E-rtΛ ⊧M∶A⇛B
 
 postulate ⊧refP : ∀ {V} {M φ : Term V} {θ} → φ ↠ decode θ → ⊧E reff M ∶ φ ≡〈 Ω 〉 φ
 -- ⊧refP {V} {M} {φ} {θ} φ↠θ = (imp θ θ ,p ↠-imp φ↠θ φ↠θ ,p (λ W ρ ε ⊧ε∶θ → expansionPC ⊧ε∶θ refplus)) ,p imp θ θ ,p ↠-imp φ↠θ φ↠θ ,p (λ ε W ρ ⊧ε∶φ → expansionPC ⊧ε∶φ refminus)
@@ -180,7 +180,7 @@ postulate botSub₃-sub↗id : ∀ {V} {M N : Term V} {P} → (x₂:= M ,x₁:= 
 
 postulate ⊧ref : ∀ {V} {M : Term V} {A} → ⊧T M ∶ A → ⊧E reff M ∶ M ≡〈 A 〉 M
 {- ⊧ref {V} {M} {A = Ω} ⊧M∶Ω = let θ ,p M↠θ = ⊧canon ⊧M∶Ω in ⊧refP {θ = θ} M↠θ
-⊧ref {V} {M} {A = A ⇛ B} ⊧M∶A⇛B L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' with Lemma29 ⊧M∶A⇛B
+⊧ref {V} {M} {A = A ⇛ B} ⊧M∶A⇛B L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' with Lemma30 ⊧M∶A⇛B
 ⊧ref {V} {M} {A = A ⇛ B} ⊧M∶A⇛B L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' | reduces-to-Λ {C} {N} M↠ΛCN = 
   let ⊧ΛCN∶A⇛B : ⊧T ΛT C N ∶ A ⇛ B
       ⊧ΛCN∶A⇛B = ↠T ⊧M∶A⇛B M↠ΛCN in

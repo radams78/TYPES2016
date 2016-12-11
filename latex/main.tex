@@ -43,7 +43,9 @@
 \ArticleNo{23}
 % Editor-only macros::end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\usepackage[all,cmtip]{xy}
 \usepackage{suffix}
+
 \newcommand*{\eqdef}{\mathrel{\smash{\stackrel{\text{def}}{=}}}}
 \newcommand*{\isotoid}{\ensuremath{\mathrm{isotoid}}}
 \newcommand*{\reff}[1]{\ensuremath{\mathrm{ref} \left( {#1} \right)}}
@@ -281,7 +283,23 @@ If $E \rightarrow F$ and $E \rightarrow G$, then there exists $H$ such that $F \
 \end{lemma}
 
 \begin{proof}
-This is easily proven by induction on the hypotheses.  The critical pairs are as follows: \textbf{TODO}
+This is easily proven by induction on the hypotheses.  The critical pairs are as follows:
+$$ \xymatrix{
+& \phi \supset \psi \ar[dl] \ar[dr] \\
+\phi' \supset \psi \ar[dr] & & \phi \supset \psi' \ar[dl] \\
+& \phi' \supset \psi' } \qquad
+\xymatrix{
+& \phi \supset^* \psi \ar[dl] \ar[dr] \\
+\phi' \supset^* \psi \ar[dr] & & \phi \supset^* \psi' \ar[dl] \\
+& \phi' \supset^* \psi' } $$
+$$ \xymatrix{
+& \reff{\phi}^+ \delta \ar[dl] \ar[dd] \\
+\reff{\phi'}^+ \delta \ar[dr] \\
+& \delta} \quad
+\xymatrix{
+& \reff{\phi} \supset^* \reff{\psi} \ar[dl] \ar[dr] \\
+\reff{\phi'} \supset^* \reff{\psi} \ar[dr] & & \reff{\phi \supset \psi} \ar[dl] \\
+& \reff{\phi' \supset \psi} }$$
 \end{proof}
 
 \begin{lemma}[Reduction respects path substitution]
