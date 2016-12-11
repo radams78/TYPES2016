@@ -75,7 +75,7 @@ The univalence axiom expresses the principle of extensionality for dependent typ
 
 As a first step, we present here a system of propositional higher-order minimal logic (PHOML).  There are three kinds of typing judgement in PHOML.  There are \emph{terms} which inhabit \emph{types}, which are the simple types over $\Omega$.  There are \emph{proofs} which inhabit \emph{propositions}, which are the terms of type $\Omega$.  The canonical propositions are those constructed from $\bot$ by implication $\supset$.  Thirdly, there are \emph{paths} which inhabit \emph{equations} $M =_A N$, where $M$ and $N$ are terms of type $A$.  There are two ways to prove an equality: reflexivity, and \emph{propositional extensionality} --- logically equivalent propositions are equal.  This system allows for some definitional equalities that are not present in cubical type theory, namely that transport along the trivial path is identity.
 
-We present a call-by-need reduction relation for this system, and prove that the system satisfies canonicity: every closed typable term head-reduces to a canonical form.  This work has been formalised in Agda.
+We present a call-by-name reduction relation for this system, and prove that the system satisfies canonicity: every closed typable term head-reduces to a canonical form.  This work has been formalised in Agda.
  \end{abstract}
 
 %\item Fill out the \verb+\subjclass+ and \verb+\keywords+ macros. For the \verb+\subjclass+, please refer to the ACM classification at \url{http://www.acm.org/about/class/ccs98-html}.
@@ -109,14 +109,14 @@ if $\delta : \varphi \supset \psi$ and $\epsilon : \psi \supset\varphi$, then $\
 In PHOML, two propositions that are logically equivalent are equal.  Every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must therefore respect logical equivalence.  That is, for any $F$ and logically equivalent $x$, $y$ we must have that $Fx$ and $Fy$ are logically equivalent. Moreover, if for $x:\Omega$ we have that $Fx$ is logically equivalent to $Gx$, then $F =_{\Omega\to\Omega} G$.
 Every function of type $(\Omega \rightarrow \Omega) \rightarrow \Omega$ must respect this equality; and so on.  This is the manifestation in PHOML of the principle that only homotopy invariant constructions can be performed in homotopy type theory.  (See Section \ref{section:exampletwo}.)
 
-We present a deterministic call-by-need reduction relation for this system, and prove that every typable term reduces to a canonical form.  From this, it follows that the system is consistent.  
+We present a deterministic call-by-name reduction relation for this system, and prove that every typable term reduces to a canonical form.  From this, it follows that the system is consistent.  
 
 For the future, we wish to expand the system with universal quantification, and expand it to a 2-dimensional system (with equations between proofs).
 
 Another system with many of the same aims is cubical type theory \cite{cchm:cubical}.  The system PHOML is almost a subsystem of cubical type theory.  We can attempt to embed PHOML into cubical type theory,
 mapping $\Omega$ to the universe $U$, and an equation $M =_A N$ to either the type $\Path{A}{M}{N}$ or to $\mathrm{Id}\ A\ M\ N$.  However, PHOML has more definitional equalities than the relevant fragment of cubical type theory; that is, there are definitionally equal terms in PHOML that are mapped to terms that are not definitionally equal in cubical type theory.  In particular, $\reff{x}^+ p$ and $p$ are definitionally equal, whereas the terms $\mathrm{comp}^i x [] p$ and $p$ are not definitionally equal in cubical type theory (but they are propositionally equal).  See Section \ref{section:cubical} for more information.
 
-The proofs in this paper have been formalized in Agda.  The formalization is available at \texttt{github.com/radams78/univalence}.
+The proofs in this paper have been formalized in Agda.  The formalization is available at \texttt{github.com/radams78/TYPES2016}.
 
 \section{Predicative Higher-Order Minimal Logic with Extensional Equality}
 
@@ -232,10 +232,10 @@ with the same domain $\{ x_1, \ldots, x_n \}$, we write
 \[ M \{ \tau : \rho = \sigma \} \text{ for } M \{ x_1 := \tau(x_1) : \rho(x_1) = \sigma(x_1), \ldots, \tau(x_n) : \rho(x_n) = \sigma(x_n) \} \enspace . \]
 \end{definition}
 
-\subsubsection{Call-By-Need Reduction}
+\subsubsection{Call-By-Name Reduction}
 
-\begin{definition}[Call-By-Need Reduction]
-Define the relation of \emph{call-by-need reduction} $\rightarrow$ on the expressions.  The inductive
+\begin{definition}[Call-By-Name Reduction]
+Define the relation of \emph{call-by-name reduction} $\rightarrow$ on the expressions.  The inductive
 definition is given by the rules in Figure \ref{fig:reduction}
 
 \begin{figure}
@@ -519,15 +519,15 @@ Induction on derivations.
 \end{proof}
 
 \begin{definition}
-If $\rho, \sigma : \Gamma \rightarrow \Delta$ and $\tau$ is a path substitution whose domain
+If $\rho, \sigma : \Gamma \Rightarrow \Delta$ and $\tau$ is a path substitution whose domain
 is the term variables in $\dom \Gamma$, then we write
-$\tau : \sigma = \rho : \Gamma \rightarrow \Delta$ iff, for each variable $x : A \in \Gamma$, we have
+$\tau : \sigma = \rho : \Gamma \Rightarrow \Delta$ iff, for each variable $x : A \in \Gamma$, we have
 $\Delta \vdash \tau(x) : \sigma(x) =_A \rho(x)$.
 \end{definition}
 
 \begin{lemma}[Path Substitution]
 \label{lm:pathsub}
-If $\tau : \sigma = \rho : \Gamma \rightarrow \Delta$ and $\Gamma \vdash M : A$ and $\Delta \vald$,
+If $\tau : \sigma = \rho : \Gamma \Rightarrow \Delta$ and $\Gamma \vdash M : A$ and $\Delta \vald$,
 then $\Delta \vdash M \{ \tau : \sigma = \rho \} : M [ \sigma ] =_A M [ \rho ]$.
 \end{lemma}
 
@@ -621,9 +621,7 @@ This is no longer true in the version of cubical type theory given in \cite{cchm
 
 As discussed in the introduction, every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must respect logical equivalence.  This fact can actually be proved in PHOML,
 in the following sense: there exists a proof $\delta$ of
-
 \[ f : \Omega \rightarrow \Omega, x : \Omega, y : \Omega, p : x \supset y, q : y \supset x \vdash \delta : f x \supset f y \]
-
 and a proof of $f y \supset f x$ in the same context.  Together, these can be read as a proof of 'if $f : \Omega \rightarrow \Omega$ and $x$ and $y$ are logically equivalent, then $fx$ and $fy$ are logically equivalent'.
 
 Specifically, take
@@ -633,12 +631,11 @@ Note that this is not possible in Martin-L\"{o}f Type Theory.
 
 % TODO Thierry's comments - do this in cubical type theory
 \section{Computable Expressions}
+\label{section:computable}
 
 \begin{definition}[Computable Expression]
 We define the relation $\models E : T$, read `$E$ is a computable expression of type $T$', as follows.
 \begin{itemize}
-\item
-$\models M : A$ iff $\models M \{\} : M =_A M$.
 \item
 $\models \delta : \bot$ iff $\delta$ reduces to a neutral proof.
 \item
@@ -649,7 +646,10 @@ If $\varphi$ reduces to the canonical proposition $\psi$, then $\models \delta :
 $\models P : \varphi =_\Omega \psi$ iff $\models P^+ : \varphi \supset \psi$ and $\models P^- : \psi \supset \varphi$.
 \item
 $\models P : M =_{A \rightarrow B} M'$ iff, for all $Q$, $N$, $N'$ such that $\models N : A$ and $\models N' : A$ and $\models Q : N =_A N'$, then we have $\models P_{NN'}Q : MN =_B M'N'$.
+\item
+$\models M : A$ iff $\models M \{\} : M =_A M$.
 \end{itemize}
+Note that the last three clauses define $\models M : A$ and $\models P : M =_A N$ simultaneously by recursion on $A$.
 \end{definition}
 
 \begin{definition}[Computable Substitution]
@@ -674,7 +674,7 @@ If $\models F : T$ and $E \rightarrow F$ then $\models E : T$.
 \end{lemma}
 
 \begin{proof}
-An easy induction, using the fact that call-by-need reduction respects path substitution (Lemma \ref{lm:resp-sub}).
+An easy induction, using the fact that call-by-name reduction respects path substitution (Lemma \ref{lm:resp-sub}).
 \end{proof}
 
 \begin{lemma}[Reduction]
@@ -683,7 +683,7 @@ If $\models E : T$ and $E \rightarrow F$ then $\models F : T$.
 \end{lemma}
 
 \begin{proof}
-An easy induction, using the fact that call-by-need reduction is confluent (Lemma \ref{lm:diamond}).
+An easy induction, using the fact that call-by-name reduction is confluent (Lemma \ref{lm:diamond}).
 \end{proof}
 
 \begin{definition}
@@ -703,15 +703,27 @@ An easy induction on $A$.
 \end{proof}
 
 \begin{lemma}
+If $\models E : T$ then $E$ reduces to a normal form.
+\end{lemma}
+
+\begin{proof}
+We prove by induction on the canonical proposition $\theta$ that, if $\models \delta : \theta$, then $\delta$ reduces to a normal form.
+We then prove by induction on the type $A$ that, if $\models P : M =_A N$, then $P$ reduces to a normal form.  These two parts are straightforward.
+
+Now, suppose $\models M : A$, i.e. $\models M \{\} : M =_A M$.  Let $A \equiv A_1 \rightarrow \cdots \rightarrow A_n \rightarrow \Omega$.  Then
+\[ \models M \{\}_{c_{A_1} c_{A_1}} c_{A_1} \{\}_{c_{A_2} c_{A_2}} \cdots c_{A_n} \{\}
+: M c_{A_1} \cdots c_{A_n} =_\Omega M c_{A_1} \cdots c_{A_n} \enspace . \]
+Therefore, $M c_{A_1} \cdots c_{A_n}$ reduces to a canonical proposition.  The reduction must consist either in reducing $M$ to a canonical proposition (if $n = 0$),
+or reducing $M$ to a $\lambda$-expression then performing a $\beta$-reduction.  In either case, $M$ reduces to a normal form.
+\end{proof}
+
+\begin{lemma}
 \label{lm:pre-ref-compute}
 If $\models M : A \rightarrow B$ then $M$ reduces to a $\lambda$-expression.
 \end{lemma}
 
 \begin{proof}
-Let $B \equiv B_1 \rightarrow \cdots \rightarrow B_n \rightarrow \Omega$ where $n \geq 0$.  We have that
-\[ \models M \{\}_{c_Ac_A} c_A \{\}_{c_{B_1} c_{B_1}} c_{B_1} \{\} \cdots c_{B_n} \{\} : M c_{A} c_{B_1} \cdots c_{B_n} =_\Omega M c_{A} c_{B_1} \cdots c_{B_n} \]
-and so $M c_A c_{B_1} \cdots c_{B_n}$ reduces to a canonical proposition.  This reduction must proceed by reducing to $M' c_A c_{B_1} \cdots c_{B_n}$ by reducing $M$,
-then applying a $\beta$-reduction.  Therefore, $M$ reduces to a $\lambda$-expression
+Similar to the last paragraph of the previous proof.
 \end{proof}
 
 \begin{lemma}
@@ -842,52 +854,22 @@ If $\Gamma \vdash M : A$ and $\models \tau : \rho = \sigma : \Gamma$, then $\mod
 \end{theorem}
 
 \begin{proof}
-The proof is by induction on derivations.
+The proof is by induction on derivations.  Most cases are straightforward, using the lemmas from
+Section \ref{section:computable}.  We deal with one case here, the rule ($\lambda_T$).
+
+$$ \infer{\Gamma \vdash \lambda x:A.M : A \rightarrow B}{\Gamma, x : A \vdash M : B} $$
+
 \begin{enumerate}
 \item
-For the (var) rules, the result is immediate from the hypothesis.  
-
-The case ($\bot$) follows from Lemma \ref{lm:ref-compute-Omega}.
-
-For the rule ($\supset$), we use Lemma \ref{lm:compute-supset*}.
-
-The case (app$_T$) is trivial.
-
-For the rule ($\lambda_T$), we must show that
+We must show that
 \[ \Delta \models \lambda x:A.M[\sigma] : A \rightarrow B \enspace . \]
 So let $\Delta \models N : A$.  Then the induction hypothesis gives
 \[ \Delta \models M[\sigma, x:=N] : B \]
 and so by Expansion (Lemma \ref{lm:expansion}) we have
 \[ \Delta \models (\lambda x:A.M[\sigma])N : B \]
 as required.
-
-The case (app$_P$) is trivial.
-
-The case ($\lambda_P$) is similar to ($\lambda_T$), also making use of Lemma \ref{lm:conv-compute}.
-
-The case (conv$_P$) follows immediately from Lemma \ref{lm:conv-compute}.
-
-The case (ref) is immediate from Lemma \ref{lm:ref-compute}.  The case (univ) is immediate from Lemma \ref{lm:univ-compute}.
-
-The cases (plus) and (minus) are trivial.
-
-For the rule ($\triplelambda$), let $\Delta \models Q : L =_A L'$.  Then the induction hypothesis gives
-\[ \Delta \models P [ \sigma, x := L, y := L', e := Q ] : M [\sigma] L =_B N [\sigma] L' \]
-and hence Expansion gives
-\[ \Delta \models (\triplelambda e:x =_A y.P [ \sigma ])_{L L'} Q : M[\sigma] L =_B N[\sigma] L' \]
-as required.
-
-The case (app$_E$) is trivial.  The case (conv$_E$) follows immediately from Lemma \ref{lm:conv-compute}.
 \item
-The case (var$_T$) is immediate from hypothesis.
-
-The case ($\bot$) follows from Lemma \ref{lm:ref-compute-Omega}.
-
-The case ($\supset$) follows from Lemma \ref{lm:compute-supset*}.
-
-The case (app$_T$) is trivial.
-
-For the case ($\lambda$), we must show that
+We must show that
 \[ \Delta \models \triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y \} : \lambda x:A.M [ \rho ] =_{A \rightarrow B} \lambda x:A.M [ \sigma ] \enspace . \]
 So let $\Delta \models P : N =_A N'$.  The induction hypothesis gives
 \[ \Delta \models M \{ \tau : \rho = \sigma, x := P : N = N' \} : M [\rho, x := N] =_B M [\sigma, x := N'] \enspace , \]
