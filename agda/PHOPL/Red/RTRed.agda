@@ -34,11 +34,8 @@ _↠_ {V} {K} = RTClose (_⇒_ {V} {K})
 ↠-appP : ∀ {V} {δ δ' ε : Proof V} → δ ↠ δ' → appP δ ε ↠ appP δ' ε
 ↠-appP = respects-RT₂ (λ _ _ → appPl) _ _
 
-↠-plus : ∀ {V} {P Q : Path V} → P ↠ Q → plus P ↠ plus Q
-↠-plus = respects-RT₂ (λ _ _ → plusR) _ _
-
-↠-minus : ∀ {V} {P Q : Path V} → P ↠ Q → minus P ↠ minus Q
-↠-minus = respects-RT₂ (λ _ _ → minusR) _ _
+↠-dir : ∀ {V} {P Q : Path V} {d} → P ↠ Q → dir d P ↠ dir d Q
+↠-dir = respects-RT₂ (λ _ _ → dirR) _ _
 
 ↠-imp*l : ∀ {V} {P P' Q : Path V} → P ↠ P' → P ⊃* Q ↠ P' ⊃* Q
 ↠-imp*l = respects-RT₂ (λ _ _ → imp*l) _ _
@@ -88,14 +85,15 @@ imp-red-inj₁ : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ↠ φ' ⊃ ψ' 
 imp-red-inj₁ φ⊃ψ↠φ'⊃ψ' with imp-red-inj₁' φ⊃ψ↠φ'⊃ψ' refl
 imp-red-inj₁ {φ = φ} φ⊃ψ↠φ'⊃ψ' | φ'' ,p ψ'' ,p φ'⊃ψ'≡φ''⊃ψ'' ,p φ↠φ'' = subst (λ x → φ ↠ x) (⊃-injl (≡-sym φ'⊃ψ'≡φ''⊃ψ'')) φ↠φ''
 
-⇒-plus' : ∀ {V} {P : Path V} {δ} → plus P ⇒ δ → Σ[ Q ∈ Path V ] P ⇒ Q × δ ≡ plus Q
-⇒-plus' (plusR P⇒Q) = _ ,p P⇒Q ,p refl
+⇒-dir' : ∀ {V} {P : Path V} {δ d} → dir d P ⇒ δ → Σ[ Q ∈ Path V ] P ⇒ Q × δ ≡ dir d Q
+⇒-dir' (dirR P⇒Q) = _ ,p P⇒Q ,p refl
 
-↠-plus' : ∀ {V} {P : Path V} {δ ε : Proof V} → δ ↠ ε → δ ≡ plus P → Σ[ Q ∈ Path V ] P ↠ Q × ε ≡ plus Q
-↠-plus' {ε = ε} (inc δ⇒ε) δ≡P+ = let Q ,p P⇒Q ,p ε≡Q+ = ⇒-plus' (subst (λ x → x ⇒ ε) δ≡P+ δ⇒ε) in Q ,p inc P⇒Q ,p ε≡Q+
-↠-plus' ref δ≡P+ = _ ,p ref ,p δ≡P+
-↠-plus' (trans δ↠ε ε↠ε') δ≡P+ =
-  let Q ,p P↠Q ,p ε≡Q+ = ↠-plus' δ↠ε δ≡P+ in
-  let R ,p Q↠R ,p ε'≡R+ = ↠-plus' ε↠ε' ε≡Q+ in 
+↠-dir' : ∀ {V} {P : Path V} {δ ε : Proof V} {d} → 
+  δ ↠ ε → δ ≡ dir d P → Σ[ Q ∈ Path V ] P ↠ Q × ε ≡ dir d Q
+↠-dir' {ε = ε} (inc δ⇒ε) δ≡P+ = let Q ,p P⇒Q ,p ε≡Q+ = ⇒-dir' (subst (λ x → x ⇒ ε) δ≡P+ δ⇒ε) in Q ,p inc P⇒Q ,p ε≡Q+
+↠-dir' ref δ≡P+ = _ ,p ref ,p δ≡P+
+↠-dir' (trans δ↠ε ε↠ε') δ≡P+ =
+  let Q ,p P↠Q ,p ε≡Q+ = ↠-dir' δ↠ε δ≡P+ in
+  let R ,p Q↠R ,p ε'≡R+ = ↠-dir' ε↠ε' ε≡Q+ in 
   R ,p trans P↠Q Q↠R ,p ε'≡R+
 

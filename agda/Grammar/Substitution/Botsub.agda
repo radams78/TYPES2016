@@ -121,9 +121,12 @@ comp-botSub : ∀ {F} {U} {V} {K} {C} {L}
   ap F σ (E' ⟦ x₀:= E ⟧) ≡ (ap F (liftOp F K σ) E') ⟦ x₀:= (ap F σ E) ⟧
 comp-botSub {E' = E'} comp₁ comp₂ = ap-comp-sim comp₁ comp₂ (comp-botSub' comp₁ comp₂) E'
 
+compRS-botSub' : ∀ {U} {V} {K} {F : Expression U (varKind K)} {ρ : Rep U V} →
+  ρ •RS x₀:= F ∼ x₀:= F 〈 ρ 〉 •SR liftRep K ρ
+compRS-botSub' = comp-botSub' COMPRS COMPSR
+
 compRS-botSub : ∀ {U} {V} {C} {K} {L} (E : Subexp (U , K) C L) {F : Expression U (varKind K)} {ρ : Rep U V} →
   E ⟦ x₀:= F ⟧ 〈 ρ 〉 ≡ E 〈 liftRep K ρ 〉 ⟦ x₀:= (F 〈 ρ 〉) ⟧
---TODO Common pattern with liftRep-botSub₃
 compRS-botSub E = comp-botSub {E' = E} COMPRS COMPSR
 
 comp-botSub'' : ∀ {U} {V} {C} {K} {L} 

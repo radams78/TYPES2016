@@ -31,11 +31,8 @@ _⇒?_ = RClose _⇒_
 ⇒?-appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒? δ' → appP δ ε ⇒? appP δ' ε
 ⇒?-appPl = respects-R' _ _⇒_ (λ _ _ → appPl) _ _
 
-⇒?-plus : ∀ {V} {P Q : Path V} → P ⇒? Q → plus P ⇒? plus Q
-⇒?-plus {V} = respects-R {A = Bool} {B = λ b → VExpression V (if b then -Path else -Proof)} (λ _ → _⇒_ ) {true} {false} plus (λ x y → plusR) _ _
-
-⇒?-minus : ∀ {V} {P Q : Path V} → P ⇒? Q → minus P ⇒? minus Q
-⇒?-minus {V} = respects-R {A = Bool} {B = λ b → VExpression V (if b then -Path else -Proof)} (λ _ → _⇒_ ) {true} {false} minus (λ x y → minusR) _ _
+⇒?-dir : ∀ {V} {P Q : Path V} {d} → P ⇒? Q → dir d P ⇒? dir d Q
+⇒?-dir = respects-R₂ (λ _ _ → dirR) _ _
 
 ⇒?-reff : ∀ {V} {M N : Term V} → M ⇒? N → reff M ⇒? reff N
 ⇒?-reff = respects-R₂ (λ _ _ → reffR) _ _

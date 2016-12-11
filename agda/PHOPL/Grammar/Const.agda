@@ -108,8 +108,8 @@ appP-injl refl = refl
 eq-inj₁ : ∀ {V A A'} {M M' N N' : Term V} → M ≡〈 A 〉 N ≡ M' ≡〈 A' 〉 N' → M ≡ M'
 eq-inj₁ refl = refl
 
-plus-inj : ∀ {V} {P Q : Path V} → plus P ≡ plus Q → P ≡ Q
-plus-inj refl = refl
+dir-inj : ∀ {V} {P Q : Path V} {d} → dir d P ≡ dir d Q → P ≡ Q
+dir-inj refl = refl
 
 APPl : ∀ {V} → Term V → snocList (Term V) → Term V
 APPl M [] = M
@@ -145,3 +145,8 @@ APPl-Λ {NN = NN snoc _} Mx≡ΛM'N = ⊥-elim (APPl-not-Λ {NN = NN} (appT-injl
 APPP : ∀ {V} → Proof V → snocList (Proof V) → Proof V
 APPP δ [] = δ
 APPP δ (εε snoc ε) = appP (APPP δ εε) ε
+
+APPP-rep : ∀ {U V} {δ : Proof U} {εε : snocList (Proof U)} {ρ : Rep U V} →
+  APPP δ εε 〈 ρ 〉 ≡ APPP (δ 〈 ρ 〉) (snocmap (λ ε → ε 〈 ρ 〉) εε)
+APPP-rep {εε = []} = refl
+APPP-rep {εε = εε snoc ε} {ρ} = cong (λ x → appP x (ε 〈 ρ 〉)) (APPP-rep {εε = εε})

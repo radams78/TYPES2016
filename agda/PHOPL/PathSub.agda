@@ -86,6 +86,7 @@ liftPathSub-•RP {τ = τ} {ρ} (↑ x) = let open ≡-Reasoning in
     τ x ⇑ ⇑ ⇑ 〈 liftsRep pathDom ρ 〉
   ∎
 
+--TODO Flip this
 pathSub-•RP : ∀ {U} {V} {W} M {ρ : Rep V W} {τ : PathSub U V} {σ σ' : Sub U V} →
   M ⟦⟦ ρ •RP τ ∶ ρ •RS σ ≡ ρ •RS σ' ⟧⟧ ≡ M ⟦⟦ τ ∶ σ ≡ σ' ⟧⟧ 〈 ρ 〉
 pathSub-•RP (var x) = refl

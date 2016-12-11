@@ -11,15 +11,15 @@
 \title{A Normalizing Computation Rule for Propositional Extensionality in Higher-Order Minimal Logic
 %\footnote{This work was partially supported by someone.}
 }
-\titlerunning{Strong Normalization for Propositional Extensionality in Minimal Logic} %optional, in case that the title is too long; the running title should fit into the top page column
+\titlerunning{Propositional Extensionality in Minimal Logic} %optional, in case that the title is too long; the running title should fit into the top page column
 
 %% Please provide for each author the \author and \affil macro, even when authors have the same affiliation, i.e. for each author there needs to be the  \author and \affil macros
 \author[1]{Robin Adams}
 \author[1]{Marc Bezem}
-\author[3]{Thierry Coquand}
+\author[2]{Thierry Coquand}
 \affil[1]{Universitetet i Bergen, Institutt for Informatikk, Postboks 7800, N-5020 BERGEN, Norway \\
   \texttt{\{robin.adams,bezem\}@ii.uib.no}}
-\affil[3]{Chalmers tekniska högskola, Data- och informationsteknik, 412 96 Göteborg, Sweden \\
+\affil[2]{Chalmers tekniska högskola, Data- och informationsteknik, 412 96 Göteborg, Sweden \\
   \texttt{coquand@chalmers.se}}
 \authorrunning{R. Adams, M. Bezem and T. Coquand} %mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et. al.'
 
@@ -72,9 +72,9 @@
 \maketitle
 
 \begin{abstract}
-The univalence axiom expresses the principle of extensionality for dependent types theory. However, if we simply add the univalence axiom to type theory, then we lose the property of canonicity --- that every term computes to a normal form. A computation becomes `stuck' when it reaches the point that it needs to evaluate a proof term that is an application of the univalence axiom. So we wish to find a way to compute with the univalence axiom. While this problem has been solved with the formulation of cubical type theory, where the computations are expressed using a nominal extension of lambda-calculus, it may be interesting to explore alternative solutions, which do not require such an extension.
+The univalence axiom expresses the principle of extensionality for dependent types theory. However, if we simply add the univalence axiom to type theory, then we lose the property of \emph{canonicity} --- that every closed term computes to a canonical form. A computation becomes `stuck' when it reaches the point that it needs to evaluate a proof term that is an application of the univalence axiom. So we wish to find a way to compute with the univalence axiom. While this problem has been solved with the formulation of cubical type theory, where the computations are expressed using a nominal extension of lambda-calculus, it may be interesting to explore alternative solutions, which do not require such an extension.
 
-As a first step, we present here a system of higher-order minimal propositional logic, with a universe $\Omega$ of propositions closed under implication. We add a type $M =_A N$ for any terms $M$, $N$ of type $A$, and two ways to prove an equality: reflexivity, and \emph{propositional extensionality} --- logically equivalent propositions are equal.  This system allows for some definitional equalities that are not present in cubical type theory, namely that transport along the trivial path is identity.
+As a first step, we present here a system of propositional higher-order minimal logic (PHOML).  There are three kinds of typing judgement in PHOML.  There are \emph{terms} which inhabit \emph[types}, which are the simple types over $\Omega$.  There are \emph{proofs} which inhabit \emph{propositions}, which are the terms of type $\Omega$.  The canonical propositions are those constructed from $\bot$ by implication $\supset$.  Thirdly, there are \emph{paths} which inhabit \emph{equations} $M =_A N$, where $M$ and $N$ are terms of type $A$.  There are two ways to prove an equality: reflexivity, and \emph{propositional extensionality} --- logically equivalent propositions are equal.  This system allows for some definitional equalities that are not present in cubical type theory, namely that transport along the trivial path is identity.
 
 We present a call-by-need reduction relation for this system, and prove that the system satisfies canonicity: every closed typable term head-reduces to a canonical form.  This work has been formalised in Agda.
  \end{abstract}
@@ -118,8 +118,8 @@ any type $A$ and terms $M : A$ and $N : A$.  The types include $\Omega$ itself a
 There are two canonical forms for proofs of $M =_\Omega N$.  For any term $M : \Omega$, we have $\reff{M} : M =_\Omega M$.  We also add univalence for this system, in this form:
 if $\delta : \varphi \supset \psi$ and $\epsilon : \psi \supset\varphi$, then $\univ{\varphi}{\psi}{\delta}{\epsilon} : \varphi =_\Omega \psi$.  
 
-In PHOML, propositions are equal if and only if they are logically equivalent.  Every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must therefore respect logical equivalence.  That is,
-if $F, G : \Omega \rightarrow \Omega$ and $F x$ is logically equivalent to $G x$ (where $x : \Omega$ is a variable), then $F =_{\Omega \rightarrow \Omega} G$.  Every function of type $(\Omega \rightarrow \Omega) \rightarrow \Omega$ must respect this equivalence relation; and so on.  This is the manifestation in PHOML of the principle that only homotopy invariant constructions can be performed in homotopy type theory.  (See Section \ref{section:exampletwo}.)
+In PHOML, two propositions that are logically equivalent are equal.  Every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must therefore respect logical equivalence.  That is, for any $F$ and logically equivalent $x$, $y$ we must have that $Fx$ and $Fy$ are logically equivalent. Moreover, if for $x:\Omega$ we have that $Fx$ is logically equivalent to $Gx$, then $F =_{\Omega\to\Omega} G$.
+Every function of type $(\Omega \rightarrow \Omega) \rightarrow \Omega$ must respect this equality; and so on.  This is the manifestation in PHOML of the principle that only homotopy invariant constructions can be performed in homotopy type theory.  (See Section \ref{section:exampletwo}.)
 
 We present a deterministic call-by-need reduction relation for this system, and prove that every typable term reduces to a canonical form.  From this, it follows that the system is consistent.  In the appendix, we present a proof of strong normalization for a different reduction relation.
 %confluence (Corollary \ref{cor:confluence}), strong normalization (Corollary \ref{cor:SN}) and canonicity (Corollary \ref{cor:canon}).
@@ -604,12 +604,13 @@ which is definitionally equal to
 \[ \vdash \langle i \rangle H (Q i) : \Path{U}{\top \rightarrow \top}{\top} \]
 From this, we can apply transport to create a term of type $\top \rightarrow \top \rightarrow \top$.  Applying this to any terms $\delta, \epsilon : \top$ gives a term that
 is definitionally equal to
-\[ \mapid{\top}{\mapid{\top}{\delta}} \]
+\[ Q \delta \epsilon = \mapid{\top}{\mapid{\top}{\delta}} \]
 where $\mapid{}{}$ represents transport across the trivial path:
 \[ \mapid{A}{t} \eqdef \comp^i \, A \, [] \, t \qquad (i \text{ does not occur in } A) \enspace . \]
 (For the details of the calculation, see the appendix.)
 
-This term does not compute any further, as we do not have $\mapid{A}{t} = t$ definitionally in cubical type theory.
+In the version of cubical type theory given in \cite{bch:cubical}, we have $\mapid{X}{x}$ is definitionally equal to $x$, and therefore $Q \delta \epsilon = \delta$, just as in PHOML.
+This is no longer true in the version of cubical type theory given in \cite{cchm:cubical}.
 
 \subsection{Provable Parametricity}
 \label{section:exampletwo}

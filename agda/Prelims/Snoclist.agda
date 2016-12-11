@@ -42,15 +42,15 @@ SNOCLIST = record {
   fold = snocfold ;
   depfold₂ = snocdepfold₂ } -}
 
-map-id : ∀ {A} {f : A → A} {l : snocList A} →
+snocmap-id : ∀ {A} {f : A → A} {l : snocList A} →
   (∀ x → f x ≡ x) → snocmap f l ≡ l
-map-id {l = []} _ = refl
-map-id {l = l snoc a} hyp = cong₂ _snoc_ (map-id hyp) (hyp a)
+snocmap-id {l = []} _ = refl
+snocmap-id {l = l snoc a} hyp = cong₂ _snoc_ (snocmap-id hyp) (hyp a)
 
-map-comp : ∀ {A B C} {g : B → C} {f : A → B} {l : snocList A} →
+snocmap-comp : ∀ {A B C} {g : B → C} {f : A → B} {l : snocList A} →
   snocmap (λ x → g (f x)) l ≡ snocmap g (snocmap f l)
-map-comp {l = []} = refl
-map-comp {g = g} {f = f} {l = l snoc a} = cong (λ x → x snoc g (f a)) map-comp
+snocmap-comp {l = []} = refl
+snocmap-comp {g = g} {f = f} {l = l snoc a} = cong (λ x → x snoc g (f a)) snocmap-comp
 
 replicate : ∀ {A} → ℕ → A → snocList A
 replicate zero _ = []

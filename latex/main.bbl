@@ -1,11 +1,23 @@
 \begin{thebibliography}{1}
 
+\bibitem{bch:cubical}
+Marc Bezem, Thierry Coquand, and Simon Huber.
+\newblock {A Model of Type Theory in Cubical Sets}.
+\newblock In Ralph Matthes and Aleksy Schubert, editors, {\em 19th
+  International Conference on Types for Proofs and Programs (TYPES 2013)},
+  volume~26 of {\em Leibniz International Proceedings in Informatics (LIPIcs)},
+  pages 107--128, Dagstuhl, Germany, 2014. Schloss Dagstuhl--Leibniz-Zentrum
+  fuer Informatik.
+\newblock URL: \url{http://drops.dagstuhl.de/opus/volltexte/2014/4628}, \href
+  {http://dx.doi.org/http://dx.doi.org/10.4230/LIPIcs.TYPES.2013.107}
+  {\path{doi:http://dx.doi.org/10.4230/LIPIcs.TYPES.2013.107}}.
+
 \bibitem{cchm:cubical}
-Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M\"{o}rtberg.
+Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"{o}}rtberg.
 \newblock Cubical type theory: a constructive interpretation of the univalence
   axiom.
-\newblock Preprint
-  \url{http://www.math.ias.edu/$\sim$amortberg/papers/cubicaltt.pdf}, 2015.
+\newblock {\em CoRR}, abs/1611.02108, 2016.
+\newblock URL: \url{http://arxiv.org/abs/1611.02108}.
 
 \bibitem{Hofmann97syntaxand}
 Martin Hofmann.

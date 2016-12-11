@@ -23,18 +23,12 @@ diamond (impr {φ = φ} ψ⇒ψ') (impr ψ⇒ψ'') =
 diamond (appPl {ε = ε} δ⇒δ') (appPl δ⇒δ'') = 
   let cr δ₀ δ'⇒?δ₀ δ''⇒?δ₀ = diamond δ⇒δ' δ⇒δ'' in 
   cr (appP δ₀ ε) (⇒?-appPl δ'⇒?δ₀) (⇒?-appPl δ''⇒?δ₀)
-diamond refplus (appPl (plusR (reffR _))) = cr _ ref (inc refplus)
-diamond refminus (appPl (minusR (reffR _))) = cr _ ref (inc refminus)
-diamond (appPl (plusR (reffR _))) refplus = cr _ (inc refplus) ref
-diamond refplus refplus = cr _ ref ref
-diamond (appPl (minusR (reffR _))) refminus = cr _ (inc refminus) ref
-diamond refminus refminus = cr _ ref ref
-diamond (plusR P⇒P') (plusR P⇒P'') = 
+diamond refdir (appPl (dirR (reffR _))) = cr _ ref (inc refdir)
+diamond (appPl (dirR (reffR _))) refdir = cr _ (inc refdir) ref
+diamond refdir refdir = cr _ ref ref
+diamond (dirR P⇒P') (dirR P⇒P'') = 
   let cr P₀ P'⇒?P₀ P''⇒?P₀ = diamond P⇒P' P⇒P'' in 
-  cr (plus P₀) (⇒?-plus P'⇒?P₀) (⇒?-plus P''⇒?P₀)
-diamond (minusR P⇒P') (minusR P⇒P'') = 
-  let cr P₀ P'⇒?P₀ P''⇒?P₀ = diamond P⇒P' P⇒P'' in 
-  cr (minus P₀) (⇒?-minus P'⇒?P₀) (⇒?-minus P''⇒?P₀)
+  cr (dir _ P₀) (⇒?-dir P'⇒?P₀) (⇒?-dir P''⇒?P₀)
 diamond βE βE = cr _ ref ref
 diamond ref⊃* ref⊃* = cr _ ref ref
 diamond (imp*l (reffR φ⇒φ')) ref⊃* = cr _ (inc ref⊃*) (inc (reffR (impl φ⇒φ')))
