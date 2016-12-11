@@ -1,10 +1,10 @@
-module PHOPL.Red.Reflect where
+module PHOML.Red.Reflect where
 open import Data.Product renaming (_,_ to _,p_)
 open import Prelims
-open import PHOPL.Grammar
-open import PHOPL.PathSub
-open import PHOPL.Red.Base
-open import PHOPL.Red.RTRed
+open import PHOML.Grammar
+open import PHOML.PathSub
+open import PHOML.Red.Base
+open import PHOML.Red.RTRed
 
 ⇒-reflect-rep : ∀ {U V K} {E : VExpression U K} {ρ : Rep U V} {F} → E 〈 ρ 〉 ⇒ F → Σ[ F' ∈ VExpression U K ] E ⇒ F' × F ≡ F' 〈 ρ 〉
 ⇒-reflect-rep {E = var _} ()

@@ -1,8 +1,8 @@
-module PHOPL.Red.Diamond where
+module PHOML.Red.Diamond where
 open import Prelims
-open import PHOPL.Grammar
-open import PHOPL.Red.Base
-open import PHOPL.Red.RRed
+open import PHOML.Grammar
+open import PHOML.Red.Base
+open import PHOML.Red.RRed
 
 diamond : ∀ {V K} {E F G : Expression V K} → E ⇒ F → E ⇒ G →
   Common-Reduct (_⇒?_ {V} {K}) (RClose _⇒_) F G

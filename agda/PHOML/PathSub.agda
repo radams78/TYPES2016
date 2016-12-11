@@ -1,7 +1,7 @@
 --TODO Module parameters
-module PHOPL.PathSub where
+module PHOML.PathSub where
 open import Prelims
-open import PHOPL.Grammar
+open import PHOML.Grammar
 --TODO Is this like an OpFamily?
 PathSub : Alphabet → Alphabet → Set
 PathSub U V = Var U -Term → Path V

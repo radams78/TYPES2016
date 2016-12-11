@@ -1,4 +1,4 @@
-module PHOPL.Grammar where
-open import PHOPL.Grammar.Base public
-open import PHOPL.Grammar.Const public
-open import PHOPL.Grammar.AddPath public
+module PHOML.Grammar where
+open import PHOML.Grammar.Base public
+open import PHOML.Grammar.Const public
+open import PHOML.Grammar.AddPath public

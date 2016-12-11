@@ -1,11 +1,11 @@
-module PHOPL.Neutral where
+module PHOML.Neutral where
 
 open import Data.Product renaming (_,_ to _,p_)
 open import Data.Sum
 open import Prelims
-open import PHOPL.Grammar
-open import PHOPL.Canon
-open import PHOPL.Red
+open import PHOML.Grammar
+open import PHOML.Canon
+open import PHOML.Red
 
 data NeutralT : Alphabet → Set where
 

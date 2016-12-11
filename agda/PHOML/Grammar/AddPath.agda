@@ -1,4 +1,4 @@
-module PHOPL.Grammar.AddPath where
+module PHOML.Grammar.AddPath where
 open import Data.Nat
 open import Data.Empty renaming (⊥ to Empty)
 open import Data.List hiding (replicate)
@@ -6,8 +6,8 @@ open import Data.Vec hiding (map;replicate)
 open import Prelims
 open import Grammar.Taxonomy
 open import Grammar.Base
-open import PHOPL.Grammar.Base
-open import PHOPL.Grammar.Const
+open import PHOML.Grammar.Base
+open import PHOML.Grammar.Const
 
 addpath : ∀ {V} → Context V → Type → Context (extend V pathDom)
 addpath Γ A = Γ ,T A ,T A ,E var x₁ ≡〈 A 〉 var x₀

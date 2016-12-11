@@ -1,10 +1,10 @@
-module PHOPL.Grammar.Const where
+module PHOML.Grammar.Const where
 open import Data.Empty renaming (⊥ to Empty)
 open import Data.List
 open import Prelims
-open import PHOPL.Grammar.Base
-open PHOPLgrammar public
-open import Grammar PHOPL public
+open import PHOML.Grammar.Base
+open PHOMLgrammar public
+open import Grammar PHOML public
 
 Proof : Alphabet → Set
 Proof V = Expression V -vProof

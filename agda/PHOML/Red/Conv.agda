@@ -1,9 +1,9 @@
-module PHOPL.Red.Conv where
+module PHOML.Red.Conv where
 open import Data.Unit
 open import Prelims
 open import Prelims.Closure.RST
-open import PHOPL.Grammar
-open import PHOPL.Red.Base
+open import PHOML.Grammar
+open import PHOML.Red.Base
 
 _≃_ : ∀ {V K} → Expression V K → Expression V K → Set
 _≃_ {V} {K} = RSTClose (_⇒_ {V} {K})

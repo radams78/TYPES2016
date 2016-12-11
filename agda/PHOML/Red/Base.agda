@@ -1,12 +1,12 @@
-module PHOPL.Red.Base where
+module PHOML.Red.Base where
 
 open import Level
 open import Data.Bool
 open import Data.Product renaming (_,_ to _,p_)
 open import Data.Sum
 open import Prelims
-open import PHOPL.Grammar
-open import PHOPL.PathSub
+open import PHOML.Grammar
+open import PHOML.PathSub
 
 infix 10 _⇒_
 data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where

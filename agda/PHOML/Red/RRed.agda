@@ -1,9 +1,9 @@
-module PHOPL.Red.RRed where
+module PHOML.Red.RRed where
 open import Data.Bool
 open import Data.Product renaming (_,_ to _,p_)
 open import Prelims
-open import PHOPL.Grammar
-open import PHOPL.Red.Base
+open import PHOML.Grammar
+open import PHOML.Red.Base
 
 infix 10 _⇒?_
 _⇒?_ : ∀ {V K} → Expression V K → Expression V K → Set
@@ -41,4 +41,9 @@ imp-osr-inj₁ : ∀ {V} {φ ψ χ : Term V} → φ ⊃ ψ ⇒ χ → Σ[ φ' �
   χ ≡ φ' ⊃ ψ' × φ ⇒? φ'
 imp-osr-inj₁ {ψ = ψ} (impl {φ' = φ'} φ⊃φ') = φ' ,p ψ ,p refl ,p inc φ⊃φ'
 imp-osr-inj₁ {φ = φ} (impr {ψ' = ψ'} _) = φ ,p ψ' ,p refl ,p ref
+
+imp-osr-inj₂ : ∀ {V} {φ ψ χ : Term V} → φ ⊃ ψ ⇒ χ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
+  χ ≡ φ' ⊃ ψ' × ψ ⇒? ψ'
+imp-osr-inj₂ {ψ = ψ} (impl {φ' = φ'} _) = φ' ,p ψ ,p refl ,p ref
+imp-osr-inj₂ {φ = φ} (impr {ψ' = ψ'} ψ⇒ψ') = φ ,p ψ' ,p refl ,p inc ψ⇒ψ'
 

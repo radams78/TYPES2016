@@ -1,12 +1,12 @@
-module PHOPL.Canon where
+module PHOML.Canon where
 open import Data.Empty renaming (⊥ to Empty)
 open import Data.Product renaming (_,_ to _,p_)
 open import Data.Sum
 open import Prelims
 open import Prelims.Closure.RST
-open import PHOPL.Grammar
-open import PHOPL.PathSub
-open import PHOPL.Red
+open import PHOML.Grammar
+open import PHOML.PathSub
+open import PHOML.Red
 
 data CanonProp : Set where
   bot : CanonProp

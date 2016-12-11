@@ -1,13 +1,13 @@
-module PHOPL.Red.RTRed where
+module PHOML.Red.RTRed where
 open import Data.Unit
 open import Data.Bool
 open import Data.Product renaming (_,_ to _,p_)
 open import Data.Sum
 open import Prelims
-open import PHOPL.Grammar
-open import PHOPL.PathSub
-open import PHOPL.Red.Base
-open import PHOPL.Red.RRed
+open import PHOML.Grammar
+open import PHOML.PathSub
+open import PHOML.Red.Base
+open import PHOML.Red.RRed
 
 infix 10 _↠_
 _↠_ : ∀ {V K} → Expression V K → Expression V K → Set
@@ -84,6 +84,19 @@ imp-red-inj₁' (trans χ₁↠χ₂ χ₂↠χ₃) χ₁≡φ⊃ψ | φ' ,p ψ'
 imp-red-inj₁ : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ↠ φ' ⊃ ψ' → φ ↠ φ'
 imp-red-inj₁ φ⊃ψ↠φ'⊃ψ' with imp-red-inj₁' φ⊃ψ↠φ'⊃ψ' refl
 imp-red-inj₁ {φ = φ} φ⊃ψ↠φ'⊃ψ' | φ'' ,p ψ'' ,p φ'⊃ψ'≡φ''⊃ψ'' ,p φ↠φ'' = subst (λ x → φ ↠ x) (⊃-injl (≡-sym φ'⊃ψ'≡φ''⊃ψ'')) φ↠φ''
+
+private imp-red-inj₂' : ∀ {V} {φ ψ χ χ' : Term V} → χ ↠ χ' → χ ≡ φ ⊃ ψ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
+                      χ' ≡ φ' ⊃ ψ' × ψ ↠ ψ'
+imp-red-inj₂' {χ' = χ'} (inc χ⇒χ') χ≡φ⊃ψ with imp-osr-inj₂ (subst (λ x → x ⇒ χ') χ≡φ⊃ψ χ⇒χ')
+imp-red-inj₂' (inc χ⇒χ') χ≡φ⊃ψ | φ' ,p ψ' ,p χ'≡φ'⊃ψ' ,p φ⇒?φ' = φ' ,p ψ' ,p χ'≡φ'⊃ψ' ,p sub-R-RT φ⇒?φ'
+imp-red-inj₂' {φ = φ} {ψ} ref χ≡φ⊃ψ = φ ,p ψ ,p χ≡φ⊃ψ ,p ref
+imp-red-inj₂' (trans χ₂↠χ₂ χ₂↠χ₃) χ₂≡φ⊃ψ with imp-red-inj₂' χ₂↠χ₂ χ₂≡φ⊃ψ
+imp-red-inj₂' (trans χ₂↠χ₂ χ₂↠χ₃) χ₂≡φ⊃ψ | φ' ,p ψ' ,p χ₂≡φ'⊃ψ' ,p φ↠φ' with imp-red-inj₂' χ₂↠χ₃ χ₂≡φ'⊃ψ'
+imp-red-inj₂' (trans χ₂↠χ₂ χ₂↠χ₃) χ₂≡φ⊃ψ | φ' ,p ψ' ,p χ₂≡φ'⊃ψ' ,p φ↠φ' | φ'' ,p ψ'' ,p χ₃≡φ''⊃ψ'' ,p φ'↠φ'' = φ'' ,p ψ'' ,p χ₃≡φ''⊃ψ'' ,p trans φ↠φ' φ'↠φ''
+
+imp-red-inj₂ : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ↠ φ' ⊃ ψ' → ψ ↠ ψ'
+imp-red-inj₂ φ⊃ψ↠φ'⊃ψ' with imp-red-inj₂' φ⊃ψ↠φ'⊃ψ' refl
+imp-red-inj₂ {ψ = ψ} φ⊃ψ↠φ'⊃ψ' | φ'' ,p ψ'' ,p φ'⊃ψ'≡φ''⊃ψ'' ,p ψ↠ψ'' = subst (λ x → ψ ↠ x) (⊃-injr (≡-sym φ'⊃ψ'≡φ''⊃ψ'')) ψ↠ψ''
 
 ⇒-dir' : ∀ {V} {P : Path V} {δ d} → dir d P ⇒ δ → Σ[ Q ∈ Path V ] P ⇒ Q × δ ≡ dir d Q
 ⇒-dir' (dirR P⇒Q) = _ ,p P⇒Q ,p refl
