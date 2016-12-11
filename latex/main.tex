@@ -321,63 +321,6 @@ We write $\rightarrow^?$ for the reflexive closure of $\rightarrow$,
 we write $\twoheadrightarrow$ for the reflexive transitive closure of $\rightarrow$, and we write $\simeq$ for the reflexive symmetric transitive closure of $\rightarrow$.
 We say an expression $E$ is in \emph{normal form} iff there is no expression $F$ such that $E \rightarrow F$.
 
-\subsubsection{Canonicity}
-
-\begin{definition}[Canonical Object]
-$ $
-\begin{itemize}
-\item
-The canonical objects $\theta$ of $\Omega$, or \emph{canonical propositions}, are given by the grammar
-\[ \theta ::= \bot \mid \theta \supset \theta \]
-\item
-A canonical object of type $A \rightarrow B$ has the form $\lambda x:A.M$, where
-$x : A \vdash M : B$.
-\end{itemize}
-We define the \emph{canonical proofs} of a canonical object $\theta$ of $\Omega$ as follows:
-\begin{itemize}
-\item
-There is no canonical proof of $\bot$.
-\item
-A canonical proof of $\varphi \supset \psi$ has the form $\lambda p : \varphi . \delta$, where $p : \varphi \vdash \delta : \psi$.
-\end{itemize}
-We define the \emph{canonical paths} of an equation $M =_A N$, where $M$ and $N$ are canonical objects of $A$, as follows:
-\begin{itemize}
-\item
-A canonical path of $\varphi =_\Omega \psi$ is either $\reff{\varphi}$ if $\varphi \simeq \psi$, or $\univ{\varphi}{\psi}{\delta}{\epsilon}$, where $\delta$ is a canonical
-proof of $\varphi \supset \psi$ and $\epsilon$ is a canonical proof of $\psi \supset \varphi$.
-\item
-A canonical path of $F =_{A \rightarrow B} G$ is either $\reff{F}$ if $F \simeq G$, or $\triplelambda e:x =_A y.P$ where $x : A, y : A, e : x =_A y \vdash P : Fx =_B Gy$ and $P$ is in normal form.
-\end{itemize}
-\end{definition}
-
-\begin{lemma}
-\label{lm:compat-beta}
-Suppose $\varphi$ reduces to a canonical proposition $\theta$, and $\varphi \simeq \psi$.  Then $\psi$ reduces to $\theta$.
-\end{lemma}
-
-\begin{proof}
-This follows from the fact that $\rightarrow$ satisfies the diamond property, and every canonical proposition $\theta$ is a normal form.
-\end{proof}
-
-\subsubsection{Neutral Expressions}
-
-\begin{definition}[Neutral]$ $
-The \emph{neutral} terms, paths and proofs are given by the grammar
-\[ \begin{array}{lrcl}
-\text{Neutral term} & M_n & ::= & x \mid M_n N \\
-\text{Neutral proof} & \delta_n & ::= & p \mid P_n^+ \mid P_n^- \mid \delta_n \epsilon \\
-\text{Neutral path} & P_n & ::= & e \mid P_n \supset^* Q \mid Q \supset^* P_n \mid (P_n)_{MN} Q
-\end{array} \]
-\end{definition}
-
-\begin{lemma}
-A term in normal form is either a neutral term, a canonical proposition, or a $\lambda$-term.
-\end{lemma}
-
-\begin{proof}
-An easy proof by case analysis.
-\end{proof}
-
 \subsection{Rules of Deduction}
 
 The rules of deduction of PHOML are given in Figure \ref{fig:lambdaoe}.
@@ -552,6 +495,63 @@ then $\Delta \vdash M \{ \tau : \sigma = \rho \} : M [ \sigma ] =_A M [ \rho ]$.
 
 \begin{proof}
 Induction on derivations.
+\end{proof}
+
+\subsubsection{Canonicity}
+
+\begin{definition}[Canonical Object]
+$ $
+\begin{itemize}
+\item
+The canonical objects $\theta$ of $\Omega$, or \emph{canonical propositions}, are given by the grammar
+\[ \theta ::= \bot \mid \theta \supset \theta \]
+\item
+A canonical object of type $A \rightarrow B$ has the form $\lambda x:A.M$, where
+$x : A \vdash M : B$.
+\end{itemize}
+We define the \emph{canonical proofs} of a canonical object $\theta$ of $\Omega$ as follows:
+\begin{itemize}
+\item
+There is no canonical proof of $\bot$.
+\item
+A canonical proof of $\varphi \supset \psi$ has the form $\lambda p : \varphi . \delta$, where $p : \varphi \vdash \delta : \psi$.
+\end{itemize}
+We define the \emph{canonical paths} of an equation $M =_A N$, where $M$ and $N$ are canonical objects of $A$, as follows:
+\begin{itemize}
+\item
+A canonical path of $\varphi =_\Omega \psi$ is either $\reff{\varphi}$ if $\varphi \simeq \psi$, or $\univ{\varphi}{\psi}{\delta}{\epsilon}$, where $\delta$ is a canonical
+proof of $\varphi \supset \psi$ and $\epsilon$ is a canonical proof of $\psi \supset \varphi$.
+\item
+A canonical path of $F =_{A \rightarrow B} G$ is either $\reff{F}$ if $F \simeq G$, or $\triplelambda e:x =_A y.P$ where $x : A, y : A, e : x =_A y \vdash P : Fx =_B Gy$.
+\end{itemize}
+\end{definition}
+
+\begin{lemma}
+\label{lm:compat-beta}
+Suppose $\varphi$ reduces to a canonical proposition $\theta$, and $\varphi \simeq \psi$.  Then $\psi$ reduces to $\theta$.
+\end{lemma}
+
+\begin{proof}
+This follows from the fact that $\rightarrow$ satisfies the diamond property, and every canonical proposition $\theta$ is a normal form.
+\end{proof}
+
+\subsubsection{Neutral Expressions}
+
+\begin{definition}[Neutral]$ $
+The \emph{neutral} terms, paths and proofs are given by the grammar
+\[ \begin{array}{lrcl}
+\text{Neutral term} & M_n & ::= & x \mid M_n N \\
+\text{Neutral proof} & \delta_n & ::= & p \mid P_n^+ \mid P_n^- \mid \delta_n \epsilon \\
+\text{Neutral path} & P_n & ::= & e \mid P_n \supset^* Q \mid Q \supset^* P_n \mid (P_n)_{MN} Q
+\end{array} \]
+\end{definition}
+
+\begin{lemma}
+A term in normal form is either a neutral term, a canonical proposition, or a $\lambda$-term.
+\end{lemma}
+
+\begin{proof}
+An easy proof by case analysis.
 \end{proof}
 
 \section{Examples}
