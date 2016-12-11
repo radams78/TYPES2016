@@ -277,7 +277,7 @@ $$ \infer{P_{MN} Q \rightarrow P'_{MN} Q}{P \rightarrow P'} \quad
 
 \begin{lemma}[Diamond Property]
 \label{lm:diamond}
-If $E \rightarrow F$ and $E \rightarrow G$, then there exists $H$ such that $F \rightarrow H$ and $G \rightarrow H$.
+If $E \rightarrow F$ and $E \rightarrow G$, then there exists $H$ such that $F \rightarrow^? H$ and $G \rightarrow^? H$.
 \end{lemma}
 
 \begin{proof}
@@ -299,7 +299,8 @@ Induction on $M \rightarrow N$.  The only difficult case is $\beta$-contraction.
 \end{align*}
 \end{proof}
 
-We write $\twoheadrightarrow$ for the reflexive transitive closure of $\rightarrow$, and $\simeq$ for the reflexive symmetric transitive closure of $\rightarrow$.
+We write $\rightarrow^?$ for the reflexive closure of $\rightarrow$, 
+we write $\twoheadrightarrow$ for the reflexive transitive closure of $\rightarrow$, and we write $\simeq$ for the reflexive symmetric transitive closure of $\rightarrow$.
 We say an expression $E$ is in \emph{normal form} iff there is no expression $F$ such that $E \rightarrow F$.
 
 \subsubsection{Canonicity}
