@@ -540,28 +540,28 @@ Induction on derivations.
 
 \section{Examples}
 
-Using propositional extensionality, we can construct a path of type $\top = \top \rightarrow \top$, and hence a proof of $\top \rightarrow (\top \rightarrow \top)$.
-But which of the canonical proofs of $\top \rightarrow (\top \rightarrow \top)$ have we constructed?
+Using propositional extensionality, we can construct a path of type $\top = \top \supset \top$, and hence a proof of $\top \supset (\top \supset \top)$.
+But which of the canonical proofs of $\top \supset (\top \supset \top)$ have we constructed?
 
 We define
-\[ \top := \bot \rightarrow \bot, \quad I_\bot := \lambda p:\bot.p, \quad I_\Omega := \lambda x:\Omega.x, \quad F := \lambda x:\Omega.\top \rightarrow x, \quad H := \lambda h.h \top \enspace . \]
+\[ \top := \bot \supset \bot, \quad \iota := \lambda p:\bot.p, \quad I := \lambda x:\Omega.x, \quad F := \lambda x:\Omega.\top \supset x, \quad H := \lambda h.h \top \enspace . \]
 
 Let $\Gamma$ be the context
 \[ \Gamma \eqdef x : \Omega, y : \Omega, e : x =_\Omega y \enspace . \]
 
 Then we have
 \begin{align*}
-\Gamma & \vdash \lambda p:\top \rightarrow x. e^+ (p I) & : & (\top \rightarrow x) \rightarrow y \\
-\Gamma & \vdash \lambda m : y. \lambda n : \top. e^- m & : & y \rightarrow (\top \rightarrow x) \\
-\Gamma & \vdash \univ*{\lambda p:\top \rightarrow x. e^- m}{\lambda m:y. \lambda n:\top. e^- m} & : & (\top \rightarrow x) =_\Omega y
+\Gamma & \vdash \lambda p:\top \supset x. e^+ (p \iota) & : & (\top \supset x) \supset y \\
+\Gamma & \vdash \lambda m : y. \lambda n : \top. e^- m & : & y \supset (\top \supset x) \\
+\Gamma & \vdash \univ*{\lambda p:\top \supset x. e^- m}{\lambda m:y. \lambda n:\top. e^- m} & : & (\top \supset x) =_\Omega y
 \end{align*}
 
-Let $P \equiv \univ*{\lambda p:\top \rightarrow x. e^+ (pI)}{\lambda m:y. \lambda n:\top. e^- m}$.  Then
+Let $P \equiv \univ*{\lambda p:\top \supset x. e^+ (p \iota)}{\lambda m:y. \lambda n:\top. e^- m}$.  Then
 
 \begin{align}
-\therefore & \vdash \triplelambda e:x =_\Omega y. P & : & F =_{\Omega \rightarrow \Omega} I_\Omega \label{eq:llleP} \\
-\therefore & \vdash (\reff{H})_{FI}(\triplelambda e:x =_\Omega y. P) & : & (\top \rightarrow \top) =_\Omega \top \label{eq:llleP2} \\
-\therefore & \vdash ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- & : & \top \rightarrow (\top \rightarrow \top) \label{eq:llleP3}
+\therefore & \vdash \triplelambda e:x =_\Omega y. P & : & F =_{\Omega \rightarrow \Omega} I \label{eq:llleP} \\
+\therefore & \vdash (\reff{H})_{FI}(\triplelambda e:x =_\Omega y. P) & : & (\top \supset \top) =_\Omega \top \label{eq:llleP2} \\
+\therefore & \vdash ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- & : & \top \supset (\top \supset \top) \label{eq:llleP3}
 \end{align}
 
 And now we compute:
@@ -571,12 +571,18 @@ And now we compute:
 \rightarrow & ((h \top) \{ h := \triplelambda e : x =_\Omega y.P : F = I \})^- \\
 \equiv & ((\triplelambda e : x =_\Omega y.P)_{\top \top} (\reff{\top}))^- \\
 \rightarrow & (P [ x := \top, y := \top, e := \reff{\top} ])^- \\
-\equiv & \univ*{\lambda p : \top \rightarrow \top. \reff{\top}^+ (p I)}{\lambda m:\top. \lambda n:\top. \reff{\top}^- m}^- \\
+\equiv & \univ*{\lambda p : \top \supset \top. \reff{\top}^+ (p \iota)}{\lambda m:\top. \lambda n:\top. \reff{\top}^- m}^- \\
 \rightarrow & \lambda m : \top. \lambda n : \top. \reff{\top}^- m
 \end{align*}
 
 Therefore, given proofs $\delta, \epsilon : \top$, we have
 \[ ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- \delta \epsilon \rightarrow \delta \enspace . \]
+
+Thus, the construction gives a proof of $\top \supset (\top \supset \top)$ which, given two proofs of $\top$, selects the first.  We could have anticipated this:
+consider the context $\Delta \eqdef X : \Omega, Y : \Omega, p : X$.  By
+replacing in our example some occurrences of $\top$ with $X$ and others with $Y$, and replacing $\iota$ with $p$, we can obtain a path
+\[ Y =_\Omega X \supset Y \]
+and hence a proof of $Y \supset (X \supset Y)$.  By parametricity, any proof that we can construct in the context $\Delta$ of this proposition must return the left input.
 
 \subsection{Comparison with Cubical Type Theory}
 \label{section:cubical}
