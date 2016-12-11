@@ -83,23 +83,12 @@ We present a call-by-need reduction relation for this system, and prove that the
 
 \section{Introduction}
 
-The rules of deduction of a type theory are traditionally justified by a \emph{meaning explanation} \cite{ML:ITT}, in which to know that a given term has a given type is to know that it computes to a \emph{canonical object} of that type.  A necessary condition for such a meaning explanation is that the type theory should have the following syntactic properties:
-\begin{itemize}
-\item \textbf{Confluence} --- The reduction relation should be confluent.
-\item \textbf{Normalization} --- Every well-typed term should reduce to a normal form.
-\item Every closed normal form of type $A$ is a canonical object of type $A$.
-\end{itemize}
-From these three properties, we have:
-\begin{itemize}
-\item \textbf{Canonicity} --- Every closed term of type $A$ reduces to a unique canonical object of type $A$.
-\end{itemize}
 
-It is desirable to have, in addition, \emph{strong normalization}, so that we know that we are free to choose whatever reduction strategy we please.
-
-The \emph{univalence axiom} of Homotopy Type theory (HoTT) \cite{hottbook} breaks the property of canonicity.  It postulates a
+The \emph{univalence axiom} of Homotopy Type theory (HoTT) \cite{hottbook} postulates a
 constant
 \[ \isotoid : A \simeq B \rightarrow A = B \]
-that is an inverse to the canonical function $A = B \rightarrow A \simeq B$.  When a computation reaches a point
+that is an inverse to the canonical function $A = B \rightarrow A \simeq B$.  However, if we simply add this constant to Martin-L\"{o}f type theory, then
+we lose the important property of \emph{canonicity} --- that every closed term of type $A$ computes to a unique canonical object of type $A$.  When a computation reaches a point
 where we eliminate a path (proof of equality) formed by $\isotoid$, it gets 'stuck'.
 
 As possible solutions to this problem, we may try to do with a weaker property than canonicity, such as \emph{propositional canonicity}.
@@ -120,8 +109,7 @@ if $\delta : \varphi \supset \psi$ and $\epsilon : \psi \supset\varphi$, then $\
 In PHOML, two propositions that are logically equivalent are equal.  Every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must therefore respect logical equivalence.  That is, for any $F$ and logically equivalent $x$, $y$ we must have that $Fx$ and $Fy$ are logically equivalent. Moreover, if for $x:\Omega$ we have that $Fx$ is logically equivalent to $Gx$, then $F =_{\Omega\to\Omega} G$.
 Every function of type $(\Omega \rightarrow \Omega) \rightarrow \Omega$ must respect this equality; and so on.  This is the manifestation in PHOML of the principle that only homotopy invariant constructions can be performed in homotopy type theory.  (See Section \ref{section:exampletwo}.)
 
-We present a deterministic call-by-need reduction relation for this system, and prove that every typable term reduces to a canonical form.  From this, it follows that the system is consistent.  In the appendix, we present a proof of strong normalization for a different reduction relation.
-%confluence (Corollary \ref{cor:confluence}), strong normalization (Corollary \ref{cor:SN}) and canonicity (Corollary \ref{cor:canon}).
+We present a deterministic call-by-need reduction relation for this system, and prove that every typable term reduces to a canonical form.  From this, it follows that the system is consistent.  
 
 For the future, we wish to expand the system with universal quantification, and expand it to a 2-dimensional system (with equations between proofs).
 
@@ -168,7 +156,7 @@ and we shall use Greek letters for terms that are intended to be propositions.  
 
 Note also that the types of PHOML are just the simple types over $\Omega$; therefore, no variable can occur in a type.
 
-The intuition behind the new expressions is as follows (see also the rules of deduction in Figure \ref{fig:lambdaoe}).  For any object $M : A$, there is the trivial path $\reff{M} : M =_A M$.  The constructor $\supset^*$ ensures congruence for $\supset$ --- if $P : \varphi =_\Omega \varphi'$ and $Q : \psi =_\Omega \psi'$ then $P \supset^* Q : \varphi \supset \psi =_\Omega \varphi' \supset \psi'$.  The constructor $\mathsf{univ}$ gives univalence for our propositions: if $\delta : \varphi \supset \psi$ and $\epsilon : \psi \supset \varphi$, then $\univ{\varphi}{\psi}{\delta}{\epsilon}$ is a path of type $\varphi =_\Omega \psi$.  The constructors $^+$ and $^-$ are the converses: if $P$ is a path of type $\varphi =_\Omega \psi$, then $P^+$ is a proof of $\varphi \supset \psi$, and $P^-$ is a proof of $\psi \supset \varphi$.
+The intuition behind the new expressions is as follows (see also the rules of deduction in Figure \ref{fig:lambdaoe}).  For any object $M : A$, there is the trivial path $\reff{M} : M =_A M$.  The constructor $\supset^*$ ensures congruence for $\supset$ --- if $P : \varphi =_\Omega \varphi'$ and $Q : \psi =_\Omega \psi'$ then $P \supset^* Q : \varphi \supset \psi =_\Omega \varphi' \supset \psi'$.  The constructor $\mathsf{univ}$ gives 'univalence' (propositional extensionality) for our propositions: if $\delta : \varphi \supset \psi$ and $\epsilon : \psi \supset \varphi$, then $\univ{\varphi}{\psi}{\delta}{\epsilon}$ is a path of type $\varphi =_\Omega \psi$.  The constructors $^+$ and $^-$ are the converses, which denote the action of transport along a path: if $P$ is a path of type $\varphi =_\Omega \psi$, then $P^+$ is a proof of $\varphi \supset \psi$, and $P^-$ is a proof of $\psi \supset \varphi$.  
 
 The constructor $\triplelambda$ gives functional extensionality.  Let $F$ and $G$ be functions of type $A \rightarrow B$.  If $F x =_B G y$ whenever $x =_A y$, then $F =_{A \rightarrow B} G$.  More formally, if $P$ is a path of type $Fx =_B Gy$ that depends on $x : A$, $y : A$ and $e : x =_A y$, then $\triplelambda e : x =_A y . P$ is a path of type $F =_{A \rightarrow B} G$.  The proofs $P^+$ and $P^-$ represent transport along the path $P$.
 
@@ -181,7 +169,7 @@ we introduce a notion of \emph{path substitution}.  If $N$, $M$ and $M'$ are ter
 $\Gamma \vdash P : M =_A M'$ and $\Gamma, x : A \vdash N : B$ then $\Gamma \vdash N \{ x := P : M = M' \} : N [ x:= M ] =_B N [ x := M' ]$ (see Lemma \ref{lm:pathsub}). 
 
 \begin{definition}[Path Substitution]
-Given terms $M_1$, \ldots, $M_n$ and $N_1$, \ldots, $N_n$; paths $P_1$, \ldots, $P_n$; term variables $x_1$, \ldots, $x_n$; and a term $L$, define the path $L \{ x_1 := P_1 : M_1 = N_1 , \ldots, x_n := P_n : M_n = N_n \}$ as follows.
+Given terms $M_1$, \ldots, $M_n$ and $N_1$, \ldots, $N_n$; paths $P_1$, \ldots, $P_n$; term variables $x_1$, \ldots, $x_n$; and a term $L$, define the path $$L \{ x_1 := P_1 : M_1 = N_1 , \ldots, x_n := P_n : M_n = N_n \}$$ as follows.
 \begin{align*}
 x_i \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \} & \eqdef P_i \\
 y \{ \vec{x} := \vec{P} : \vec{M} = \vec{N} \} & \eqdef \reff{y} \qquad (y \not\equiv x_1, \ldots, x_n) \\
@@ -247,24 +235,28 @@ with the same domain $\{ x_1, \ldots, x_n \}$, we write
 \subsubsection{Call-By-Need Reduction}
 
 \begin{definition}[Call-By-Need Reduction]
-Define the relation of \emph{call-by-need reduction} $\rightarrow$ on the expressions as follows:
+Define the relation of \emph{call-by-need reduction} $\rightarrow$ on the expressions.  The inductive
+definition is given by the rules in Figure \ref{fig:reduction}
+
+\begin{figure}
+\paragraph*{Reduction on Terms}
 $$ \infer{(\lambda x:A.M)N \rightarrow M[x:=N]}{} \quad
 \infer{MN \rightarrow M'N}{M \rightarrow M'} \quad
-\infer{\varphi \supset \psi \rightarrow \varphi' \supset \psi}{\varphi \rightarrow \varphi'} $$
-$$ \infer{\varphi \supset \psi \rightarrow \varphi \supset \psi'}{\psi \rightarrow \psi'} \quad
-\infer{(\lambda p : \varphi . \delta)\epsilon \rightarrow \delta [ p := \epsilon ]}{} \quad
+\infer{\varphi \supset \psi \rightarrow \varphi' \supset \psi}{\varphi \rightarrow \varphi'} \quad
+\infer{\varphi \supset \psi \rightarrow \varphi \supset \psi'}{\psi \rightarrow \psi'} $$
+\paragraph*{Reduction on Proofs}
+$$\infer{(\lambda p : \varphi . \delta)\epsilon \rightarrow \delta [ p := \epsilon ]}{} \quad
 \infer{\reff{\varphi}^+ \delta \rightarrow \delta}{} \quad
 \infer{\reff{\varphi}^- \delta \rightarrow \delta}{} $$
 $$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rightarrow \delta}{} \quad
 \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^- \rightarrow \epsilon}{} \quad
 \infer{\delta \epsilon \rightarrow \delta' \epsilon}{\delta \rightarrow \delta'} $$
 $$ \infer{P^+ \rightarrow Q^+}{P \rightarrow Q} \quad
-\infer{P^- \rightarrow Q^-}{P \rightarrow Q} \quad
-\infer{(\triplelambda e:x =_A y.P)_{MN} Q \rightarrow P [x := M, y := N, e := Q]}{} $$
+\infer{P^- \rightarrow Q^-}{P \rightarrow Q}$$
+\paragraph*{Reduction on Paths}
+$$\infer{(\triplelambda e:x =_A y.P)_{MN} Q \rightarrow P [x := M, y := N, e := Q]}{} $$
 $$ \infer{\reff{\lambda x:A.M}_{N N'} P \rightarrow M \{ x:=P : N = N' \}}{} $$
-$$ \infer{\reff{M} \rightarrow \reff{N}}{M \rightarrow N} \quad
-\infer{P_{MN} Q \rightarrow P'_{MN} Q}{P \rightarrow P'} \quad
-\infer{\reff{\varphi} \supset^* \reff{\psi} \rightarrow \reff{\varphi \supset \psi}}{} $$
+$$ \infer{\reff{\varphi} \supset^* \reff{\psi} \rightarrow \reff{\varphi \supset \psi}}{} $$
 $$ \infer{\reff{\varphi} \supset^* \univ{\psi}{\chi}{\delta}{\epsilon} \rightarrow 
 \univ{\varphi \supset \psi}{\varphi \supset \chi}{\lambda p:\varphi \supset \psi. \lambda q : \varphi. \delta (pq)}{\lambda p : \varphi \supset \chi. \lambda q : \varphi. \epsilon (pq)}}{} $$
 $$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon} \supset^* \reff{\chi} \rightarrow
@@ -274,8 +266,13 @@ $$ \infer{\begin{array}{l}
  \rightarrow
 \univ{\varphi \supset \varphi'}{\psi \supset \psi'}{\lambda p : \varphi \supset \varphi'. \lambda q : \psi. \delta' (p(\epsilon q))}{\lambda p : \psi \supset \psi'. \lambda q : \varphi. \epsilon' (p (\delta q))}
 \end{array}}{} $$
-$$ \infer{P \supset^* Q \rightarrow P' \supset^* Q}{P \rightarrow P'} \quad
+$$ \infer{P_{MN} Q \rightarrow P'_{MN} Q}{P \rightarrow P'} \quad
+\infer{\reff{M} \rightarrow \reff{N}}{M \rightarrow N} \quad
+\infer{P \supset^* Q \rightarrow P' \supset^* Q}{P \rightarrow P'} \quad
 \infer{P \supset^* Q \rightarrow P \supset^* Q'}{Q \rightarrow Q'} $$
+\caption{Reduction in PHOML}
+\label{fig:reduction}
+\end{figure}
 \end{definition}
 
 \begin{lemma}[Diamond Property]
@@ -591,7 +588,7 @@ In cubical type theory, we say that a type $A$ is a \emph{proposition} iff any t
 \[ \isProp{A} \eqdef \Pi x,y:A. \Path{A}{x}{y} \]
 and let $\Prop$ be the type of all types in $U$ that are propositions:
 \[ \Prop \eqdef \Sigma X : U. \isProp{X} \enspace . \]
-Let $\bot$ be any type in $U$ that is a proposition; that is, there exists a term of type $\isProp{\bot}$.  ($\bot$ may be the empty type, but we do not require this in what follows.)
+Let $\bot$ be any type in the universe $U$ that is a proposition; that is, there exists a term of type $\isProp{\bot}$.  ($\bot$ may be the empty type, but we do not require this in what follows.)
 
 Define
 \[ \top := \bot \rightarrow \bot \]

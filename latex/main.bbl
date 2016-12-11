@@ -25,11 +25,6 @@ Martin Hofmann.
 \newblock In {\em Semantics and Logics of Computation}, pages 79--130.
   Cambridge University Press, 1997.
 
-\bibitem{ML:ITT}
-Per Martin-L{\"o}f.
-\newblock {\em Intuitionistic Type Theory}.
-\newblock Bibliopolis, 1984.
-
 \bibitem{Polonsky14a}
 Andrew Polonsky.
 \newblock Internalization of extensional equality.
