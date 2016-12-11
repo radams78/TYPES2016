@@ -52,13 +52,12 @@
 \newcommand*{\triplelambda}{\ensuremath{\lambda \!\! \lambda \!\! \lambda}}
 \newcommand*{\vald}{\ensuremath{\vdash \mathrm{valid}}}
 \newcommand*{\dom}{\ensuremath{\operatorname{dom}}}
-\newcommand{\Path}[3]{\ensuremath{\mathrm{Path} \, {#1} \, {#2} \, {#3}}}
-\newcommand{\nf}{\ensuremath{\ \mathrm{nf}}}
-\newcommand{\Prop}{\mathbf{Prop}}
-\newcommand{\outputt}{\mathrm{output}}
-\newcommand{\isProp}[1]{\mathrm{isProp} \left( {#1} \right)}
-\newcommand{\mapid}[2]{\mathrm{mapid}_{#1} \, {#2}}
-\newcommand{\comp}{\mathrm{comp}}
+\newcommand{\Path}[3]{\ensuremath{\mathsf{Path} \, {#1} \, {#2} \, {#3}}}
+\newcommand{\Prop}{\mathsf{Prop}}
+\newcommand{\outputt}{\mathsf{output}}
+\newcommand{\isProp}[1]{\mathsf{isProp} \left( {#1} \right)}
+\newcommand{\mapid}[2]{\mathsf{mapid}_{#1} \, {#2}}
+\newcommand{\comp}{\mathsf{comp}}
 
 \theoremstyle{plain}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -74,7 +73,7 @@
 \begin{abstract}
 The univalence axiom expresses the principle of extensionality for dependent types theory. However, if we simply add the univalence axiom to type theory, then we lose the property of \emph{canonicity} --- that every closed term computes to a canonical form. A computation becomes `stuck' when it reaches the point that it needs to evaluate a proof term that is an application of the univalence axiom. So we wish to find a way to compute with the univalence axiom. While this problem has been solved with the formulation of cubical type theory, where the computations are expressed using a nominal extension of lambda-calculus, it may be interesting to explore alternative solutions, which do not require such an extension.
 
-As a first step, we present here a system of propositional higher-order minimal logic (PHOML).  There are three kinds of typing judgement in PHOML.  There are \emph{terms} which inhabit \emph[types}, which are the simple types over $\Omega$.  There are \emph{proofs} which inhabit \emph{propositions}, which are the terms of type $\Omega$.  The canonical propositions are those constructed from $\bot$ by implication $\supset$.  Thirdly, there are \emph{paths} which inhabit \emph{equations} $M =_A N$, where $M$ and $N$ are terms of type $A$.  There are two ways to prove an equality: reflexivity, and \emph{propositional extensionality} --- logically equivalent propositions are equal.  This system allows for some definitional equalities that are not present in cubical type theory, namely that transport along the trivial path is identity.
+As a first step, we present here a system of propositional higher-order minimal logic (PHOML).  There are three kinds of typing judgement in PHOML.  There are \emph{terms} which inhabit \emph{types}, which are the simple types over $\Omega$.  There are \emph{proofs} which inhabit \emph{propositions}, which are the terms of type $\Omega$.  The canonical propositions are those constructed from $\bot$ by implication $\supset$.  Thirdly, there are \emph{paths} which inhabit \emph{equations} $M =_A N$, where $M$ and $N$ are terms of type $A$.  There are two ways to prove an equality: reflexivity, and \emph{propositional extensionality} --- logically equivalent propositions are equal.  This system allows for some definitional equalities that are not present in cubical type theory, namely that transport along the trivial path is identity.
 
 We present a call-by-need reduction relation for this system, and prove that the system satisfies canonicity: every closed typable term head-reduces to a canonical form.  This work has been formalised in Agda.
  \end{abstract}
@@ -541,26 +540,28 @@ Induction on derivations.
 
 \section{Examples}
 
-Using propositional extensionality, we can construct a path of type $\top = \top \rightarrow \top$, and thence a proof of $\top \rightarrow \top \rightarrow \top$.
-But which of the canonical proofs of $\top \rightarrow \top \rightarrow \top$ have we constructed?
-
+Using propositional extensionality, we can construct a path of type $\top = \top \rightarrow \top$, and hence a proof of $\top \rightarrow (\top \rightarrow \top)$.
+But which of the canonical proofs of $\top \rightarrow (\top \rightarrow \top)$ have we constructed?
 
 We define
 \[ \top := \bot \rightarrow \bot, \quad I_\bot := \lambda p:\bot.p, \quad I_\Omega := \lambda x:\Omega.x, \quad F := \lambda x:\Omega.\top \rightarrow x, \quad H := \lambda h.h \top \enspace . \]
 
-Now, we have
+Let $\Gamma$ be the context
+\[ \Gamma \eqdef x : \Omega, y : \Omega, e : x =_\Omega y \enspace . \]
+
+Then we have
 \begin{align*}
-x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \lambda p:\top \rightarrow x. e^+ (p I) & : & (\top \rightarrow x) \rightarrow y \\
-x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \lambda m : y. \lambda n : \top. e^- m & : & y \rightarrow \top \rightarrow x \\
-x : \Omega, y : \Omega, e : x =_\Omega y & \vdash \univ*{\lambda p:\top \rightarrow x. e^- m}{\lambda m:y. \lambda n:\top. e^- m} & : & \top \rightarrow x =_\Omega y
+\Gamma & \vdash \lambda p:\top \rightarrow x. e^+ (p I) & : & (\top \rightarrow x) \rightarrow y \\
+\Gamma & \vdash \lambda m : y. \lambda n : \top. e^- m & : & y \rightarrow (\top \rightarrow x) \\
+\Gamma & \vdash \univ*{\lambda p:\top \rightarrow x. e^- m}{\lambda m:y. \lambda n:\top. e^- m} & : & (\top \rightarrow x) =_\Omega y
 \end{align*}
 
 Let $P \equiv \univ*{\lambda p:\top \rightarrow x. e^+ (pI)}{\lambda m:y. \lambda n:\top. e^- m}$.  Then
 
 \begin{align}
 \therefore & \vdash \triplelambda e:x =_\Omega y. P & : & F =_{\Omega \rightarrow \Omega} I_\Omega \label{eq:llleP} \\
-\therefore & \vdash (\reff{H})_{FI}(\triplelambda e:x =_\Omega y. P) & : & \top \rightarrow \top =_\Omega \top \label{eq:llleP2} \\
-\therefore & \vdash ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- & : & \top \rightarrow \top \rightarrow \top \label{eq:llleP3}
+\therefore & \vdash (\reff{H})_{FI}(\triplelambda e:x =_\Omega y. P) & : & (\top \rightarrow \top) =_\Omega \top \label{eq:llleP2} \\
+\therefore & \vdash ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- & : & \top \rightarrow (\top \rightarrow \top) \label{eq:llleP3}
 \end{align}
 
 And now we compute:
@@ -612,7 +613,7 @@ where $\mapid{}{}$ represents transport across the trivial path:
 In the version of cubical type theory given in \cite{bch:cubical}, we have $\mapid{X}{x}$ is definitionally equal to $x$, and therefore $Q \delta \epsilon = \delta$, just as in PHOML.
 This is no longer true in the version of cubical type theory given in \cite{cchm:cubical}.
 
-\subsection{Provable Parametricity}
+\subsection{Functions Respect Logical Equivalence}
 \label{section:exampletwo}
 
 As discussed in the introduction, every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must respect logical equivalence.  This fact can actually be proved in PHOML,
@@ -931,8 +932,8 @@ $\forall x,y : A. x =_A y \supset y =_A x$
 \section{Calculation in Cubical Type Theory}
 \label{appendix:cubical}
 
-\newcommand{\steptwo}{\mathrm{step}_2}
-\newcommand{\stepthree}{\mathrm{step}_3}
+\newcommand{\steptwo}{\mathsf{step}_2}
+\newcommand{\stepthree}{\mathsf{step}_3}
 
 %TODO Better name than step2 and step3
 We can prove that, if $X$ is a proposition, then the type $\Sigma f:\top \rightarrow X. Path \, X \, x \, (f I)$ is contractible (we omit the details).  Let $e[X, x, p]$ be the term such that
@@ -943,10 +944,10 @@ We can prove that, if $X$ is a proposition, then the type $\Sigma f:\top \righta
 Let $\steptwo [X,x] \eqdef \langle \langle \lambda t : T.x, 1_{X.1} \rangle,
 \lambda p : \Sigma f : T \rightarrow X.1. \Path{X.1}{x}{(fI)}. e[X, x, p] \rangle$.  Then
 $$ X : \Prop, x : X.1 \vdash \steptwo [X, x] : \mathsf{isContr}(\Sigma f:T \rightarrow X.1. \Path{X.1}{x}{(fI)}) \enspace . $$
-Let $\stepthree [X] \equiv \lambda x : X.1. step2[X, x]$.  Then
+Let $\stepthree [X] \equiv \lambda x : X.1. \steptwo [X, x]$.  Then
 $$ X : \Prop \vdash \stepthree [X] : \mathsf{isEquiv} \, (T \rightarrow X.1) \, X.1 \, (\lambda f : T \rightarrow X.1. f I) \enspace . $$
 Let $E[X] \equiv \langle \lambda f : \top \rightarrow X.1. f I, step3[X] \rangle$.  Then
-$$ X : \Prop \vdash E[X] : Equiv \, (\top \rightarrow X.1) \, X.1 $$
+$$ X : \Prop \vdash E[X] : \mathsf{Equiv} \, (\top \rightarrow X.1) \, X.1 $$
 
 From this equivalence, we want to get a path from $\top \rightarrow X.1$ to $X.1$ in $U$.  We apply the proof of univalence in \cite{cchm:cubical}
 
@@ -955,7 +956,7 @@ $$ X : \Prop \vdash P[X] : \Path{U}{(\top \rightarrow X.1)}{X.1} $$
 Let $Q \equiv \langle i \rangle \lambda x : \Prop. P[X] i$.  Then
 $$ \vdash Q : \Path{(\Prop \rightarrow U)}{F}{I} $$
 
-This is the term in cubical type theory that corresponds to $\triplelambda e : x =_\Omega y.P$ in HOML (formula \ref{eq:llleP}).  We now construct
+This is the term in cubical type theory that corresponds to $\triplelambda e : x =_\Omega y.P$ in PHOML (formula \ref{eq:llleP}).  We now construct
 terms corresponding to formulas (\ref{eq:llleP2}) and (\ref{eq:llleP3}):
 \[ \vdash \langle i \rangle H (Q i) : \Path{U}{(\top \rightarrow \top)}{\top} \]
 \[ \vdash \lambda x : \top. \comp^i (H (Q (1 - i))) [] x : \top \rightarrow \top \rightarrow \top \]
@@ -964,17 +965,24 @@ Let us write $\outputt$ for this term:
 \[ \outputt \eqdef \lambda x : \top. \comp^i (H (Q (1 - i))) [] x \enspace . \]
 And we calculate (using the notation from \cite{cchm:cubical} section 6.2):
 \begin{align*}
-\outputt
+& \quad \outputt \\
 & = \lambda x : \top. \comp^i (Q (1 - i) \top) [] x \\
 & = \lambda x : \top. \comp^i (P[\top] (1 - i)) [] x \\
-& = \lambda x : \top. \comp^i (\mathsf{Glue}[(i = 1) \mapsto (\top \rightarrow \top, E[\top]), (i = 0) \mapsto (\top, equiv^k \top)] \top) [] x \\
+& = \lambda x : \top. \comp^i (\mathsf{Glue}[(i = 1) \mapsto (\top \rightarrow \top, E[\top]), (i = 0) \mapsto (\top, \mathsf{equiv}^k \top)] \top) [] x \\
 & = \lambda x : \top. \mathsf{glue} [ 1_\mathbb{F} \mapsto t_1 ] a_1 \\
 & = \lambda x : \top. t_1 \\
-& = \lambda x : \top. (\mathsf{equiv} \, E[\top] \, [] \, mapid_\top(x)).1 \\
-& = \lambda x : \top. (\mathsf{contr} (step2[\top, mapid_\top(x)]) []).1 \\
-& = \lambda x : \top. (\comp^i (\Sigma f : \top \rightarrow \top. \Path{\top}{mapid_\top(x)}{(fI)}) [] \langle \lambda t : \top. mapid_\top(x), 1_{mapid_\top(x)} \rangle).1 \\
-& = \lambda x : \top. \mapid{\top \rightarrow \top}{\lambda _ : \top. \mapid{\top}{x}} \\
-\therefore \outputt \, m \, n & = \mapid{\top \rightarrow \top}{\lambda _ : \top. \mapid{\top}{m}} n \\
+& = \lambda x : \top. (\mathsf{equiv} \, E[\top] \, [] \, \mapid{\top}{x}).1 \\
+& = \lambda x : \top. (\mathsf{contr} (step2[\top, \mapid{\top}{x}]) []).1 \\
+& = \lambda x : \top. (\comp^i \\
+& \qquad (\Sigma f : \top \rightarrow \top. \Path{\top}{(\mapid{\top}{x})}{(fI)}) \\
+& \qquad [] \\
+& \qquad \langle \lambda t : \top. \mapid{\top}{x}, 1_{mapid_\top(x)} \rangle).1 \\
+& = \lambda x : \top. \mapid{\top \rightarrow \top}{(\lambda y : \top. \mapid{\top}{x})}
+\end{align*}
+Therefore,
+\begin{align*}
+& \outputt \, m \, n \\
+& = \mapid{\top \rightarrow \top}{(\lambda y : \top. \mapid{\top}{m})} n \\
 & \equiv (\comp^i (\top \rightarrow \top) [] (\lambda _ : \top. \mapid{\top}{m})) n \\
 & = \mapid{\top}{\mapid{\top}{m}}
 \end{align*}
