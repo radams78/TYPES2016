@@ -22,6 +22,15 @@ decode-inj {θ = imp _ _} {bot} ()
 decode-inj {θ = bot} {imp _ _} ()
 decode-inj {θ = imp θ₁ θ₂} {imp θ₁' θ₂'} θ₁⊃θ₂≡θ₁'⊃θ₂' = cong₂ imp (decode-inj (⊃-injl θ₁⊃θ₂≡θ₁'⊃θ₂')) (decode-inj (⊃-injr θ₁⊃θ₂≡θ₁'⊃θ₂'))
 
+canon-closed : ∀ {U V} (θ : CanonProp) {ρ : Rep U V} → decode θ 〈 ρ 〉 ≡ decode θ
+canon-closed bot = refl
+canon-closed (imp θ θ') = cong₂ _⊃_ (canon-closed θ) (canon-closed θ')
+
+rep-red-canon : ∀ {U V} {φ : Term U} (θ : CanonProp) {ρ : Rep U V} →
+  φ ↠ decode θ → φ 〈 ρ 〉 ↠ decode θ
+rep-red-canon {U} {V} {φ} θ {ρ} φ↠θ = subst (λ x → φ 〈 ρ 〉 ↠ x) 
+  (canon-closed θ) (↠-resp-rep φ↠θ)
+
 canon-nf : ∀ {V θ} {φ : Term V} → decode θ ⇒ φ → Empty
 canon-nf {θ = bot} ()
 canon-nf {θ = imp φ _} (impl θ⇒φ) = canon-nf {θ = φ} θ⇒φ

@@ -115,6 +115,7 @@ red-appPl : ∀ {V} {δ ε δ₁ δ₂ : Proof V} → δ ↠ ε → δ ≡ appP 
 red-appPl (inc (βP {φ = φ} {δ})) Λφδε≡δ₁δ₂ = inj₂ (_ ,p (_ ,p subst (λ x → x ↠ ΛP φ δ) (appP-injl Λφδε≡δ₁δ₂) ref))
 red-appPl (inc (appPl {δ' = δ'} δ⇒δ')) δ≡δ₁δ₂ = inj₁ (δ' ,p inc (subst (λ x → x ⇒ δ') (appP-injl δ≡δ₁δ₂) δ⇒δ') ,p cong (appP δ') (appP-injr δ≡δ₁δ₂))
 red-appPl (inc refdir) ()
+red-appPl (inc univplus) ()
 red-appPl (inc (dirR δ⇒ε)) ()
 red-appPl {δ₁ = δ₁} ref δ≡δ₁δ₂ = inj₁ (δ₁ ,p (ref ,p δ≡δ₁δ₂))
 red-appPl (trans δ↠ε ε↠ε') δ≡δ₁δ₂ with red-appPl δ↠ε δ≡δ₁δ₂
@@ -122,3 +123,6 @@ red-appPl (trans δ↠ε ε↠ε') δ≡δ₁δ₂ | inj₁ (δ₁' ,p δ₁↠�
 red-appPl (trans δ↠ε ε↠ε') δ≡δ₁δ₂ | inj₁ (δ₁' ,p δ₁↠δ₁' ,p ε≡δ₁'δ₂) | inj₁ (δ₁'' ,p δ₁'↠δ₁'' ,p ε'≡δ₁''δ₂) = inj₁ (δ₁'' ,p trans δ₁↠δ₁' δ₁'↠δ₁'' ,p ε'≡δ₁''δ₂)
 red-appPl (trans δ↠ε ε↠ε') δ≡δ₁δ₂ | inj₁ (δ₁' ,p δ₁↠δ₁' ,p ε≡δ₁'δ₂) | inj₂ (φ ,p δ₁'' ,p δ₁'↠Λδ₁'') = inj₂ (φ ,p (δ₁'' ,p (trans δ₁↠δ₁' δ₁'↠Λδ₁'')))
 red-appPl (trans δ↠ε δ↠ε₁) δ≡δ₁δ₂ | inj₂ δ₁↠Λ = inj₂ δ₁↠Λ
+
+Pdirlm : ∀ {U V} {P : Path U} {ρ : Rep U V} {M} {δ d} → P ↠ reff M → appP (dir d P 〈 ρ 〉) δ ↠ δ
+Pdirlm P↠refM = trans (↠-appP (↠-dir (↠-resp-rep P↠refM))) (trans (inc (appPl refdir)) (inc βP))

@@ -17,10 +17,13 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   βP : ∀ {V} {φ : Term V} {δ ε} → appP (ΛP φ δ) ε ⇒ δ ⟦ x₀:= ε ⟧
   appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒ δ' → appP δ ε ⇒ appP δ' ε
   refdir : ∀ {V} {φ : Term V} {d} → dir d (reff φ) ⇒ id φ
+  univplus : ∀ {V} {φ ψ : Term V} {δ ε} → plus (univ φ ψ δ ε) ⇒ δ
   dirR : ∀ {V} {P Q : Path V} {d} → P ⇒ Q → dir d P ⇒ dir d Q
   βE : ∀ {V A M N P} {Q : Path V} → app* M N (λλλ A P) Q ⇒ P ⟦ x₂:= M ,x₁:= N ,x₀:= Q ⟧
   βPP : ∀ {V A M} {N N' : Term V} {P} → app* N N' (reff (ΛT A M)) P ⇒ M ⟦⟦ x₀::= P ∶ x₀:= N ≡ x₀:= N' ⟧⟧
   ref⊃* : ∀ {V} {φ ψ : Term V} → reff φ ⊃* reff ψ ⇒ reff (φ ⊃ ψ)
+  ref⊃*univ : ∀ {V} {φ ψ ψ' : Term V} {δ ε} → 
+    reff φ ⊃* univ ψ ψ' δ ε ⇒ univ (φ ⊃ ψ) (φ ⊃ ψ') (ΛP (φ ⊃ ψ) (ΛP (φ ⇑) (appP (δ ⇑ ⇑) (appP (var x₁) (var x₀))))) (ΛP (φ ⊃ ψ') (ΛP (φ ⇑) (appP (ε ⇑ ⇑) (appP (var x₁) (var x₀)))))
   imp*l : ∀ {V} {P P' Q : Path V} → P ⇒ P' → P ⊃* Q ⇒ P' ⊃* Q
   imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒ Q' → P ⊃* Q ⇒ P ⊃* Q'
   app*l : ∀ {V} {M N : Term V} {P P' Q} → P ⇒ P' → app* M N P Q ⇒ app* M N P' Q
@@ -36,6 +39,7 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-rep {ρ = ρ} (βP {φ = φ} {δ} {ε}) = subst (λ x → (appP (ΛP φ δ) ε) 〈 ρ 〉 ⇒ x) (≡-sym (compRS-botSub δ)) βP
 ⇒-resp-rep (appPl δ⇒δ') = appPl (⇒-resp-rep δ⇒δ')
 ⇒-resp-rep refdir = refdir
+⇒-resp-rep univplus = univplus
 ⇒-resp-rep (dirR P⇒Q) = dirR (⇒-resp-rep P⇒Q)
 ⇒-resp-rep {ρ = ρ} (βE {A = A} {M} {N} {P} {Q}) = subst (λ x → (app* M N (λλλ A P) Q 〈 ρ 〉) ⇒ x) (botSub₃-liftRep₃ P) βE
 ⇒-resp-rep {ρ = ρ} (βPP {V} {A} {M} {N} {N'} {P}) = subst (λ x → (app* N N' (reff (ΛT A M)) P) 〈 ρ 〉 ⇒ x) 
@@ -52,6 +56,11 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   ∎) 
   βPP
 ⇒-resp-rep ref⊃* = ref⊃*
+⇒-resp-rep {ρ = ρ} (ref⊃*univ {φ = φ} {ψ} {ψ'} {δ} {ε}) = subst (λ x → (reff φ ⊃* univ ψ ψ' δ ε) 〈 ρ 〉 ⇒ x) 
+  (cong₂ (λ x y → univ ((φ ⊃ ψ) 〈 ρ 〉) ((φ ⊃ ψ') 〈 ρ 〉) (ΛP ((φ ⊃ ψ) 〈 ρ 〉) x) (ΛP ((φ ⊃ ψ') 〈 ρ 〉) y)) 
+    (cong₂ ΛP (≡-sym (liftRep-upRep φ)) (cong₂ appP (≡-sym (liftRep-upRep₂ δ)) refl)) 
+    (cong₂ ΛP (≡-sym (liftRep-upRep φ)) (cong₂ appP (≡-sym (liftRep-upRep₂ ε)) refl))) 
+  ref⊃*univ
 ⇒-resp-rep (imp*l P⇒P') = imp*l (⇒-resp-rep P⇒P')
 ⇒-resp-rep (imp*r Q⇒Q') = imp*r (⇒-resp-rep Q⇒Q')
 ⇒-resp-rep (app*l P⇒P') = app*l (⇒-resp-rep P⇒P')

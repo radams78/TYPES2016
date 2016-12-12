@@ -60,6 +60,7 @@ open import PHOML.Red.RTRed
 ⇒-reflect-rep {E = app (-dir d) (app -imp* x₁ ∷ [])} (dirR Pρ⇒Q) =
   let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in 
   dir d Q' ,p dirR P⇒Q' ,p cong (dir d) Q'ρ≡Q
+⇒-reflect-rep {E = app (-dir -plus) (app -univ (φ ∷ ψ ∷ δ ∷ ε ∷ []) ∷ [])} univplus = δ ,p univplus ,p refl
 ⇒-reflect-rep {E = app (-dir d) (app -univ x₁ ∷ [])} (dirR Pρ⇒Q) =
   let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in 
   dir d Q' ,p dirR P⇒Q' ,p cong (dir d) Q'ρ≡Q
@@ -97,6 +98,9 @@ open import PHOML.Red.RTRed
 ⇒-reflect-rep {E = app -imp* (app -ref _ ∷ app -univ (φ ∷ ψ ∷ δ ∷ ε ∷ []) ∷ [])} {ρ} (imp*l Pρ⇒P'ρ) =
   let P' ,p P⇒P' ,p P'ρ≡P'ρ = ⇒-reflect-rep Pρ⇒P'ρ in
   P' ⊃* univ φ ψ δ ε ,p imp*l P⇒P' ,p cong (λ y → y ⊃* univ (φ 〈 ρ 〉) (ψ 〈 ρ 〉) (δ 〈 ρ 〉) (ε 〈 ρ 〉)) P'ρ≡P'ρ
+⇒-reflect-rep {E = app -imp* (app -ref (φ ∷ []) ∷ app -univ (ψ ∷ ψ' ∷ δ ∷ ε ∷ []) ∷ [])} {ρ} ref⊃*univ = _ ,p ref⊃*univ ,p (cong₂ (univ _ _) 
+  (cong₂ ΛP refl (cong₂ ΛP (≡-sym (liftRep-upRep φ)) (cong₂ appP (≡-sym (liftRep-upRep₂ δ)) refl))) 
+  (cong₂ ΛP refl (cong₂ ΛP (≡-sym (liftRep-upRep φ)) (cong₂ appP (≡-sym (liftRep-upRep₂ ε)) refl))))
 ⇒-reflect-rep {E = app -imp* (app -ref (M ∷ []) ∷ app -univ x₂ ∷ [])} {ρ} (imp*r Qρ⇒Q'ρ) =
   let Q' ,p Q⇒Q' ,p Q'ρ≡Q'ρ = ⇒-reflect-rep Qρ⇒Q'ρ in
   reff M ⊃* Q' ,p imp*r Q⇒Q' ,p cong (λ y → reff (M 〈 ρ 〉) ⊃* y) Q'ρ≡Q'ρ
