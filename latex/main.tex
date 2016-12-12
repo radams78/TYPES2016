@@ -11,7 +11,7 @@
 \title{A Normalizing Computation Rule for Propositional Extensionality in Higher-Order Minimal Logic
 %\footnote{This work was partially supported by someone.}
 }
-\titlerunning{Propositional Extensionality in Minimal Logic} %optional, in case that the title is too long; the running title should fit into the top page column
+\titlerunning{Propositional Extensionality in Higher-Order Minimal Logic} %optional, in case that the title is too long; the running title should fit into the top page column
 
 %% Please provide for each author the \author and \affil macro, even when authors have the same affiliation, i.e. for each author there needs to be the  \author and \affil macros
 \author[1]{Robin Adams}
@@ -255,6 +255,7 @@ $$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rightarrow \delta}{} \quad
 \infer{\delta \epsilon \rightarrow \delta' \epsilon}{\delta \rightarrow \delta'} $$
 $$ \infer{P^+ \rightarrow Q^+}{P \rightarrow Q} \quad
 \infer{P^- \rightarrow Q^-}{P \rightarrow Q}$$
+$$ \infer{\lambda p:\phi.\delta \rightarrow \lambda p:\phi'.\delta}{\phi \rightarrow \phi'} $$
 \paragraph*{Reduction on Paths}
 $$\infer{(\triplelambda e:x =_A y.P)_{MN} Q \rightarrow P [x := M, y := N, e := Q]}{} $$
 $$ \infer{\reff{\lambda x:A.M}_{N N'} P \rightarrow M \{ x:=P : N = N' \}}{} $$
@@ -272,34 +273,25 @@ $$ \infer{P_{MN} Q \rightarrow P'_{MN} Q}{P \rightarrow P'} \quad
 \infer{\reff{M} \rightarrow \reff{N}}{M \rightarrow N} \quad
 \infer{P \supset^* Q \rightarrow P' \supset^* Q}{P \rightarrow P'} \quad
 \infer{P \supset^* Q \rightarrow P \supset^* Q'}{Q \rightarrow Q'} $$
+$$ \infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi'}{\psi}{\delta}{\epsilon}}{\phi \rightarrow \phi'}
+\quad
+\infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi'}{\delta}{\epsilon}}{\psi \rightarrow \psi'}
+\quad
+\infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi}{\delta'}{\epsilon}}{\delta \rightarrow \delta'}
+\quad
+\infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi}{\delta}{\epsilon'}}{\epsilon \rightarrow \epsilon'} $$
 \caption{Reduction in PHOML}
 \label{fig:reduction}
 \end{figure}
 \end{definition}
 
-\begin{lemma}[Diamond Property]
+\begin{lemma}[Confluence]
 \label{lm:diamond}
-If $E \rightarrow F$ and $E \rightarrow G$, then there exists $H$ such that $F \rightarrow^? H$ and $G \rightarrow^? H$.
+If $E \twoheadrightarrow F$ and $E \twoheadrightarrow G$, then there exists $H$ such that $F \twoheadrightarrow H$ and $G \twoheadrightarrow H$.
 \end{lemma}
 
 \begin{proof}
-This is easily proven by induction on the hypotheses.  The critical pairs are as follows:
-$$ \xymatrix{
-& \phi \supset \psi \ar[dl] \ar[dr] \\
-\phi' \supset \psi \ar[dr] & & \phi \supset \psi' \ar[dl] \\
-& \phi' \supset \psi' } \qquad
-\xymatrix{
-& \phi \supset^* \psi \ar[dl] \ar[dr] \\
-\phi' \supset^* \psi \ar[dr] & & \phi \supset^* \psi' \ar[dl] \\
-& \phi' \supset^* \psi' } $$
-$$ \xymatrix{
-& \reff{\phi}^+ \delta \ar[dl] \ar[dd] \\
-\reff{\phi'}^+ \delta \ar[dr] \\
-& \delta} \quad
-\xymatrix{
-& \reff{\phi} \supset^* \reff{\psi} \ar[dl] \ar[dr] \\
-\reff{\phi'} \supset^* \reff{\psi} \ar[dr] & & \reff{\phi \supset \psi} \ar[dl] \\
-& \reff{\phi' \supset \psi} }$$
+The proof is given in Appendix \ref{section:confluence}.
 \end{proof}
 
 \begin{lemma}[Reduction respects path substitution]
@@ -656,6 +648,9 @@ In fact, we can go further and prove that equality of propositions is equal to l
 \section{Computable Expressions}
 \label{section:computable}
 
+In this section, we use $E$, $F$, $S$ and $T$ as metavariables that range over expressions.  In each case, either $E$ and $F$ are terms and $S$ and $T$ are types; or $E$ and $F$ are
+proofs and $S$ and $T$ are propositions; or $E$ and $F$ are paths and $S$ and $T$ are equations.
+
 \begin{definition}[Computable Expression]
 We define the relation $\models E : T$, read `$E$ is a computable expression of type $T$', as follows.
 \begin{itemize}
@@ -922,6 +917,10 @@ There is no proof $\delta$ such that $\vdash \delta : \bot$.
 \section{Conclusion}
 
 We have presented a system with propositional extensionality, and shown that it satisfies the property of canonicity.
+This gives hope that it will be possible to find a computation rule for homotopy type theory that satisfies canonicity, and
+that does not involve extending the type theory, either with a nominal extension of the syntax as in cubical type theory or
+otherwise.
+
 We now intend to do the same for stronger and stronger systems, getting
 ever closer to full homotopy type theory.  The next steps will be:
 
@@ -994,4 +993,9 @@ Therefore,
 & \equiv (\comp^i (\top \rightarrow \top) [] (\lambda _ : \top. \mapid{\top}{m})) n \\
 & = \mapid{\top}{\mapid{\top}{m}}
 \end{align*}
+
+\section{Proof of Confluence}
+\label{section:confluence}
+
+\textbf{TODO}
 \end{document}
