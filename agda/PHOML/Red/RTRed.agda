@@ -116,6 +116,7 @@ red-appPl (inc (βP {φ = φ} {δ})) Λφδε≡δ₁δ₂ = inj₂ (_ ,p (_ ,p 
 red-appPl (inc (appPl {δ' = δ'} δ⇒δ')) δ≡δ₁δ₂ = inj₁ (δ' ,p inc (subst (λ x → x ⇒ δ') (appP-injl δ≡δ₁δ₂) δ⇒δ') ,p cong (appP δ') (appP-injr δ≡δ₁δ₂))
 red-appPl (inc refdir) ()
 red-appPl (inc univplus) ()
+red-appPl (inc univminus) ()
 red-appPl (inc (dirR δ⇒ε)) ()
 red-appPl {δ₁ = δ₁} ref δ≡δ₁δ₂ = inj₁ (δ₁ ,p (ref ,p δ≡δ₁δ₂))
 red-appPl (trans δ↠ε ε↠ε') δ≡δ₁δ₂ with red-appPl δ↠ε δ≡δ₁δ₂

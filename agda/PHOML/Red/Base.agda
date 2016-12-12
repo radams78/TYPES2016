@@ -18,6 +18,7 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒ δ' → appP δ ε ⇒ appP δ' ε
   refdir : ∀ {V} {φ : Term V} {d} → dir d (reff φ) ⇒ id φ
   univplus : ∀ {V} {φ ψ : Term V} {δ ε} → plus (univ φ ψ δ ε) ⇒ δ
+  univminus : ∀ {V} {φ ψ : Term V} {δ ε} → minus (univ φ ψ δ ε) ⇒ ε
   dirR : ∀ {V} {P Q : Path V} {d} → P ⇒ Q → dir d P ⇒ dir d Q
   βE : ∀ {V A M N P} {Q : Path V} → app* M N (λλλ A P) Q ⇒ P ⟦ x₂:= M ,x₁:= N ,x₀:= Q ⟧
   βPP : ∀ {V A M} {N N' : Term V} {P} → app* N N' (reff (ΛT A M)) P ⇒ M ⟦⟦ x₀::= P ∶ x₀:= N ≡ x₀:= N' ⟧⟧
@@ -40,6 +41,7 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-rep (appPl δ⇒δ') = appPl (⇒-resp-rep δ⇒δ')
 ⇒-resp-rep refdir = refdir
 ⇒-resp-rep univplus = univplus
+⇒-resp-rep univminus = univminus
 ⇒-resp-rep (dirR P⇒Q) = dirR (⇒-resp-rep P⇒Q)
 ⇒-resp-rep {ρ = ρ} (βE {A = A} {M} {N} {P} {Q}) = subst (λ x → (app* M N (λλλ A P) Q 〈 ρ 〉) ⇒ x) (botSub₃-liftRep₃ P) βE
 ⇒-resp-rep {ρ = ρ} (βPP {V} {A} {M} {N} {N'} {P}) = subst (λ x → (app* N N' (reff (ΛT A M)) P) 〈 ρ 〉 ⇒ x) 

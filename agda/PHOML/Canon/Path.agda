@@ -42,7 +42,9 @@ Lemma35a : ∀ {V} {P : Path V} {pp : snocList (Var V -Proof)} {δ d} →
 Lemma35a {pp = []} (dirR P⇒Q) = inj₁ (_ ,p P⇒Q ,p refl)
 Lemma35a {pp = []} refdir = inj₂ ((reffC _) ,p refl)
 Lemma35a {pp = []} univplus = inj₂ ((univC _ _ _ _) ,p refl)
+Lemma35a {pp = []} univminus = inj₂ ((univC _ _ _ _) ,p refl)
 Lemma35a {pp = [] snoc p} (appPl univplus) = inj₂ ((univC _ _ _ _) ,p refl)
+Lemma35a {pp = [] snoc p} (appPl univminus) = inj₂ ((univC _ _ _ _) ,p refl)
 Lemma35a {pp = [] snoc _} (appPl (dirR P⇒Q)) = inj₁ (_ ,p P⇒Q ,p refl)
 Lemma35a {pp = [] snoc _} (appPl refdir) = inj₂ (reffC _ ,p refl)
 Lemma35a {pp = pp snoc x snoc _} (appPl Pppx⇒δ) with Lemma35a {pp = pp snoc x} Pppx⇒δ

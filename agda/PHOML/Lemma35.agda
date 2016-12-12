@@ -63,6 +63,8 @@ open import PHOML.Compute
       ⊧ψ' = ⊧E-valid₂ (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) in
   let ⊧δ∶ψ⊃ψ' : ⊧P δ ∶ ψ ⊃ ψ'
       ⊧δ∶ψ⊃ψ' = ↠P ⊧Q+∶ψ⊃ψ' (trans (↠-dir Q↠univδε) (inc univplus)) in
+  let ⊧ε∶ψ'⊃ψ : ⊧P ε ∶ ψ' ⊃ ψ
+      ⊧ε∶ψ'⊃ψ = ↠P ⊧Q-∶ψ'⊃ψ (trans (↠-dir Q↠univδε) (inc univminus)) in
   (⊧P⊃I (⊧imp ⊧φ ⊧ψ) (⊧imp ⊧φ' ⊧ψ') (λ W ρ α ⊧α∶φ⊃ψ → 
   ⊧P⊃I (⊧TΩrep ⊧φ') (⊧TΩrep ⊧ψ') (λ W₁ ρ₁ β ⊧β∶φ' → 
   let ⊧β∶φ : ⊧P β ∶ φ 〈 ρ 〉 〈 ρ₁ 〉
@@ -86,5 +88,27 @@ open import PHOML.Compute
     ⊧δαβ∶ψ') 
   (trans (↠-appP (↠-appP (↠-dir (↠-imp* (↠-resp-rep (↠-resp-rep P↠refM)) (↠-resp-rep (↠-resp-rep Q↠univδε)))))) 
   (trans (inc (appPl (appPl (dirR ref⊃*univ)))) (trans (inc (appPl (appPl univplus))) (trans (inc (appPl βP)) (inc βP)))))))) ,p
-  ⊧P⊃I (⊧imp ⊧φ' {!⊧ψ'!}) {!!} {!!}
+  ⊧P⊃I (⊧imp ⊧φ' ⊧ψ') (⊧imp ⊧φ ⊧ψ) (λ W ρ α ⊧α∶φ'⊃ψ' → 
+  ⊧P⊃I (⊧TΩrep ⊧φ) (⊧TΩrep ⊧ψ) (λ W₁ ρ₁ β ⊧β∶φ → 
+  let ⊧β∶φ' : ⊧P β ∶ φ' 〈 ρ 〉 〈 ρ₁ 〉
+      ⊧β∶φ' = ↠P (⊧P⊃E (⊧Prep (⊧Prep ⊧P+∶φ⊃φ')) ⊧β∶φ) (subst (λ x → x ↠ β) (cong (λ x → appP x β) (cong plus (rep-comp P))) (Pdirlm P↠refM)) in
+  let ⊧αβ∶ψ' : ⊧P appP (α 〈 ρ₁ 〉) β ∶ ψ' 〈 ρ 〉 〈 ρ₁ 〉
+      ⊧αβ∶ψ' = ⊧P⊃E (⊧Prep ⊧α∶φ'⊃ψ') ⊧β∶φ' in
+  let ⊧εαβ∶ψ : ⊧P appP (ε 〈 ρ 〉 〈 ρ₁ 〉) (appP (α 〈 ρ₁ 〉) β) ∶ ψ 〈 ρ 〉 〈 ρ₁ 〉
+      ⊧εαβ∶ψ = ⊧P⊃E (⊧Prep (⊧Prep ⊧ε∶ψ'⊃ψ)) ⊧αβ∶ψ' in
+    ↞P (subst (λ x → ⊧P x ∶ ((ψ 〈 ρ 〉) 〈 ρ₁ 〉)) 
+    (cong₂ appP (let open ≡-Reasoning in 
+    begin
+      ε 〈 ρ 〉 〈 ρ₁ 〉
+    ≡⟨⟨ botSub-upRep (ε 〈 ρ 〉 〈 ρ₁ 〉) ⟩⟩
+      ε 〈 ρ 〉 〈 ρ₁ 〉 ⇑ ⟦ x₀:= β ⟧
+    ≡⟨⟨ sub-congl (rep-congl (botSub-upRep (ε 〈 ρ 〉 〈 ρ₁ 〉))) ⟩⟩
+      ε 〈 ρ 〉 〈 ρ₁ 〉 ⇑ ⟦ x₀:= α 〈 ρ₁ 〉 ⟧ ⇑ ⟦ x₀:= β ⟧
+    ≡⟨⟨ sub-congl (liftSub-upRep (ε 〈 ρ 〉 〈 ρ₁ 〉 ⇑)) ⟩⟩
+      ε 〈 ρ 〉 〈 ρ₁ 〉 ⇑ ⇑ ⟦ liftSub _ (x₀:= α 〈 ρ₁ 〉) ⟧ ⟦ x₀:= β ⟧
+    ∎) 
+    (cong₂ appP (≡-sym (botSub-upRep (α 〈 ρ₁ 〉))) refl)) 
+    ⊧εαβ∶ψ) 
+  (trans (↠-appP (↠-appP (↠-dir (↠-imp* (↠-resp-rep (↠-resp-rep P↠refM)) (↠-resp-rep (↠-resp-rep Q↠univδε)))))) 
+  (trans (inc (appPl (appPl (dirR ref⊃*univ)))) (trans (inc (appPl (appPl univminus))) (trans (inc (appPl βP)) (inc βP)))))))
 ⊧⊃* (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | univC x x₁ x₂ x₃ ,p P↠Pcanon | Qcanon ,p Q↠Qcanon = {!!}

@@ -61,6 +61,7 @@ open import PHOML.Red.RTRed
   let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in 
   dir d Q' ,p dirR P⇒Q' ,p cong (dir d) Q'ρ≡Q
 ⇒-reflect-rep {E = app (-dir -plus) (app -univ (φ ∷ ψ ∷ δ ∷ ε ∷ []) ∷ [])} univplus = δ ,p univplus ,p refl
+⇒-reflect-rep {E = app (-dir -minus) (app -univ (φ ∷ ψ ∷ δ ∷ ε ∷ []) ∷ [])} univminus = ε ,p univminus ,p refl
 ⇒-reflect-rep {E = app (-dir d) (app -univ x₁ ∷ [])} (dirR Pρ⇒Q) =
   let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in 
   dir d Q' ,p dirR P⇒Q' ,p cong (dir d) Q'ρ≡Q
