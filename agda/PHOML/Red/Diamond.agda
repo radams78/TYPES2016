@@ -3,8 +3,12 @@ open import Prelims
 open import PHOML.Grammar
 open import PHOML.Red.Base
 open import PHOML.Red.RRed
+open import PHOML.Red.RTRed
 
-diamond : ∀ {V K} {E F G : Expression V K} → E ⇒ F → E ⇒ G →
+postulate diamond : ∀ {V K} {E F G : Expression V K} → E ↠ F → E ↠ G →
+                  Common-Reduct _↠_ _↠_ F G
+
+{- diamond : ∀ {V K} {E F G : Expression V K} → E ⇒ F → E ⇒ G →
   Common-Reduct (_⇒?_ {V} {K}) (RClose _⇒_) F G
 diamond βT βT = cr _ ref ref
 diamond (appTl ()) βT
@@ -23,8 +27,8 @@ diamond (impr {φ = φ} ψ⇒ψ') (impr ψ⇒ψ'') =
 diamond (appPl {ε = ε} δ⇒δ') (appPl δ⇒δ'') = 
   let cr δ₀ δ'⇒?δ₀ δ''⇒?δ₀ = diamond δ⇒δ' δ⇒δ'' in 
   cr (appP δ₀ ε) (⇒?-appPl δ'⇒?δ₀) (⇒?-appPl δ''⇒?δ₀)
-diamond refdir (appPl (dirR (reffR _))) = cr _ ref (inc refdir)
-diamond (appPl (dirR (reffR _))) refdir = cr _ (inc refdir) ref
+diamond refdir (dirR (reffR _)) = cr _ ref {!!}
+diamond (dirR (reffR _)) refdir = cr _ {!!} ref
 diamond refdir refdir = cr _ ref ref
 diamond (dirR P⇒P') (dirR P⇒P'') = 
   let cr P₀ P'⇒?P₀ P''⇒?P₀ = diamond P⇒P' P⇒P'' in 
@@ -53,4 +57,4 @@ diamond (app*l {M = M} {N = N} {Q = Q} P⇒P') (app*l P⇒P'') =
   cr (app* M N P₀ Q) (⇒?-app*l P'⇒?P₀) (⇒?-app*l P''⇒?P₀)
 diamond (reffR M⇒N₁) (reffR M⇒N₂) = 
   let cr L N₁⇒?L N₂⇒?L = diamond M⇒N₁ M⇒N₂ in 
-  cr (reff L) (⇒?-reff N₁⇒?L) (⇒?-reff N₂⇒?L)
+  cr (reff L) (⇒?-reff N₁⇒?L) (⇒?-reff N₂⇒?L) -}

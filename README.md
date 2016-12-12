@@ -13,6 +13,7 @@ The following is a guide to which lemmas in the paper correspond to which terms 
 | Lemma 7 (Diamond Property) | PHOML / Red / Diamond.agda | diamond |
 | Lemma 8 (Reduction respects path substitution) | PHOML / Red / Base.agda | ⇒-resp-ps |
 | Lemma 10 | PHOML / Canon.agda | red-canon |
+| Lemma 12.7 | PHOML / Meta.agda | Generation-ΛP |
 | Lemma 13 (Context Validity) | PHOML / Meta / ConVal.agda | context-validity |
 | Lemma 14 (Weakening) | PHOML / Meta / ConVal.agda | weakening |
 | Lemma 15.1 (Type Validity) | PHOML / Meta.agda | Prop-Validity |
@@ -26,3 +27,4 @@ The following is a guide to which lemmas in the paper correspond to which terms 
 | Lemma 30 | PHOML / Compute.agda | Lemma30 |
 | Lemma 31 | PHOML / Compute.agda | ⊧ref |
 | Lemma 32 | PHOML / Compute.agda | ⊧canon, ⊧canon' |
+| Lemma 33 | PHOML / Compute.agda | ⊧neutralP |

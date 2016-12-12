@@ -16,6 +16,12 @@ decode : ∀ {V} → CanonProp → Term V
 decode bot = ⊥
 decode (imp φ ψ) = decode φ ⊃ decode ψ
 
+decode-inj : ∀ {V θ θ'} → decode {V} θ ≡ decode θ' → θ ≡ θ'
+decode-inj {θ = bot} {bot} _ = refl
+decode-inj {θ = imp _ _} {bot} ()
+decode-inj {θ = bot} {imp _ _} ()
+decode-inj {θ = imp θ₁ θ₂} {imp θ₁' θ₂'} θ₁⊃θ₂≡θ₁'⊃θ₂' = cong₂ imp (decode-inj (⊃-injl θ₁⊃θ₂≡θ₁'⊃θ₂')) (decode-inj (⊃-injr θ₁⊃θ₂≡θ₁'⊃θ₂'))
+
 canon-nf : ∀ {V θ} {φ : Term V} → decode θ ⇒ φ → Empty
 canon-nf {θ = bot} ()
 canon-nf {θ = imp φ _} (impl θ⇒φ) = canon-nf {θ = φ} θ⇒φ
@@ -26,10 +32,15 @@ canon-nf' θ (inc φ⇒ψ) θ≡φ = ⊥-elim (canon-nf {θ = θ} (subst (λ x �
 canon-nf' _ ref θ≡φ = θ≡φ
 canon-nf' θ (trans φ↠ψ ψ↠ψ') θ≡φ = canon-nf' θ ψ↠ψ' (canon-nf' θ φ↠ψ θ≡φ)
 
-red-canon : ∀ {V} {φ ψ : Term V} {θ : CanonProp} → φ ↠ decode θ → φ ≃ ψ → ψ ↠ decode θ
-red-canon {V} {φ} {ψ} {θ} φ↠θ φ≃ψ = 
+postulate red-canon : ∀ {V} {φ ψ : Term V} {θ : CanonProp} → φ ↠ decode θ → φ ≃ ψ → ψ ↠ decode θ
+{- red-canon {V} {φ} {ψ} {θ} φ↠θ φ≃ψ = 
   let cr χ θ↠χ ψ↠χ = diamond-CR (λ _ _ _ → diamond) (decode θ) ψ (trans (sym (sub-RT-RST φ↠θ)) φ≃ψ) in 
-  subst (λ x → ψ ↠ x) (≡-sym (canon-nf' θ θ↠χ refl)) ψ↠χ
+  subst (λ x → ψ ↠ x) (≡-sym (canon-nf' θ θ↠χ refl)) ψ↠χ -}
+
+canon-unique : ∀ {V} {φ : Term V} {θ θ' : CanonProp} → φ ↠ decode θ → φ ↠ decode θ' → θ ≡ θ'
+canon-unique {θ = θ} {θ'} φ↠θ φ↠θ' =
+  let cr θ₀ θ↠θ₀ θ'↠θ₀ = diamond φ↠θ φ↠θ' in 
+  decode-inj (≡-trans (canon-nf' θ θ↠θ₀ refl) (≡-sym (canon-nf' θ' θ'↠θ₀ refl)))
 
 imp-red-imp : ∀ {V} {E F : Term V} → E ↠ F → Is-⊃ E → Is-⊃ F
 imp-red-imp (inc (impl _)) is-⊃ = is-⊃

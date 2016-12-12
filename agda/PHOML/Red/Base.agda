@@ -14,11 +14,12 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   appTl : ∀ {V} {M M' N : Term V} → M ⇒ M' → appT M N ⇒ appT M' N
   impl : ∀ {V} {φ φ' ψ : Term V} → φ ⇒ φ' → φ ⊃ ψ ⇒ φ' ⊃ ψ
   impr : ∀ {V} {φ ψ ψ' : Term V} → ψ ⇒ ψ' → φ ⊃ ψ ⇒ φ ⊃ ψ'
+  βP : ∀ {V} {φ : Term V} {δ ε} → appP (ΛP φ δ) ε ⇒ δ ⟦ x₀:= ε ⟧
   appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒ δ' → appP δ ε ⇒ appP δ' ε
   refdir : ∀ {V} {φ : Term V} {d} → dir d (reff φ) ⇒ id φ
   dirR : ∀ {V} {P Q : Path V} {d} → P ⇒ Q → dir d P ⇒ dir d Q
   βE : ∀ {V A M N P} {Q : Path V} → app* M N (λλλ A P) Q ⇒ P ⟦ x₂:= M ,x₁:= N ,x₀:= Q ⟧
-  βP : ∀ {V A M} {N N' : Term V} {P} → app* N N' (reff (ΛT A M)) P ⇒ M ⟦⟦ x₀::= P ∶ x₀:= N ≡ x₀:= N' ⟧⟧
+  βPP : ∀ {V A M} {N N' : Term V} {P} → app* N N' (reff (ΛT A M)) P ⇒ M ⟦⟦ x₀::= P ∶ x₀:= N ≡ x₀:= N' ⟧⟧
   ref⊃* : ∀ {V} {φ ψ : Term V} → reff φ ⊃* reff ψ ⇒ reff (φ ⊃ ψ)
   imp*l : ∀ {V} {P P' Q : Path V} → P ⇒ P' → P ⊃* Q ⇒ P' ⊃* Q
   imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒ Q' → P ⊃* Q ⇒ P ⊃* Q'
@@ -32,11 +33,12 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-rep (appTl M⇒M') = appTl (⇒-resp-rep M⇒M')
 ⇒-resp-rep (impl φ⇒φ') = impl (⇒-resp-rep φ⇒φ')
 ⇒-resp-rep (impr ψ⇒ψ') = impr (⇒-resp-rep ψ⇒ψ')
+⇒-resp-rep {ρ = ρ} (βP {φ = φ} {δ} {ε}) = subst (λ x → (appP (ΛP φ δ) ε) 〈 ρ 〉 ⇒ x) (≡-sym (compRS-botSub δ)) βP
 ⇒-resp-rep (appPl δ⇒δ') = appPl (⇒-resp-rep δ⇒δ')
 ⇒-resp-rep refdir = refdir
 ⇒-resp-rep (dirR P⇒Q) = dirR (⇒-resp-rep P⇒Q)
 ⇒-resp-rep {ρ = ρ} (βE {A = A} {M} {N} {P} {Q}) = subst (λ x → (app* M N (λλλ A P) Q 〈 ρ 〉) ⇒ x) (botSub₃-liftRep₃ P) βE
-⇒-resp-rep {ρ = ρ} (βP {V} {A} {M} {N} {N'} {P}) = subst (λ x → (app* N N' (reff (ΛT A M)) P) 〈 ρ 〉 ⇒ x) 
+⇒-resp-rep {ρ = ρ} (βPP {V} {A} {M} {N} {N'} {P}) = subst (λ x → (app* N N' (reff (ΛT A M)) P) 〈 ρ 〉 ⇒ x) 
   (let open ≡-Reasoning in 
   begin
     M 〈 liftRep -Term ρ 〉 ⟦⟦ x₀::= (P 〈 ρ 〉) ∶ x₀:= N 〈 ρ 〉 ≡ x₀:= N' 〈 ρ 〉 ⟧⟧
@@ -48,7 +50,7 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   ≡⟨ pathSub-•RP M ⟩
     M ⟦⟦ x₀::= P ∶ x₀:= N ≡ x₀:= N' ⟧⟧ 〈 ρ 〉
   ∎) 
-  βP
+  βPP
 ⇒-resp-rep ref⊃* = ref⊃*
 ⇒-resp-rep (imp*l P⇒P') = imp*l (⇒-resp-rep P⇒P')
 ⇒-resp-rep (imp*r Q⇒Q') = imp*r (⇒-resp-rep Q⇒Q')

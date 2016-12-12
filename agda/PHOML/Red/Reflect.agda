@@ -29,7 +29,10 @@ open import PHOML.Red.RTRed
   appT M' N ,p appTl M⇒M' ,p cong (λ x → appT x (N 〈 ρ 〉)) M'ρ≡M'ρ
 ⇒-reflect-rep {E = app -lamProof _} ()
 ⇒-reflect-rep {E = app -appProof (var _ ∷ _ ∷ [])} (appPl ())
-⇒-reflect-rep {E = app -appProof (app -lamProof δ ∷ ε ∷ [])} {ρ} (appPl ())
+⇒-reflect-rep {E = app -appProof (app -lamProof (φ ∷ δ ∷ []) ∷ ε ∷ [])} βP = (δ ⟦ x₀:= ε ⟧) ,p (βP ,p (≡-sym (compRS-botSub δ)))
+⇒-reflect-rep {E = app -appProof (app -lamProof (φ ∷ δ ∷ []) ∷ ε ∷ [])} {ρ} (appPl δρ⇒δ'ρ) =
+  let δ' ,p δ⇒δ' ,p δ'ρ≡δ'ρ = ⇒-reflect-rep δρ⇒δ'ρ in
+  appP δ' ε ,p appPl δ⇒δ' ,p cong (λ x → appP x (ε 〈 ρ 〉)) δ'ρ≡δ'ρ
 ⇒-reflect-rep {E = app -appProof (app -appProof x₁ ∷ ε ∷ [])} {ρ} (appPl δρ⇒δ'ρ) =
   let δ' ,p δ⇒δ' ,p δ'ρ≡δ'ρ = ⇒-reflect-rep δρ⇒δ'ρ in
   appP δ' ε ,p appPl δ⇒δ' ,p cong (λ x → appP x (ε 〈 ρ 〉)) δ'ρ≡δ'ρ
@@ -37,7 +40,6 @@ open import PHOML.Red.RTRed
 ⇒-reflect-rep {E = app -appProof (app (-dir _) (app -ref (M ∷ []) ∷ []) ∷ ε ∷ [])} {ρ} (appPl δρ⇒δ'ρ) =
   let δ' ,p δ⇒δ' ,p δ'ρ≡δ'ρ = ⇒-reflect-rep δρ⇒δ'ρ in
   appP δ' ε ,p appPl δ⇒δ' ,p cong (λ x → appP x (ε 〈 ρ 〉)) δ'ρ≡δ'ρ
---⇒-reflect-rep {E = app -appProof (app (-dir _) (app -ref (M ∷ []) ∷ []) ∷ ε ∷ [])} refdir = ε ,p refdir ,p refl
 ⇒-reflect-rep {E = app -appProof (app (-dir _) (app -imp* x₁ ∷ []) ∷ ε ∷ [])} {ρ} (appPl δρ⇒δ'ρ) =
   let δ' ,p δ⇒δ' ,p δ'ρ≡δ'ρ = ⇒-reflect-rep δρ⇒δ'ρ in
   appP δ' ε ,p appPl δ⇒δ' ,p cong (λ x → appP x (ε 〈 ρ 〉)) δ'ρ≡δ'ρ
@@ -52,12 +54,21 @@ open import PHOML.Red.RTRed
   appP δ' ε ,p appPl δ⇒δ' ,p cong (λ x → appP x (ε 〈 ρ 〉)) δ'ρ≡δ'ρ
 ⇒-reflect-rep {E = app (-dir d) (var x ∷ [])} (dirR ())
 ⇒-reflect-rep {E = app (-dir d) (app -ref (φ ∷ []) ∷ [])} refdir = id φ ,p refdir ,p refl
-⇒-reflect-rep {E = app (-dir d) (app -ref (φ ∷ []) ∷ [])} (dirR Pρ⇒Q) = {!!}
-  let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in ?
-⇒-reflect-rep {E = app (-dir d) (app -imp* x₁ ∷ [])} Eρ⇒F = {!!}
-⇒-reflect-rep {E = app (-dir d) (app -univ x₁ ∷ [])} Eρ⇒F = {!!}
-⇒-reflect-rep {E = app (-dir d) (app (-lll x) x₁ ∷ [])} Eρ⇒F = {!!}
-⇒-reflect-rep {E = app (-dir d) (app -app* x₁ ∷ [])} Eρ⇒F = {!!}
+⇒-reflect-rep {E = app (-dir d) (app -ref (φ ∷ []) ∷ [])} (dirR Pρ⇒Q) =
+  let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in 
+  dir d Q' ,p dirR P⇒Q' ,p cong (dir d) Q'ρ≡Q
+⇒-reflect-rep {E = app (-dir d) (app -imp* x₁ ∷ [])} (dirR Pρ⇒Q) =
+  let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in 
+  dir d Q' ,p dirR P⇒Q' ,p cong (dir d) Q'ρ≡Q
+⇒-reflect-rep {E = app (-dir d) (app -univ x₁ ∷ [])} (dirR Pρ⇒Q) =
+  let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in 
+  dir d Q' ,p dirR P⇒Q' ,p cong (dir d) Q'ρ≡Q
+⇒-reflect-rep {E = app (-dir d) (app (-lll x) x₁ ∷ [])} (dirR Pρ⇒Q) =
+  let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in 
+  dir d Q' ,p dirR P⇒Q' ,p cong (dir d) Q'ρ≡Q
+⇒-reflect-rep {E = app (-dir d) (app -app* x₁ ∷ [])} (dirR Pρ⇒Q) =
+  let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in 
+  dir d Q' ,p dirR P⇒Q' ,p cong (dir d) Q'ρ≡Q
 ⇒-reflect-rep {E = app -ref (M ∷ [])} (reffR Mρ⇒M'ρ) =
   let M' ,p M⇒M' ,p M'ρ≡M'ρ = ⇒-reflect-rep Mρ⇒M'ρ in
   reff M' ,p reffR M⇒M' ,p cong reff M'ρ≡M'ρ
@@ -135,8 +146,8 @@ open import PHOML.Red.RTRed
 ⇒-reflect-rep {E = app -app* (M ∷ M' ∷ app -ref (app -imp x₁ ∷ []) ∷ Q ∷ [])}  {ρ} (app*l Pρ⇒P'ρ) =
   let P' ,p P⇒P' ,p P'ρ≡P'ρ = ⇒-reflect-rep Pρ⇒P'ρ in
   app* M M' P' Q ,p app*l P⇒P' ,p cong (λ x → app* (M 〈 ρ 〉) (M' 〈 ρ 〉) x (Q 〈 ρ 〉)) P'ρ≡P'ρ
-⇒-reflect-rep {E = app -app* (M ∷ M' ∷ app -ref (app (-lamTerm A) (N ∷ []) ∷ []) ∷ Q ∷ [])} {ρ} βP = 
-  N ⟦⟦ (x₀::= Q) ∶ (x₀:= M) ≡ x₀:= M' ⟧⟧ ,p βP ,p (let open ≡-Reasoning in 
+⇒-reflect-rep {E = app -app* (M ∷ M' ∷ app -ref (app (-lamTerm A) (N ∷ []) ∷ []) ∷ Q ∷ [])} {ρ} βPP = 
+  N ⟦⟦ (x₀::= Q) ∶ (x₀:= M) ≡ x₀:= M' ⟧⟧ ,p βPP ,p (let open ≡-Reasoning in 
   begin
     N 〈 liftRep -Term ρ 〉 ⟦⟦ x₀::= (Q 〈 ρ 〉) ∶ x₀:= M 〈 ρ 〉 ≡ x₀:= M' 〈 ρ 〉 ⟧⟧
   ≡⟨ pathSub-•PR N ⟩
