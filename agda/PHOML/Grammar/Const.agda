@@ -144,6 +144,9 @@ left (app (-eq _) (M ∷ _ ∷ [])) = M
 left-rep : ∀ {U V} (E : Equation U) {ρ : Rep U V} → left E 〈 ρ 〉 ≡ left (E 〈 ρ 〉)
 left-rep (app (-eq _) (_ ∷ _ ∷ [])) = refl
 
+id : ∀ {V} → Term V → Proof V
+id φ = ΛP φ (var x₀)
+
 -- Mx1...xn =/= Λ M' for n >= 1
 APPl-not-Λ : ∀ {V M N} {NN : snocList (Term V)} {A M'} → APPl (appT M N) NN ≡ ΛT A M' → Empty
 APPl-not-Λ {NN = []} ()

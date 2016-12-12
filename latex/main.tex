@@ -89,7 +89,7 @@ We present a call-by-name reduction relation for this system, and prove that the
 The \emph{univalence axiom} of Homotopy Type theory (HoTT) \cite{hottbook} postulates a
 constant
 \[ \isotoid : A \simeq B \rightarrow A = B \]
-that is an inverse to the canonical function $A = B \rightarrow A \simeq B$.  However, if we simply add this constant to Martin-L\"{o}f type theory, then
+that is an inverse to the obvious function $A = B \rightarrow A \simeq B$.  However, if we simply add this constant to Martin-L\"{o}f type theory, then
 we lose the important property of \emph{canonicity} --- that every closed term of type $A$ computes to a unique canonical object of type $A$.  When a computation reaches a point
 where we eliminate a path (proof of equality) formed by $\isotoid$, it gets 'stuck'.
 
@@ -105,20 +105,20 @@ In this paper, we present a system we call PHOML, or predicative higher-order mi
 of \emph{propositions}, and the universe of \emph{types}.  The propositions are closed under $\supset$ (implication) and include $\bot$ (falsehood), and an equality proposition $M =_A N$ for
 any type $A$ and terms $M : A$ and $N : A$.  The types include $\Omega$ itself and are closed under $\rightarrow$ (non-dependent function type).
 
-There are two canonical forms for proofs of $M =_\Omega N$.  For any term $M : \Omega$, we have $\reff{M} : M =_\Omega M$.  We also add univalence for this system, in this form:
+There are two canonical forms for proofs of $M =_\Omega N$.  For any term $\varphi : \Omega$, we have $\reff{\varphi} : \varphi =_\Omega \varphi$.  We also add univalence for this system, in this form:
 if $\delta : \varphi \supset \psi$ and $\epsilon : \psi \supset\varphi$, then $\univ{\varphi}{\psi}{\delta}{\epsilon} : \varphi =_\Omega \psi$.  
 
 In PHOML, two propositions that are logically equivalent are equal.  Every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must therefore respect logical equivalence.  That is, for any $F$ and logically equivalent $x$, $y$ we must have that $Fx$ and $Fy$ are logically equivalent. Moreover, if for $x:\Omega$ we have that $Fx$ is logically equivalent to $Gx$, then $F =_{\Omega\to\Omega} G$.
 Every function of type $(\Omega \rightarrow \Omega) \rightarrow \Omega$ must respect this equality; and so on.  This is the manifestation in PHOML of the principle that only homotopy invariant constructions can be performed in homotopy type theory.  (See Section \ref{section:exampletwo}.)
 
-We present a deterministic call-by-name reduction relation for this system, and prove that every typable term reduces to a canonical form.  From this, it follows that the system is consistent.  
+We present a call-by-name reduction relation for this system, and prove that every typable term reduces to a canonical form.  From this, it follows that the system is consistent.  
 
-For the future, we wish to expand the system with universal quantification, and expand it to a 2-dimensional system (with equations between proofs).
+For the future, we wish to expand the system with universal quantification, and expand it to a 2-dimensional system (with equations between proofs).  We then wish to add more inductive types and more dimensions, getting ever closer to full homotopy type theory.
 
 Another system with many of the same aims is cubical type theory \cite{cchm:cubical}.  The system PHOML is almost a subsystem of cubical type theory.  We can attempt to embed PHOML into cubical type theory,
 mapping $\Omega$ to the universe $U$, and an equation $M =_A N$ to either the type $\Path{A}{M}{N}$ or to $\mathrm{Id}\ A\ M\ N$.  However, PHOML has more definitional equalities than the relevant fragment of cubical type theory; that is, there are definitionally equal terms in PHOML that are mapped to terms that are not definitionally equal in cubical type theory.  In particular, $\reff{x}^+ p$ and $p$ are definitionally equal, whereas the terms $\mathrm{comp}^i x [] p$ and $p$ are not definitionally equal in cubical type theory (but they are propositionally equal).  See Section \ref{section:cubical} for more information.
 
-The proofs in this paper have been formalized in Agda.  The formalization is available at \texttt{github.com/radams78/TYPES2016}.
+The proofs in this paper have been formalized in Agda.  The formalization is available at \texttt{https://github.com/radams78/TYPES2016}.
 
 \section{Predicative Higher-Order Minimal Logic with Extensional Equality}
 
@@ -648,7 +648,11 @@ Specifically, take
 
 Note that this is not possible in Martin-L\"{o}f Type Theory.
 
-% TODO Thierry's comments - do this in cubical type theory
+In cubical type theory, we can construct a term $\delta$ such that
+\[ f : \Prop \rightarrow \Prop, x : \Prop, y : \Prop, p : x.1 \rightarrow y.1, q : y.1 \rightarrow x.1 \vdash \delta : (f x).1 \rightarrow (f y).1 \]
+In fact, we can go further and prove that equality of propositions is equal to logical equivalence.  That is, we can prove
+\[ \Path{U}{(\Path{\Prop}{x}{y})}{((x.1 \rightarrow y.1) \times (y.1 \rightarrow x.1))} \enspace . \]
+
 \section{Computable Expressions}
 \label{section:computable}
 

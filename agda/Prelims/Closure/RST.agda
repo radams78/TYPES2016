@@ -1,6 +1,6 @@
 module Prelims.Closure.RST where
 open import Relation.Binary
-open import Prelims.Closure
+open import Prelims.Closure.RT
 open import Prelims.Respect
 
 data RSTClose {i} {A : Set} (R : Rel A i) : Rel A i where

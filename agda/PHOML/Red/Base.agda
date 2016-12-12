@@ -15,7 +15,7 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   impl : ∀ {V} {φ φ' ψ : Term V} → φ ⇒ φ' → φ ⊃ ψ ⇒ φ' ⊃ ψ
   impr : ∀ {V} {φ ψ ψ' : Term V} → ψ ⇒ ψ' → φ ⊃ ψ ⇒ φ ⊃ ψ'
   appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒ δ' → appP δ ε ⇒ appP δ' ε
-  refdir : ∀ {V} {φ : Term V} {δ d} → appP (dir d (reff φ)) δ ⇒ δ
+  refdir : ∀ {V} {φ : Term V} {d} → dir d (reff φ) ⇒ id φ
   dirR : ∀ {V} {P Q : Path V} {d} → P ⇒ Q → dir d P ⇒ dir d Q
   βE : ∀ {V A M N P} {Q : Path V} → app* M N (λλλ A P) Q ⇒ P ⟦ x₂:= M ,x₁:= N ,x₀:= Q ⟧
   βP : ∀ {V A M} {N N' : Term V} {P} → app* N N' (reff (ΛT A M)) P ⇒ M ⟦⟦ x₀::= P ∶ x₀:= N ≡ x₀:= N' ⟧⟧

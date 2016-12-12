@@ -98,8 +98,9 @@ imp-red-inj₂ : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ↠ φ' ⊃ ψ' 
 imp-red-inj₂ φ⊃ψ↠φ'⊃ψ' with imp-red-inj₂' φ⊃ψ↠φ'⊃ψ' refl
 imp-red-inj₂ {ψ = ψ} φ⊃ψ↠φ'⊃ψ' | φ'' ,p ψ'' ,p φ'⊃ψ'≡φ''⊃ψ'' ,p ψ↠ψ'' = subst (λ x → ψ ↠ x) (⊃-injr (≡-sym φ'⊃ψ'≡φ''⊃ψ'')) ψ↠ψ''
 
-⇒-dir' : ∀ {V} {P : Path V} {δ d} → dir d P ⇒ δ → Σ[ Q ∈ Path V ] P ⇒ Q × δ ≡ dir d Q
+{- ⇒-dir' : ∀ {V} {P : Path V} {δ d} → dir d P ⇒ δ → Σ[ Q ∈ Path V ] P ⇒ Q × δ ≡ dir d Q
 ⇒-dir' (dirR P⇒Q) = _ ,p P⇒Q ,p refl
+⇒-dir' refdir = {!!}
 
 ↠-dir' : ∀ {V} {P : Path V} {δ ε : Proof V} {d} → 
   δ ↠ ε → δ ≡ dir d P → Σ[ Q ∈ Path V ] P ↠ Q × ε ≡ dir d Q
@@ -108,5 +109,4 @@ imp-red-inj₂ {ψ = ψ} φ⊃ψ↠φ'⊃ψ' | φ'' ,p ψ'' ,p φ'⊃ψ'≡φ''�
 ↠-dir' (trans δ↠ε ε↠ε') δ≡P+ =
   let Q ,p P↠Q ,p ε≡Q+ = ↠-dir' δ↠ε δ≡P+ in
   let R ,p Q↠R ,p ε'≡R+ = ↠-dir' ε↠ε' ε≡Q+ in 
-  R ,p trans P↠Q Q↠R ,p ε'≡R+
-
+  R ,p trans P↠Q Q↠R ,p ε'≡R+ -}

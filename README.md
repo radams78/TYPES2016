@@ -1,4 +1,4 @@
-# TYPES2016
+# A Normalizing Computation Rule for Propositional Extensionality in Higher-Order Minimal Logic
 
 This is an Agda formalization of the results in the paper A Normalizing Computation Rule for Propositional Extensionality in Higher-Order Minimal Logic,
 submitted to the Post-Proceedings of the TYPES 2016 conference.

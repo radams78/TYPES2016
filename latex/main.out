@@ -1,17 +1,17 @@
-\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Predicative Higher-Order Minimal Logic with Extensional Equality}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Syntax}{section.2}% 3
-\BOOKMARK [3][-]{subsubsection.2.1.1}{Substitution and Path Substitution}{subsection.2.1}% 4
-\BOOKMARK [3][-]{subsubsection.2.1.2}{Call-By-Name Reduction}{subsection.2.1}% 5
-\BOOKMARK [2][-]{subsection.2.2}{Rules of Deduction}{section.2}% 6
-\BOOKMARK [3][-]{subsubsection.2.2.1}{Metatheorems}{subsection.2.2}% 7
-\BOOKMARK [3][-]{subsubsection.2.2.2}{Substitutions}{subsection.2.2}% 8
-\BOOKMARK [3][-]{subsubsection.2.2.3}{Canonicity}{subsection.2.2}% 9
-\BOOKMARK [3][-]{subsubsection.2.2.4}{Neutral Expressions}{subsection.2.2}% 10
-\BOOKMARK [1][-]{section.3}{Examples}{}% 11
-\BOOKMARK [2][-]{subsection.3.1}{Comparison with Cubical Type Theory}{section.3}% 12
-\BOOKMARK [2][-]{subsection.3.2}{Functions Respect Logical Equivalence}{section.3}% 13
-\BOOKMARK [1][-]{section.4}{Computable Expressions}{}% 14
-\BOOKMARK [1][-]{section.5}{Proof of Canonicity}{}% 15
-\BOOKMARK [1][-]{section.6}{Conclusion}{}% 16
-\BOOKMARK [1][-]{appendix.A}{Calculation in Cubical Type Theory}{}% 17
+\BOOKMARK [1][-]{section.1}{Introduction}{}
+\BOOKMARK [1][-]{section.2}{Predicative Higher-Order Minimal Logic with Extensional Equality}{}
+\BOOKMARK [2][-]{subsection.2.1}{Syntax}{section.2}
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Substitution and Path Substitution}{subsection.2.1}
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Call-By-Name Reduction}{subsection.2.1}
+\BOOKMARK [2][-]{subsection.2.2}{Rules of Deduction}{section.2}
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Metatheorems}{subsection.2.2}
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Substitutions}{subsection.2.2}
+\BOOKMARK [3][-]{subsubsection.2.2.3}{Canonicity}{subsection.2.2}
+\BOOKMARK [3][-]{subsubsection.2.2.4}{Neutral Expressions}{subsection.2.2}
+\BOOKMARK [1][-]{section.3}{Examples}{}
+\BOOKMARK [2][-]{subsection.3.1}{Comparison with Cubical Type Theory}{section.3}
+\BOOKMARK [2][-]{subsection.3.2}{Functions Respect Logical Equivalence}{section.3}
+\BOOKMARK [1][-]{section.4}{Computable Expressions}{}
+\BOOKMARK [1][-]{section.5}{Proof of Canonicity}{}
+\BOOKMARK [1][-]{section.6}{Conclusion}{}
+\BOOKMARK [1][-]{appendix.A}{Calculation in Cubical Type Theory}{}

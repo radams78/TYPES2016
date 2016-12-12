@@ -252,6 +252,19 @@ Lemma35e (_ ,p _ ,p ⊧P+∶θ) = Lemma35d {pp = []} ⊧P+∶θ
 ⊧imp ⊧Tφ ⊧Tψ = let θ ,p φ↠θ = ⊧canon ⊧Tφ in 
   let θ' ,p ψ↠θ' = ⊧canon ⊧Tψ in ⊧canon' {θ = imp θ θ'} (↠-imp φ↠θ ψ↠θ')
 
+pre-app-wnl' : ∀ {V} {δ ε χ : Proof V} {χ' : CanonP V} → appP δ ε ⇒ χ → χ ≡ decode-CanonP χ' → Σ[ χ'' ∈ CanonP V ] δ ↠ decode-CanonP χ''
+pre-app-wnl' {χ' = neutral (var _)} (appPl _) ()
+pre-app-wnl' {δ = δ} {χ' = neutral (app χ'' _)} (appPl δ⇒δ') χ≡χ' = neutral χ'' ,p inc (subst (λ x → δ ⇒ x) (appP-injl χ≡χ') δ⇒δ')
+pre-app-wnl' {χ' = neutral (dirN _ _)} (appPl _) ()
+pre-app-wnl' refdir χ≡χ' = {!!}
+
+app-wnl' : ∀ {V} {δ ε : Proof V} {χ : CanonP V} → appP δ ε ↠ decode-CanonP χ → Σ[ χ' ∈ CanonP V ] δ ↠ decode-CanonP χ'
+app-wnl' δε↠χ = {!!}
+
+⊧PC-wn : ∀ {V} {δ : Proof V} {θ} → ⊧PC δ ∶ θ → Σ[ ε ∈ CanonP V ] δ ↠ decode-CanonP ε
+⊧PC-wn {θ = bot} (ε ,p δ↠ε) = neutral ε ,p δ↠ε
+⊧PC-wn {θ = imp θ θ'} ⊧δ∶θ = {!!}
+
 ⊧⊃* : ∀ {V} {P : Path V} {φ φ' Q ψ ψ'} →
   ⊧E P ∶ φ ≡〈 Ω 〉 φ' → ⊧E Q ∶ ψ ≡〈 Ω 〉 ψ' → ⊧E P ⊃* Q ∶ φ ⊃ ψ ≡〈 Ω 〉 φ' ⊃ ψ'
 ⊧⊃* (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) with Lemma35e ⊧P+∶φ⊃φ'

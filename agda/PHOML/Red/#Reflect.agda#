@@ -53,7 +53,7 @@ open import PHOML.Red.RTRed
 ⇒-reflect-rep {E = app (-dir d) (var x ∷ [])} (dirR ())
 ⇒-reflect-rep {E = app (-dir d) (app -ref (φ ∷ []) ∷ [])} refdir = id φ ,p refdir ,p refl
 ⇒-reflect-rep {E = app (-dir d) (app -ref (φ ∷ []) ∷ [])} (dirR Pρ⇒Q) = {!!}
-  let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in ?
+  let Q' ,p P⇒Q' ,p Q'ρ≡Q = ⇒-reflect-rep Pρ⇒Q in {!!}
 ⇒-reflect-rep {E = app (-dir d) (app -imp* x₁ ∷ [])} Eρ⇒F = {!!}
 ⇒-reflect-rep {E = app (-dir d) (app -univ x₁ ∷ [])} Eρ⇒F = {!!}
 ⇒-reflect-rep {E = app (-dir d) (app (-lll x) x₁ ∷ [])} Eρ⇒F = {!!}
