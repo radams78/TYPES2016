@@ -203,6 +203,10 @@ soundness {U} {σ = σ} (lllR {B = B} {M = F} {G} {P} ΓAAE⊢P∶Fx≡Gy) ⊧S�
         (let open ≡-Reasoning in 
         begin
           P ⟦ σ' ⟧
+        ≡⟨ extendSub-decomp P ⟩
+          P ⟦ liftSub _ (extendSub (extendSub (ρ •RS σ) N) N') ⟧ ⟦ x₀:= Q ⟧
+        ≡⟨ sub-congl (sub-congr P (liftSub-cong {!extendSub-decomp'!})) ⟩
+          P ⟦ liftSub _ (x₀:= N' • liftSub _ (extendSub (ρ •RS σ) N)) ⟧ ⟦ x₀:= Q ⟧
         ≡⟨ {!!} ⟩
           P ⟦ liftsSub pathDom σ ⟧ 〈 liftsRep pathDom ρ 〉 ⟦ x₂:= N ,x₁:= N' ,x₀:= Q ⟧
         ∎) 
