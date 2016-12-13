@@ -1,8 +1,8 @@
-module PHOPL.Rules where
+module PHOML.Rules where
 open import Data.Product using (_×_)
 open import Prelims
-open import PHOPL.Grammar
-open import PHOPL.Red
+open import PHOML.Grammar
+open import PHOML.Red
 
 infix 10 _⊢_∶_
 data valid : ∀ {V} → Context V → Set

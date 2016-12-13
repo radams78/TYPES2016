@@ -81,8 +81,10 @@ SUB = record {
     apV-comp = refl }
   }
 
-open OpFamily SUB using (comp-congl;comp-congr)
-  renaming (liftOp-idOp to liftSub-idOp;
+open OpFamily SUB using ()
+  renaming (comp-congl to •-congl;
+           comp-congr to •-congr;
+           liftOp-idOp to liftSub-idOp;
            ap-idOp to sub-idSub;
            ap-congr to sub-congl;
            unitl to sub-unitl;

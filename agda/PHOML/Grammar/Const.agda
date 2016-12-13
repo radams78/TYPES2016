@@ -1,6 +1,5 @@
 module PHOML.Grammar.Const where
 open import Data.Empty renaming (⊥ to Empty)
-open import Data.List
 open import Prelims
 open import PHOML.Grammar.Base
 open PHOMLgrammar public
@@ -86,6 +85,12 @@ _,E_ = _,_
 
 yt : ∀ {V} → Expression V (nonVarKind -Type) → Type
 yt (app (-ty A) []) = A
+
+yt-rep : ∀ {U V} {A : Expression U -nvType} {ρ : Rep U V} → yt (A 〈 ρ 〉) ≡ yt A
+yt-rep {A = app (-ty _) []} = refl
+
+yt-sub : ∀ {U V} {A : Expression U -nvType} {σ : Sub U V} → yt (A ⟦ σ ⟧) ≡ yt A
+yt-sub {A = app (-ty _) []} = refl
 
 typeof' : ∀ {V} → Var V -Term → Context V → Type
 typeof' x Γ  = yt (typeof x Γ)

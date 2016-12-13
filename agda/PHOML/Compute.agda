@@ -25,12 +25,12 @@ open import PHOML.Neutral
 
 ⊧T M ∶ A = ⊧E M ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧ ∶ M ≡〈 A 〉 M
 ⊧E P ∶ φ ≡〈 Ω 〉 ψ = ⊧P plus P ∶ φ ⊃ ψ × ⊧P minus P ∶ ψ ⊃ φ
-⊧E P ∶ M ≡〈 A ⇛ B 〉 M' = ∀ N N' Q → ⊧T N ∶ A → ⊧T N' ∶ A → ⊧E Q ∶ N ≡〈 A 〉 N' →
-  ⊧E app* N N' P Q ∶ appT M N ≡〈 B 〉 appT M' N'
+⊧E_∶_≡〈_〉_ {U} P M (A ⇛ B) M' = ∀ V (ρ : Rep U V) N N' Q → ⊧T N ∶ A → ⊧T N' ∶ A → ⊧E Q ∶ N ≡〈 A 〉 N' →
+  ⊧E app* N N' (P 〈 ρ 〉) Q ∶ appT (M 〈 ρ 〉) N ≡〈 B 〉 appT (M' 〈 ρ 〉) N'
 
 ⊧_∶_ : ∀ {V K} → VExpression V K → Expression V (parent K) → Set
 ⊧_∶_ {K = -Proof} δ φ = ⊧P δ ∶ φ
-⊧_∶_ {K = -Term} M (app (-ty A) []) = ⊧T M ∶ A
+⊧_∶_ {K = -Term} M A = ⊧T M ∶ yt A
 ⊧_∶_ {K = -Path} P (app (-eq A) (M ∷ N ∷ [])) = ⊧E P ∶ M ≡〈 A 〉 N
 
 ⊧PCrep : ∀ {U V} {δ : Proof U} {ρ : Rep U V} {θ} → ⊧PC δ ∶ θ → ⊧PC δ 〈 ρ 〉 ∶ θ
@@ -43,15 +43,42 @@ open import PHOML.Neutral
 ⊧Prep : ∀ {U V} {δ : Proof U} {φ} {ρ : Rep U V} → ⊧P δ ∶ φ → ⊧P δ 〈 ρ 〉 ∶ φ 〈 ρ 〉
 ⊧Prep (θ ,p φ↠θ ,p ⊧δ∶θ) = θ ,p rep-red-canon θ φ↠θ ,p ⊧PCrep ⊧δ∶θ
 
+⊧Erep : ∀ {U V} {P : Path U} {M A N} {ρ : Rep U V} → ⊧E P ∶ M ≡〈 A 〉 N → ⊧E P 〈 ρ 〉 ∶ M 〈 ρ 〉 ≡〈 A 〉 N 〈 ρ 〉
+⊧Erep {A = Ω} (⊧P+∶M⊃N ,p ⊧P-∶N⊃M) = ⊧Prep ⊧P+∶M⊃N ,p ⊧Prep ⊧P-∶N⊃M
+⊧Erep {P = P} {M} {A = A ⇛ B} {M'} {ρ = ρ} ⊧P∶M≡M' W ρ₁ N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' = 
+  subst₃ (λ x y z → ⊧E x ∶ y ≡〈 B 〉 z) (cong (λ x → app* N N' x Q) (rep-comp P)) (cong (λ x → appT x N) (rep-comp M)) (cong (λ x → appT x N') (rep-comp M')) (⊧P∶M≡M' W (ρ₁ •R ρ) N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N')
+
+⊧Trep : ∀ {U V} (M : Term U) {A} {ρ : Rep U V} → ⊧T M ∶ A → ⊧T M 〈 ρ 〉 ∶ A
+⊧Trep {U} {V} M {A} {ρ} ⊧M∶A = subst (λ x → ⊧E x ∶ M 〈 ρ 〉 ≡〈 A 〉 (M 〈 ρ 〉)) 
+  (let open ≡-Reasoning in 
+    begin
+      M ⟦⟦ refSub ∶ idSub U ≡ idSub U ⟧⟧ 〈 ρ 〉
+    ≡⟨⟨ pathSub-•RP M ⟩⟩
+      M ⟦⟦ refSub •PR ρ ∶ idSub V •SR ρ ≡ idSub V •SR ρ ⟧⟧
+    ≡⟨⟨ pathSub-•PR M ⟩⟩
+      M 〈 ρ 〉 ⟦⟦ refSub ∶ idSub V ≡ idSub V ⟧⟧
+    ∎) 
+  (⊧Erep ⊧M∶A)
+--TODO Flip inputs to pathsub-•PR
+
+⊧rep : ∀ {U V K} {E : VExpression U K} {T} {ρ : Rep U V} → ⊧ E ∶ T → ⊧ E 〈 ρ 〉 ∶ T 〈 ρ 〉
+⊧rep {K = -Proof} = ⊧Prep
+⊧rep {K = -Term} {T = app (-ty _) []} = ⊧Trep _
+⊧rep {K = -Path} {T = app (-eq _) (_ ∷ _ ∷ [])} = ⊧Erep
+
+⊧E⇛E : ∀ {V} {P : Path V} {M A B M' Q N N'} → ⊧E P ∶ M ≡〈 A ⇛ B 〉 M' → ⊧T N ∶ A → ⊧T N' ∶ A → ⊧E Q ∶ N ≡〈 A 〉 N' → ⊧E app* N N' P Q ∶ appT M N ≡〈 B 〉 appT M' N'
+⊧E⇛E {V} {P} {M} {A} {B} {M'} {Q} {N} {N'} ⊧P∶M≡M' ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' = subst₃ (λ x y z → ⊧E app* N N' x Q ∶ appT y N ≡〈 B 〉 appT z N') rep-idRep rep-idRep
+                                                               rep-idRep (⊧P∶M≡M' V (idRep V) N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N')
+
 postulate conversionP : ∀ {V} {δ : Proof V} {φ ψ} → ⊧P δ ∶ φ → φ ≃ ψ → ⊧P δ ∶ ψ
 --conversionP (θ ,p φ↠θ ,p ⊧δ∶θ) φ≃ψ = θ ,p red-canon {θ = θ} φ↠θ φ≃ψ ,p ⊧δ∶θ
 
-postulate conversionE : ∀ {V} {P : Path V} {M M' N N' A} → ⊧E P ∶ M ≡〈 A 〉 N → M ≃ M' → N ≃ N' →
+conversionE : ∀ {V} {P : Path V} {M M' N N' A} → ⊧E P ∶ M ≡〈 A 〉 N → M ≃ M' → N ≃ N' →
                       ⊧E P ∶ M' ≡〈 A 〉 N'
-{- conversionE {A = Ω} (⊧P+∶φ⊃ψ ,p ⊧P-∶ψ⊃φ) φ≃φ' ψ≃ψ' =
+conversionE {A = Ω} (⊧P+∶φ⊃ψ ,p ⊧P-∶ψ⊃φ) φ≃φ' ψ≃ψ' =
   conversionP ⊧P+∶φ⊃ψ (≃-imp φ≃φ' ψ≃ψ') ,p conversionP ⊧P-∶ψ⊃φ (≃-imp ψ≃ψ' φ≃φ')
-conversionE {A = A ⇛ B} ⊧P∶M≡N M≃M' N≃N' L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L' = 
-  conversionE {A = B} (⊧P∶M≡N L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L') (≃-appTl M≃M') (≃-appTl N≃N') -}
+conversionE {A = A ⇛ B} ⊧P∶M≡N M≃M' N≃N' W ρ L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L' = 
+  conversionE {A = B} (⊧P∶M≡N W ρ L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L') (≃-appTl (≃-resp-rep M≃M')) (≃-appTl (≃-resp-rep N≃N'))
 
 postulate expansionPC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC ε ∶ θ → δ ⇒ ε → ⊧PC δ ∶ θ
 {- expansionPC {θ = bot} (χ ,p ε↠χ) δ⇒ε = χ ,p (trans (inc δ⇒ε) ε↠χ)
@@ -60,14 +87,14 @@ expansionPC {θ = imp θ θ'} ⊧ε∶θ⊃θ' δ⇒ε W ρ χ ⊧χ∶θ = expa
 postulate expansionP : ∀ {V} {δ ε : Proof V} {φ} → ⊧P ε ∶ φ → δ ⇒ ε → ⊧P δ ∶ φ
 --expansionP (θ ,p φ↠θ ,p ⊧ε∶θ) δ⇒ε = θ ,p φ↠θ ,p expansionPC ⊧ε∶θ δ⇒ε
 
-postulate expansionT : ∀ {V} {M N : Term V} {A} → ⊧T N ∶ A → M ⇒ N → ⊧T M ∶ A
-postulate expansionE : ∀ {V} {P Q : Path V} {M A N} → ⊧E Q ∶ M ≡〈 A 〉 N → P ⇒ Q → ⊧E P ∶ M ≡〈 A 〉 N
+expansionT : ∀ {V} {M N : Term V} {A} → ⊧T N ∶ A → M ⇒ N → ⊧T M ∶ A
+expansionE : ∀ {V} {P Q : Path V} {M A N} → ⊧E Q ∶ M ≡〈 A 〉 N → P ⇒ Q → ⊧E P ∶ M ≡〈 A 〉 N
 
-{- expansionT ⊧N∶A M⇒N = conversionE (expansionE ⊧N∶A (⇒-resp-ps M⇒N)) (sym (inc M⇒N)) (sym (inc M⇒N))
+expansionT ⊧N∶A M⇒N = conversionE (expansionE ⊧N∶A (⇒-resp-ps M⇒N)) (sym (inc M⇒N)) (sym (inc M⇒N))
 
 expansionE {A = Ω} (⊧Q+∶φ⊃ψ ,p ⊧Q-∶ψ⊃φ) P⇒Q = 
-  expansionP ⊧Q+∶φ⊃ψ (plusR P⇒Q) ,p expansionP ⊧Q-∶ψ⊃φ (minusR P⇒Q)
-expansionE {A = A ⇛ B} ⊧Q∶M≡M' P⇒Q N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N' = expansionE (⊧Q∶M≡M' N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N') (app*l P⇒Q) -}
+  expansionP ⊧Q+∶φ⊃ψ (dirR P⇒Q) ,p expansionP ⊧Q-∶ψ⊃φ (dirR P⇒Q)
+expansionE {A = A ⇛ B} ⊧Q∶M≡M' P⇒Q W ρ N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N' = expansionE (⊧Q∶M≡M' W ρ N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N') (app*l (⇒-resp-rep P⇒Q))
 
 postulate ↞PC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC ε ∶ θ → δ ↠ ε → ⊧PC δ ∶ θ
 {- ↞PC ⊧ε∶θ (inc δ⇒ε) = expansionPC ⊧ε∶θ δ⇒ε
@@ -93,14 +120,14 @@ reductionPC {θ = imp θ θ'} ⊧δ∶θ⊃θ' δ⇒δ' W ρ ε ⊧ε∶θ = red
 postulate reductionP : ∀ {V} {δ ε : Proof V} {φ} → ⊧P δ ∶ φ → δ ⇒ ε → ⊧P ε ∶ φ
 --reductionP (θ ,p φ↠θ ,p ⊧ε∶θ) δ⇒ε = θ ,p φ↠θ ,p reductionPC ⊧ε∶θ δ⇒ε
 
-postulate reductionT : ∀ {V} {M N : Term V} {A} → ⊧T M ∶ A → M ⇒ N → ⊧T N ∶ A
-postulate reductionE : ∀ {V} {P Q : Path V} {M A N} → ⊧E P ∶ M ≡〈 A 〉 N → P ⇒ Q → ⊧E Q ∶ M ≡〈 A 〉 N
+reductionT : ∀ {V} {M N : Term V} {A} → ⊧T M ∶ A → M ⇒ N → ⊧T N ∶ A
+reductionE : ∀ {V} {P Q : Path V} {M A N} → ⊧E P ∶ M ≡〈 A 〉 N → P ⇒ Q → ⊧E Q ∶ M ≡〈 A 〉 N
 
-{- reductionT ⊧N∶A M⇒N = conversionE (reductionE ⊧N∶A (⇒-resp-ps M⇒N)) (inc M⇒N) (inc M⇒N)
+reductionT ⊧N∶A M⇒N = conversionE (reductionE ⊧N∶A (⇒-resp-ps M⇒N)) (inc M⇒N) (inc M⇒N)
 
 reductionE {A = Ω} (⊧Q+∶φ⊃ψ ,p ⊧Q-∶ψ⊃φ) P⇒Q = 
-  reductionP ⊧Q+∶φ⊃ψ (plusR P⇒Q) ,p reductionP ⊧Q-∶ψ⊃φ (minusR P⇒Q)
-reductionE {A = A ⇛ B} ⊧Q∶M≡M' P⇒Q N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N' = reductionE (⊧Q∶M≡M' N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N') (app*l P⇒Q) -}
+  reductionP ⊧Q+∶φ⊃ψ (dirR P⇒Q) ,p reductionP ⊧Q-∶ψ⊃φ (dirR P⇒Q)
+reductionE {A = A ⇛ B} ⊧Q∶M≡M' P⇒Q W ρ N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N' = reductionE (⊧Q∶M≡M' W ρ N N' R ⊧N∶A ⊧N'∶A ⊧R∶N≡N') (app*l (⇒-resp-rep P⇒Q))
 --TODO Duplication
 
 postulate ↠T : ∀ {V} {M N : Term V} {A} → ⊧T M ∶ A → M ↠ N → ⊧T N ∶ A
@@ -123,35 +150,47 @@ postulate c-closed : ∀ {U V} A {σ : Sub U V} → c A ⟦ σ ⟧ ≡ c A
 --c-closed Ω = refl
 --c-closed (A ⇛ B) = cong (ΛT A) (c-closed B)
 
-postulate c-closedE : ∀ {U U' V W} A {ρ₁ ρ₂ ρ₁' ρ₂'} {τ' : PathSub U' W} {τ : PathSub U V} {σ : Sub V W} →
+c-closedR : ∀ {U V} A {ρ : Rep U V} → c A 〈 ρ 〉 ≡ c A
+c-closedR Ω = refl
+c-closedR (A ⇛ B) = cong (ΛT A) (c-closedR B)
+
+c-closedE : ∀ {U U' V W} A {ρ₁ ρ₂ ρ₁' ρ₂'} {τ' : PathSub U' W} {τ : PathSub U V} {σ : Sub V W} →
                     c A ⟦⟦ τ ∶ ρ₁ ≡ ρ₂ ⟧⟧ ⟦ σ ⟧ ≡ c A ⟦⟦ τ' ∶ ρ₁' ≡ ρ₂' ⟧⟧
---c-closedE Ω = refl
---c-closedE (A ⇛ B) = cong (λλλ A) (c-closedE B)
+c-closedE Ω = refl
+c-closedE (A ⇛ B) = cong (λλλ A) (c-closedE B)
 
-postulate ⊧c : ∀ {V A} → ⊧T c {V} A ∶ A
-{- ⊧c {A = Ω} = (imp bot bot ,p ref ,p (λ {W ρ ε (ε' ,p ε↠ε') → ε' ,p (trans (inc refplus) ε↠ε')})) ,p imp bot bot ,p ref ,p 
-  λ {W ρ ε (ε' ,p ε↠ε') → ε' ,p (trans (inc refminus) ε↠ε')}
-⊧c {A = A ⇛ B} N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' = expansionE (conversionE 
-  (subst₃ (λ x y z → ⊧E x ∶ y ≡〈 B 〉 z) 
-    (≡-sym (c-closedE B)) (≡-sym (c-closed B)) (≡-sym (c-closed B)) 
-    (⊧c {A = B})) 
-  (sym (inc βT)) (sym (inc βT))) βE -}
+⊧c : ∀ {V A} → ⊧T c {V} A ∶ A
+⊧c {A = Ω} = (imp bot bot ,p ref ,p (λ {W ρ ε (ε' ,p ε↠ε') → ε' ,p trans (inc (appPl refdir)) (trans (inc βP) ε↠ε')})) ,p imp bot bot ,p ref ,p 
+  λ {W ρ ε (ε' ,p ε↠ε') → ε' ,p trans (inc (appPl refdir)) (trans (inc βP) ε↠ε')}
+⊧c {V} {A = A ⇛ B} W ρ N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' = expansionE 
+  (conversionE 
+    (subst₃ (λ x y z → ⊧E x ∶ y ≡〈 B 〉 z) 
+      (let open ≡-Reasoning in 
+      begin
+        c B ⟦⟦ refSub ∶ idSub W ≡ idSub W ⟧⟧
+      ≡⟨⟨ c-closedE B ⟩⟩
+        c B ⟦⟦ liftPathSub refSub ∶ sub↖ (idSub V) ≡ sub↗ (idSub V) ⟧⟧ ⟦ (x₂:= N ,x₁:= N' ,x₀:= Q) •SR liftsRep pathDom ρ ⟧
+      ≡⟨ sub-•SR (c B ⟦⟦ liftPathSub refSub ∶ sub↖ (idSub V) ≡ sub↗ (idSub V) ⟧⟧) ⟩
+        c B ⟦⟦ liftPathSub refSub ∶ sub↖ (idSub V) ≡ sub↗ (idSub V) ⟧⟧ 〈 liftsRep pathDom ρ 〉 ⟦ x₂:= N ,x₁:= N' ,x₀:= Q ⟧
+      ∎) (≡-sym (≡-trans (sub-congl (c-closedR B)) (c-closed B))) (≡-sym (≡-trans (sub-congl (c-closedR B)) (c-closed B))) (⊧c {A = B}))
+    (sym (inc βT)) (sym (inc βT))) 
+  βE
 
-postulate APPl-rtΛ : ∀ {V P M N} {NN : snocList (Term V)} {A L} →
+APPl-rtΛ : ∀ {V P M N} {NN : snocList (Term V)} {A L} →
                    ⊧E P ∶ APPl (appT M N) NN ≡〈 A 〉 L → Reduces-to-Λ M
-{- APPl-rtΛ {A = Ω} ((bot ,p MNN⊃N↠⊥ ,p _) ,p _) = ⊥-elim (imp-not-red-bot MNN⊃N↠⊥)
+APPl-rtΛ {A = Ω} ((bot ,p MNN⊃N↠⊥ ,p _) ,p _) = ⊥-elim (imp-not-red-bot MNN⊃N↠⊥)
 APPl-rtΛ {M = M} {N} {NN = NN} {A = Ω} ((imp θ θ' ,p MNN⊃N↠θ⊃θ' ,p proj₂) ,p proj₃ ,p proj₄ ,p proj₅) = 
   APPl-red-canon {NN = NN} {θ = θ} (imp-red-inj₁ MNN⊃N↠θ⊃θ')
 APPl-rtΛ {V} {P} {M} {N} {NN} {A ⇛ B} {L} ⊧P∶MNN≡N = APPl-rtΛ {V}
   {app* (c A) (c A) P (c A ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧)} {M} {N}
   {NN snoc c A} {B} {appT L (c A)} 
-  (⊧P∶MNN≡N (c A) (c A) (c A ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧) ⊧c ⊧c ⊧c) -}
+  (⊧E⇛E ⊧P∶MNN≡N ⊧c ⊧c ⊧c)
 
-postulate ⊧E-rtΛ : ∀ {V} {P : Path V} {M N A B} → ⊧E P ∶ M ≡〈 A ⇛ B 〉 N → Reduces-to-Λ M
-{- ⊧E-rtΛ {V} {P} {M} {N} {A} {B} ⊧P∶M≡N = APPl-rtΛ {V}
+⊧E-rtΛ : ∀ {V} {P : Path V} {M N A B} → ⊧E P ∶ M ≡〈 A ⇛ B 〉 N → Reduces-to-Λ M
+⊧E-rtΛ {V} {P} {M} {N} {A} {B} ⊧P∶M≡N = APPl-rtΛ {V}
                                              {app* (c A) (c A) P (c A ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧)} {M}
                                              {c A} {[]} {B} {appT N (c A)} 
-          (⊧P∶M≡N (c A) (c A) (c A ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧) ⊧c ⊧c ⊧c) -}
+          (⊧E⇛E ⊧P∶M≡N ⊧c ⊧c ⊧c)
 --TODO Duplication
 
 postulate Lemma30 : ∀ {V} {M : Term V} {A B} → ⊧T M ∶ A ⇛ B → Reduces-to-Λ M
@@ -168,8 +207,8 @@ postulate ⊧canon' : ∀ {V} {φ : Term V} (θ : CanonProp) → φ ↠ decode �
 --⊧canon' {V} {φ} θ φ↠θ = (imp θ θ ,p (↠-imp φ↠θ φ↠θ) ,p (λ W ρ ε ⊧ε∶φ → ↞PC (expansionPC ⊧ε∶φ refplus) (↠-appP (↠-plus (↠-resp-rep (trans (↠-resp-ps φ↠θ) (θps-red-ref θ))))))) ,p 
 --  imp θ θ ,p (↠-imp φ↠θ φ↠θ) ,p (λ W ρ ε ⊧ε∶φ → ↞PC (expansionPC ⊧ε∶φ refminus) (↠-appP (↠-minus (↠-resp-rep (trans (↠-resp-ps φ↠θ) (θps-red-ref θ))))))
 
-⊧TΩrep : ∀ {U V} {φ : Term U} {ρ : Rep U V} → ⊧T φ ∶ Ω → ⊧T φ 〈 ρ 〉 ∶ Ω
-⊧TΩrep ⊧φ = let θ ,p φ↠θ = ⊧canon ⊧φ in ⊧canon' θ (rep-red-canon θ φ↠θ)
+postulate ⊧TΩrep : ∀ {U V} {φ : Term U} {ρ : Rep U V} → ⊧T φ ∶ Ω → ⊧T φ 〈 ρ 〉 ∶ Ω
+-- ⊧TΩrep ⊧φ = let θ ,p φ↠θ = ⊧canon ⊧φ in ⊧canon' θ (rep-red-canon θ φ↠θ)
 
 ⊧P⊃I : ∀ {V} {φ ψ : Term V} {δ} →
   ⊧T φ ∶ Ω → ⊧T ψ ∶ Ω →
@@ -194,18 +233,18 @@ postulate ⊧neutralP : ∀ {V} {δ : NeutralP V} {φ : Term V} {θ : CanonProp}
                     φ ↠ decode θ → ⊧ decode-NeutralP δ ∶ φ
 --⊧neutralP {δ = δ} {θ = θ} φ↠θ = θ ,p φ↠θ ,p ⊧neutralPC δ
 
-postulate ⊧appT : ∀ {V A B} {M N : Term V} → ⊧T M ∶ A ⇛ B → ⊧T N ∶ A → ⊧T appT M N ∶ B
-{- ⊧appT {A = A} {B} {M} {N} ⊧M∶A⇛B ⊧N∶A = subst (λ x → ⊧E x ∶ appT M N ≡〈 B 〉 appT M N) 
+⊧appT : ∀ {V A B} {M N : Term V} → ⊧T M ∶ A ⇛ B → ⊧T N ∶ A → ⊧T appT M N ∶ B
+⊧appT {A = A} {B} {M} {N} ⊧M∶A⇛B ⊧N∶A = subst (λ x → ⊧E x ∶ appT M N ≡〈 B 〉 appT M N) 
   (cong₂ (λ x y → app* x y (M ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧) (N ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧)) (≡-sym sub-idSub) (≡-sym sub-idSub))
-  (⊧M∶A⇛B N N _ ⊧N∶A ⊧N∶A ⊧N∶A) -}
+  (⊧E⇛E ⊧M∶A⇛B ⊧N∶A ⊧N∶A ⊧N∶A)
 
-postulate ⊧neutralE : ∀ {V} {P : NeutralE V} {M A N} → ⊧T M ∶ A → ⊧T N ∶ A → ⊧E decode-NeutralE P ∶ M ≡〈 A 〉 N
-{- ⊧neutralE {P = P} {A = Ω} ⊧M∶Ω ⊧N∶Ω =
+⊧neutralE : ∀ {V} {P : NeutralE V} {M A N} → ⊧T M ∶ A → ⊧T N ∶ A → ⊧E decode-NeutralE P ∶ M ≡〈 A 〉 N
+⊧neutralE {P = P} {A = Ω} ⊧M∶Ω ⊧N∶Ω =
   let θ ,p M↠θ = ⊧canon ⊧M∶Ω in 
-  let θ' ,p N↠θ' = ⊧canon ⊧N∶Ω in (imp θ θ' ,p (↠-imp M↠θ N↠θ') ,p (λ W ρ ε ⊧ε∶φ → subst (λ x → ⊧PC x ∶ θ') (cong (λ x → appP (plus x) ε) decode-nrepE) (⊧neutralPC (app (plusN (nrepE ρ P)) ε)))) ,p (imp θ' θ) ,p (↠-imp N↠θ' M↠θ ,p (λ W ρ ε ⊧ε∶φ → subst (λ x → ⊧PC x ∶ θ) (cong (λ x → appP (minus x) ε) decode-nrepE) (⊧neutralPC (app (minusN (nrepE ρ P)) ε))))
-{-  (imp θ θ' ,p ↠-imp M↠θ N↠θ' ,p λ ε ⊧ε∶φ → ⊧neutralPC (app (plusN P) ε)) ,p imp θ' θ ,p ↠-imp N↠θ' M↠θ ,p (λ ε ⊧ε∶φ → ⊧neutralPC (app (minusN P) ε)) -}
-⊧neutralE {P = P} {A = A ⇛ B} ⊧M∶A⇛B ⊧N∶A⇛B L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L' = 
-  ⊧neutralE {P = app*N L L' P Q} (⊧appT ⊧M∶A⇛B ⊧L∶A) (⊧appT ⊧N∶A⇛B ⊧L'∶A) -}
+  let θ' ,p N↠θ' = ⊧canon ⊧N∶Ω in (imp θ θ' ,p (↠-imp M↠θ N↠θ') ,p (λ W ρ ε ⊧ε∶φ → subst (λ x → ⊧PC x ∶ θ') (cong (λ x → appP (plus x) ε) (decode-nrepE P)) (⊧neutralPC (app (dirN -plus (nrepE ρ P)) ε)))) ,p (imp θ' θ) ,p (↠-imp N↠θ' M↠θ ,p (λ W ρ ε ⊧ε∶φ → subst (λ x → ⊧PC x ∶ θ) (cong (λ x → appP (minus x) ε) (decode-nrepE P)) (⊧neutralPC (app (dirN -minus (nrepE ρ P)) ε))))
+⊧neutralE {P = P} {M} {A = A ⇛ B} {N} ⊧M∶A⇛B ⊧N∶A⇛B W ρ L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L' = subst (λ x → ⊧E x ∶ appT (M 〈 ρ 〉) L ≡〈 B 〉 appT (N 〈 ρ 〉) L') (cong (λ x → app* L L' x Q) (decode-nrepE P)) 
+  (⊧neutralE {P = app*N L L' (nrepE ρ P) Q} (⊧appT (⊧Trep M ⊧M∶A⇛B) ⊧L∶A) (⊧appT (⊧Trep N ⊧N∶A⇛B) ⊧L'∶A))
+  --⊧neutralE {P = app*N L L' (nrepE ρ P) Q} ? ?
 
 postulate botSub₃-sub↖id : ∀ {V} {M N : Term V} {P} → (x₂:= M ,x₁:= N ,x₀:= P) • sub↖ (idSub V) ∼ x₀:= M
 --botSub₃-sub↖id x₀ = refl
@@ -300,3 +339,5 @@ app-wnl' δ↠ε δ≡δ₁δ₂ ε≡χ | inj₂ (φ ,p δ₁' ,p δ₁↠Λφ�
   let χ''' ,p χ'''⇑≡χ'' = reflect-CanonP {δ = χ''} {χ = χ'} χ''⇑≡χ' in
   χ''' ,p subst (λ x → δ ↠ x) χ'''⇑≡χ'' δ↠χ''
 
+⊧univ : ∀ {V} {φ ψ : Term V} {δ ε} → ⊧P δ ∶ φ ⊃ ψ → ⊧P ε ∶ ψ ⊃ φ → ⊧E univ φ ψ δ ε ∶ φ ≡〈 Ω 〉 ψ
+⊧univ ⊧δ∶φ⊃ψ ⊧ε∶ψ⊃φ = expansionP ⊧δ∶φ⊃ψ univplus ,p expansionP ⊧ε∶ψ⊃φ univminus

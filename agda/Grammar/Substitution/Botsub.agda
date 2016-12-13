@@ -135,6 +135,9 @@ comp-botSub'' : ∀ {U} {V} {C} {K} {L}
 --TODO Better name
 comp-botSub'' F = let COMP = OpFamily.comp SUB in comp-botSub {E' = F} COMP COMP
 
+botSub-upRep' : ∀ {V K} (E : VExpression V K) → x₀:= E •SR upRep ∼ idSub V
+botSub-upRep' E = botSub-up' {E = E} COMPSR
+
 botSub-upRep : ∀ {U} {C} {K} {L}
   (E : Subexp U C K) {F : Expression U (varKind L)} → 
   E 〈 upRep 〉 ⟦ x₀:= F ⟧ ≡ E
