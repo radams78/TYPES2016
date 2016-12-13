@@ -163,4 +163,34 @@ open import PHOML.Compute
     ≡⟨⟨ sub-congl (liftSub-upRep (δ 〈 ρ 〉 〈 ρ₁ 〉 ⇑)) ⟩⟩
       δ 〈 ρ 〉 〈 ρ₁ 〉 ⇑ ⇑ ⟦ liftSub _ (x₀:= α 〈 ρ₁ 〉) ⟧ ⟦ x₀:= β ⟧
     ∎)) refl)) βP))))))))
-⊧⊃* {V} {P} {φ} {φ'} {Q} {ψ} {ψ'} (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | univC x₄ x₅ x₆ x₇ ,p P↠Pcanon | univC x x₁ x₂ x₃ ,p Q↠Qcanon = {!!}
+⊧⊃* {V} {P} {φ} {φ'} {Q} {ψ} {ψ'} (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | univC M M' δ ε ,p P↠univ | univC N N' δ' ε' ,p Q↠univ =
+  let ⊧φ : ⊧T φ ∶ Ω
+      ⊧φ = ⊧E-valid₁ (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) in
+  let ⊧φ' : ⊧T φ' ∶ Ω
+      ⊧φ' = ⊧E-valid₂ (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) in
+  let ⊧ψ : ⊧T ψ ∶ Ω
+      ⊧ψ = ⊧E-valid₁ (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) in
+  let ⊧ψ' : ⊧T ψ' ∶ Ω
+      ⊧ψ' = ⊧E-valid₂ (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) in
+  let ⊧δ∶φ⊃φ' : ⊧P δ ∶ φ ⊃ φ'
+      ⊧δ∶φ⊃φ' = ↠P ⊧P+∶φ⊃φ' (trans (↠-dir P↠univ) (inc univplus)) in
+  let ⊧ε∶φ'⊃φ : ⊧P ε ∶ φ' ⊃ φ
+      ⊧ε∶φ'⊃φ = ↠P ⊧P-∶φ'⊃φ (trans (↠-dir P↠univ) (inc univminus)) in
+  let ⊧δ'∶ψ⊃ψ' : ⊧P δ' ∶ ψ ⊃ ψ'
+      ⊧δ'∶ψ⊃ψ' = ↠P ⊧Q+∶ψ⊃ψ' (trans (↠-dir Q↠univ) (inc univplus)) in
+  let ⊧ε'∶ψ'⊃ψ : ⊧P ε' ∶ ψ' ⊃ ψ
+      ⊧ε'∶ψ'⊃ψ = ↠P ⊧Q-∶ψ'⊃ψ (trans (↠-dir Q↠univ) (inc univminus)) in
+  (⊧P⊃I (⊧imp ⊧φ ⊧ψ) (⊧imp ⊧φ' ⊧ψ') (λ W ρ α ⊧α∶φ⊃ψ → 
+  ⊧P⊃I (⊧TΩrep ⊧φ') (⊧TΩrep ⊧ψ') (λ W₁ ρ₁ β ⊧β∶φ' → 
+  let ⊧εβ∶φ : ⊧P appP (ε 〈 ρ 〉 〈 ρ₁ 〉) β ∶ φ 〈 ρ 〉 〈 ρ₁ 〉
+      ⊧εβ∶φ = ⊧P⊃E (⊧Prep (⊧Prep ⊧ε∶φ'⊃φ)) ⊧β∶φ' in
+  let ⊧αεβ∶ψ : ⊧P appP (α 〈 ρ₁ 〉) (appP (ε 〈 ρ 〉 〈 ρ₁ 〉) β) ∶ ψ 〈 ρ 〉 〈 ρ₁ 〉
+      ⊧αεβ∶ψ = ⊧P⊃E (⊧Prep ⊧α∶φ⊃ψ) ⊧εβ∶φ in
+  let ⊧δαεβ∶ψ' : ⊧P appP (δ 〈 ρ 〉 〈 ρ₁ 〉) (
+    {!!}))) ,p 
+  ⊧P⊃I (⊧imp ⊧φ' ⊧ψ') (⊧imp ⊧φ ⊧ψ) (λ W ρ α ⊧α∶φ'⊃ψ' → 
+  ⊧P⊃I (⊧TΩrep ⊧φ) (⊧TΩrep ⊧ψ) (λ W₁ ρ₁ β ⊧β∶φ →
+  let ⊧δβ∶φ' : ⊧P appP (δ 〈 ρ 〉 〈 ρ₁ 〉) β ∶ φ' 〈 ρ 〉 〈 ρ₁ 〉
+      ⊧δβ∶φ' = ⊧P⊃E (⊧Prep (⊧Prep ⊧δ∶φ⊃φ')) ⊧β∶φ in
+  {!!}))
+--TODO Lots of duplication!
