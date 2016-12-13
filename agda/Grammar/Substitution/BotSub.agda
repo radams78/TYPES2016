@@ -1,6 +1,6 @@
 open import Grammar.Base
   
-module Grammar.Substitution.Botsub (G : Grammar) where
+module Grammar.Substitution.BotSub (G : Grammar) where
 open import Prelims
 open Grammar G
 open import Grammar.OpFamily G
@@ -157,20 +157,4 @@ botSub₃-liftRep₃ {M2 = M2} {M1} {M0} {ρ} N = let open ≡-Reasoning in
                 N ⟦ x₂:= M2 ,x₁:= M1 ,x₀:= M0 ⟧ 〈 ρ 〉
               ∎
 --TODO General lemma for this
---TODO Deletable?
 
-extendSub : ∀ {U} {V} {K} → Sub U V → Expression V (varKind K) → Sub (U , K) V
-extendSub σ M _ x₀ = M
-extendSub σ M _ (↑ x) = σ _ x
-
-extendSub-decomp' : ∀ {U V K} {σ : Sub U V} {E : VExpression V K} →
-  extendSub σ E ∼ x₀:= E • liftSub _ σ
-extendSub-decomp' x₀ = refl
-extendSub-decomp' {σ = σ} (↑ x) = ≡-sym (botSub-upRep (σ _ x))
-
-postulate extendSub-decomp : ∀ {U} {V} {σ : Sub U V} {K} {M : Expression V (varKind K)} {C} {L} (E : Subexp (U , K) C L) →
-                           E ⟦ extendSub σ M ⟧ ≡ E ⟦ liftSub K σ ⟧ ⟦ x₀:= M ⟧
-
-•-botsub : ∀ {U V K} {σ : Sub U V} {N : VExpression U K} → σ • (x₀:= N) ∼ extendSub σ (N ⟦ σ ⟧)
-•-botsub x₀ = refl
-•-botsub (↑ _) = refl
