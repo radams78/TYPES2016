@@ -81,6 +81,12 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-rep (app*l P⇒P') = app*l (⇒-resp-rep P⇒P')
 ⇒-resp-rep (reffR M⇒N) = reffR (⇒-resp-rep M⇒N)
 
+⇒-resp-sub : ∀ {U V} {M N : Term U} {σ : Sub U V} → M ⇒ N → M ⟦ σ ⟧ ⇒ N ⟦ σ ⟧
+⇒-resp-sub {σ = σ} (βT {A = A} {M} {N}) = subst (λ x → appT (ΛT A (M ⟦ liftSub _ σ ⟧)) (N ⟦ σ ⟧) ⇒ x) (≡-sym (comp-botSub'' M)) βT
+⇒-resp-sub (appTl E⇒F) = appTl (⇒-resp-sub E⇒F)
+⇒-resp-sub (impl E⇒F) = impl (⇒-resp-sub E⇒F)
+⇒-resp-sub (impr E⇒F) = impr (⇒-resp-sub E⇒F)
+
 ⇒-resp-ps : ∀ {U V} {M N : Term U} {τ : PathSub U V} {ρ σ} → M ⇒ N → M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ⇒ N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧
 ⇒-resp-ps {V = V} {τ = τ} {ρ} {σ} (βT {U} {A} {M} {N}) = 
   let μ : Sub (extend V pathDom) V
@@ -118,4 +124,3 @@ APPl-⇒ [] (impl _) ()
 APPl-⇒ (_ snoc _) (impl _) ()
 APPl-⇒ [] (impr _) ()
 APPl-⇒ (_ snoc _) (impr _) ()
-

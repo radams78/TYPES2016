@@ -11,6 +11,9 @@ _≃_ {V} {K} = RSTClose (_⇒_ {V} {K})
 ≃-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ≃ F → E 〈 ρ 〉 ≃ F 〈 ρ 〉
 ≃-resp-rep {ρ = ρ} = respects-RST (λ V → _⇒_ {V}) (λ x → x 〈 ρ 〉) (λ _ _ → ⇒-resp-rep) _ _
 
+≃-resp-sub : ∀ {U V} {M N : Term U} {σ : Sub U V} → M ≃ N → M ⟦ σ ⟧ ≃ N ⟦ σ ⟧
+≃-resp-sub = respects-RST₂ (λ _ _ → ⇒-resp-sub) _ _
+
 ≃-impl : ∀ {V} {φ φ' ψ : Term V} → φ ≃ φ' → φ ⊃ ψ ≃ φ' ⊃ ψ
 ≃-impl {V} = respects-RST {A = ⊤} (λ _ → _⇒_ {V} { -vTerm}) _ (λ _ _ → impl) _ _
 
