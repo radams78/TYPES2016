@@ -9,48 +9,7 @@ open import PHOML.Rules
 open import PHOML.Canon
 open import PHOML.Compute
 open import PHOML.Lemma35
-
-⊧S_∶_ : ∀ {U V} → Sub U V → Context U → Set
-⊧S σ ∶ Γ = ∀ {K} x → ⊧ σ K x ∶ (typeof x Γ) ⟦ σ ⟧
-
-⊧S-cong : ∀ {U V} {σ σ' : Sub U V} {Γ : Context U} → ⊧S σ ∶ Γ → σ ∼ σ' → ⊧S σ' ∶ Γ
-⊧S-cong {Γ = Γ} ⊧σ∶Γ σ∼σ' x = subst₂ ⊧_∶_ (σ∼σ' x) (sub-congr (typeof x Γ) σ∼σ') (⊧σ∶Γ x)
-
-⊧_∶_≡_∶_ : ∀ {U V} → PathSub U V → Sub U V → Sub U V → Context U → Set
-⊧ τ ∶ ρ ≡ σ ∶ Γ = ∀ x → ⊧E τ x ∶ ρ -Term x ≡〈 yt (typeof x Γ) 〉 σ -Term x
-
-postulate ⊧RS : ∀ {U V W} {ρ : Rep V W} {σ : Sub U V} {Γ : Context U} → ⊧S σ ∶ Γ → ⊧S ρ •RS σ ∶ Γ
---⊧RS {U} {V} {W} {ρ = ρ} {σ = σ} {Γ} ⊧σ∶Γ x = subst (λ y → ⊧ σ _ x 〈 ρ 〉 ∶ y) (≡-sym (sub-•RS (typeof x Γ))) (⊧rep {E = σ _ x} (⊧σ∶Γ x))
-
-⊧extendSub : ∀ {U V K} {σ : Sub U V} {Γ} {E : VExpression V K} {T : Expression U (parent K)} → ⊧S σ ∶ Γ → ⊧ E ∶ T ⟦ σ ⟧ → ⊧S extendSub σ E ∶ Γ , T
-⊧extendSub {E = E} {T} ⊧σ∶Γ ⊧E∶T x₀ = subst (λ x → ⊧ E ∶ x) (sub-•SR T) ⊧E∶T
-⊧extendSub {σ = σ} {Γ} ⊧σ∶Γ ⊧E∶T (↑ x) = subst (λ y → ⊧ σ _ x ∶ y) (sub-•SR (typeof x Γ)) (⊧σ∶Γ x)
-
-⊧extendSub' : ∀ {U V K} {σ : Sub U V} {Γ} {E : VExpression V K} {T : Expression U (parent K)} → ⊧S σ ∶ Γ → ⊧ E ∶ T ⟦ σ ⟧ → ⊧S x₀:= E • liftSub K σ ∶ Γ , T
-⊧extendSub' {E = E} {T} ⊧σ∶Γ ⊧E∶T = ⊧S-cong (⊧extendSub ⊧σ∶Γ ⊧E∶T) extendSub-decomp'
-
-postulate ⊧extend : ∀ {U V} {Q : Path V} {N N'} {σ : Sub U V} {Γ A} → ⊧S σ ∶ Γ → ⊧E Q ∶ N ≡〈 A 〉 N' → ⊧ x₀::= Q ∶ x₀:= N ≡ x₀:= N' •PS liftSub -Term σ ∶ x₀:= N • liftSub -Term σ ≡ x₀:= N' • liftSub -Term σ ∶ Γ ,T A
-{-⊧extend ⊧σ∶Γ ⊧Q∶N≡N' x₀ = ⊧Q∶N≡N'
-⊧extend {V = V} {Q = Q} {N} {N'} {σ = σ} {Γ} {A = A} ⊧σ∶Γ ⊧Q∶N≡N' (↑ x) = subst₄ ⊧E_∶_≡〈_〉_ 
-  (let open ≡-Reasoning in 
-  begin
-    σ _ x ⟦⟦ refSub ∶ idSub V ≡ idSub V ⟧⟧
-  ≡⟨ pathSub-cong (σ _ x) (∼∼-sym (botPathSub-upRep {P = Q})) (sub-sym (botSub-upRep' N)) (sub-sym (botSub-upRep' N')) ⟩
-    σ _ x ⟦⟦ x₀::= Q •PR upRep ∶ x₀:= N •SR upRep ≡ x₀:= N' •SR upRep ⟧⟧
-  ≡⟨⟨ pathSub-•PR (σ _ x) ⟩⟩
-    σ _ x ⇑ ⟦⟦ x₀::= Q ∶ x₀:= N ≡ x₀:= N' ⟧⟧
-  ∎) 
-  (≡-sym (botSub-upRep (σ _ x))) 
-  (let open ≡-Reasoning in 
-  begin
-    yt (typeof x Γ ⟦ σ ⟧)
-  ≡⟨ yt-sub {A = typeof x Γ} ⟩
-    yt (typeof x Γ)
-  ≡⟨⟨ yt-rep {A = typeof x Γ} ⟩⟩
-    yt (typeof x Γ ⇑)
-  ∎)
-  (≡-sym (botSub-upRep (σ _ x))) 
-  (⊧σ∶Γ x) -}
+open import PHOML.ComputeSub
 
 soundness : ∀ {U V} {Γ : Context U} {K} {E : VExpression U K} {T} {σ : Sub U V} → 
   Γ ⊢ E ∶ T → ⊧S σ ∶ Γ → ⊧ E ⟦ σ ⟧ ∶ T ⟦ σ ⟧
@@ -268,6 +227,49 @@ soundness-path {V = V} {τ = τ} {ρ = ρ} {σ} (appR {M = M} {N} {A} {B} Γ⊢M
   (soundness-path Γ⊢M∶A⇛B ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ V (idRep V) (N ⟦ ρ ⟧) (N ⟦ σ ⟧) 
     (N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧) (soundness Γ⊢N∶A ⊧ρ∶Γ) (soundness Γ⊢N∶A ⊧σ∶Γ) 
     (soundness-path Γ⊢N∶A ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ))
-soundness-path (ΛR Γ⊢M∶A) ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ V₂ ρ₁ N N' Q x x₁ x₂ = {!!}
+soundness-path {U} {V} {τ = τ} {σ} {σ'} (ΛR {A = A} {M} {B} Γ,A⊢M∶B) ⊧σ∶Γ ⊧σ'∶Γ ⊧τ∶σ≡σ' W ρ N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' = 
+  let ⊧MQ∶MN≡MN' : ⊧E M ⟦⟦ extendPS (ρ •RP τ) Q ∶ extendSub (ρ •RS σ) N ≡ extendSub (ρ •RS σ') N' ⟧⟧ ∶ M ⟦ extendSub (ρ •RS σ) N ⟧ ≡〈 B 〉 M ⟦ extendSub (ρ •RS σ') N' ⟧
+      ⊧MQ∶MN≡MN' = soundness-path Γ,A⊢M∶B (⊧extendSub (⊧RS ⊧σ∶Γ) ⊧N∶A) (⊧extendSub (⊧RS ⊧σ'∶Γ) ⊧N'∶A) (⊧extendPS (⊧RP {ρ = ρ} {τ} {σ} {σ'} ⊧τ∶σ≡σ') ⊧Q∶N≡N') in
+  expansionE (conversionE ⊧MQ∶MN≡MN' 
+    (let open EqReasoning (RSTCLOSE _⇒_) in 
+    begin
+      M ⟦ extendSub (ρ •RS σ) N ⟧
+    ≡⟨ extendSub-decomp M ⟩
+      M ⟦ liftSub _ (ρ •RS σ) ⟧ ⟦ x₀:= N ⟧
+    ≡⟨ sub-congl (liftSub-•RS M) ⟩
+      M ⟦ liftSub _ σ ⟧ 〈 liftRep _ ρ 〉 ⟦ x₀:= N ⟧
+    ≈⟨⟨ inc βT ⟩⟩
+      appT (ΛT A M ⟦ σ ⟧ 〈 ρ 〉) N
+    ∎) 
+    (let open EqReasoning (RSTCLOSE _⇒_) in 
+    begin
+      M ⟦ extendSub (ρ •RS σ') N' ⟧
+    ≡⟨ extendSub-decomp M ⟩
+      M ⟦ liftSub _ (ρ •RS σ') ⟧ ⟦ x₀:= N' ⟧
+    ≡⟨ sub-congl (liftSub-•RS M) ⟩
+      M ⟦ liftSub _ σ' ⟧ 〈 liftRep _ ρ 〉 ⟦ x₀:= N' ⟧
+    ≈⟨⟨ inc βT ⟩⟩
+      appT (ΛT A M ⟦ σ' ⟧ 〈 ρ 〉) N'
+    ∎))
+    (subst
+       (λ x →
+          app* N N' (λλλ A (M ⟦⟦ liftPathSub τ ∶ sub↖ σ ≡ sub↗ σ' ⟧⟧) 〈 ρ 〉)
+          Q
+          ⇒ x)
+    (let open ≡-Reasoning in 
+    begin
+      M ⟦⟦ liftPathSub τ ∶ sub↖ σ ≡ sub↗ σ' ⟧⟧ 〈 liftsRep pathDom ρ 〉 ⟦ x₂:= N ,x₁:= N' ,x₀:= Q ⟧
+    ≡⟨⟨ sub-congl (pathSub-•RP M) ⟩⟩
+      M ⟦⟦ liftsRep pathDom ρ •RP liftPathSub τ ∶ liftsRep pathDom ρ •RS sub↖ σ ≡ liftsRep pathDom ρ •RS sub↗ σ' ⟧⟧ ⟦ x₂:= N ,x₁:= N' ,x₀:= Q ⟧
+    ≡⟨ sub-congl (pathSub-cong M (∼∼-sym liftPathSub-•RP) liftsRep-sub↖ liftsRep-sub↗) ⟩
+      M ⟦⟦ liftPathSub (ρ •RP τ) ∶ sub↖ (ρ •RS σ) ≡ sub↗ (ρ •RS σ') ⟧⟧ ⟦ x₂:= N ,x₁:= N' ,x₀:= Q ⟧
+    ≡⟨⟨ pathSub-•SP M ⟩⟩
+      M ⟦⟦ (x₂:= N ,x₁:= N' ,x₀:= Q) •SP liftPathSub (ρ •RP τ) ∶ 
+           (x₂:= N ,x₁:= N' ,x₀:= Q) • sub↖ (ρ •RS σ) ≡ 
+           (x₂:= N ,x₁:= N' ,x₀:= Q) • sub↗ (ρ •RS σ') ⟧⟧
+    ≡⟨ pathSub-cong M botSub₃-liftPathSub botSub₃-sub↖ botSub₃-sub↗ ⟩
+      M ⟦⟦ extendPS (ρ •RP τ) Q ∶ extendSub (ρ •RS σ) N ≡ extendSub (ρ •RS σ') N' ⟧⟧
+    ∎) 
+    βE)
 soundness-path (⊥R validΓ) ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ = ⊧canon' bot ref
 soundness-path (⊃R Γ⊢φ∶Ω Γ⊢ψ∶Ω) ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ = ⊧⊃* (soundness-path Γ⊢φ∶Ω ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ) (soundness-path Γ⊢ψ∶Ω ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ)

@@ -86,8 +86,8 @@ _,E_ = _,_
 yt : ∀ {V} → Expression V (nonVarKind -Type) → Type
 yt (app (-ty A) []) = A
 
-yt-rep : ∀ {U V} {A : Expression U -nvType} {ρ : Rep U V} → yt (A 〈 ρ 〉) ≡ yt A
-yt-rep {A = app (-ty _) []} = refl
+yt-rep : ∀ {U V} (A : Expression U -nvType) {ρ : Rep U V} → yt (A 〈 ρ 〉) ≡ yt A
+yt-rep (app (-ty _) []) = refl
 
 yt-sub : ∀ {U V} {A : Expression U -nvType} {σ : Sub U V} → yt (A ⟦ σ ⟧) ≡ yt A
 yt-sub {A = app (-ty _) []} = refl

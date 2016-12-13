@@ -100,3 +100,23 @@ liftsRep-sub↖id (↑ _) = refl
 liftsRep-sub↗id : ∀ {U V} {ρ : Rep U V} → liftsRep pathDom ρ •RS sub↗ (idSub U) ∼ sub↗ (idSub V) •SR liftRep -Term ρ
 liftsRep-sub↗id x₀ = refl
 liftsRep-sub↗id (↑ _) = refl
+
+liftsRep-sub↖ : ∀ {U V W} {ρ : Rep V W} {σ : Sub U V} →
+  liftsRep pathDom ρ •RS sub↖ σ ∼ sub↖ (ρ •RS σ)
+liftsRep-sub↖ x₀ = refl
+liftsRep-sub↖ {σ = σ} (↑ x) = liftRep-upRep₃ (σ _ x)
+
+liftsRep-sub↗ : ∀ {U V W} {ρ : Rep V W} {σ : Sub U V} →
+  liftsRep pathDom ρ •RS sub↗ σ ∼ sub↗ (ρ •RS σ)
+liftsRep-sub↗ x₀ = refl
+liftsRep-sub↗ {σ = σ} (↑ x) = liftRep-upRep₃ (σ _ x)
+
+botSub₃-sub↖ : ∀ {U V} {M N : Term V} {P} {σ : Sub U V} →
+  (x₂:= M ,x₁:= N ,x₀:= P) • sub↖ σ ∼ extendSub σ M
+botSub₃-sub↖ x₀ = refl
+botSub₃-sub↖ (↑ x) = botSub-upRep₃
+
+botSub₃-sub↗ : ∀ {U V} {M N : Term V} {P} {σ : Sub U V} →
+  (x₂:= M ,x₁:= N ,x₀:= P) • sub↗ σ ∼ extendSub σ N
+botSub₃-sub↗ x₀ = refl
+botSub₃-sub↗ (↑ x) = botSub-upRep₃
