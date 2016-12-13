@@ -182,15 +182,88 @@ open import PHOML.Compute
       ⊧ε'∶ψ'⊃ψ = ↠P ⊧Q-∶ψ'⊃ψ (trans (↠-dir Q↠univ) (inc univminus)) in
   (⊧P⊃I (⊧imp ⊧φ ⊧ψ) (⊧imp ⊧φ' ⊧ψ') (λ W ρ α ⊧α∶φ⊃ψ → 
   ⊧P⊃I (⊧TΩrep ⊧φ') (⊧TΩrep ⊧ψ') (λ W₁ ρ₁ β ⊧β∶φ' → 
-  let ⊧εβ∶φ : ⊧P appP (ε 〈 ρ 〉 〈 ρ₁ 〉) β ∶ φ 〈 ρ 〉 〈 ρ₁ 〉
+  let M* = M 〈 ρ 〉 〈 ρ₁ 〉 in
+  let M'* = M' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let δ* = δ 〈 ρ 〉 〈 ρ₁ 〉 in
+  let ε* = ε 〈 ρ 〉 〈 ρ₁ 〉 in
+  let N* = N 〈 ρ 〉 〈 ρ₁ 〉 in
+  let N'* = N' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let δ'* = δ' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let ε'* = ε' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let φ* = φ 〈 ρ 〉 〈 ρ₁ 〉 in
+  let φ'* = φ' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let ψ* = ψ 〈 ρ 〉 〈 ρ₁ 〉 in
+  let ψ'* = ψ' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let P* = P 〈 ρ 〉 〈 ρ₁ 〉 in
+  let Q* = Q 〈 ρ 〉 〈 ρ₁ 〉 in
+  let α* = α 〈 ρ₁ 〉 in
+  let ⊧εβ∶φ : ⊧P appP ε* β ∶ φ*
       ⊧εβ∶φ = ⊧P⊃E (⊧Prep (⊧Prep ⊧ε∶φ'⊃φ)) ⊧β∶φ' in
-  let ⊧αεβ∶ψ : ⊧P appP (α 〈 ρ₁ 〉) (appP (ε 〈 ρ 〉 〈 ρ₁ 〉) β) ∶ ψ 〈 ρ 〉 〈 ρ₁ 〉
+  let ⊧αεβ∶ψ : ⊧P appP α* (appP ε* β) ∶ ψ*
       ⊧αεβ∶ψ = ⊧P⊃E (⊧Prep ⊧α∶φ⊃ψ) ⊧εβ∶φ in
-  let ⊧δαεβ∶ψ' : ⊧P appP (δ 〈 ρ 〉 〈 ρ₁ 〉) (
-    {!!}))) ,p 
+  let ⊧δ'αεβ∶ψ' : ⊧P appP δ'* (appP α* (appP ε* β)) ∶ ψ'*
+      ⊧δ'αεβ∶ψ' = ⊧P⊃E (⊧Prep (⊧Prep ⊧δ'∶ψ⊃ψ')) ⊧αεβ∶ψ in 
+  ↞P ⊧δ'αεβ∶ψ' (let open PreorderReasoning (RTCLOSE _⇒_) in 
+    begin
+      appP (appP (plus (P* ⊃* Q*)) α*) β
+    ∼⟨ ↠-appP (↠-appP (↠-dir (↠-imp* (↠-resp-rep (↠-resp-rep P↠univ)) (↠-resp-rep (↠-resp-rep Q↠univ))))) ⟩
+      appP (appP (plus (univ M* M'* δ* ε* ⊃* univ N* N'* δ'* ε'*)) α*) β
+    ∼⟨ inc (appPl (appPl (dirR univ⊃*univ))) ⟩
+      appP (appP (plus (univ (M* ⊃ N*) (M'* ⊃ N'*) (ΛP (M* ⊃ N*) (ΛP (M'* ⇑) (appP (δ'* ⇑ ⇑) (appP (var x₁) (appP (ε* ⇑ ⇑) (var x₀)))))) (ΛP (M'* ⊃ N'*) (ΛP (M* ⇑) (appP (ε'* ⇑ ⇑) (appP (var x₁) (appP (δ* ⇑ ⇑) (var x₀)))))))) α*) β
+    ∼⟨ inc (appPl (appPl univplus)) ⟩
+      appP (appP (ΛP (M* ⊃ N*) (ΛP (M'* ⇑) (appP (δ'* ⇑ ⇑) (appP (var x₁) (appP (ε* ⇑ ⇑) (var x₀)))))) α*) β
+    ∼⟨ inc (appPl βP) ⟩
+      appP (ΛP (M'* ⇑ ⟦ x₀:= α* ⟧) (appP (δ'* ⇑ ⇑ ⟦ liftSub _ (x₀:= α*) ⟧) (appP (α* ⇑) (appP (ε* ⇑ ⇑ ⟦ liftSub _ (x₀:= α*) ⟧) (var x₀))))) β
+    ≈⟨ cong₂ appP (cong₂ ΛP (botSub-upRep M'*) (cong₂ appP (liftSub-upRep (δ'* ⇑)) (cong₂ appP refl (cong₂ appP (liftSub-upRep (ε* ⇑)) refl)))) refl ⟩
+      appP (ΛP M'* (appP (δ'* ⇑ ⟦ x₀:= α* ⟧ ⇑) (appP (α* ⇑) (appP (ε* ⇑ ⟦ x₀:= α* ⟧ ⇑) (var x₀))))) β
+    ≈⟨ cong₂ appP (cong (ΛP M'*) (cong₂ appP (rep-congl (botSub-upRep δ'*)) (cong₂ appP refl (cong₂ appP (rep-congl (botSub-upRep ε*)) refl)))) refl ⟩
+      appP (ΛP M'* (appP (δ'* ⇑) (appP (α* ⇑) (appP (ε* ⇑) (var x₀))))) β
+    ∼⟨ inc βP ⟩
+      appP (δ'* ⇑ ⟦ x₀:= β ⟧) (appP (α* ⇑ ⟦ x₀:= β ⟧) (appP (ε* ⇑ ⟦ x₀:= β ⟧) β))
+    ≈⟨ cong₂ appP (botSub-upRep δ'*) (cong₂ appP (botSub-upRep α*) (cong₂ appP (botSub-upRep ε*) refl)) ⟩
+      appP δ'* (appP α* (appP ε* β))
+    ∎)))),p   
   ⊧P⊃I (⊧imp ⊧φ' ⊧ψ') (⊧imp ⊧φ ⊧ψ) (λ W ρ α ⊧α∶φ'⊃ψ' → 
   ⊧P⊃I (⊧TΩrep ⊧φ) (⊧TΩrep ⊧ψ) (λ W₁ ρ₁ β ⊧β∶φ →
-  let ⊧δβ∶φ' : ⊧P appP (δ 〈 ρ 〉 〈 ρ₁ 〉) β ∶ φ' 〈 ρ 〉 〈 ρ₁ 〉
+  let M* = M 〈 ρ 〉 〈 ρ₁ 〉 in
+  let M'* = M' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let δ* = δ 〈 ρ 〉 〈 ρ₁ 〉 in
+  let ε* = ε 〈 ρ 〉 〈 ρ₁ 〉 in
+  let N* = N 〈 ρ 〉 〈 ρ₁ 〉 in
+  let N'* = N' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let δ'* = δ' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let ε'* = ε' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let φ* = φ 〈 ρ 〉 〈 ρ₁ 〉 in
+  let φ'* = φ' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let ψ* = ψ 〈 ρ 〉 〈 ρ₁ 〉 in
+  let ψ'* = ψ' 〈 ρ 〉 〈 ρ₁ 〉 in
+  let P* = P 〈 ρ 〉 〈 ρ₁ 〉 in
+  let Q* = Q 〈 ρ 〉 〈 ρ₁ 〉 in
+  let α* = α 〈 ρ₁ 〉 in
+  let ⊧δβ∶φ' : ⊧P appP δ* β ∶ φ'*
       ⊧δβ∶φ' = ⊧P⊃E (⊧Prep (⊧Prep ⊧δ∶φ⊃φ')) ⊧β∶φ in
-  {!!}))
+  let ⊧αδβ∶ψ' : ⊧P appP α* (appP δ* β) ∶ ψ'*
+      ⊧αδβ∶ψ' = ⊧P⊃E (⊧Prep ⊧α∶φ'⊃ψ') ⊧δβ∶φ' in
+  let ⊧ε'αδβ∶ψ : ⊧P appP ε'* (appP α* (appP δ* β)) ∶ ψ*
+      ⊧ε'αδβ∶ψ = ⊧P⊃E (⊧Prep (⊧Prep ⊧ε'∶ψ'⊃ψ)) ⊧αδβ∶ψ' in 
+  ↞P ⊧ε'αδβ∶ψ (let open PreorderReasoning (RTCLOSE _⇒_) in 
+  begin
+    appP (appP (minus (P* ⊃* Q*)) α*) β
+  ∼⟨ ↠-appP (↠-appP (↠-dir (↠-imp* (↠-resp-rep (↠-resp-rep P↠univ)) (↠-resp-rep (↠-resp-rep Q↠univ))))) ⟩
+    appP (appP (minus (univ M* M'* δ* ε* ⊃* univ N* N'* δ'* ε'*)) α*) β
+  ∼⟨ inc (appPl (appPl (dirR univ⊃*univ))) ⟩
+    appP (appP (minus (univ (M* ⊃ N*) (M'* ⊃ N'*) (ΛP (M* ⊃ N*) (ΛP (M'* ⇑) (appP (δ'* ⇑ ⇑) (appP (var x₁) (appP (ε* ⇑ ⇑) (var x₀)))))) (ΛP (M'* ⊃ N'*) (ΛP (M* ⇑) (appP (ε'* ⇑ ⇑) (appP (var x₁) (appP (δ* ⇑ ⇑) (var x₀)))))))) α*) β
+  ∼⟨ inc (appPl (appPl univminus)) ⟩
+    appP (appP (ΛP (M'* ⊃ N'*) (ΛP (M* ⇑) (appP (ε'* ⇑ ⇑) (appP (var x₁) (appP (δ* ⇑ ⇑) (var x₀)))))) α*) β
+  ∼⟨ inc (appPl βP) ⟩
+    appP (ΛP (M* ⇑ ⟦ x₀:= α* ⟧) (appP (ε'* ⇑ ⇑ ⟦ liftSub _ (x₀:= α*) ⟧) (appP (α* ⇑) (appP (δ* ⇑ ⇑ ⟦ liftSub _ (x₀:= α*) ⟧) (var x₀))))) β
+  ≈⟨ cong₂ appP (cong₂ ΛP (botSub-upRep M*) (cong₂ appP (liftSub-upRep (ε'* ⇑)) (cong₂ appP refl (cong₂ appP (liftSub-upRep (δ* ⇑)) refl)))) refl ⟩
+    appP (ΛP M* (appP (ε'* ⇑ ⟦ x₀:= α* ⟧ ⇑) (appP (α* ⇑) (appP (δ* ⇑ ⟦ x₀:= α* ⟧ ⇑) (var x₀))))) β
+  ≈⟨ cong₂ appP (cong (ΛP M*) (cong₂ appP (rep-congl (botSub-upRep ε'*)) (cong₂ appP refl (cong₂ appP (rep-congl (botSub-upRep δ*)) refl)))) refl ⟩
+    appP (ΛP M* (appP (ε'* ⇑) (appP (α* ⇑) (appP (δ* ⇑) (var x₀))))) β
+  ∼⟨ inc βP ⟩
+    appP (ε'* ⇑ ⟦ x₀:= β ⟧) (appP (α* ⇑ ⟦ x₀:= β ⟧) (appP (δ* ⇑ ⟦ x₀:= β ⟧) β))
+  ≈⟨ cong₂ appP (botSub-upRep ε'*) (cong₂ appP (botSub-upRep α*) (cong₂ appP (botSub-upRep δ*) refl)) ⟩
+    appP ε'* (appP α* (appP δ* β))
+  ∎)))
 --TODO Lots of duplication!
