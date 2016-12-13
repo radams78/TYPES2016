@@ -50,26 +50,6 @@ soundness : ∀ {U V} {Γ : Context U} {K} {E : VExpression U K} {T} {σ : Sub U
 soundness-path : ∀ {U V} {Γ : Context U} {M A} {τ : PathSub U V} {ρ σ} →
   Γ ⊢ M ∶ ty A → ⊧ τ ∶ ρ ≡ σ ∶ Γ → ⊧E M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ∶ M ⟦ ρ ⟧ ≡〈 A 〉 M ⟦ σ ⟧
 
-botSub-liftSub₃' : ∀ {U V L₂ L₁ L₀} {F₂ : VExpression U L₂} {F₁ : VExpression U L₁} {F₀ : VExpression U L₀} {σ : Sub U V} →
-  (x₂:= F₂ ⟦ σ ⟧ ,x₁:= F₁ ⟦ σ ⟧ ,x₀:= F₀ ⟦ σ ⟧) • liftSub L₀ (liftSub L₁ (liftSub L₂ σ)) ∼ σ • (x₂:= F₂ ,x₁:= F₁ ,x₀:= F₀)
-botSub-liftSub₃' x₀ = refl
-botSub-liftSub₃' (↑ x₀) = refl
-botSub-liftSub₃' (↑ (↑ x₀)) = refl
-botSub-liftSub₃' (↑ (↑ (↑ x))) = botSub-upRep₃
-
-botSub-liftSub₃ : ∀ {U V C K L₂ L₁ L₀} {E : Subexp (U , L₂ , L₁ , L₀) C K} {F₂ : VExpression U L₂} {F₁ : VExpression U L₁} {F₀ : VExpression U L₀} {σ : Sub U V} →
-  E ⟦ liftSub L₀ (liftSub L₁ (liftSub L₂ σ)) ⟧ ⟦ x₂:= F₂ ⟦ σ ⟧ ,x₁:= F₁ ⟦ σ ⟧ ,x₀:= F₀ ⟦ σ ⟧ ⟧ ≡ E ⟦ x₂:= F₂ ,x₁:= F₁ ,x₀:= F₀ ⟧ ⟦ σ ⟧
-botSub-liftSub₃ {L₂ = L₂} {L₁} {L₀} {E} {F₂} {F₁} {F₀} {σ} = let open ≡-Reasoning in 
-  begin
-    E ⟦ liftSub L₀ (liftSub L₁ (liftSub L₂ σ)) ⟧ ⟦ x₂:= F₂ ⟦ σ ⟧ ,x₁:= F₁ ⟦ σ ⟧ ,x₀:= F₀ ⟦ σ ⟧ ⟧
-  ≡⟨⟨ sub-• E ⟩⟩
-    E ⟦ (x₂:= F₂ ⟦ σ ⟧ ,x₁:= F₁ ⟦ σ ⟧ ,x₀:= F₀ ⟦ σ ⟧) • liftSub L₀ (liftSub L₁ (liftSub L₂ σ)) ⟧
-  ≡⟨ sub-congr E botSub-liftSub₃' ⟩
-    E ⟦ σ • (x₂:= F₂ ,x₁:= F₁ ,x₀:= F₀) ⟧
-  ≡⟨ sub-• E ⟩
-    E ⟦ x₂:= F₂ ,x₁:= F₁ ,x₀:= F₀ ⟧ ⟦ σ ⟧
-  ∎
-
 ⇒-resp-sub : ∀ {U V} {M N : Term U} {σ : Sub U V} → M ⇒ N → M ⟦ σ ⟧ ⇒ N ⟦ σ ⟧
 ⇒-resp-sub {σ = σ} (βT {A = A} {M} {N}) = subst (λ x → appT (ΛT A (M ⟦ liftSub _ σ ⟧)) (N ⟦ σ ⟧) ⇒ x) (≡-sym (comp-botSub'' M)) βT
 ⇒-resp-sub (appTl E⇒F) = appTl (⇒-resp-sub E⇒F)
@@ -205,8 +185,12 @@ soundness {U} {σ = σ} (lllR {B = B} {M = F} {G} {P} ΓAAE⊢P∶Fx≡Gy) ⊧S�
           P ⟦ σ' ⟧
         ≡⟨ extendSub-decomp P ⟩
           P ⟦ liftSub _ (extendSub (extendSub (ρ •RS σ) N) N') ⟧ ⟦ x₀:= Q ⟧
-        ≡⟨ sub-congl (sub-congr P (liftSub-cong {!extendSub-decomp'!})) ⟩
+        ≡⟨ sub-congl (sub-congr P (liftSub-cong extendSub-decomp')) ⟩
           P ⟦ liftSub _ (x₀:= N' • liftSub _ (extendSub (ρ •RS σ) N)) ⟧ ⟦ x₀:= Q ⟧
+        ≡⟨ sub-congl (sub-congr P liftSub-•) ⟩
+          P ⟦ liftSub _ (x₀:= N') • liftSub _ (liftSub _ (extendSub (ρ •RS σ) N)) ⟧ ⟦ x₀:= Q ⟧
+        ≡⟨ {!!} ⟩
+          P ⟦ liftSub _ (liftSub _ (extendSub (ρ •RS σ) N)) ⟧ ⟦ liftSub _ (x₀:= N) ⟧ ⟦ x₀:= Q ⟧
         ≡⟨ {!!} ⟩
           P ⟦ liftsSub pathDom σ ⟧ 〈 liftsRep pathDom ρ 〉 ⟦ x₂:= N ,x₁:= N' ,x₀:= Q ⟧
         ∎) 

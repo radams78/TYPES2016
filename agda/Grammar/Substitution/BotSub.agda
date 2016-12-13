@@ -158,3 +158,23 @@ botSub₃-liftRep₃ {M2 = M2} {M1} {M0} {ρ} N = let open ≡-Reasoning in
               ∎
 --TODO General lemma for this
 
+botSub-liftSub₃' : ∀ {U V L₂ L₁ L₀} {F₂ : VExpression U L₂} {F₁ : VExpression U L₁} {F₀ : VExpression U L₀} {σ : Sub U V} →
+  (x₂:= F₂ ⟦ σ ⟧ ,x₁:= F₁ ⟦ σ ⟧ ,x₀:= F₀ ⟦ σ ⟧) • liftSub L₀ (liftSub L₁ (liftSub L₂ σ)) ∼ σ • (x₂:= F₂ ,x₁:= F₁ ,x₀:= F₀)
+botSub-liftSub₃' x₀ = refl
+botSub-liftSub₃' (↑ x₀) = refl
+botSub-liftSub₃' (↑ (↑ x₀)) = refl
+botSub-liftSub₃' (↑ (↑ (↑ x))) = botSub-upRep₃
+
+botSub-liftSub₃ : ∀ {U V C K L₂ L₁ L₀} {E : Subexp (U , L₂ , L₁ , L₀) C K} {F₂ : VExpression U L₂} {F₁ : VExpression U L₁} {F₀ : VExpression U L₀} {σ : Sub U V} →
+  E ⟦ liftSub L₀ (liftSub L₁ (liftSub L₂ σ)) ⟧ ⟦ x₂:= F₂ ⟦ σ ⟧ ,x₁:= F₁ ⟦ σ ⟧ ,x₀:= F₀ ⟦ σ ⟧ ⟧ ≡ E ⟦ x₂:= F₂ ,x₁:= F₁ ,x₀:= F₀ ⟧ ⟦ σ ⟧
+botSub-liftSub₃ {L₂ = L₂} {L₁} {L₀} {E} {F₂} {F₁} {F₀} {σ} = let open ≡-Reasoning in 
+  begin
+    E ⟦ liftSub L₀ (liftSub L₁ (liftSub L₂ σ)) ⟧ ⟦ x₂:= F₂ ⟦ σ ⟧ ,x₁:= F₁ ⟦ σ ⟧ ,x₀:= F₀ ⟦ σ ⟧ ⟧
+  ≡⟨⟨ sub-• E ⟩⟩
+    E ⟦ (x₂:= F₂ ⟦ σ ⟧ ,x₁:= F₁ ⟦ σ ⟧ ,x₀:= F₀ ⟦ σ ⟧) • liftSub L₀ (liftSub L₁ (liftSub L₂ σ)) ⟧
+  ≡⟨ sub-congr E botSub-liftSub₃' ⟩
+    E ⟦ σ • (x₂:= F₂ ,x₁:= F₁ ,x₀:= F₀) ⟧
+  ≡⟨ sub-• E ⟩
+    E ⟦ x₂:= F₂ ,x₁:= F₁ ,x₀:= F₀ ⟧ ⟦ σ ⟧
+  ∎
+
