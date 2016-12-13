@@ -1,28 +1,19 @@
-module PHOPL.Meta where
+module PHOML.Meta where
 open import Data.Empty renaming (⊥ to Empty)
 open import Data.Fin
 open import Data.Product renaming (_,_ to _,p_)
 open import Prelims
 open import Prelims.Closure
-open import PHOPL.Grammar
-open import PHOPL.Red
-open import PHOPL.Rules
-open import PHOPL.PathSub
-open import PHOPL.Meta.ConVal
+open import PHOML.Grammar
+open import PHOML.Red
+open import PHOML.Rules
+open import PHOML.PathSub
+open import PHOML.Meta.ConVal public
 
 ⊃-gen₂ : ∀ {V} {Γ : Context V} {φ} {ψ} {A} → Γ ⊢ φ ⊃ ψ ∶ A → Γ ⊢ ψ ∶ ty Ω
 ⊃-gen₂ (⊃R _ Γ⊢ψ∶Ω) = Γ⊢ψ∶Ω
 
-eq-validity₁ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P ∶ E → E ≡ M ≡〈 A 〉 N → Γ ⊢ M ∶ ty A
-eq-validity₁ (varR {Γ = Γ} _ validΓ) E≡M≡N = subst (λ E → Γ ⊢ left E ∶ ty (type E)) E≡M≡N (context-validity-Eq₁ validΓ)
-eq-validity₁ {Γ = Γ} (refR Γ⊢P∶M≡N) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ y) {!eq-inj₁!} {!!} {!!}
-eq-validity₁ (⊃*R Γ⊢P∶M≡N Γ⊢P∶M≡N₁) E≡M≡N = {!!}
-eq-validity₁ (univR Γ⊢P∶M≡N Γ⊢P∶M≡N₁) E≡M≡N = {!!}
-eq-validity₁ (lllR Γ⊢P∶M≡N) E≡M≡N = {!!}
-eq-validity₁ (app*R Γ⊢P∶M≡N Γ⊢P∶M≡N₁ Γ⊢P∶M≡N₂ Γ⊢P∶M≡N₃) E≡M≡N = {!!}
-eq-validity₁ (convER Γ⊢P∶M≡N Γ⊢P∶M≡N₁ Γ⊢P∶M≡N₂ M≃M' N≃N') E≡M≡N = {!!}
-
-postulate Prop-Validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → 
+postulate prop-validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → 
                         Γ ⊢ δ ∶ φ → Γ ⊢ φ ∶ ty Ω
 {- Prop-Validity (varR _ validΓ) = context-validity-Prop validΓ
 Prop-Validity (appPR Γ⊢δ∶φ⊃ψ _) = ⊃-gen₂ (Prop-Validity Γ⊢δ∶φ⊃ψ)
@@ -30,6 +21,15 @@ Prop-Validity (ΛPR Γ⊢φ∶Ω Γ⊢ψ∶Ω _) = ⊃R Γ⊢φ∶Ω Γ⊢ψ∶�
 Prop-Validity (convR _ Γ⊢φ∶Ω _) = Γ⊢φ∶Ω
 Prop-Validity (plusR Γ⊢δ∶φ) = {!!}
 Prop-Validity (minusR Γ⊢δ∶φ) = {!!} -}
+
+eq-validity₁ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P ∶ E → E ≡ M ≡〈 A 〉 N → Γ ⊢ M ∶ ty A
+eq-validity₁ (varR {Γ = Γ} _ validΓ) E≡M≡N = subst (λ E → Γ ⊢ left E ∶ ty (type E)) E≡M≡N (context-validity-Eq₁ validΓ)
+eq-validity₁ {Γ = Γ} (refR Γ⊢P∶M≡N) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢P∶M≡N
+eq-validity₁ {Γ = Γ} (⊃*R Γ⊢P∶φ≡φ' Γ⊢Q∶ψ≡ψ') E≡φ⊃ψ≡φ'⊃ψ' = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡φ⊃ψ≡φ'⊃ψ') (eq-inj₂ E≡φ⊃ψ≡φ'⊃ψ') (⊃R (eq-validity₁ Γ⊢P∶φ≡φ' refl) (eq-validity₁ Γ⊢Q∶ψ≡ψ' refl))
+eq-validity₁ {Γ = Γ} (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) E≡φ≡ψ = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡φ≡ψ) (eq-inj₂ E≡φ≡ψ) (⊃-gen₂ (prop-validity Γ⊢ε∶ψ⊃φ))
+eq-validity₁ {Γ = Γ} (lllR Γ⊢M∶A _ _) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M∶A
+eq-validity₁ {Γ = Γ} (app*R Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) (appR (eq-validity₁ Γ⊢P∶M≡M' refl) Γ⊢N∶A)
+eq-validity₁ {Γ = Γ} (convER Γ⊢P∶M≡N Γ⊢M'∶A Γ⊢N'∶A M≃M' N≃N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M'∶A
 
 postulate change-codR : ∀ {U} {V} {ρ : Rep U V} {Γ : Context U} {Δ Δ' : Context V} →
                       ρ ∶ Γ ⇒R Δ → Δ ≡ Δ' → ρ ∶ Γ ⇒R Δ'

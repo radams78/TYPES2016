@@ -1,8 +1,8 @@
-module PHOPL.Meta.ConVal where
+module PHOML.Meta.ConVal where
 open import Prelims
-open import PHOPL.Grammar
-open import PHOPL.Red
-open import PHOPL.Rules
+open import PHOML.Grammar
+open import PHOML.Red
+open import PHOML.Rules
 
 valid-addpath : ∀ {V} {Γ : Context V} {A} → valid Γ → valid (addpath Γ A)
 valid-addpath validΓ = ctxER (varR x₁ (ctxTR (ctxTR validΓ))) (varR x₀ (ctxTR (ctxTR validΓ)))
@@ -26,7 +26,7 @@ context-validity (⊃*R Γ⊢φ∶Ω _) = context-validity Γ⊢φ∶Ω
 context-validity (univR Γ⊢δ∶φ⊃ψ _) = context-validity Γ⊢δ∶φ⊃ψ
 context-validity (plusR Γ⊢P∶φ≡ψ) = context-validity Γ⊢P∶φ≡ψ
 context-validity (minusR Γ⊢P∶φ≡ψ) = context-validity Γ⊢P∶φ≡ψ
-context-validity (lllR addpathΓ⊢P∶M≡N) = context-validity' (context-validity addpathΓ⊢P∶M≡N)
+context-validity (lllR Γ⊢M∶A _ _) = context-validity Γ⊢M∶A
 context-validity (app*R Γ⊢N∶A _ _ _) = context-validity Γ⊢N∶A
 context-validity (convER Γ⊢P∶M≡N _ _ _ _) = context-validity Γ⊢P∶M≡N
 
@@ -51,7 +51,9 @@ weakening (⊃*R Γ⊢P∶φ≡φ' Γ⊢Q∶ψ≡ψ') validΔ ρ∶Γ⇒RΔ = �
 weakening (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) validΔ ρ∶Γ⇒RΔ = univR (weakening Γ⊢δ∶φ⊃ψ validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢ε∶ψ⊃φ validΔ ρ∶Γ⇒RΔ)
 weakening (plusR Γ⊢P∶φ≡ψ) validΔ ρ∶Γ⇒RΔ = plusR (weakening Γ⊢P∶φ≡ψ validΔ ρ∶Γ⇒RΔ)
 weakening (minusR Γ⊢P∶φ≡ψ) validΔ ρ∶Γ⇒RΔ = minusR (weakening Γ⊢P∶φ≡ψ validΔ ρ∶Γ⇒RΔ)
-weakening (lllR {B = B} {M = M} {N} ΓAAE⊢P∶Mx≡Ny) validΔ ρ∶Γ⇒RΔ = lllR (change-type (weakening ΓAAE⊢P∶Mx≡Ny (valid-addpath validΔ) (liftRep-typed (liftRep-typed (liftRep-typed ρ∶Γ⇒RΔ)))) 
+weakening (lllR {B = B} {M = M} {N} Γ⊢M∶A Γ⊢N∶A ΓAAE⊢P∶Mx≡Ny) validΔ ρ∶Γ⇒RΔ = lllR 
+  (weakening Γ⊢M∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N∶A validΔ ρ∶Γ⇒RΔ) 
+  (change-type (weakening ΓAAE⊢P∶Mx≡Ny (valid-addpath validΔ) (liftRep-typed (liftRep-typed (liftRep-typed ρ∶Γ⇒RΔ)))) 
   (cong₂ (λ x y → appT x (var x₂) ≡〈 B 〉 appT y (var x₁)) (liftRep-upRep₃ M) (liftRep-upRep₃ N)))
 weakening (app*R Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') validΔ ρ∶Γ⇒RΔ = app*R (weakening Γ⊢N∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢N'∶A validΔ ρ∶Γ⇒RΔ) (weakening Γ⊢P∶M≡M' validΔ ρ∶Γ⇒RΔ) 
   (weakening Γ⊢Q∶N≡N' validΔ ρ∶Γ⇒RΔ)

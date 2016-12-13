@@ -119,6 +119,9 @@ app*-injl refl = refl
 eq-inj₁ : ∀ {V A A'} {M M' N N' : Term V} → M ≡〈 A 〉 N ≡ M' ≡〈 A' 〉 N' → M ≡ M'
 eq-inj₁ refl = refl
 
+eq-inj₂ : ∀ {V} {M N M' N' : Term V} {A A'} → M ≡〈 A 〉 N ≡ M' ≡〈 A' 〉 N' → A ≡ A'
+eq-inj₂ refl = refl
+
 dir-inj : ∀ {V} {P Q : Path V} {d d'} → dir d P ≡ dir d' Q → P ≡ Q
 dir-inj refl = refl
 

@@ -131,7 +131,7 @@ soundness (⊃*R Γ⊢P∶φ≡φ' Γ⊢Q∶ψ≡ψ') ⊧Sσ∶Γ = ⊧⊃* (sou
 soundness (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) ⊧Sσ∶Γ = ⊧univ (soundness Γ⊢δ∶φ⊃ψ ⊧Sσ∶Γ) (soundness Γ⊢ε∶ψ⊃φ ⊧Sσ∶Γ)
 soundness (plusR Γ⊢P∶φ≡ψ) ⊧Sσ∶Γ = proj₁ (soundness Γ⊢P∶φ≡ψ ⊧Sσ∶Γ)
 soundness (minusR Γ⊢P∶φ≡ψ) ⊧Sσ∶Γ = proj₂ (soundness Γ⊢P∶φ≡ψ ⊧Sσ∶Γ)
-soundness {U} {σ = σ} (lllR {B = B} {M = F} {G} {P} ΓAAE⊢P∶Fx≡Gy) ⊧Sσ∶Γ W ρ N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' = 
+soundness {U} {σ = σ} (lllR {B = B} {M = F} {G} {P} _ _ ΓAAE⊢P∶Fx≡Gy) ⊧Sσ∶Γ W ρ N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' = 
   let σ' : Sub (extend U pathDom) W
       σ' = extendSub (extendSub (extendSub (ρ •RS σ) N) N') Q in
   let PQ∶FN≡GN' : ⊧E P ⟦ σ' ⟧ ∶ appT (F ⇑ ⇑ ⇑ ⟦ σ' ⟧) N ≡〈 B 〉 appT (G ⇑ ⇑ ⇑ ⟦ σ' ⟧) N'
