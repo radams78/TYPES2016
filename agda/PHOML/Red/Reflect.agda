@@ -123,6 +123,9 @@ open import PHOML.Red.RTRed
 ⇒-reflect-rep {E = app -imp* (app -imp* (P₁ ∷ P₂ ∷ []) ∷ Q ∷ [])} {ρ} (imp*r Qρ⇒Q'ρ) =
   let Q' ,p Q⇒Q' ,p Q'ρ≡Q'ρ = ⇒-reflect-rep Qρ⇒Q'ρ in
   (P₁ ⊃* P₂) ⊃* Q' ,p imp*r Q⇒Q' ,p cong (λ y → (P₁ ⊃* P₂) 〈 ρ 〉 ⊃* y) Q'ρ≡Q'ρ
+⇒-reflect-rep {E = app -imp* (app -univ (φ ∷ φ' ∷ δ ∷ ε ∷ []) ∷ app -ref (N ∷ []) ∷ [])} {ρ} univ⊃*ref = _ ,p (univ⊃*ref ,p (cong₂ (univ _ _) 
+  (cong₂ ΛP refl (cong₂ ΛP (≡-sym (liftRep-upRep φ')) (cong₂ appP refl (cong₂ appP (≡-sym (liftRep-upRep₂ ε)) refl)))) 
+  (cong₂ ΛP refl (cong₂ ΛP (≡-sym (liftRep-upRep φ)) (cong₂ appP refl (cong₂ appP (≡-sym (liftRep-upRep₂ δ)) refl))))))
 ⇒-reflect-rep {E = app -imp* (app -univ _ ∷ Q ∷ [])} {ρ} (imp*l Pρ⇒P'ρ) =
   let P' ,p P⇒P' ,p P'ρ≡P'ρ = ⇒-reflect-rep Pρ⇒P'ρ in
   P' ⊃* Q ,p imp*l P⇒P' ,p cong (λ y → y ⊃* Q 〈 ρ 〉) P'ρ≡P'ρ

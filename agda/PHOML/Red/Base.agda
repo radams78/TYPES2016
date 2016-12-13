@@ -25,6 +25,8 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   ref⊃* : ∀ {V} {φ ψ : Term V} → reff φ ⊃* reff ψ ⇒ reff (φ ⊃ ψ)
   ref⊃*univ : ∀ {V} {φ ψ ψ' : Term V} {δ ε} → 
     reff φ ⊃* univ ψ ψ' δ ε ⇒ univ (φ ⊃ ψ) (φ ⊃ ψ') (ΛP (φ ⊃ ψ) (ΛP (φ ⇑) (appP (δ ⇑ ⇑) (appP (var x₁) (var x₀))))) (ΛP (φ ⊃ ψ') (ΛP (φ ⇑) (appP (ε ⇑ ⇑) (appP (var x₁) (var x₀)))))
+  univ⊃*ref : ∀ {V} {φ φ' : Term V} {δ ε ψ} →
+    univ φ φ' δ ε ⊃* reff ψ ⇒ univ (φ ⊃ ψ) (φ' ⊃ ψ) (ΛP (φ ⊃ ψ) (ΛP (φ' ⇑) (appP (var x₁) (appP (ε ⇑ ⇑) (var x₀))))) (ΛP (φ' ⊃ ψ) (ΛP (φ ⇑) (appP (var x₁) (appP (δ ⇑ ⇑) (var x₀)))))
   imp*l : ∀ {V} {P P' Q : Path V} → P ⇒ P' → P ⊃* Q ⇒ P' ⊃* Q
   imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒ Q' → P ⊃* Q ⇒ P ⊃* Q'
   app*l : ∀ {V} {M N : Term V} {P P' Q} → P ⇒ P' → app* M N P Q ⇒ app* M N P' Q
@@ -63,6 +65,10 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
     (cong₂ ΛP (≡-sym (liftRep-upRep φ)) (cong₂ appP (≡-sym (liftRep-upRep₂ δ)) refl)) 
     (cong₂ ΛP (≡-sym (liftRep-upRep φ)) (cong₂ appP (≡-sym (liftRep-upRep₂ ε)) refl))) 
   ref⊃*univ
+⇒-resp-rep {ρ = ρ} (univ⊃*ref {φ = φ} {φ'} {δ} {ε} {ψ}) = subst (λ x → (univ φ φ' δ ε ⊃* reff ψ) 〈 ρ 〉 ⇒ x) 
+  (cong₂ (univ _ _) (cong₂ ΛP refl (cong₂ ΛP (≡-sym (liftRep-upRep φ')) (cong₂ appP refl (cong₂ appP (≡-sym (liftRep-upRep₂ ε)) refl)))) 
+  (cong₂ ΛP refl (cong₂ ΛP (≡-sym (liftRep-upRep φ)) (cong₂ appP refl (cong₂ appP (≡-sym (liftRep-upRep₂ δ)) refl))))) 
+  univ⊃*ref
 ⇒-resp-rep (imp*l P⇒P') = imp*l (⇒-resp-rep P⇒P')
 ⇒-resp-rep (imp*r Q⇒Q') = imp*r (⇒-resp-rep Q⇒Q')
 ⇒-resp-rep (app*l P⇒P') = app*l (⇒-resp-rep P⇒P')

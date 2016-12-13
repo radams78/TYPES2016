@@ -52,7 +52,7 @@ open import PHOML.Compute
   let ⊧εε₁∶ψ : ⊧P appP (ε 〈 ρ₁ 〉) ε₁ ∶ ψ 〈 ρ₁ •R ρ 〉
       ⊧εε₁∶ψ = ↠P ⊧Q-εε₁∶ψ (Pdirlm Q↠refN) in
    ↞P (⊧P-change-prop ⊧εε₁∶ψ (rep-comp ψ)) (↠-appP (subst (λ x → appP x (ε 〈 ρ₁ 〉) ↠ ε 〈 ρ₁ 〉) (rep-comp (minus (P ⊃* Q))) (Pdirlm (trans (↠-imp* P↠refM Q↠refN) (inc ref⊃*))))))))
-⊧⊃* {V} {P} {φ} {φ'} {Q} {ψ} {ψ'} (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | reffC M ,p P↠refM | univC α β δ ε ,p Q↠univδε = 
+⊧⊃* {V} {P} {φ} {φ'} {Q} {ψ} {ψ'} (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | reffC M ,p P↠refM | univC _ _ δ ε ,p Q↠univδε = 
   let ⊧φ : ⊧T φ ∶ Ω
       ⊧φ = ⊧E-valid₁ (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) in
   let ⊧φ' : ⊧T φ' ∶ Ω
@@ -111,4 +111,37 @@ open import PHOML.Compute
     ⊧εαβ∶ψ) 
   (trans (↠-appP (↠-appP (↠-dir (↠-imp* (↠-resp-rep (↠-resp-rep P↠refM)) (↠-resp-rep (↠-resp-rep Q↠univδε)))))) 
   (trans (inc (appPl (appPl (dirR ref⊃*univ)))) (trans (inc (appPl (appPl univminus))) (trans (inc (appPl βP)) (inc βP)))))))
-⊧⊃* (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | univC x x₁ x₂ x₃ ,p P↠Pcanon | Qcanon ,p Q↠Qcanon = {!!}
+⊧⊃* {V} {P} {φ} {φ'} {Q} {ψ} {ψ'} (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | univC M M' δ ε ,p P↠univ | reffC N ,p Q↠ref =
+  let ⊧φ : ⊧T φ ∶ Ω
+      ⊧φ = ⊧E-valid₁ (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) in
+  let ⊧φ' : ⊧T φ' ∶ Ω
+      ⊧φ' = ⊧E-valid₂ (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) in
+  let ⊧ψ : ⊧T ψ ∶ Ω
+      ⊧ψ = ⊧E-valid₁ (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) in
+  let ⊧ψ' : ⊧T ψ' ∶ Ω
+      ⊧ψ' = ⊧E-valid₂ (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) in
+  let ⊧δ∶φ⊃φ' : ⊧P δ ∶ φ ⊃ φ'
+      ⊧δ∶φ⊃φ' = ↠P ⊧P+∶φ⊃φ' (trans (↠-dir P↠univ) (inc univplus)) in
+  let ⊧ε∶φ'⊃φ : ⊧P ε ∶ φ' ⊃ φ
+      ⊧ε∶φ'⊃φ = ↠P ⊧P-∶φ'⊃φ (trans (↠-dir P↠univ) (inc univminus)) in
+  (⊧P⊃I (⊧imp ⊧φ ⊧ψ) (⊧imp ⊧φ' ⊧ψ') (λ W ρ α ⊧α∶φ⊃ψ → 
+  ⊧P⊃I (⊧TΩrep ⊧φ') (⊧TΩrep ⊧ψ') (λ W₁ ρ₁ β ⊧β∶φ' → 
+    let ⊧εβ∶φ : ⊧P appP (ε 〈 ρ 〉 〈 ρ₁ 〉) β ∶ φ 〈 ρ 〉 〈 ρ₁ 〉
+        ⊧εβ∶φ = ⊧P⊃E (⊧Prep (⊧Prep ⊧ε∶φ'⊃φ)) ⊧β∶φ' in
+    let ⊧αεβ∶ψ : ⊧P appP (α 〈 ρ₁ 〉) (appP (ε 〈 ρ 〉 〈 ρ₁ 〉) β) ∶ ψ 〈 ρ 〉 〈 ρ₁ 〉
+        ⊧αεβ∶ψ = ⊧P⊃E (⊧Prep ⊧α∶φ⊃ψ) ⊧εβ∶φ in
+    let ⊧αεβ∶ψ' : ⊧P appP (α 〈 ρ₁ 〉) (appP (ε 〈 ρ 〉 〈 ρ₁ 〉) β) ∶ ψ' 〈 ρ 〉 〈 ρ₁ 〉
+        ⊧αεβ∶ψ' = ↠P (⊧P⊃E (⊧Prep (⊧Prep ⊧Q+∶ψ⊃ψ')) ⊧αεβ∶ψ) (trans (↠-appP (↠-dir (↠-resp-rep (↠-resp-rep Q↠ref)))) (trans (inc (appPl refdir)) (inc βP))) in
+  ↞P ⊧αεβ∶ψ' (trans (↠-appP (↠-appP (↠-dir (↠-resp-rep (↠-resp-rep (↠-imp* P↠univ Q↠ref)))))) (trans (inc (appPl (appPl (dirR univ⊃*ref)))) 
+    (trans (inc (appPl (appPl univplus))) (trans (inc (appPl βP)) (inc (subst (λ x → appP ((ΛP (M' 〈 ρ 〉 〈 ρ₁ 〉 ⇑) (appP (var x₁) (appP (ε 〈 ρ 〉 〈 ρ₁ 〉 ⇑ ⇑) (var x₀)))) ⟦ x₀:= α 〈 ρ₁ 〉 ⟧) β ⇒ x) (cong₂ appP (botSub-upRep (α 〈 ρ₁ 〉)) (cong₂ appP (≡-sym (let open ≡-Reasoning in 
+    begin
+      ε 〈 ρ 〉 〈 ρ₁ 〉
+    ≡⟨⟨ botSub-upRep (ε 〈 ρ 〉 〈 ρ₁ 〉) ⟩⟩
+      ε 〈 ρ 〉 〈 ρ₁ 〉 ⇑ ⟦ x₀:= β ⟧
+    ≡⟨⟨ sub-congl (rep-congl (botSub-upRep (ε 〈 ρ 〉 〈 ρ₁ 〉))) ⟩⟩
+      ε 〈 ρ 〉 〈 ρ₁ 〉 ⇑ ⟦ x₀:= α 〈 ρ₁ 〉 ⟧ ⇑ ⟦ x₀:= β ⟧
+    ≡⟨⟨ sub-congl (liftSub-upRep (ε 〈 ρ 〉 〈 ρ₁ 〉 ⇑)) ⟩⟩
+      ε 〈 ρ 〉 〈 ρ₁ 〉 ⇑ ⇑ ⟦ liftSub _ (x₀:= α 〈 ρ₁ 〉) ⟧ ⟦ x₀:= β ⟧
+    ∎)) refl)) βP))))))))) ,p
+  {!!}
+⊧⊃* {V} {P} {φ} {φ'} {Q} {ψ} {ψ'} (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | univC x₄ x₅ x₆ x₇ ,p P↠Pcanon | univC x x₁ x₂ x₃ ,p Q↠Qcanon = {!!}
