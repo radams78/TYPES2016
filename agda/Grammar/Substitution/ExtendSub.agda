@@ -2,6 +2,7 @@ open import Grammar.Base
 module Grammar.Substitution.ExtendSub (G : Grammar) where
 open import Prelims.EqReasoning
 open Grammar G
+open import Grammar.Replacement G
 open import Grammar.Substitution.PreOpFamily G
 open import Grammar.Substitution.Lifting G
 open import Grammar.Substitution.OpFamily G
@@ -22,3 +23,16 @@ postulate extendSub-decomp : ∀ {U} {V} {σ : Sub U V} {K} {M : Expression V (v
 •-botsub : ∀ {U V K} {σ : Sub U V} {N : VExpression U K} → σ • (x₀:= N) ∼ extendSub σ (N ⟦ σ ⟧)
 •-botsub x₀ = refl
 •-botsub (↑ _) = refl
+
+extendSub-upRep : ∀ {U V C K L} (E : Subexp U C K) {σ : Sub U V} {F : VExpression V L} → E ⇑ ⟦ extendSub σ F ⟧ ≡ E ⟦ σ ⟧
+extendSub-upRep {U} {V} {C} {K} {L} E {σ} {F} = let open ≡-Reasoning in 
+  begin
+    E ⇑ ⟦ extendSub σ F ⟧
+  ≡⟨ extendSub-decomp (E ⇑) ⟩
+    E ⇑ ⟦ liftSub L σ ⟧ ⟦ x₀:= F ⟧
+  ≡⟨ sub-congl (liftSub-upRep E) ⟩
+    E ⟦ σ ⟧ ⇑ ⟦ x₀:= F ⟧
+  ≡⟨ botSub-upRep (E ⟦ σ ⟧) ⟩
+    E ⟦ σ ⟧
+  ∎
+  
