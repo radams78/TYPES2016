@@ -65,7 +65,9 @@ extendSub-upRep-•RS {U} {V} {W} {C} {K} {L} E {σ} {ρ} {F} = let open ≡-Rea
 ⊧default {V , -Term} {_ , app (-ty _) []} _ x₀ = ⊧c
 ⊧default {V , -Path} {Γ , app (-eq A) (M ∷ N ∷ [])} (ctxER Γ⊢M∶A Γ⊢N∶A) x₀ = ⊧neutralE {P = var x₀} 
   (subst (λ x → ⊧T x ∶ A) 
-    (≡-sym (extendSub-upRep-•RS M {default Γ} )) (⊧Trep (M ⟦ default Γ ⟧) (soundness Γ⊢M∶A (⊧default (context-validity Γ⊢M∶A))))) {!!}
-⊧default {V , -Proof} {Γ , x} x₁ (↑ x₂) = {!!}
+    (≡-sym (extendSub-upRep-•RS M {default Γ} )) (⊧Trep (M ⟦ default Γ ⟧) (soundness Γ⊢M∶A (⊧default (context-validity Γ⊢M∶A))))) 
+  (subst (λ x → ⊧T x ∶ A) 
+    (≡-sym (extendSub-upRep-•RS N {default Γ} )) (⊧Trep (N ⟦ default Γ ⟧) (soundness Γ⊢N∶A (⊧default (context-validity Γ⊢N∶A)))))
+⊧default {V , -Proof} {Γ , φ} x₁ (↑ x₂) = {!!}
 ⊧default {V , -Term} {Γ , x} x₁ (↑ x₂) = {!!}
 ⊧default {V , -Path} {Γ , x} x₁ (↑ x₂) = {!!}
