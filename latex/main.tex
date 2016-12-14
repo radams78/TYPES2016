@@ -498,23 +498,21 @@ $ $
 The canonical objects $\theta$ of $\Omega$, or \emph{canonical propositions}, are given by the grammar
 \[ \theta ::= \bot \mid \theta \supset \theta \]
 \item
-A canonical object of type $A \rightarrow B$ has the form $\lambda x:A.M$, where
-$x : A \vdash M : B$.
+A canonical object of type $A \rightarrow B$ has the form $\lambda x:A.M$.
 \end{itemize}
 We define the \emph{canonical proofs} of a canonical object $\theta$ of $\Omega$ as follows:
 \begin{itemize}
 \item
 There is no canonical proof of $\bot$.
 \item
-A canonical proof of $\varphi \supset \psi$ has the form $\lambda p : \varphi . \delta$, where $p : \varphi \vdash \delta : \psi$.
+A canonical proof of $\varphi \supset \psi$ has the form $\lambda p : \varphi . \delta$.
 \end{itemize}
-We define the \emph{canonical paths} of an equation $M =_A N$, where $M$ and $N$ are canonical objects of $A$, as follows:
+We define the \emph{canonical paths} of an equation $M =_A N$ as follows.  (Note that this depends only on the type $A$, not on $M$ and $N$.)
 \begin{itemize}
 \item
-A canonical path of $\varphi =_\Omega \psi$ is either $\reff{\varphi}$ if $\varphi \simeq \psi$, or $\univ{\varphi}{\psi}{\delta}{\epsilon}$, where $\delta$ is a canonical
-proof of $\varphi \supset \psi$ and $\epsilon$ is a canonical proof of $\psi \supset \varphi$.
+A canonical path of $\varphi =_\Omega \psi$ is one of the form $\reff{M}$ or $\univ{\varphi}{\psi}{\delta}{\epsilon}$.
 \item
-A canonical path of $F =_{A \rightarrow B} G$ is either $\reff{F}$ if $F \simeq G$, or $\triplelambda e:x =_A y.P$ where $x : A, y : A, e : x =_A y \vdash P : Fx =_B Gy$.
+A canonical path of $F =_{A \rightarrow B} G$ is one of the form $\reff{M}$ or $\triplelambda e:x =_A y. P$.
 \end{itemize}
 \end{definition}
 
@@ -537,14 +535,6 @@ The \emph{neutral} terms, paths and proofs are given by the grammar
 \text{Neutral path} & P_n & ::= & e \mid P_n \supset^* Q \mid Q \supset^* P_n \mid (P_n)_{MN} Q
 \end{array} \]
 \end{definition}
-
-\begin{lemma}
-A term in normal form is either a neutral term, a canonical proposition, or a $\lambda$-term.
-\end{lemma}
-
-\begin{proof}
-An easy proof by case analysis.
-\end{proof}
 
 \section{Examples}
 
@@ -721,18 +711,25 @@ An easy induction on $A$.
 \end{proof}
 
 \begin{lemma}
-If $\models E : T$ then $E$ reduces to a normal form.
+\label{lm:neutral-canon}
+If $\models E : T$ then $E$ reduces to either a neutral term or canonical expression of $T$.
 \end{lemma}
 
 \begin{proof}
-We prove by induction on the canonical proposition $\theta$ that, if $\models \delta : \theta$, then $\delta$ reduces to a normal form.
-We then prove by induction on the type $A$ that, if $\models P : M =_A N$, then $P$ reduces to a normal form.  These two parts are straightforward.
+We prove by induction on the canonical proposition $\theta$ that, if $\models \delta : \theta$, then $\delta$ reduces to a neutral proof or
+a canonical proof of $\theta$.
+
+If $\models \delta : \bot$ then $\delta$ reduces to a neutral proof.  Now, suppose $\models \delta : \theta \supset \theta'$.  Then $\models \delta p :
+\theta'$, so $\delta p$ reduces to either a neutral proof or canonical proof by the induction hypothesis.  This reduction must proceed either by
+reducing $\delta$ to a neutral proof, or reducing $\delta$ to a $\lambda$-proof then $\beta$-reducing.
+
+We then prove by induction on the type $A$ that, if $\models P : M =_A N$, then $P$ reduces to a neutral path or a canonical path. The two cases are straightforward.
 
 Now, suppose $\models M : A$, i.e. $\models M \{\} : M =_A M$.  Let $A \equiv A_1 \rightarrow \cdots \rightarrow A_n \rightarrow \Omega$.  Then
 \[ \models M \{\}_{c_{A_1} c_{A_1}} c_{A_1} \{\}_{c_{A_2} c_{A_2}} \cdots c_{A_n} \{\}
 : M c_{A_1} \cdots c_{A_n} =_\Omega M c_{A_1} \cdots c_{A_n} \enspace . \]
 Therefore, $M c_{A_1} \cdots c_{A_n}$ reduces to a canonical proposition.  The reduction must consist either in reducing $M$ to a canonical proposition (if $n = 0$),
-or reducing $M$ to a $\lambda$-expression then performing a $\beta$-reduction.  In either case, $M$ reduces to a normal form.
+or reducing $M$ to a $\lambda$-expression then performing a $\beta$-reduction.  In either case, $M$ reduces to a canonical term.
 \end{proof}
 
 \begin{lemma}
@@ -825,9 +822,7 @@ If $\models P : \varphi =_\Omega \varphi'$ and $\models Q : \psi =_\Omega \psi'$
 
 \begin{proof}
 %Extract as lemma
-By Reduction (Lemma \ref{lm:reduction}) and Expansion (Lemma \ref{lm:expansion}), we may assume that $P$ and $Q$ are normal forms.  We also have that $\varphi'$ reduces to a canonical proposition
-$\theta_1 \supset \cdots \supset \theta_n \supset \bot$, say, and $P^+ p q_1 \cdots q_n$ reduces to a neutral proof.  Therefore, $P$ must be either a neutral path or have the form $\reff{-}$ or
-$\univ*{-}{-}$.
+By Reduction (Lemma \ref{lm:reduction}) and Expansion (Lemma \ref{lm:expansion}), we may assume that $P$ and $Q$ are either neutral, or have the form $\reff{-}$ or $\univ{-}{-}{-}{-}$.
 
 If either $P$ or $Q$ is neutral then $P \supset^* Q$ is neutral, and the result follows from Lemma \ref{lm:neutral-path}.
 
@@ -898,20 +893,36 @@ by Expansion, as required.
 \end{proof}
 
 \begin{corollary}
-If $\Gamma \vdash E : T$ then $E$ reduces to a normal form.
+If $\Gamma \vdash E : T$ then $E$ reduces to a neutral expression or a canonical expression of $T$.
 \end{corollary}
 
 \begin{proof}
 Let $\mathrm{id}_\Gamma$ be the substitution on $\dom \Gamma$ that maps a variable to itself.
 We prove that, if $\Gamma \vald$, then $\models \mathrm{id}_\Gamma : \Gamma$; the proof is by induction on derivations, and uses Lemmas \ref{lm:neutral-proof} and \ref{lm:neutral-path}.
+Therefore, $\models E : T$, and so $E$ reduces to a neutral expression or canonical expression by Lemma \ref{lm:neutral-canon}.
 \end{proof}
 
 \begin{corollary}[Canonicity]
-If $\vdash E : T$ then $E$ reduces to a canonical form.
-\end{corollary}
-
-\begin{corollary}[Consistency]
-There is no proof $\delta$ such that $\vdash \delta : \bot$.
+$ $
+\begin{enumerate}
+\item
+If $\vdash \phi : \Omega$ then $\phi$ reduces to a canonical proposition.
+\item
+If $\vdash F : A \rightarrow B$ then $F$ reduces to $\lambda x:A.M$ where $x : A \vdash M : B$.
+\item
+\textbf{(Consistency)}
+There is no $\delta$ such that $\vdash \delta : \bot$.
+\item
+If $\vdash \delta : \varphi \supset \psi$, then $\delta$ reduces to $\lambda p : \varphi' . \epsilon$ where $\varphi \simeq \varphi'$ and
+$p : \varphi' \vdash \epsilon : \psi$.
+\item
+If $\vdash P : \varphi =_\Omega \psi$ then either $P$ reduces to $\reff{\varphi'}$ and $\varphi' \simeq \varphi \simeq \psi$; or
+$P$ reduces to $\univ{\varphi'}{\psi'}{\lambda p:\varphi'.\delta}{\lambda q:\psi'.\epsilon}$ where $\varphi \simeq \varphi'$, $\psi \simeq \psi'$,
+$p : \varphi' \vdash \delta : \psi'$ and $q : \psi' \vdash \epsilon : \varphi'$.
+\item
+If $\vdash P : F =_{A \rightarrow B} G$ then either $P$ reduces to $\reff{M}$ and $M \simeq F \simeq G$; or $P$ reduces to
+$\triplelambda e:x =_A y.Q$ where $x : A, y : A, e : x =_A y \vdash Q : F x =_B G y$.
+\end{enumerate}
 \end{corollary}
 
 \section{Conclusion}

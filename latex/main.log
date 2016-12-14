@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  12 DEC 2016 16:46
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  14 DEC 2016 13:09
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -1082,7 +1082,7 @@ LaTeX Font Warning: Font shape `U/msb/m/n' in size <4.25> not available
 (Font)              size <5> substituted on input line 455.
 
 [8] [9] [10] [11] [12] [13]
-Overfull \hbox (6.56285pt too wide) detected at line 895
+Overfull \hbox (6.56285pt too wide) detected at line 890
   $\OT1/lmr/m/n/10 ^^A \OMS/lmsy/m/n/10 j[]\OT1/lmr/m/n/10 = (\OML/lmm/m/it/10 
 ^^U  ^^U  ^^Ue \OT1/lmr/m/n/10 : \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 =[] \OML/lm
 m/m/it/10 y:M\OMS/lmsy/m/n/10 f\OML/lmm/m/it/10 ^^\ \OT1/lmr/m/n/10 : \OML/lmm/
@@ -1102,38 +1102,38 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 11775 strings out of 256214
- 164512 string characters out of 1917001
- 298142 words of memory out of 1500000
- 14532 multiletter control sequences out of 10000+200000
- 221913 words of font info for 194 fonts, out of 1200000 for 2000
+ 11782 strings out of 256214
+ 164573 string characters out of 1917001
+ 298193 words of memory out of 1500000
+ 14534 multiletter control sequences out of 10000+200000
+ 226188 words of font info for 195 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
  43i,17n,44p,961b,489s stack positions out of 5000i,500n,6000p,200000b,15000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dv
-ips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/s
-hare/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
+ips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share
+/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm
 -mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}</usr/share/texmf/f
 onts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.
 pfb></usr/share/texmf/fonts/type1/public/lm/lmbx8.pfb></usr/share/texmf/fonts/t
-ype1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></
-usr/share/texmf/fonts/type1/public/lm/lmmi5.pfb></usr/share/texmf/fonts/type1/p
-ublic/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi9.pfb></usr/shar
-e/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm
-/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fo
-nts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr9.pfb><
-/usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1
-/public/lm/lmri9.pfb></usr/share/texmf/fonts/type1/public/lm/lmss10.pfb></usr/s
-hare/texmf/fonts/type1/public/lm/lmss8.pfb></usr/share/texmf/fonts/type1/public
-/lm/lmssbo10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/sha
-re/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/
-lm/lmsy5.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texm
-f/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt
-10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msam10.pfb></usr/share/texmf/f
-onts/type1/bluesky/ams/msbm10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msb
-m7.pfb>
-Output written on main.pdf (17 pages, 594440 bytes).
+ype1/public/lm/lmbxi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb><
+/usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1
+/public/lm/lmmi5.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb></usr/sh
+are/texmf/fonts/type1/public/lm/lmmi9.pfb></usr/share/texmf/fonts/type1/public/
+lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr5.pfb></usr/share/texmf
+/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pf
+b></usr/share/texmf/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type
+1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri9.pfb></usr/
+share/texmf/fonts/type1/public/lm/lmss10.pfb></usr/share/texmf/fonts/type1/publ
+ic/lm/lmss8.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbo10.pfb></usr/shar
+e/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public
+/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy5.pfb></usr/share/te
+xmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmt
+k10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fo
+nts/type1/bluesky/ams/msam10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm
+10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm7.pfb>
+Output written on main.pdf (17 pages, 610099 bytes).
 PDF statistics:
- 459 PDF objects out of 1000 (max. 8388607)
- 118 named destinations out of 1000 (max. 131072)
- 60593 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 469 PDF objects out of 1000 (max. 8388607)
+ 122 named destinations out of 1000 (max. 131072)
+ 61105 words of extra memory for PDF output out of 61914 (max. 10000000)
 
