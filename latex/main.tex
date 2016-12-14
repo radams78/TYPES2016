@@ -88,7 +88,7 @@ We present a call-by-name reduction relation for this system, and prove that the
 
 The \emph{univalence axiom} of Homotopy Type theory (HoTT) \cite{hottbook} postulates a
 constant
-\[ \isotoid : A \simeq B \rightarrow A = B \]
+$$ \isotoid : A \simeq B \rightarrow A = B $$
 that is an inverse to the obvious function $A = B \rightarrow A \simeq B$.  However, if we simply add this constant to Martin-L\"{o}f type theory, then
 we lose the important property of \emph{canonicity} --- that every closed term of type $A$ computes to a unique canonical object of type $A$.  When a computation reaches a point
 where we eliminate a path (proof of equality) formed by $\isotoid$, it gets 'stuck'.
@@ -132,7 +132,7 @@ $e$ as a path variable, and $z$ for a variable that may come from any of these t
 
 The syntax of PHOML is given by the grammar:
 
-\[
+$$
 \begin{array}{lrcl}
 \text{Type} & A,B,C & ::= & \Omega \mid A \rightarrow B \\
 \text{Term} & L,M,N, \varphi,\psi,\chi & ::= & x \mid \bot \mid \varphi \supset \psi \mid \lambda x:A.M \mid MN \\
@@ -143,7 +143,7 @@ The syntax of PHOML is given by the grammar:
 \text{Judgement} & \mathbf{J} & ::= & \Gamma \vald \mid \Gamma \vdash M : A \mid \Gamma \vdash \delta : \varphi \mid \\
 & & & \Gamma \vdash P : M =_A N
 \end{array}
-\]
+$$
 
 In the path $\triplelambda e : x =_A y . P$, the term variables $x$ and $y$ must be distinct.  (We also have $x \not\equiv e \not\equiv y$, thanks to our
 stipulation that term variables and path variables are disjoint.)  The term variable $x$ is bound within $M$ in the term $\lambda x:A.M$,
@@ -231,7 +231,7 @@ We write $E[\sigma]$ for the result of substituting the expression $\sigma(z)$ f
 A \emph{path substitution} $\tau$ is a function whose domain is a finite set of term variables,
 and which maps each term variable to a path.  Given a path substitution $\tau$ and substitutions $\rho$, $\sigma$
 with the same domain $\{ x_1, \ldots, x_n \}$, we write
-\[ M \{ \tau : \rho = \sigma \} \text{ for } M \{ x_1 := \tau(x_1) : \rho(x_1) = \sigma(x_1), \ldots, \tau(x_n) : \rho(x_n) = \sigma(x_n) \} \enspace . \]
+$$ M \{ \tau : \rho = \sigma \} \text{ for } M \{ x_1 := \tau(x_1) : \rho(x_1) = \sigma(x_1), \ldots, \tau(x_n) : \rho(x_n) = \sigma(x_n) \} \enspace . $$
 \end{definition}
 
 \subsubsection{Call-By-Name Reduction}
@@ -303,7 +303,7 @@ If $M \rightarrow N$ then $M \{ \tau : \rho = \sigma \} \rightarrow N \{ \tau : 
 Induction on $M \rightarrow N$.  The only difficult case is $\beta$-contraction.  We have
 \begin{align*}
 & ((\lambda x:A.M)N)\{ \tau : \rho = \sigma \} \\
-\equiv & (\triplelambda e : x =_A x' . M \{ \tau : \rho = \sigma, x := e : x = x' \})_{N [ \rho ] N [ \sigma ]} N \{ \tau : \rho = \sigma \} \\
+\equiv & (\triplelambda e : x =_A x' . M \{ \tau : \rho = \sigma , x := e : x = x' \})_{N [ \rho ] N [ \sigma ]} N \{ \tau : \rho = \sigma \} \\
 \rightarrow & M \{ \tau : \rho = \sigma, x := N \{ \tau \} : N [ \rho ] = N [ \sigma ] \} \\
 \equiv & M [ x := N ] \{ \tau : \rho = \sigma \} & (\text{Lemma \ref{lm:pathsubsub}})
 \end{align*}
@@ -320,41 +320,41 @@ The rules of deduction of PHOML are given in Figure \ref{fig:lambdaoe}.
 \newcommand{\RvarT}{\ensuremath(\mathsf{varT})}
 \begin{figure}
 \paragraph*{Contexts}
-\[ (\langle \rangle) \quad \vcenter{\infer{\langle \rangle \vald}{}} \qquad
+$$ (\langle \rangle) \quad \vcenter{\infer{\langle \rangle \vald}{}} \qquad
 (\mathrm{ctxt}_T) \quad \vcenter{\infer{\Gamma, x : A \vald}{\Gamma \vald}} \qquad 
-(\mathrm{ctxt}_P) \quad \vcenter{\infer{\Gamma, p : \varphi \vald}{\Gamma \vdash \varphi : \Omega}} \]
-\[ (\mathrm{ctxt}_E) \quad \vcenter{\infer{\Gamma, e : M =_A N \vald}{\Gamma \vdash M : A \quad \Gamma \vdash N : A}} \]
-\[ (\mathrm{var}_T) \quad \vcenter{\infer[(x : A \in \Gamma)]{\Gamma \vdash x : A}{\Gamma \vald}} \qquad
-(\mathrm{var}_P) \quad \vcenter{\infer[(p : \varphi \in \Gamma)]{\Gamma \vdash p : \varphi}{\Gamma \vald}} \]
-\[ (\mathrm{var}_E) \quad \vcenter{\infer[(e : M =_A N \in \Gamma)]{\Gamma \vdash e : M =_A N}{\Gamma \vald}} \]
+(\mathrm{ctxt}_P) \quad \vcenter{\infer{\Gamma, p : \varphi \vald}{\Gamma \vdash \varphi : \Omega}} $$
+$$ (\mathrm{ctxt}_E) \quad \vcenter{\infer{\Gamma, e : M =_A N \vald}{\Gamma \vdash M : A \quad \Gamma \vdash N : A}} $$
+$$ (\mathrm{var}_T) \quad \vcenter{\infer[(x : A \in \Gamma)]{\Gamma \vdash x : A}{\Gamma \vald}} \qquad
+(\mathrm{var}_P) \quad \vcenter{\infer[(p : \varphi \in \Gamma)]{\Gamma \vdash p : \varphi}{\Gamma \vald}} $$
+$$ (\mathrm{var}_E) \quad \vcenter{\infer[(e : M =_A N \in \Gamma)]{\Gamma \vdash e : M =_A N}{\Gamma \vald}} $$
 
 \paragraph*{Terms}
-\[ (\bot) \quad \vcenter{\infer{\Gamma \vdash \bot : \Omega}{\Gamma \vald}} \qquad
-(\supset) \quad \vcenter{\infer{\Gamma \vdash \varphi \supset \psi : \Omega}{\Gamma \vdash \varphi : \Omega \quad \Gamma \vdash \psi : \Omega}} \]
-\[ (\mathrm{app}_T) \quad \vcenter{\infer{\Gamma \vdash M N : B} {\Gamma \vdash M : A \rightarrow B \quad \Gamma \vdash N : A}} \qquad
-(\lambda_T) \quad \vcenter{\infer{\Gamma \vdash \lambda x:A.M : A \rightarrow B}{\Gamma, x : A \vdash M : B}} \]
+$$ (\bot) \quad \vcenter{\infer{\Gamma \vdash \bot : \Omega}{\Gamma \vald}} \qquad
+(\supset) \quad \vcenter{\infer{\Gamma \vdash \varphi \supset \psi : \Omega}{\Gamma \vdash \varphi : \Omega \quad \Gamma \vdash \psi : \Omega}} $$
+$$ (\mathrm{app}_T) \quad \vcenter{\infer{\Gamma \vdash M N : B} {\Gamma \vdash M : A \rightarrow B \quad \Gamma \vdash N : A}} \qquad
+(\lambda_T) \quad \vcenter{\infer{\Gamma \vdash \lambda x:A.M : A \rightarrow B}{\Gamma, x : A \vdash M : B}} $$
 
 \paragraph*{Proofs}
-\[ (\mathrm{app}_P) \quad \vcenter{\infer{\Gamma \vdash \delta \epsilon : \psi} {\Gamma \vdash \delta : \varphi \supset \psi \quad \Gamma \vdash \epsilon : \varphi}} \qquad
-(\lambda_P) \quad \vcenter{\infer{\Gamma \vdash \lambda p : \varphi . \delta : \varphi \supset \psi}{\Gamma, p : \varphi \vdash \delta : \psi}} \]
-\[ (\mathrm{conv}_P) \quad \vcenter{\infer[(\varphi \simeq \psi)]{\Gamma \vdash \delta : \psi}{\Gamma \vdash \delta : \varphi \quad \Gamma \vdash \psi : \Omega}} \]
+$$ (\mathrm{app}_P) \quad \vcenter{\infer{\Gamma \vdash \delta \epsilon : \psi} {\Gamma \vdash \delta : \varphi \supset \psi \quad \Gamma \vdash \epsilon : \varphi}} \qquad
+(\lambda_P) \quad \vcenter{\infer{\Gamma \vdash \lambda p : \varphi . \delta : \varphi \supset \psi}{\Gamma, p : \varphi \vdash \delta : \psi}} $$
+$$ (\mathrm{conv}_P) \quad \vcenter{\infer[(\varphi \simeq \psi)]{\Gamma \vdash \delta : \psi}{\Gamma \vdash \delta : \varphi \quad \Gamma \vdash \psi : \Omega}} $$
 
 \paragraph*{Paths}
-\[ (\mathrm{ref}) \quad \vcenter{\infer{\Gamma \vdash \reff{M} : M =_A M}{\Gamma \vdash M : A}}
+$$ (\mathrm{ref}) \quad \vcenter{\infer{\Gamma \vdash \reff{M} : M =_A M}{\Gamma \vdash M : A}}
 \qquad
-(\supset^*) \quad \vcenter{\infer{\Gamma \vdash P \supset^* Q : \varphi \supset \psi =_\Omega \varphi' \supset \psi'}{\Gamma \vdash P : \varphi =_\Omega \varphi' \quad \Gamma \vdash Q : \psi =_\Omega \psi'}} \]
-\[ (\mathrm{univ}) \quad \vcenter{\infer{\Gamma \vdash \univ{\varphi}{\psi}{\delta}{\epsilon} : \varphi =_\Omega \psi}{\Gamma \vdash \delta : \varphi \supset \psi \quad \Gamma \vdash \epsilon : \psi \supset \varphi}} \]
-\[ (\mathrm{plus}) \quad \vcenter{\infer{\Gamma \vdash P^+ : \varphi \supset \psi}{\Gamma \vdash P : \varphi =_\Omega \psi}}
+(\supset^*) \quad \vcenter{\infer{\Gamma \vdash P \supset^* Q : \varphi \supset \psi =_\Omega \varphi' \supset \psi'}{\Gamma \vdash P : \varphi =_\Omega \varphi' \quad \Gamma \vdash Q : \psi =_\Omega \psi'}} $$
+$$ (\mathrm{univ}) \quad \vcenter{\infer{\Gamma \vdash \univ{\varphi}{\psi}{\delta}{\epsilon} : \varphi =_\Omega \psi}{\Gamma \vdash \delta : \varphi \supset \psi \quad \Gamma \vdash \epsilon : \psi \supset \varphi}} $$
+$$ (\mathrm{plus}) \quad \vcenter{\infer{\Gamma \vdash P^+ : \varphi \supset \psi}{\Gamma \vdash P : \varphi =_\Omega \psi}}
 \qquad
-(\mathrm{minus}) \quad \vcenter{\infer{\Gamma \vdash P^- : \psi \supset \varphi}{\Gamma \vdash P : \psi =_\Omega \psi}} \]
-\[ (\triplelambda) \quad \vcenter{\infer{\Gamma \vdash \triplelambda e : x =_A y . P : M =_{A \rightarrow B} N}
+(\mathrm{minus}) \quad \vcenter{\infer{\Gamma \vdash P^- : \psi \supset \varphi}{\Gamma \vdash P : \psi =_\Omega \psi}} $$
+$$ (\triplelambda) \quad \vcenter{\infer{\Gamma \vdash \triplelambda e : x =_A y . P : M =_{A \rightarrow B} N}
   {\begin{array}{c}
      \Gamma, x : A, y : A, e : x =_A y \vdash P : M x =_B N y \\
      \Gamma \vdash M : A \rightarrow B \quad
 \Gamma \vdash N : A \rightarrow B
-     \end{array}}} \]
-\[ (\mathrm{app}_E) \quad \vcenter{\infer{\Gamma \vdash P_{NN'}Q : MN =_B M' N'}{\Gamma \vdash P : M =_{A \rightarrow B} M' \quad \Gamma \vdash Q : N =_A N' \quad \Gamma \vdash N : A \quad \Gamma \vdash N' : A}} \]
-\[ (\mathrm{conv}_E) \quad \vcenter{\infer[(M \simeq M', N \simeq N')]{\Gamma \vdash P : M' =_A N'}{\Gamma \vdash P : M =_A N \quad \Gamma \vdash M' : A \quad \Gamma \vdash N' : A}} \]
+     \end{array}}} $$
+$$ (\mathrm{app}_E) \quad \vcenter{\infer{\Gamma \vdash P_{NN'}Q : MN =_B M' N'}{\Gamma \vdash P : M =_{A \rightarrow B} M' \quad \Gamma \vdash Q : N =_A N' \quad \Gamma \vdash N : A \quad \Gamma \vdash N' : A}} $$
+$$ (\mathrm{conv}_E) \quad \vcenter{\infer[(M \simeq M', N \simeq N')]{\Gamma \vdash P : M' =_A N'}{\Gamma \vdash P : M =_A N \quad \Gamma \vdash M' : A \quad \Gamma \vdash N' : A}} $$
 \caption{Rules of Deduction of $\lambda oe$}
 \label{fig:lambdaoe}
 \end{figure}
@@ -423,7 +423,7 @@ If $\Gamma \vdash P \supset^* Q : \varphi =_A \psi$, then there exist $\varphi_1
 $\Gamma \vdash P : \varphi_1 =_\Omega \psi_1$, $\Gamma \vdash Q : \varphi_2 =_\Omega \psi_2$, $\varphi \simeq \varphi_1 \supset \psi_1$, $\psi \simeq \varphi_2 \supset \psi_2$, and $A \equiv \Omega$.
 \item
 If $\Gamma \vdash \univ{\varphi}{\psi}{P}{Q} : \chi =_A \theta$, then we have $\Gamma \vdash P : \varphi \supset \psi$, $\Gamma \vdash Q : \psi \supset \varphi$,
-$\Gamma \vdash \chi \simeq_\Delta \varphi : \Omega$, $\Gamma \vdash \theta \simeq_\Delta \psi : \Omega$ and $A \equiv \Omega$.
+$\Gamma \vdash \chi \simeq \varphi : \Omega$, $\Gamma \vdash \theta \simeq \psi : \Omega$ and $A \equiv \Omega$.
 \item
 If $\Gamma \vdash \triplelambda e : x =_A y. P : M =_B N$ then there exists $C$ such that $\Gamma, x : A, y : A, e : x =_A y \vdash P : M x =_C N y$
 and $B \equiv A \rightarrow C$.
@@ -496,7 +496,7 @@ $ $
 \begin{itemize}
 \item
 The canonical objects $\theta$ of $\Omega$, or \emph{canonical propositions}, are given by the grammar
-\[ \theta ::= \bot \mid \theta \supset \theta \]
+$$ \theta ::= \bot \mid \theta \supset \theta $$
 \item
 A canonical object of type $A \rightarrow B$ has the form $\lambda x:A.M$.
 \end{itemize}
@@ -529,11 +529,11 @@ This follows from the fact that $\rightarrow$ satisfies the diamond property, an
 
 \begin{definition}[Neutral]$ $
 The \emph{neutral} terms, paths and proofs are given by the grammar
-\[ \begin{array}{lrcl}
+$$ \begin{array}{lrcl}
 \text{Neutral term} & M_n & ::= & x \mid M_n N \\
 \text{Neutral proof} & \delta_n & ::= & p \mid P_n^+ \mid P_n^- \mid \delta_n \epsilon \\
 \text{Neutral path} & P_n & ::= & e \mid P_n \supset^* Q \mid Q \supset^* P_n \mid (P_n)_{MN} Q
-\end{array} \]
+\end{array} $$
 \end{definition}
 
 \section{Examples}
@@ -542,10 +542,10 @@ Using propositional extensionality, we can construct a path of type $\top = \top
 But which of the canonical proofs of $\top \supset (\top \supset \top)$ have we constructed?
 
 We define
-\[ \top := \bot \supset \bot, \quad \iota := \lambda p:\bot.p, \quad I := \lambda x:\Omega.x, \quad F := \lambda x:\Omega.\top \supset x, \quad H := \lambda h.h \top \enspace . \]
+$$ \top := \bot \supset \bot, \quad \iota := \lambda p:\bot.p, \quad I := \lambda x:\Omega.x, \quad F := \lambda x:\Omega.\top \supset x, \quad H := \lambda h.h \top \enspace . $$
 
 Let $\Gamma$ be the context
-\[ \Gamma \eqdef x : \Omega, y : \Omega, e : x =_\Omega y \enspace . \]
+$$ \Gamma \eqdef x : \Omega, y : \Omega, e : x =_\Omega y \enspace . $$
 
 Then we have
 \begin{align*}
@@ -574,44 +574,44 @@ And now we compute:
 \end{align*}
 
 Therefore, given proofs $\delta, \epsilon : \top$, we have
-\[ ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- \delta \epsilon \rightarrow \delta \enspace . \]
+$$ ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- \delta \epsilon \rightarrow \delta \enspace . $$
 
 Thus, the construction gives a proof of $\top \supset (\top \supset \top)$ which, given two proofs of $\top$, selects the first.  We could have anticipated this:
 consider the context $\Delta \eqdef X : \Omega, Y : \Omega, p : X$.  By
 replacing in our example some occurrences of $\top$ with $X$ and others with $Y$, and replacing $\iota$ with $p$, we can obtain a path
-\[ Y =_\Omega X \supset Y \]
+$$ Y =_\Omega X \supset Y $$
 and hence a proof of $Y \supset (X \supset Y)$.  By parametricity, any proof that we can construct in the context $\Delta$ of this proposition must return the left input.
 
 \subsection{Comparison with Cubical Type Theory}
 \label{section:cubical}
 
 In cubical type theory, we say that a type $A$ is a \emph{proposition} iff any two terms of type $A$ are propositionally equal; that is, there exists a path between any two terms of type $A$.  Let
-\[ \isProp{A} \eqdef \Pi x,y:A. \Path{A}{x}{y} \]
+$$ \isProp{A} \eqdef \Pi x,y:A. \Path{A}{x}{y} $$
 and let $\Prop$ be the type of all types in $U$ that are propositions:
-\[ \Prop \eqdef \Sigma X : U. \isProp{X} \enspace . \]
+$$ \Prop \eqdef \Sigma X : U. \isProp{X} \enspace . $$
 Let $\bot$ be any type in the universe $U$ that is a proposition; that is, there exists a term of type $\isProp{\bot}$.  ($\bot$ may be the empty type, but we do not require this in what follows.)
 
 Define
-\[ \top := \bot \rightarrow \bot \]
+$$ \top := \bot \rightarrow \bot $$
 Then there exists a term $\top_\Prop$ of type $\isProp{\top}$ (we omit the details).  Define
-\[ I := \lambda X:\Prop.X.1, \quad F := \lambda X : \Prop.\top \rightarrow X.1, \quad H := \lambda h.h (\top , \top_\Prop) \]
+$$ I := \lambda X:\Prop.X.1, \quad F := \lambda X : \Prop.\top \rightarrow X.1, \quad H := \lambda h.h (\top , \top_\Prop) $$
 Then we have
-\[ \vdash \top : U \quad
+$$ \vdash \top : U \quad
 \vdash I  : \Prop \rightarrow U \quad
 \vdash F  : \Prop \rightarrow U \quad
-\vdash H  : (\Prop \rightarrow U) \rightarrow U \]
+\vdash H  : (\Prop \rightarrow U) \rightarrow U $$
 
 From the fact that univalence is provable in cubical type theory \cite{cchm:cubical}, we can construct a term $Q$ such that
-\[ \vdash Q : \Path{(\Prop \rightarrow U)}{I}{F} \enspace . \]
+$$ \vdash Q : \Path{(\Prop \rightarrow U)}{I}{F} \enspace . $$
 Hence we have
-\[ \vdash \langle i \rangle H (Q i) : \Path{U}{HI}{HF} \]
+$$ \vdash \langle i \rangle H (Q i) : \Path{U}{HI}{HF} $$
 which is definitionally equal to
-\[ \vdash \langle i \rangle H (Q i) : \Path{U}{\top \rightarrow \top}{\top} \]
+$$ \vdash \langle i \rangle H (Q i) : \Path{U}{\top \rightarrow \top}{\top} $$
 From this, we can apply transport to create a term of type $\top \rightarrow \top \rightarrow \top$.  Applying this to any terms $\delta, \epsilon : \top$ gives a term that
 is definitionally equal to
-\[ Q \delta \epsilon = \mapid{\top}{\mapid{\top}{\delta}} \]
+$$ Q \delta \epsilon = \mapid{\top}{\mapid{\top}{\delta}} $$
 where $\mapid{}{}$ represents transport across the trivial path:
-\[ \mapid{A}{t} \eqdef \comp^i \, A \, [] \, t \qquad (i \text{ does not occur in } A) \enspace . \]
+$$ \mapid{A}{t} \eqdef \comp^i \, A \, [] \, t \qquad (i \text{ does not occur in } A) \enspace . $$
 (For the details of the calculation, see the appendix.)
 
 In the version of cubical type theory given in \cite{bch:cubical}, we have $\mapid{X}{x}$ is definitionally equal to $x$, and therefore $Q \delta \epsilon = \delta$, just as in PHOML.
@@ -622,18 +622,18 @@ This is no longer true in the version of cubical type theory given in \cite{cchm
 
 As discussed in the introduction, every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must respect logical equivalence.  This fact can actually be proved in PHOML,
 in the following sense: there exists a proof $\delta$ of
-\[ f : \Omega \rightarrow \Omega, x : \Omega, y : \Omega, p : x \supset y, q : y \supset x \vdash \delta : f x \supset f y \]
+$$ f : \Omega \rightarrow \Omega, x : \Omega, y : \Omega, p : x \supset y, q : y \supset x \vdash \delta : f x \supset f y $$
 and a proof of $f y \supset f x$ in the same context.  Together, these can be read as a proof of 'if $f : \Omega \rightarrow \Omega$ and $x$ and $y$ are logically equivalent, then $fx$ and $fy$ are logically equivalent'.
 
 Specifically, take
-\[ \delta \eqdef (\reff{f}_{xy} \univ{x}{y}{p}{q})^+ \enspace . \]
+$$ \delta \eqdef (\reff{f}_{xy} \univ{x}{y}{p}{q})^+ \enspace . $$
 
 Note that this is not possible in Martin-L\"{o}f Type Theory.
 
 In cubical type theory, we can construct a term $\delta$ such that
-\[ f : \Prop \rightarrow \Prop, x : \Prop, y : \Prop, p : x.1 \rightarrow y.1, q : y.1 \rightarrow x.1 \vdash \delta : (f x).1 \rightarrow (f y).1 \]
+$$ f : \Prop \rightarrow \Prop, x : \Prop, y : \Prop, p : x.1 \rightarrow y.1, q : y.1 \rightarrow x.1 \vdash \delta : (f x).1 \rightarrow (f y).1 $$
 In fact, we can go further and prove that equality of propositions is equal to logical equivalence.  That is, we can prove
-\[ \Path{U}{(\Path{\Prop}{x}{y})}{((x.1 \rightarrow y.1) \times (y.1 \rightarrow x.1))} \enspace . \]
+$$ \Path{U}{(\Path{\Prop}{x}{y})}{((x.1 \rightarrow y.1) \times (y.1 \rightarrow x.1))} \enspace . $$
 
 \section{Computable Expressions}
 \label{section:computable}
@@ -726,8 +726,8 @@ reducing $\delta$ to a neutral proof, or reducing $\delta$ to a $\lambda$-proof 
 We then prove by induction on the type $A$ that, if $\models P : M =_A N$, then $P$ reduces to a neutral path or a canonical path. The two cases are straightforward.
 
 Now, suppose $\models M : A$, i.e. $\models M \{\} : M =_A M$.  Let $A \equiv A_1 \rightarrow \cdots \rightarrow A_n \rightarrow \Omega$.  Then
-\[ \models M \{\}_{c_{A_1} c_{A_1}} c_{A_1} \{\}_{c_{A_2} c_{A_2}} \cdots c_{A_n} \{\}
-: M c_{A_1} \cdots c_{A_n} =_\Omega M c_{A_1} \cdots c_{A_n} \enspace . \]
+$$ \models M \{\}_{c_{A_1} c_{A_1}} c_{A_1} \{\}_{c_{A_2} c_{A_2}} \cdots c_{A_n} \{\}
+: M c_{A_1} \cdots c_{A_n} =_\Omega M c_{A_1} \cdots c_{A_n} \enspace . $$
 Therefore, $M c_{A_1} \cdots c_{A_n}$ reduces to a canonical proposition.  The reduction must consist either in reducing $M$ to a canonical proposition (if $n = 0$),
 or reducing $M$ to a $\lambda$-expression then performing a $\beta$-reduction.  In either case, $M$ reduces to a canonical term.
 \end{proof}
@@ -807,11 +807,11 @@ So suppose $A \equiv B \rightarrow C$.  Using Lemma \ref{lm:pre-ref-compute}, Re
 we may assume that $M$ is a $\lambda$-term.  Let $M \equiv \lambda y:D.N$.
 
 Let $\models L : B$ and $\models L' : B$ and $\models P : L =_B L'$.  We must show that
-\[ \models \reff{\lambda y:D.N}_{L L'} P : (\lambda y:D.N)L =_C (\lambda y:D.N)L' \enspace . \]
+$$ \models \reff{\lambda y:D.N}_{L L'} P : (\lambda y:D.N)L =_C (\lambda y:D.N)L' \enspace . $$
 By Expansion and Conversion, it is sufficient to prove
-\[ \models N \{ y := P : L = L' \} : N [ y:= L ] =_C N [y := L'] \enspace . \]
+$$ \models N \{ y := P : L = L' \} : N [ y:= L ] =_C N [y := L'] \enspace . $$
 We have that $\models (\lambda y:D.N)\{\} : \lambda y:D.N =_{B \rightarrow C} \lambda y:D.N$, and so
-\[ \models (\triplelambda e : y =_D y' . N \{ y := e : y = y' \})_{L L'} P : (\lambda y:D.N)L =_C (\lambda y:D.N)L' \enspace , \]
+$$ \models (\triplelambda e : y =_D y' . N \{ y := e : y = y' \})_{L L'} P : (\lambda y:D.N)L =_C (\lambda y:D.N)L' \enspace , $$
 and the result follows by Reduction and Conversion.
 \end{proof}
 
@@ -829,7 +829,7 @@ If either $P$ or $Q$ is neutral then $P \supset^* Q$ is neutral, and the result 
 Otherwise, let $\models \delta : \varphi \supset \psi$ and $\epsilon \models \varphi'$.  We must show that $\models (P \supset^* Q)^+ \delta \epsilon : \psi'$.
 
 If $P \equiv \reff{M}$ and $Q \equiv \reff{N}$, then we have
-\[ (P \supset^* Q)^+ \delta \epsilon \rightarrow \reff{M \supset N}^+ \delta \epsilon \rightarrow \delta \epsilon \enspace . \]
+$$ (P \supset^* Q)^+ \delta \epsilon \rightarrow \reff{M \supset N}^+ \delta \epsilon \rightarrow \delta \epsilon \enspace . $$
 Now, $\models P^- \epsilon : \varphi$, hence $\models \epsilon : \varphi$ by Reduction, and so $\models \delta \epsilon : \psi$.  Therefore, $\models Q^+ (\delta \epsilon) : \psi'$,
 and hence by Reduction $\models \delta \epsilon : \psi'$ as required.
 
@@ -875,20 +875,23 @@ $$ \infer{\Gamma \vdash \lambda x:A.M : A \rightarrow B}{\Gamma, x : A \vdash M 
 \begin{enumerate}
 \item
 We must show that
-\[ \Delta \models \lambda x:A.M[\sigma] : A \rightarrow B \enspace . \]
-So let $\Delta \models N : A$.  Then the induction hypothesis gives
-\[ \Delta \models M[\sigma, x:=N] : B \]
-and so by Expansion (Lemma \ref{lm:expansion}) we have
-\[ \Delta \models (\lambda x:A.M[\sigma])N : B \]
+$$ \models \lambda x:A.M[\sigma] : A \rightarrow B \enspace . $$
+So let $\models Q : N =_A N'$.  Define the path substitution $\tau$ by
+$$ \tau(x) \equiv Q, \qquad \tau(y) \equiv \reff{\sigma(y)} \ (y \in \dom \Gamma) $$
+Then we have $\models \tau : (\sigma, x:=N) = (\sigma, x:=N')$, and so the induction hypothesis gives
+$$ \models M \{ \tau \} : M[\sigma, x:=N] =_B M [ \sigma, x:= N' ] $$
+We observe that $M \{ \tau \} \equiv M [ \sigma ] \{ x:=Q:N=N' \}$ (Lemma \ref{lm:pathsubsub}),
+and so by Expansion (Lemma \ref{lm:expansion}) and Conversion (Lemma \ref{lm:conv-compute}) we have
+$$ \models (\lambda x:A.M[\sigma])\{\}_{N N'} Q : (\lambda x:A.M[\sigma])N =_B (\lambda x:A.M[\sigma])N' $$
 as required.
 \item
 We must show that
-\[ \Delta \models \triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y \} : \lambda x:A.M [ \rho ] =_{A \rightarrow B} \lambda x:A.M [ \sigma ] \enspace . \]
-So let $\Delta \models P : N =_A N'$.  The induction hypothesis gives
-\[ \Delta \models M \{ \tau : \rho = \sigma, x := P : N = N' \} : M [\rho, x := N] =_B M [\sigma, x := N'] \enspace , \]
+$$  \models \triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y \} : \lambda x:A.M [ \rho ] =_{A \rightarrow B} \lambda x:A.M [ \sigma ] \enspace . $$
+So let $ \models P : N =_A N'$.  The induction hypothesis gives
+$$  \models M \{ \tau : \rho = \sigma, x := P : N = N' \} : M [\rho, x := N] =_B M [\sigma, x := N'] \enspace , $$
 and so we have
-\[ \Delta \models (\triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y \})_{N N'} P : (\lambda x:A.M [ \rho ])N =_B (\lambda x:A.M [ \sigma ])N'\]
-by Expansion, as required.
+$$  \models (\triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y \})_{N N'} P : (\lambda x:A.M [ \rho ])N =_B (\lambda x:A.M [ \sigma ])N'$$
+by Expansion and Conversion, as required.
 \end{enumerate}
 \end{proof}
 
@@ -981,11 +984,11 @@ $$ \vdash Q : \Path{(\Prop \rightarrow U)}{F}{I} $$
 
 This is the term in cubical type theory that corresponds to $\triplelambda e : x =_\Omega y.P$ in PHOML (formula \ref{eq:llleP}).  We now construct
 terms corresponding to formulas (\ref{eq:llleP2}) and (\ref{eq:llleP3}):
-\[ \vdash \langle i \rangle H (Q i) : \Path{U}{(\top \rightarrow \top)}{\top} \]
-\[ \vdash \lambda x : \top. \comp^i (H (Q (1 - i))) [] x : \top \rightarrow \top \rightarrow \top \]
+$$ \vdash \langle i \rangle H (Q i) : \Path{U}{(\top \rightarrow \top)}{\top} $$
+$$ \vdash \lambda x : \top. \comp^i (H (Q (1 - i))) [] x : \top \rightarrow \top \rightarrow \top $$
 
 Let us write $\outputt$ for this term:
-\[ \outputt \eqdef \lambda x : \top. \comp^i (H (Q (1 - i))) [] x \enspace . \]
+$$ \outputt \eqdef \lambda x : \top. \comp^i (H (Q (1 - i))) [] x \enspace . $$
 And we calculate (using the notation from \cite{cchm:cubical} section 6.2):
 \begin{align*}
 & \quad \outputt \\

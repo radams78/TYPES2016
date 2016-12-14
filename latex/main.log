@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  14 DEC 2016 13:14
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  14 DEC 2016 18:30
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -1082,20 +1082,20 @@ LaTeX Font Warning: Font shape `U/msb/m/n' in size <4.25> not available
 (Font)              size <5> substituted on input line 455.
 
 [8] [9] [10] [11] [12] [13]
-Overfull \hbox (6.56285pt too wide) detected at line 890
-  $\OT1/lmr/m/n/10 ^^A \OMS/lmsy/m/n/10 j[]\OT1/lmr/m/n/10 = (\OML/lmm/m/it/10 
-^^U  ^^U  ^^Ue \OT1/lmr/m/n/10 : \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 =[] \OML/lm
-m/m/it/10 y:M\OMS/lmsy/m/n/10 f\OML/lmm/m/it/10 ^^\ \OT1/lmr/m/n/10 : \OML/lmm/
-m/it/10 ^^Z \OT1/lmr/m/n/10 = \OML/lmm/m/it/10 ^^[; x \OT1/lmr/m/n/10 := \OML/l
-mm/m/it/10 e \OT1/lmr/m/n/10 : \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 = \OML/lmm/m/
-it/10 y\OMS/lmsy/m/n/10 g\OT1/lmr/m/n/10 )[]\OML/lmm/m/it/10 P \OT1/lmr/m/n/10 
-: (\OML/lmm/m/it/10 ^^Ux \OT1/lmr/m/n/10 : \OML/lmm/m/it/10 A:M\OT1/lmr/m/n/10 
-[\OML/lmm/m/it/10 ^^Z\OT1/lmr/m/n/10 ])\OML/lmm/m/it/10 N \OT1/lmr/m/n/10 =[] (
-\OML/lmm/m/it/10 ^^Ux \OT1/lmr/m/n/10 : \OML/lmm/m/it/10 A:M\OT1/lmr/m/n/10 [\O
-ML/lmm/m/it/10 ^^[\OT1/lmr/m/n/10 ])\OML/lmm/m/it/10 N[]$ 
+Overfull \hbox (10.45216pt too wide) detected at line 893
+\OMS/lmsy/m/n/10 j[]\OT1/lmr/m/n/10 = (\OML/lmm/m/it/10 ^^U  ^^U  ^^Ue \OT1/lmr
+/m/n/10 : \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 =[] \OML/lmm/m/it/10 y:M\OMS/lmsy/
+m/n/10 f\OML/lmm/m/it/10 ^^\ \OT1/lmr/m/n/10 : \OML/lmm/m/it/10 ^^Z \OT1/lmr/m/
+n/10 = \OML/lmm/m/it/10 ^^[; x \OT1/lmr/m/n/10 := \OML/lmm/m/it/10 e \OT1/lmr/m
+/n/10 : \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 = \OML/lmm/m/it/10 y\OMS/lmsy/m/n/10
+ g\OT1/lmr/m/n/10 )[]\OML/lmm/m/it/10 P \OT1/lmr/m/n/10 : (\OML/lmm/m/it/10 ^^U
+x \OT1/lmr/m/n/10 : \OML/lmm/m/it/10 A:M\OT1/lmr/m/n/10 [\OML/lmm/m/it/10 ^^Z\O
+T1/lmr/m/n/10 ])\OML/lmm/m/it/10 N \OT1/lmr/m/n/10 =[] (\OML/lmm/m/it/10 ^^Ux \
+OT1/lmr/m/n/10 : \OML/lmm/m/it/10 A:M\OT1/lmr/m/n/10 [\OML/lmm/m/it/10 ^^[\OT1/
+lmr/m/n/10 ])\OML/lmm/m/it/10 N[]
  []
 
-[14] (./main.bbl [15]) [16] AED: lastpage setting LastPage [17] (./main.aux)
+[14] (./main.bbl) [15] [16] AED: lastpage setting LastPage [17] (./main.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.75pt have occurred.
@@ -1131,9 +1131,9 @@ xmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmt
 k10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fo
 nts/type1/bluesky/ams/msam10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm
 10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm7.pfb>
-Output written on main.pdf (17 pages, 610332 bytes).
+Output written on main.pdf (17 pages, 610684 bytes).
 PDF statistics:
- 469 PDF objects out of 1000 (max. 8388607)
+ 471 PDF objects out of 1000 (max. 8388607)
  122 named destinations out of 1000 (max. 131072)
  61105 words of extra memory for PDF output out of 61914 (max. 10000000)
 
