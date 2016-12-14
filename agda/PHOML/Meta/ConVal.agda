@@ -76,3 +76,10 @@ context-validity-Eq₁ {e = ↑ e} (ctxPR {Γ = Γ} {φ = φ} Γ⊢φ∶Ω) = su
 context-validity-Eq₁ {e = x₀} (ctxER {Γ = Γ} {M} {N} {A} Γ⊢M∶A Γ⊢N∶A) = weakening Γ⊢M∶A (ctxER Γ⊢M∶A Γ⊢N∶A) (upRep-typed (M ≡〈 A 〉 N))
 context-validity-Eq₁ {e = ↑ e} (ctxER {Γ = Γ} {M} {N} {A} Γ⊢M∶A Γ⊢N∶A) = subst₂ (λ x y → Γ ,E M ≡〈 A 〉 N ⊢ x ∶ y) (left-rep (typeof e Γ)) (cong ty (≡-sym (type-rep (typeof e Γ)))) (weakening (context-validity-Eq₁ {e = e} (context-validity Γ⊢M∶A)) (ctxER Γ⊢M∶A Γ⊢N∶A) (upRep-typed (M ≡〈 A 〉 N)))
 --TODO Duplication
+
+context-validity-Eq₂ : ∀ {V} {Γ} {e : Var V -Path} → valid Γ → Γ ⊢ right (typeof e Γ) ∶ ty (type (typeof e Γ))
+context-validity-Eq₂ {e = ()} empR
+context-validity-Eq₂ {e = ↑ e} (ctxTR {Γ = Γ} {A = A} validΓ) = subst₂ (λ x y → Γ ,T A ⊢ x ∶ y) (right-rep (typeof e Γ)) (cong ty (≡-sym (type-rep (typeof e Γ)))) (weakening (context-validity-Eq₂ {e = e} validΓ) (ctxTR validΓ) (upRep-typed (ty A)))
+context-validity-Eq₂ {e = ↑ e} (ctxPR {Γ = Γ} {φ = φ} Γ⊢φ∶Ω) = subst₂ (λ x y → Γ ,P φ ⊢ x ∶ y) (right-rep (typeof e Γ)) (cong ty (≡-sym (type-rep (typeof e Γ)))) (weakening (context-validity-Eq₂ {e = e} (context-validity Γ⊢φ∶Ω)) (ctxPR Γ⊢φ∶Ω) (upRep-typed φ))
+context-validity-Eq₂ {e = x₀} (ctxER {Γ = Γ} {M} {N} {A} Γ⊢M∶A Γ⊢N∶A) = weakening Γ⊢N∶A (ctxER Γ⊢M∶A Γ⊢N∶A) (upRep-typed (M ≡〈 A 〉 N))
+context-validity-Eq₂ {e = ↑ e} (ctxER {Γ = Γ} {M} {N} {A} Γ⊢M∶A Γ⊢N∶A) = subst₂ (λ x y → Γ ,E M ≡〈 A 〉 N ⊢ x ∶ y) (right-rep (typeof e Γ)) (cong ty (≡-sym (type-rep (typeof e Γ)))) (weakening (context-validity-Eq₂ {e = e} (context-validity Γ⊢M∶A)) (ctxER Γ⊢M∶A Γ⊢N∶A) (upRep-typed (M ≡〈 A 〉 N)))

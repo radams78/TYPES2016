@@ -122,6 +122,9 @@ eq-inj₁ refl = refl
 eq-inj₂ : ∀ {V} {M N M' N' : Term V} {A A'} → M ≡〈 A 〉 N ≡ M' ≡〈 A' 〉 N' → A ≡ A'
 eq-inj₂ refl = refl
 
+eq-inj₃ : ∀ {V} {M N M' N' : Term V} {A A'} → M ≡〈 A 〉 N ≡ M' ≡〈 A' 〉 N' → N ≡ N'
+eq-inj₃ refl = refl
+
 dir-inj : ∀ {V} {P Q : Path V} {d d'} → dir d P ≡ dir d' Q → P ≡ Q
 dir-inj refl = refl
 
@@ -154,6 +157,12 @@ left (app (-eq _) (M ∷ _ ∷ [])) = M
 
 left-rep : ∀ {U V} (E : Equation U) {ρ : Rep U V} → left E 〈 ρ 〉 ≡ left (E 〈 ρ 〉)
 left-rep (app (-eq _) (_ ∷ _ ∷ [])) = refl
+
+right : ∀ {V} → Equation V → Term V
+right (app (-eq _) (_ ∷ N ∷ [])) = N
+
+right-rep : ∀ {U V} (E : Equation U) {ρ : Rep U V} → right E 〈 ρ 〉 ≡ right (E 〈 ρ 〉)
+right-rep (app (-eq _) (_ ∷ _ ∷ [])) = refl
 
 id : ∀ {V} → Term V → Proof V
 id φ = ΛP φ (var x₀)
