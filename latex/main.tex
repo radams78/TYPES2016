@@ -896,22 +896,28 @@ by Expansion and Conversion, as required.
 \end{proof}
 
 \begin{corollary}
-If $\Gamma \vdash E : T$ then $E$ reduces to a neutral expression or a canonical expression of $T$.
+\begin{enumerate}
+\item
+If $\Gamma \vdash \delta : \phi$ then $\delta$ reduces to a neutral proof or canonical proof.
+\item
+If $\Gamma \vdash P : M =_A N$ then $P$ reduces to a neutral path or canonical path.
+\end{enumerate}
 \end{corollary}
 
 \begin{proof}
-Let $\mathrm{id}_\Gamma$ be the substitution on $\dom \Gamma$ that maps a variable to itself.
-We prove that, if $\Gamma \vald$, then $\models \mathrm{id}_\Gamma : \Gamma$; the proof is by induction on derivations, and uses Lemmas \ref{lm:neutral-proof} and \ref{lm:neutral-path}.
-Therefore, $\models E : T$, and so $E$ reduces to a neutral expression or canonical expression by Lemma \ref{lm:neutral-canon}.
+For every context $\Gamma$, define the substitution $\sigma_\Gamma$ by
+\[ \sigma_\Gamma(x) \eqdef c_A \ (x : A \in \Gamma) \qquad \sigma_\Gamma(p) \eqdef p \qquad \sigma_\Gamma(e) \eqdef e \enspace . \]
+If $\Gamma \vald$ then $\models \sigma_\Gamma : \Gamma$ using Lemmas \ref{lm:neutral-proof} and \ref{lm:neutral-path}.
+
+Therefore, if $\Gamma \vdash E : T$ then $\models E [ \sigma_\Gamma ] : T [ \sigma_\Gamma ]$, and so $E [ \sigma_\Gamma ]$ reduces to
+a neutral expression or canonical expression.  Each reduction step is either a reduction that can be carried out in $E$, or a reduction
+within one of the terms $c_A$.  By carrying out the same reduction steps in $E$, we see that $E$ can be reduced to a neutral expression or canonical
+expression.
 \end{proof}
 
 \begin{corollary}[Canonicity]
 $ $
 \begin{enumerate}
-\item
-If $\vdash \varphi : \Omega$ then $\varphi$ reduces to a canonical proposition.
-\item
-If $\vdash F : A \rightarrow B$ then $F$ reduces to $\lambda x:A.M$ where $x : A \vdash M : B$.
 \item
 \textbf{(Consistency)}
 There is no $\delta$ such that $\vdash \delta : \bot$.
@@ -1016,5 +1022,8 @@ Therefore,
 \section{Proof of Confluence}
 \label{section:confluence}
 
-\textbf{TODO}
+The proof follows the same lines as the proof given in \cite{luo:car}.
+
+Define the notion of \emph{parallel one-step reduction} $\rhd$ by. $E \rhd F$ if and only if
+$F$ is obtained from $E$ by reducing one or more of the redexes that exist in $E$.  
 \end{document}
