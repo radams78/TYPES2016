@@ -906,7 +906,7 @@ Therefore, $\models E : T$, and so $E$ reduces to a neutral expression or canoni
 $ $
 \begin{enumerate}
 \item
-If $\vdash \phi : \Omega$ then $\phi$ reduces to a canonical proposition.
+If $\vdash \varphi : \Omega$ then $\varphi$ reduces to a canonical proposition.
 \item
 If $\vdash F : A \rightarrow B$ then $F$ reduces to $\lambda x:A.M$ where $x : A \vdash M : B$.
 \item
@@ -924,6 +924,11 @@ If $\vdash P : F =_{A \rightarrow B} G$ then either $P$ reduces to $\reff{M}$ an
 $\triplelambda e:x =_A y.Q$ where $x : A, y : A, e : x =_A y \vdash Q : F x =_B G y$.
 \end{enumerate}
 \end{corollary}
+
+\begin{proof}
+A closed expression cannot be neutral, so from the previous corollary every typed closed expression must reduce to a canonical expression.
+We now apply case analysis to the possible forms of canonical expression, and use the Generation Lemma.
+\end{proof}
 
 \section{Conclusion}
 
