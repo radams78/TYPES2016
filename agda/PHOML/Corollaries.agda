@@ -33,5 +33,19 @@ decodeNTA (V ,Path) = decodeNTA V , -Path
       φ ⇑ ⟦ idSub (decodeNTA V , -Proof) ⟧
     ∎)
   (⊧Trep _ (soundness Γ⊢φ∶Ω (⊧idSub V Γ (context-validity Γ⊢φ∶Ω)))))
-⊧idSub (V ,Proof) _ (ctxPR Γ⊢φ∶Ω) (↑ x) = {!!}
-⊧idSub (V ,Path) Γ validΓ x = {!!}
+⊧idSub (V ,Proof) (Γ , φ) (ctxPR Γ⊢φ∶Ω) (↑ x) = 
+  subst (λ y → ⊧ var (↑ x) ∶ y) 
+  (≡-sym sub-idSub) 
+  (⊧rep {decodeNTA V} {decodeNTA V , -Proof} {_} {var x} {typeof x Γ}
+     {upRep} 
+  (subst (λ y → ⊧ var x ∶ y) sub-idSub (⊧idSub V Γ (context-validity Γ⊢φ∶Ω) x)))
+⊧idSub (V ,Path) (Γ , app (-eq A) (M ∷ N ∷ [])) (ctxER Γ⊢M∶A Γ⊢N∶A) x₀ = 
+  ⊧neutralE {P = var x₀} 
+  (subst (λ x → ⊧T x ∶ A) (≡-sym sub-idSub) (⊧Trep M {ρ = upRep}  
+  (subst (λ x → ⊧T x ∶ A) sub-idSub (soundness Γ⊢M∶A (⊧idSub V Γ (context-validity Γ⊢M∶A)))))) 
+  (subst (λ x → ⊧T x ∶ A) (≡-sym sub-idSub) (⊧Trep N {ρ = upRep}  
+  (subst (λ x → ⊧T x ∶ A) sub-idSub (soundness Γ⊢N∶A (⊧idSub V Γ (context-validity Γ⊢M∶A))))))
+⊧idSub (V ,Path) (Γ , _) (ctxER Γ⊢M∶A _) (↑ x) = 
+  subst (λ y → ⊧ var (↑ x) ∶ y) (≡-sym sub-idSub) 
+  (⊧rep {decodeNTA V} {decodeNTA V , -Path} {_} {E = var x} {typeof x Γ} {ρ = upRep} 
+  (subst (λ y → ⊧ var x ∶ y) sub-idSub (⊧idSub V Γ (context-validity Γ⊢M∶A) x)))
