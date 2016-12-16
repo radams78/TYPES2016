@@ -9,8 +9,9 @@
 \BOOKMARK [3][-]{subsubsection.2.2.3}{Canonicity}{subsection.2.2}
 \BOOKMARK [3][-]{subsubsection.2.2.4}{Neutral Expressions}{subsection.2.2}
 \BOOKMARK [1][-]{section.3}{Examples}{}
-\BOOKMARK [2][-]{subsection.3.1}{Comparison with Cubical Type Theory}{section.3}
-\BOOKMARK [2][-]{subsection.3.2}{Functions Respect Logical Equivalence}{section.3}
+\BOOKMARK [2][-]{subsection.3.1}{Functions Respect Logical Equivalence}{section.3}
+\BOOKMARK [2][-]{subsection.3.2}{Computation with Paths}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Comparison with Cubical Type Theory}{subsection.3.2}
 \BOOKMARK [1][-]{section.4}{Computable Expressions}{}
 \BOOKMARK [1][-]{section.5}{Proof of Canonicity}{}
 \BOOKMARK [1][-]{section.6}{Conclusion}{}

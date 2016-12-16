@@ -34,6 +34,11 @@ Andrew Polonsky.
 \newblock Internalization of extensional equality.
 \newblock Preprint \url{http://arxiv.org/abs/1401.1148}, 2014.
 
+\bibitem{tait1967}
+W.~W. Tait.
+\newblock Intensional iinterpretation of ffunctional of finite type i.
+\newblock {\em Journal of Symbolic Logic}, 32:198--212, 1967.
+
 \bibitem{hottbook}
 The {Univalent Foundations Program}.
 \newblock {\em Homotopy Type Theory: Univalent Foundations of Mathematics}.

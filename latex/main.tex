@@ -93,27 +93,25 @@ that is an inverse to the obvious function $A = B \rightarrow A \simeq B$.  Howe
 we lose the important property of \emph{canonicity} --- that every closed term of type $A$ computes to a unique canonical object of type $A$.  When a computation reaches a point
 where we eliminate a path (proof of equality) formed by $\isotoid$, it gets 'stuck'.
 
-As possible solutions to this problem, we may try to do with a weaker property than canonicity, such as \emph{propositional canonicity}.
-We may attempt to prove that every closed term of type $\mathbb{N}$ is \emph{propositionally} equal to a numeral, as conjectured by Voevodsky.  Or we may attempt to change the definition of equality to make $\isotoid$ definable \cite{Polonsky14a}, or extend the type theory with higher dimensions (e.g. Cubical Type Theory \cite{cchm:cubical}).
+As possible solutions to this problem, we may try to do with a weaker property than canonicity, such as \emph{propositional canonicity}:
+that every closed term of type $\mathbb{N}$ is \emph{propositionally} equal to a numeral, as conjectured by Voevodsky.  Or we may attempt to change the definition of equality to make $\isotoid$ definable \cite{Polonsky14a}, or add a nominal extension to the syntax of the type theory (e.g. Cubical Type Theory \cite{cchm:cubical}).
 
 We could also try a more conservative approach, and simply attempt to find a reduction relation for a type theory involving $\isotoid$ that satisfies
 all three of the properties above.  There seems to be no reason \emph{a priori} to believe this is not possible, but it is difficult to do because
 the full Homotopy Type Theory is a complex and interdependent system.  We can tackle the problem by adding univalence to a much simpler system, finding
 a well-behaved reduction relation, then doing the same for more and more complex systems, gradually approaching the full strength of HoTT.
 
-In this paper, we present a system we call PHOML, or predicative higher-order minimal logic.  It is a type theory with two universes: the universe $\Omega$
-of \emph{propositions}, and the universe of \emph{types}.  The propositions are closed under $\supset$ (implication) and include $\bot$ (falsehood), and an equality proposition $M =_A N$ for
-any type $A$ and terms $M : A$ and $N : A$.  The types include $\Omega$ itself and are closed under $\rightarrow$ (non-dependent function type).
+In this paper, we present a system we call PHOML, or predicative higher-order minimal logic.  It is a type theory with three kinds of typing judgement.  There are \emph{terms} which inhabit \emph{types}, which are the simple types over $\Omega$.  There are \emph{proofs} which inhabit \emph{propositions}, which are the terms of type $\Omega$.  The canonical propositions are those constructed from $\bot$ by implication $\supset$.  Thirdly, there are \emph{paths} which inhabit \emph{equations} $M =_A N$, where $M$ and $N$ are terms of type $A$.
 
 There are two canonical forms for proofs of $M =_\Omega N$.  For any term $\varphi : \Omega$, we have $\reff{\varphi} : \varphi =_\Omega \varphi$.  We also add univalence for this system, in this form:
 if $\delta : \varphi \supset \psi$ and $\epsilon : \psi \supset\varphi$, then $\univ{\varphi}{\psi}{\delta}{\epsilon} : \varphi =_\Omega \psi$.  
 
-In PHOML, two propositions that are logically equivalent are equal.  Every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must therefore respect logical equivalence.  That is, for any $F$ and logically equivalent $x$, $y$ we must have that $Fx$ and $Fy$ are logically equivalent. Moreover, if for $x:\Omega$ we have that $Fx$ is logically equivalent to $Gx$, then $F =_{\Omega\to\Omega} G$.
+This entails that in PHOML, two propositions that are logically equivalent are equal.  Every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must therefore respect logical equivalence.  That is, for any $F$ and logically equivalent $x$, $y$ we must have that $Fx$ and $Fy$ are logically equivalent. Moreover, if for $x:\Omega$ we have that $Fx$ is logically equivalent to $Gx$, then $F =_{\Omega\to\Omega} G$.
 Every function of type $(\Omega \rightarrow \Omega) \rightarrow \Omega$ must respect this equality; and so on.  This is the manifestation in PHOML of the principle that only homotopy invariant constructions can be performed in homotopy type theory.  (See Section \ref{section:exampletwo}.)
 
 We present a call-by-name reduction relation for this system, and prove that every typable term reduces to a canonical form.  From this, it follows that the system is consistent.  
 
-For the future, we wish to expand the system with universal quantification, and expand it to a 2-dimensional system (with equations between proofs).  We then wish to add more inductive types and more dimensions, getting ever closer to full homotopy type theory.
+For the future, we wish to include the equations in $\Omega$, allowing for propositions such as $M =_A N \supset N =_A M$.  We wish to expand the system with universal quantification, and expand it to a 2-dimensional system (with equations between proofs).  We then wish to add more inductive types and more dimensions, getting ever closer to full homotopy type theory.
 
 Another system with many of the same aims is cubical type theory \cite{cchm:cubical}.  The system PHOML is almost a subsystem of cubical type theory.  We can attempt to embed PHOML into cubical type theory,
 mapping $\Omega$ to the universe $U$, and an equation $M =_A N$ to either the type $\Path{A}{M}{N}$ or to $\mathrm{Id}\ A\ M\ N$.  However, PHOML has more definitional equalities than the relevant fragment of cubical type theory; that is, there are definitionally equal terms in PHOML that are mapped to terms that are not definitionally equal in cubical type theory.  In particular, $\reff{x}^+ p$ and $p$ are definitionally equal, whereas the terms $\mathrm{comp}^i x [] p$ and $p$ are not definitionally equal in cubical type theory (but they are propositionally equal).  See Section \ref{section:cubical} for more information.
@@ -250,9 +248,9 @@ $$ \infer{(\lambda x:A.M)N \rightarrow M[x:=N]}{} \quad
 $$\infer{(\lambda p : \varphi . \delta)\epsilon \rightarrow \delta [ p := \epsilon ]}{} \quad
 \infer{\reff{\varphi}^+ \delta \rightarrow \delta}{} \quad
 \infer{\reff{\varphi}^- \delta \rightarrow \delta}{} $$
-$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rightarrow \delta}{} \quad
-\infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^- \rightarrow \epsilon}{} \quad
-\infer{\delta \epsilon \rightarrow \delta' \epsilon}{\delta \rightarrow \delta'} $$
+$$ \infer{\delta \epsilon \rightarrow \delta' \epsilon}{\delta \rightarrow \delta'} \quad
+\infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rightarrow \delta}{} \quad
+\infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^- \rightarrow \epsilon}{} $$
 $$ \infer{P^+ \rightarrow Q^+}{P \rightarrow Q} \quad
 \infer{P^- \rightarrow Q^-}{P \rightarrow Q}$$
 $$ \infer{\lambda p:\phi.\delta \rightarrow \lambda p:\phi'.\delta}{\phi \rightarrow \phi'} $$
@@ -275,9 +273,8 @@ $$ \infer{P_{MN} Q \rightarrow P'_{MN} Q}{P \rightarrow P'} \quad
 \infer{P \supset^* Q \rightarrow P \supset^* Q'}{Q \rightarrow Q'} $$
 $$ \infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi'}{\psi}{\delta}{\epsilon}}{\phi \rightarrow \phi'}
 \quad
-\infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi'}{\delta}{\epsilon}}{\psi \rightarrow \psi'}
-\quad
-\infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi}{\delta'}{\epsilon}}{\delta \rightarrow \delta'}
+\infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi'}{\delta}{\epsilon}}{\psi \rightarrow \psi'} $$
+$$ \infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi}{\delta'}{\epsilon}}{\delta \rightarrow \delta'}
 \quad
 \infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi}{\delta}{\epsilon'}}{\epsilon \rightarrow \epsilon'} $$
 \caption{Reduction in PHOML}
@@ -313,6 +310,25 @@ We write $\rightarrow^?$ for the reflexive closure of $\rightarrow$,
 we write $\twoheadrightarrow$ for the reflexive transitive closure of $\rightarrow$, and we write $\simeq$ for the reflexive symmetric transitive closure of $\rightarrow$.
 We say an expression $E$ is in \emph{normal form} iff there is no expression $F$ such that $E \rightarrow F$.
 
+\begin{note}
+$ $
+\begin{enumerate}
+\item
+Reduction on proofs and paths does \emph{not} respect substitution.  For example, let $F \equiv \lambda x:\Omega.x$.  Then we have
+\begin{align}
+\reff{\lambda y : \Omega. z}_{\bot \bot} \reff{\bot} & \rightarrow z \{ y:= \reff{\bot} : \bot = \bot \} \equiv \reff{z} \nonumber \\
+(\reff{\lambda y : \Omega.z}_{\bot \bot} \reff{\bot}) [z := F] & \equiv \reff{\lambda x : \Omega.F}_{\bot \bot} \reff{\bot}
+\label{eq:exp1} \\
+\label{eq:exp2}
+\reff{z}[z:=F] & \equiv \reff{F} \equiv \reff{\lambda x : \Omega.x}
+\end{align}
+Expression (\ref{eq:exp1}) does not reduce to (\ref{eq:exp2}).  Instead, (\ref{eq:exp1}) reduces to
+$$ F \{ y := \reff{\bot} : \bot = \bot \} \equiv \triplelambda e : x =_\Omega x'. e \enspace . $$
+\item
+Reduction on terms does respect substitution: if $M \rightarrow N$ then $M[x:=P] \rightarrow N[x:=P]$, as is easily shown by induction on $M \rightarrow N$.
+\end{enumerate}
+\end{note}
+
 \subsection{Rules of Deduction}
 
 The rules of deduction of PHOML are given in Figure \ref{fig:lambdaoe}.
@@ -321,9 +337,9 @@ The rules of deduction of PHOML are given in Figure \ref{fig:lambdaoe}.
 \begin{figure}
 \paragraph*{Contexts}
 $$ (\langle \rangle) \quad \vcenter{\infer{\langle \rangle \vald}{}} \qquad
-(\mathrm{ctxt}_T) \quad \vcenter{\infer{\Gamma, x : A \vald}{\Gamma \vald}} \qquad 
-(\mathrm{ctxt}_P) \quad \vcenter{\infer{\Gamma, p : \varphi \vald}{\Gamma \vdash \varphi : \Omega}} $$
-$$ (\mathrm{ctxt}_E) \quad \vcenter{\infer{\Gamma, e : M =_A N \vald}{\Gamma \vdash M : A \quad \Gamma \vdash N : A}} $$
+(\mathrm{ctx}_T) \quad \vcenter{\infer{\Gamma, x : A \vald}{\Gamma \vald}} \qquad 
+(\mathrm{ctx}_P) \quad \vcenter{\infer{\Gamma, p : \varphi \vald}{\Gamma \vdash \varphi : \Omega}} $$
+$$ (\mathrm{ctx}_E) \quad \vcenter{\infer{\Gamma, e : M =_A N \vald}{\Gamma \vdash M : A \quad \Gamma \vdash N : A}} $$
 $$ (\mathrm{var}_T) \quad \vcenter{\infer[(x : A \in \Gamma)]{\Gamma \vdash x : A}{\Gamma \vald}} \qquad
 (\mathrm{var}_P) \quad \vcenter{\infer[(p : \varphi \in \Gamma)]{\Gamma \vdash p : \varphi}{\Gamma \vald}} $$
 $$ (\mathrm{var}_E) \quad \vcenter{\infer[(e : M =_A N \in \Gamma)]{\Gamma \vdash e : M =_A N}{\Gamma \vald}} $$
@@ -411,7 +427,7 @@ If $\Gamma \vdash MN : A$ then there exists $B$ such that $\Gamma \vdash M : B \
 \item
 If $\Gamma \vdash p : \varphi$, then there exists $\psi$ such that $p : \psi \in \Gamma$ and $\varphi \simeq \psi$.
 \item
-If $\Gamma \vdash \lambda p:\varphi.\delta : \psi$, then there exists $\chi$ such that $\Gamma, p : \varphi \vdash \delta : \chi$ and $\psi \simeq \varphi \supset \chi$.
+If $\Gamma \vdash \lambda p:\varphi.\delta : \psi$, then there exists $\chi$ such that $\Gamma, p : \varphi \vdash \delta : \chi$ and $\psi \simeq (\varphi \supset \chi)$.
 \item
 If $\Gamma \vdash \delta \epsilon : \varphi$ then there exists $\psi$ such that $\Gamma \vdash \delta : \psi \supset \varphi$ and $\Gamma \vdash \epsilon : \psi$.
 \item
@@ -420,10 +436,10 @@ If $\Gamma \vdash e : M =_A N$, then there exist $M'$, $N'$ such that $e : M' =_
 If $\Gamma \vdash \reff{M} : N =_A P$, then we have $\Gamma \vdash M : A$ and $M \simeq N \simeq P$.
 \item
 If $\Gamma \vdash P \supset^* Q : \varphi =_A \psi$, then there exist $\varphi_1$, $\varphi_2$, $\psi_1$, $\psi_2$ such that
-$\Gamma \vdash P : \varphi_1 =_\Omega \psi_1$, $\Gamma \vdash Q : \varphi_2 =_\Omega \psi_2$, $\varphi \simeq \varphi_1 \supset \psi_1$, $\psi \simeq \varphi_2 \supset \psi_2$, and $A \equiv \Omega$.
+$\Gamma \vdash P : \varphi_1 =_\Omega \psi_1$, $\Gamma \vdash Q : \varphi_2 =_\Omega \psi_2$, $\varphi \simeq (\varphi_1 \supset \psi_1)$, $\psi \simeq (\varphi_2 \supset \psi_2)$, and $A \equiv \Omega$.
 \item
-If $\Gamma \vdash \univ{\varphi}{\psi}{P}{Q} : \chi =_A \theta$, then we have $\Gamma \vdash P : \varphi \supset \psi$, $\Gamma \vdash Q : \psi \supset \varphi$,
-$\Gamma \vdash \chi \simeq \varphi : \Omega$, $\Gamma \vdash \theta \simeq \psi : \Omega$ and $A \equiv \Omega$.
+If $\Gamma \vdash \univ{\varphi}{\psi}{\delta}{\epsilon} : \chi =_A \theta$, then we have $\Gamma \vdash \delta : \varphi \supset \psi$, $\Gamma \vdash \epsilon : \psi \supset \varphi$,
+$\chi \simeq \varphi$, $\theta \simeq \psi$ and $A \equiv \Omega$.
 \item
 If $\Gamma \vdash \triplelambda e : x =_A y. P : M =_B N$ then there exists $C$ such that $\Gamma, x : A, y : A, e : x =_A y \vdash P : M x =_C N y$
 and $B \equiv A \rightarrow C$.
@@ -439,14 +455,6 @@ If $\Gamma \vdash P^- : \varphi$, there exist $\psi$, $\chi$ such that $\Gamma \
 
 \begin{proof}
 Induction on derivations.
-\end{proof}
-
-\begin{proposition}[Subject Reduction]
-If $\Gamma \vdash s : T$ and $s \twoheadrightarrow t$ then $\Gamma \vdash t : T$.
-\end{proposition}
-
-\begin{proof}
-It is sufficient to prove the case $s \rightarrow t$.  The proof is by a case analysis on $s \rightarrow t$, using the Generation Lemma.
 \end{proof}
 
 \subsubsection{Substitutions}
@@ -487,6 +495,15 @@ then $\Delta \vdash M \{ \tau : \sigma = \rho \} : M [ \sigma ] =_A M [ \rho ]$.
 
 \begin{proof}
 Induction on derivations.
+\end{proof}
+
+\begin{proposition}[Subject Reduction]
+If $\Gamma \vdash s : T$ and $s \twoheadrightarrow t$ then $\Gamma \vdash t : T$.
+\end{proposition}
+
+\begin{proof}
+It is sufficient to prove the case $s \rightarrow t$.  The proof is by a case analysis on $s \rightarrow t$, using the Generation,
+Well-Typed Substitution and Path Substitution Lemmas.
 \end{proof}
 
 \subsubsection{Canonicity}
@@ -538,6 +555,29 @@ $$ \begin{array}{lrcl}
 
 \section{Examples}
 
+We present two examples illustrating the way that proofs and paths behave in PHOML.  In each case, we compare the example with the same construction performed in cubical type theory.
+
+\subsection{Functions Respect Logical Equivalence}
+\label{section:exampletwo}
+
+As discussed in the introduction, every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must respect logical equivalence.  This fact can actually be proved in PHOML,
+in the following sense: there exists a proof $\delta$ of
+$$ f : \Omega \rightarrow \Omega, x : \Omega, y : \Omega, p : x \supset y, q : y \supset x \vdash \delta : f x \supset f y $$
+and a proof of $f y \supset f x$ in the same context.  Together, these can be read as a proof of 'if $f : \Omega \rightarrow \Omega$ and $x$ and $y$ are logically equivalent, then $fx$ and $fy$ are logically equivalent'.
+
+Specifically, take
+$$ \delta \eqdef (\reff{f}_{xy} \univ{x}{y}{p}{q})^+ \enspace . $$
+
+Note that this is not possible in Martin-L\"{o}f Type Theory.
+
+In cubical type theory, we can construct a term $\delta$ such that
+$$ f : \Prop \rightarrow \Prop, x : \Prop, y : \Prop, p : x.1 \rightarrow y.1, q : y.1 \rightarrow x.1 \vdash \delta : (f x).1 \rightarrow (f y).1 $$
+In fact, we can go further and prove that equality of propositions is equal to logical equivalence.  That is, we can prove
+$$ \Path{U}{(\Path{\Prop}{x}{y})}{((x.1 \rightarrow y.1) \times (y.1 \rightarrow x.1))} \enspace . $$
+
+\subsection{Computation with Paths}
+
+Let $\top \eqdef \bot \supset \bot$.
 Using propositional extensionality, we can construct a path of type $\top = \top \supset \top$, and hence a proof of $\top \supset (\top \supset \top)$.
 But which of the canonical proofs of $\top \supset (\top \supset \top)$ have we constructed?
 
@@ -582,7 +622,7 @@ replacing in our example some occurrences of $\top$ with $X$ and others with $Y$
 $$ Y =_\Omega X \supset Y $$
 and hence a proof of $Y \supset (X \supset Y)$.  By parametricity, any proof that we can construct in the context $\Delta$ of this proposition must return the left input.
 
-\subsection{Comparison with Cubical Type Theory}
+\subsubsection{Comparison with Cubical Type Theory}
 \label{section:cubical}
 
 In cubical type theory, we say that a type $A$ is a \emph{proposition} iff any two terms of type $A$ are propositionally equal; that is, there exists a path between any two terms of type $A$.  Let
@@ -612,31 +652,17 @@ is definitionally equal to
 $$ Q \delta \epsilon = \mapid{\top}{\mapid{\top}{\delta}} $$
 where $\mapid{}{}$ represents transport across the trivial path:
 $$ \mapid{A}{t} \eqdef \comp^i \, A \, [] \, t \qquad (i \text{ does not occur in } A) \enspace . $$
-(For the details of the calculation, see the appendix.)
+(For the details of the calculation, see Appendix \ref{appendix:cubical}.)
 
 In the version of cubical type theory given in \cite{bch:cubical}, we have $\mapid{X}{x}$ is definitionally equal to $x$, and therefore $Q \delta \epsilon = \delta$, just as in PHOML.
 This is no longer true in the version of cubical type theory given in \cite{cchm:cubical}.
 
-\subsection{Functions Respect Logical Equivalence}
-\label{section:exampletwo}
-
-As discussed in the introduction, every function of type $\Omega \rightarrow \Omega$ that can be constructed in PHOML must respect logical equivalence.  This fact can actually be proved in PHOML,
-in the following sense: there exists a proof $\delta$ of
-$$ f : \Omega \rightarrow \Omega, x : \Omega, y : \Omega, p : x \supset y, q : y \supset x \vdash \delta : f x \supset f y $$
-and a proof of $f y \supset f x$ in the same context.  Together, these can be read as a proof of 'if $f : \Omega \rightarrow \Omega$ and $x$ and $y$ are logically equivalent, then $fx$ and $fy$ are logically equivalent'.
-
-Specifically, take
-$$ \delta \eqdef (\reff{f}_{xy} \univ{x}{y}{p}{q})^+ \enspace . $$
-
-Note that this is not possible in Martin-L\"{o}f Type Theory.
-
-In cubical type theory, we can construct a term $\delta$ such that
-$$ f : \Prop \rightarrow \Prop, x : \Prop, y : \Prop, p : x.1 \rightarrow y.1, q : y.1 \rightarrow x.1 \vdash \delta : (f x).1 \rightarrow (f y).1 $$
-In fact, we can go further and prove that equality of propositions is equal to logical equivalence.  That is, we can prove
-$$ \Path{U}{(\Path{\Prop}{x}{y})}{((x.1 \rightarrow y.1) \times (y.1 \rightarrow x.1))} \enspace . $$
-
 \section{Computable Expressions}
 \label{section:computable}
+
+We now proceed with the proof of canonicity for PHOML.  Our proof follows the lines of the Girard-Tait reducibility method \cite{tait1967}: we define what it means to be a \emph{computable}
+term (proof, path) of a given type (proposition, equation), and prove: (1) every typable expression is computable (2) every computable expression reduces to either a neutral or a canonical
+expression.  In particular, every closed computable expression reduces to a canonical expression.
 
 In this section, we use $E$, $F$, $S$ and $T$ as metavariables that range over expressions.  In each case, either $E$ and $F$ are terms and $S$ and $T$ are types; or $E$ and $F$ are
 proofs and $S$ and $T$ are propositions; or $E$ and $F$ are paths and $S$ and $T$ are equations.
@@ -763,7 +789,7 @@ $\models \varphi : \Omega$ if and only if $\varphi$ reduces to a canonical propo
 If $\models \varphi : \Omega$ then $\models \varphi \{\}^+ : \varphi \supset \varphi$.  Therefore $\varphi \supset \varphi$ reduces to a canonical proposition,
 and so $\varphi$ must reduce to a canonical proposition.
 
-Conversely, suppose $\varphi$ reduces to a canonical proposition $\theta$.  We have $\varphi \{\} \twoheadrightarrow \theta \{\} \twoheadrightarrow \reff{\theta}$, and so $\models \varphi \{\} : \varphi =_\Omega \varphi$ by Expansion (Lemma \ref{lm:expansion}).  Hence $\models \varphi : \Omega$.
+Conversely, suppose $\varphi$ reduces to a canonical proposition $\theta$.  We have $\varphi \{\} \twoheadrightarrow \theta \{\}$, and $\theta \{\} \twoheadrightarrow \reff{\theta}$ for every canonical proposition $\theta$.  Therefore, $\models \varphi \{\} : \varphi =_\Omega \varphi$ by Expansion (Lemma \ref{lm:expansion}).  Hence $\models \varphi : \Omega$.
 \end{proof}
 
 \begin{lemma}
@@ -836,7 +862,7 @@ and hence by Reduction $\models \delta \epsilon : \psi'$ as required.
 If $P \equiv \reff{M}$ and $Q \equiv \univ{N}{N'}{\chi}{\chi'}$, then we have
 \begin{align*}
 (P \supset^* Q)^+ \delta \epsilon & \rightarrow \univ{M \supset N}{M \supset N'}{\lambda pq.\chi(pq)}{\lambda pq.\chi'(pq)}^+ \delta \epsilon \\
-& \rightarrow (\lambda pq.\chi(pq)) \delta \epsilon
+& \rightarrow (\lambda pq.\chi(pq)) \delta \epsilon \\
 & \twoheadrightarrow \chi (\delta \epsilon)
 \end{align*}
 We have $\models P^- \epsilon : \varphi$, hence $\models \epsilon : \varphi$ by Reduction, and so $\models \delta \epsilon : \psi$.  Therefore,
@@ -1024,6 +1050,88 @@ Therefore,
 
 The proof follows the same lines as the proof given in \cite{luo:car}.
 
-Define the notion of \emph{parallel one-step reduction} $\rhd$ by. $E \rhd F$ if and only if
-$F$ is obtained from $E$ by reducing one or more of the redexes that exist in $E$.  
+\begin{figure}
+\paragraph*{Reflexivity}
+$$ \infer{E \rhd E}{} $$
+\paragraph*{Reduction on Terms}
+$$ \infer{(\lambda x:A.M)N \rhd M[x:=N]}{} \quad
+\infer{MN \rhd M'N}{M \rhd M'} \quad
+\infer{\varphi \supset \psi \rhd \varphi' \supset \psi'}{\varphi \rhd \varphi' \quad \psi \rhd \psi'} $$
+\paragraph*{Reduction on Proofs}
+$$\infer{(\lambda p : \varphi . \delta)\epsilon \rhd \delta [ p := \epsilon ]}{} \quad
+\infer{\reff{\varphi}^+ \rhd \lambda p : \varphi . p}{} \quad
+\infer{\reff{\varphi}^- \rhd \lambda p : \varphi . p}{} $$
+$$ \infer{\delta \epsilon \rhd \delta' \epsilon}{\delta \rhd \delta'} \quad
+\infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rhd \delta}{} \quad
+\infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^- \rhd \epsilon}{} $$
+$$ \infer{P^+ \rhd Q^+}{P \rhd Q} \quad
+\infer{P^- \rhd Q^-}{P \rhd Q}$$
+$$ \infer{\lambda p:\phi.\delta \rhd \lambda p:\phi'.\delta}{\phi \rhd \phi'} $$
+\paragraph*{Reduction on Paths}
+$$\infer{(\triplelambda e:x =_A y.P)_{MN} Q \rhd P [x := M, y := N, e := Q]}{} $$
+$$ \infer{\reff{\lambda x:A.M}_{N N'} P \rhd M \{ x:=P : N = N' \}}{} $$
+$$ \infer{\reff{\varphi} \supset^* \reff{\psi} \rhd \reff{\varphi \supset \psi}}{} $$
+$$ \infer{\reff{\varphi} \supset^* \univ{\psi}{\chi}{\delta}{\epsilon} \rhd
+\univ{\varphi \supset \psi}{\varphi \supset \chi}{\lambda p:\varphi \supset \psi. \lambda q : \varphi. \delta (pq)}{\lambda p : \varphi \supset \chi. \lambda q : \varphi. \epsilon (pq)}}{} $$
+$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon} \supset^* \reff{\chi} \rhd
+\univ{\varphi \supset \chi}{\psi \supset \chi}{\lambda p : \varphi \supset \chi. \lambda q : \psi. p (\epsilon q)}{\lambda p:\psi \supset \chi. \lambda q : \varphi. p(\delta q)}}{} $$
+$$ \infer{\begin{array}{l}
+\univ{\varphi}{\psi}{\delta}{\epsilon} \supset^* \univ{\varphi'}{\psi'}{\delta'}{\epsilon'} \\
+ \rhd
+\univ{\varphi \supset \varphi'}{\psi \supset \psi'}{\lambda p : \varphi \supset \varphi'. \lambda q : \psi. \delta' (p(\epsilon q))}{\lambda p : \psi \supset \psi'. \lambda q : \varphi. \epsilon' (p (\delta q))}
+\end{array}}{} $$
+$$ \infer{P_{MN} Q \rhd P'_{MN} Q}{P \rhd P'} \quad
+\infer{\reff{M} \rhd \reff{N}}{M \rhd N} \quad
+\infer{P \supset^* Q \rhd P' \supset^* Q}{P \rhd P' \quad Q \rhd Q'} $$
+$$ \infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi'}{\psi'}{\delta'}{\epsilon'}}{\phi \rhd \phi' \quad \psi \rhd \psi' \quad \delta \rhd \delta' \quad \epsilon \rhd \epsilon'} $$
+\caption{Parallel One-Step Reduction}
+\label{fig:POSR}
+\end{figure}
+
+\begin{definition}[Parallel One-Step Reduction]
+Define the notion of \emph{parallel one-step reduction} $\rhd$ by the rules given in Figure \ref{fig:POSR}.
+Let $\rhd^*$ be the transitive closure of $\rhd$.
+\end{definition}
+
+\begin{lemma}
+\label{lm:rhdiff}
+\begin{enumerate}
+\item
+If $E \rightarrow F$ then $E \rhd F$.
+\item
+If $E \twoheadrightarrow F$ then $E \rhd^* F$.
+\item
+If $E \rhd^* F$ then $E \twoheadrightarrow F$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+These are easily proved by induction.
+\end{proof}
+
+Our reason for defining $\rhd$ is that it satisfies the diamond property:
+
+\begin{lemma}[Diamond Property]
+If $E \rhd F$ and $E \rhd G$ then there exists an expression $H$ such that $F \rhd H$ and $G \rhd H$.
+\end{lemma}
+
+\begin{proof}
+The proof is by case analysis on $E \rhd F$ and $E \rhd G$.  We give the details for one case here:
+$$ \reff{\phi} \supset^* \reff{\psi} \rhd \reff{\phi \supset \psi} \mbox{ and } \reff{\phi} \supset^* \reff{\psi} \rhd \reff{\phi'} \supset^* \reff{\psi'} $$
+where $\phi \rhd \phi'$ and $\psi \rhd \psi'$.  In this case, we have $\reff{\phi \supset \psi} \rhd \reff{\phi' \supset \psi'}$ and $\reff{\phi'} \supset^* \reff{\psi'}
+\rhd \reff{\phi' \supset \psi'}$.
+\end{proof}
+
+\begin{corollary}
+If $E \rhd^* F$ and $E \rhd^* G$ then there exists $H$ such that $F \rhd^* H$ and $G \rhd^* H$.
+\end{corollary}
+
+\begin{corollary}
+If $E \twoheadrightarrow F$ and $E \twoheadrightarrow G$ then $F \twoheadrightarrow H$ and $G \twoheadrightarrow H$.
+\end{corollary}
+
+\begin{proof}
+Immediate from the previous corollary and Lemma \ref{lm:rhdiff}.
+\end{proof}
+
 \end{document}

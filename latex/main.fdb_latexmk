@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex main"] 1481902294 "main.aux" "main.bbl" "main" 1481902296
+["bibtex main"] 1481912581 "main.aux" "main.bbl" "main" 1481912583
   "../../../../type.bib" 1481532867 257699 eee31fc5fb5c7535fa58d2f33fd1d238 ""
   "/usr/share/texmf/bibtex/bst/plainurl/plainurl.bst" 1480006159 23633 0605c9c538b27adaa6aa4c7ec71944c1 ""
-  "main.aux" 1481898286 5486 c85f2839a6efb780d9a2377dc1622d9b ""
+  "main.aux" 1481908575 6002 59ad6b96e2957eb17a262f30012b2686 ""
   "main.bcf" 0 -1 0 ""
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1481902294 "main.tex" "main.pdf" "main" 1481902296
+["pdflatex"] 1481912582 "main.tex" "main.pdf" "main" 1481912583
   "/usr/share/texmf/tex/generic/babel/babel.def" 1156702963 29121 e77b4424f08be0203e3344877c6692b1 ""
   "/usr/share/texmf/tex/generic/babel/babel.sty" 1156702963 9003 27e67bc37e2b812bf4e1bf4d9fe3489b ""
   "/usr/share/texmf/tex/generic/babel/english.ldf" 1137109563 6608 fe33acefb75a26ad10c2c6f09d423415 ""
@@ -103,13 +103,13 @@
   "/usr/share/texmf/tex/latex/tools/tabularx.sty" 1156702393 6063 3d2a3e9625d00889b0c7fca1acdadfba ""
   "cc-by.pdf" 1480346093 59879 b534039833ae0720e95faf00c3f48850 ""
   "lipics-logo-bw.pdf" 1480346093 13746 f468fb282d86ba458872de888bef15fe ""
-  "main.aux" 1481898286 5486 c85f2839a6efb780d9a2377dc1622d9b ""
-  "main.bbl" 1481898286 1646 44034d3bf8626c77dead095168d3eb8c "bibtex main"
-  "main.out" 1481898286 1172 8bc089cc916a030e132098a9d6fff088 ""
-  "main.tex" 1481898272 60465 fd11e6479bb35aed20fccdf59c28cc30 ""
+  "main.aux" 1481908575 6002 59ad6b96e2957eb17a262f30012b2686 ""
+  "main.bbl" 1481908574 1811 f950a49713ff912bf9faf43bb15c8176 "bibtex main"
+  "main.out" 1481908575 1250 ff3eab9f0dce9283ac6cd9da2783e378 ""
+  "main.tex" 1481908567 66355 6d12214240f843d8c2cf10b83900f456 ""
   (generated)
   "main.out"
   "main.log"
   "main.pdf"
-  "main.vtc"
   "main.aux"
+  "main.vtc"
