@@ -49,3 +49,7 @@ decodeNTA (V ,Path) = decodeNTA V , -Path
   subst (λ y → ⊧ var (↑ x) ∶ y) (≡-sym sub-idSub) 
   (⊧rep {decodeNTA V} {decodeNTA V , -Path} {_} {E = var x} {typeof x Γ} {ρ = upRep} 
   (subst (λ y → ⊧ var x ∶ y) sub-idSub (⊧idSub V Γ (context-validity Γ⊢M∶A) x)))
+
+soundness' : ∀ {V} {Γ : Context (decodeNTA V)} {K} {E : VExpression (decodeNTA V) K} {T} → Γ ⊢ E ∶ T → ⊧ E ∶ T
+soundness' {V} {Γ} {K} {E} {T} Γ⊢E∶T = subst₂ (λ x y → ⊧ x ∶ y) {E ⟦ idSub (decodeNTA V) ⟧} {E} {T ⟦ idSub (decodeNTA V) ⟧} {T} sub-idSub sub-idSub 
+  (soundness Γ⊢E∶T (⊧idSub V Γ (context-validity Γ⊢E∶T)))
