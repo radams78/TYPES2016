@@ -47,7 +47,7 @@
 \usepackage{suffix}
 
 \newcommand*{\eqdef}{\mathrel{\smash{\stackrel{\text{def}}{=}}}}
-\newcommand*{\isotoid}{\ensuremath{\mathrm{isotoid}}}
+\newcommand*{\isotoid}{\ensuremath{\mathsf{isotoid}}}
 \newcommand*{\reff}[1]{\ensuremath{\mathrm{ref} \left( {#1} \right)}}
 \newcommand*{\univ}[4]{\ensuremath{\mathrm{univ}_{{#1}, {#2}} \left({#3} , {#4} \right)}}
 \WithSuffix\newcommand\univ*[2]{\ensuremath{\mathsf{univ} \left( {#1} , {#2} \right)}}
@@ -73,7 +73,7 @@
 \maketitle
 
 \begin{abstract}
-The univalence axiom expresses the principle of extensionality for dependent types theory. However, if we simply add the univalence axiom to type theory, then we lose the property of \emph{canonicity} --- that every closed term computes to a canonical form. A computation becomes `stuck' when it reaches the point that it needs to evaluate a proof term that is an application of the univalence axiom. So we wish to find a way to compute with the univalence axiom. While this problem has been solved with the formulation of cubical type theory, where the computations are expressed using a nominal extension of lambda-calculus, it may be interesting to explore alternative solutions, which do not require such an extension.
+The univalence axiom expresses the principle of extensionality for dependent type theory. However, if we simply add the univalence axiom to type theory, then we lose the property of \emph{canonicity} --- that every closed term computes to a canonical form. A computation becomes `stuck' when it reaches the point that it needs to evaluate a proof term that is an application of the univalence axiom. So we wish to find a way to compute with the univalence axiom. While this problem has been solved with the formulation of cubical type theory, where the computations are expressed using a nominal extension of lambda-calculus, it may be interesting to explore alternative solutions, which do not require such an extension.
 
 As a first step, we present here a system of propositional higher-order minimal logic (PHOML).  There are three kinds of typing judgement in PHOML.  There are \emph{terms} which inhabit \emph{types}, which are the simple types over $\Omega$.  There are \emph{proofs} which inhabit \emph{propositions}, which are the terms of type $\Omega$.  The canonical propositions are those constructed from $\bot$ by implication $\supset$.  Thirdly, there are \emph{paths} which inhabit \emph{equations} $M =_A N$, where $M$ and $N$ are terms of type $A$.  There are two ways to prove an equality: reflexivity, and \emph{propositional extensionality} --- logically equivalent propositions are equal.  This system allows for some definitional equalities that are not present in cubical type theory, namely that transport along the trivial path is identity.
 

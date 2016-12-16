@@ -23,6 +23,12 @@ Martin Hofmann.
 \newblock In {\em Semantics and Logics of Computation}, pages 79--130.
   Cambridge University Press, 1997.
 
+\bibitem{luo:car}
+Zhaohui Luo.
+\newblock {\em Computation and Reasoning: A Type Theory for Computer Science}.
+\newblock Number~11 in International Series of Monographs on Computer Science.
+  Oxford University Press, 1994.
+
 \bibitem{Polonsky14a}
 Andrew Polonsky.
 \newblock Internalization of extensional equality.

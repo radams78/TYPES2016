@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  14 DEC 2016 18:30
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2016.4.4)  16 DEC 2016 16:31
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -1018,6 +1018,11 @@ LaTeX Font Warning: Font shape `U/msa/m/n' in size <9.5> not available
 LaTeX Font Warning: Font shape `U/msb/m/n' in size <9.5> not available
 (Font)              size <9> substituted on input line 78.
 
+LaTeX Font Info:    Try loading font information for OT1+lmss on input line 91.
+
+(/usr/share/texmf/tex/latex/lm/ot1lmss.fd
+File: ot1lmss.fd 2007/01/14 v1.3 Font defs for Latin Modern
+)
 <cc-by.pdf, id=83, 88.33pt x 31.11626pt>
 File: cc-by.pdf Graphic file (type pdf)
  <use cc-by.pdf>
@@ -1032,13 +1037,7 @@ File: lipics-logo-bw.pdf Graphic file (type pdf)
 <use lipics-logo-bw.pdf> [1
 
 {/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map} <./cc-by.pdf> <./lipics-l
-ogo-bw.pdf>]
-LaTeX Font Info:    Try loading font information for OT1+lmss on input line 119
-.
-
-(/usr/share/texmf/tex/latex/lm/ot1lmss.fd
-File: ot1lmss.fd 2007/01/14 v1.3 Font defs for Latin Modern
-) [2] [3]
+ogo-bw.pdf>] [2] [3]
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
 (Font)              Font shape `T1/lmss/m/sl' tried instead on input line 201.
 LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <10> not available
@@ -1095,18 +1094,18 @@ OT1/lmr/m/n/10 : \OML/lmm/m/it/10 A:M\OT1/lmr/m/n/10 [\OML/lmm/m/it/10 ^^[\OT1/
 lmr/m/n/10 ])\OML/lmm/m/it/10 N[]
  []
 
-[14] (./main.bbl) [15] [16] AED: lastpage setting LastPage [17] (./main.aux)
+[14] (./main.bbl [15]) [16] AED: lastpage setting LastPage [17] (./main.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.75pt have occurred.
 
  ) 
 Here is how much of TeX's memory you used:
- 11782 strings out of 256214
- 164573 string characters out of 1917001
- 298193 words of memory out of 1500000
+ 11783 strings out of 256214
+ 164580 string characters out of 1917001
+ 298221 words of memory out of 1500000
  14534 multiletter control sequences out of 10000+200000
- 226188 words of font info for 195 fonts, out of 1200000 for 2000
+ 223149 words of font info for 194 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
  43i,17n,44p,961b,489s stack positions out of 5000i,500n,6000p,200000b,15000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
@@ -1131,9 +1130,9 @@ xmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmt
 k10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fo
 nts/type1/bluesky/ams/msam10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm
 10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm7.pfb>
-Output written on main.pdf (17 pages, 610684 bytes).
+Output written on main.pdf (17 pages, 612022 bytes).
 PDF statistics:
- 471 PDF objects out of 1000 (max. 8388607)
- 122 named destinations out of 1000 (max. 131072)
- 61105 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 472 PDF objects out of 1000 (max. 8388607)
+ 123 named destinations out of 1000 (max. 131072)
+ 60593 words of extra memory for PDF output out of 61914 (max. 10000000)
 

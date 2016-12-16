@@ -16,6 +16,14 @@ decode-CanonE (neutral P) = decode-NeutralE P
 decode-CanonE (reffC M) = reff M
 decode-CanonE (univC φ ψ δ ε) = univ φ ψ δ ε
 
+app*-CanonE : ∀ {V} {P Q : Path V} {M N P₀} → app* M N P Q ≡ decode-CanonE P₀ → Σ[ N ∈ NeutralE V ] P ≡ decode-NeutralE N
+app*-CanonE {P₀ = neutral (var _)} ()
+app*-CanonE {P₀ = neutral (app*N _ _ P _)} PQ≡PQ = P ,p app*-injl PQ≡PQ
+app*-CanonE {P₀ = neutral (imp*l _ _)} ()
+app*-CanonE {P₀ = neutral (imp*r _ _)} ()
+app*-CanonE {P₀ = reffC _} ()
+app*-CanonE {P₀ = univC _ _ _ _} ()
+
 reflect-canonE : ∀ {U V} {P : Path U} {Q : CanonE V} {ρ : Rep U V} →
   P 〈 ρ 〉 ≡ decode-CanonE Q → Σ[ P' ∈ CanonE U ] P ≡ decode-CanonE P'
 reflect-canonE {P = P} {neutral Q} {ρ} Pρ≡Q = 
