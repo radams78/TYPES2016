@@ -1,5 +1,5 @@
 module PHOML.Neutral where
-
+open import Data.Empty renaming (⊥ to Empty)
 open import Data.Product renaming (_,_ to _,p_)
 open import Data.Sum
 open import Prelims
@@ -171,3 +171,14 @@ neutralP-red (dirN d (imp*r x δ)) (inc (dirR P⇒Q)) =
   let Q' ,p Q≡Q' = neutralE-osr (imp*r x δ) P⇒Q in
   (dirN d Q') ,p (cong (dir d) Q≡Q')
 neutralP-red δ ref = δ ,p refl
+
+NeutralE-not-closed : NeutralE ∅ → Empty
+NeutralE-not-closed (var ())
+NeutralE-not-closed (app*N _ _ N _) = NeutralE-not-closed N
+NeutralE-not-closed (imp*l N _) = NeutralE-not-closed N
+NeutralE-not-closed (imp*r _ N) = NeutralE-not-closed N
+
+NeutralP-not-closed : NeutralP ∅ → Empty
+NeutralP-not-closed (var ())
+NeutralP-not-closed (app N _) = NeutralP-not-closed N
+NeutralP-not-closed (dirN _ N) = NeutralE-not-closed N

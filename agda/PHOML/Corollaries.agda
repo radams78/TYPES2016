@@ -1,4 +1,5 @@
 module PHOML.Corollaries where
+open import Data.Empty renaming (⊥ to Empty)
 open import Data.Product renaming (_,_ to _,p_)
 open import Prelims
 open import PHOML.Grammar
@@ -53,3 +54,11 @@ decodeNTA (V ,Path) = decodeNTA V , -Path
 soundness' : ∀ {V} {Γ : Context (decodeNTA V)} {K} {E : VExpression (decodeNTA V) K} {T} → Γ ⊢ E ∶ T → ⊧ E ∶ T
 soundness' {V} {Γ} {K} {E} {T} Γ⊢E∶T = subst₂ (λ x y → ⊧ x ∶ y) {E ⟦ idSub (decodeNTA V) ⟧} {E} {T ⟦ idSub (decodeNTA V) ⟧} {T} sub-idSub sub-idSub 
   (soundness Γ⊢E∶T (⊧idSub V Γ (context-validity Γ⊢E∶T)))
+
+canonicityP : ∀ {V} {Γ : Context (decodeNTA V)} {δ : Proof (decodeNTA V)} {φ} → Γ ⊢ δ ∶ φ → Σ[ ε ∈ CanonP (decodeNTA V) ] δ ↠ decode-CanonP ε
+canonicityP {V} Γ⊢δ∶φ = ⊧P-wn (soundness' {V} Γ⊢δ∶φ)
+
+consistency : ∀ {δ : Proof ∅} → 〈〉 ⊢ δ ∶ ⊥ → Empty
+consistency {δ} ⊢δ∶⊥ with soundness' {∅} ⊢δ∶⊥
+consistency ⊢δ∶⊥ | bot ,p _ ,p ε ,p _ = NeutralP-not-closed ε
+consistency ⊢δ∶⊥ | imp ε ε₁ ,p ⊥↠φ⊃ψ ,p x = bot-not-red-imp ⊥↠φ⊃ψ
