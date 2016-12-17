@@ -1,8 +1,10 @@
 module PHOML.Corollaries where
 open import Data.Empty renaming (⊥ to Empty)
 open import Data.Product renaming (_,_ to _,p_)
+open import Data.Sum
 open import Prelims
 open import PHOML.Grammar
+open import PHOML.PathSub
 open import PHOML.Red
 open import PHOML.Canon
 open import PHOML.Neutral
@@ -57,6 +59,17 @@ soundness' {V} {Γ} {K} {E} {T} Γ⊢E∶T = subst₂ (λ x y → ⊧ x ∶ y) {
 
 canonicityP : ∀ {V} {Γ : Context (decodeNTA V)} {δ : Proof (decodeNTA V)} {φ} → Γ ⊢ δ ∶ φ → Σ[ ε ∈ CanonP (decodeNTA V) ] δ ↠ decode-CanonP ε
 canonicityP {V} Γ⊢δ∶φ = ⊧P-wn (soundness' {V} Γ⊢δ∶φ)
+
+⊧E-wn : ∀ {V} {P : Path V} {M A N} → ⊧E P ∶ M ≡〈 A 〉 N → Σ[ Q ∈ CanonE V ] P ↠ decode-CanonE Q
+⊧E-wn {A = Ω} (⊧P+∶M⊃N ,p _) with Lemma35e ⊧P+∶M⊃N
+⊧E-wn {P = P} {A = Ω} (⊧P+∶M⊃N ,p _) | (P' ,p P↠P') = CanonΩ2CanonE P' ,p subst (λ x → P ↠ x) (decode-CanonΩE {P = P'}) P↠P'
+⊧E-wn {V} {A = A ⇛ B} ⊧P∶M≡N = let 
+  P'cA ,p PcA↠P'cA = ⊧E-wn (⊧P∶M≡N V (idRep V) (c A) (c A) (c A ⟦⟦ refSub ∶ idSub V ≡ idSub V ⟧⟧) ⊧c ⊧c ⊧c) in 
+  app*-wnl {R = P'cA} PcA↠P'cA (cong₄ app* refl refl rep-idRep refl)
+
+canonicityE : ∀ {V} {Γ : Context (decodeNTA V)} {P M A N} → Γ ⊢ P ∶ M ≡〈 A 〉 N →
+  Σ[ Q ∈ CanonE _ ] P ↠ decode-CanonE Q
+canonicityE Γ⊢P∶M≡N = {!!}
 
 consistency : ∀ {δ : Proof ∅} → 〈〉 ⊢ δ ∶ ⊥ → Empty
 consistency {δ} ⊢δ∶⊥ with soundness' {∅} ⊢δ∶⊥

@@ -140,3 +140,18 @@ bot-red-bot (trans φ₁↠φ₂ φ₂↠φ₃) φ₁≡⊥ = bot-red-bot φ₂�
 bot-not-red-imp : ∀ {V} {φ ψ : Term V} → ⊥ ↠ φ ⊃ ψ → Empty
 bot-not-red-imp {V} {φ} {ψ} ⊥↠φ⊃ψ with bot-red-bot ⊥↠φ⊃ψ refl
 bot-not-red-imp ⊥↠φ⊃ψ | ()
+
+λλλ-red-ref : ∀ {V A} {P P' : Path V} {Q} → P ↠ P' → P ≡ λλλ A Q → P' ≡ λλλ A Q
+λλλ-red-ref (inc βE) ()
+λλλ-red-ref (inc βPP) ()
+λλλ-red-ref (inc ref⊃*) ()
+λλλ-red-ref (inc ref⊃*univ) ()
+λλλ-red-ref (inc univ⊃*ref) ()
+λλλ-red-ref (inc univ⊃*univ) ()
+λλλ-red-ref (inc (imp*l x₁)) ()
+λλλ-red-ref (inc (imp*r x₁)) ()
+λλλ-red-ref (inc (app*l x₁)) ()
+λλλ-red-ref (inc (reffR x₁)) ()
+λλλ-red-ref ref P≡λQ = P≡λQ
+λλλ-red-ref (trans P↠P' P'↠P'') P≡λQ = λλλ-red-ref P'↠P'' (λλλ-red-ref P↠P' P≡λQ)
+
