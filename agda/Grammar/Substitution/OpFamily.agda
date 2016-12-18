@@ -20,11 +20,11 @@ liftSub-•RS' {K = K} x₀ = refl
 liftSub-•RS' {U} {V} {W} {K} {ρ} {σ} {L} (↑ x) = let open ≡-Reasoning {A = Expression (W , K) (varKind L)} in 
   begin 
     (σ L x) 〈 ρ 〉 〈 upRep 〉
-  ≡⟨⟨ rep-comp (σ L x) ⟩⟩
+  ≡⟨⟨ rep-•R (σ L x) ⟩⟩
     (σ L x) 〈 upRep •R ρ 〉
   ≡⟨⟩
     (σ L x) 〈 liftRep K ρ •R upRep 〉
-  ≡⟨ rep-comp (σ L x) ⟩
+  ≡⟨ rep-•R (σ L x) ⟩
     (σ L x) 〈 upRep 〉 〈 liftRep K ρ 〉
   ∎
 

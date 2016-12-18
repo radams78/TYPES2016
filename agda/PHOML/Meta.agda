@@ -7,55 +7,33 @@ open import PHOML.Rules
 open import PHOML.PathSub
 open import PHOML.Meta.ConVal public
 open import PHOML.Meta.Gen public
-
-prop-validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → Γ ⊢ δ ∶ φ → Γ ⊢ φ ∶ ty Ω
-eq-validity₁ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P ∶ E → E ≡ M ≡〈 A 〉 N → Γ ⊢ M ∶ ty A
-eq-validity₂ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P ∶ E → E ≡ M ≡〈 A 〉 N → Γ ⊢ N ∶ ty A
-
-prop-validity (varR _ validΓ) = context-validity-Prop validΓ
-prop-validity (appPR Γ⊢δ∶φ⊃ψ _) = generation-⊃₂ (prop-validity Γ⊢δ∶φ⊃ψ)
-prop-validity (ΛPR Γ⊢φ∶Ω Γ⊢ψ∶Ω _) = ⊃R Γ⊢φ∶Ω Γ⊢ψ∶Ω
-prop-validity (convR _ Γ⊢φ∶Ω _) = Γ⊢φ∶Ω
-prop-validity (plusR Γ⊢P∶φ≡ψ) = ⊃R (eq-validity₁ Γ⊢P∶φ≡ψ refl) (eq-validity₂ Γ⊢P∶φ≡ψ refl)
-prop-validity (minusR Γ⊢P∶φ≡ψ) = ⊃R (eq-validity₂ Γ⊢P∶φ≡ψ refl) (eq-validity₁ Γ⊢P∶φ≡ψ refl)
-
-eq-validity₁ (varR {Γ = Γ} _ validΓ) E≡M≡N = subst (λ E → Γ ⊢ left E ∶ ty (type E)) E≡M≡N (context-validity-Eq₁ validΓ)
-eq-validity₁ {Γ = Γ} (refR Γ⊢P∶M≡N) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢P∶M≡N
-eq-validity₁ {Γ = Γ} (⊃*R Γ⊢P∶φ≡φ' Γ⊢Q∶ψ≡ψ') E≡φ⊃ψ≡φ'⊃ψ' = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡φ⊃ψ≡φ'⊃ψ') (eq-inj₂ E≡φ⊃ψ≡φ'⊃ψ') (⊃R (eq-validity₁ Γ⊢P∶φ≡φ' refl) (eq-validity₁ Γ⊢Q∶ψ≡ψ' refl))
-eq-validity₁ {Γ = Γ} (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) E≡φ≡ψ = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡φ≡ψ) (eq-inj₂ E≡φ≡ψ) (generation-⊃₂ (prop-validity Γ⊢ε∶ψ⊃φ))
-eq-validity₁ {Γ = Γ} (lllR Γ⊢M∶A _ _) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M∶A
-eq-validity₁ {Γ = Γ} (app*R Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) (appR (eq-validity₁ Γ⊢P∶M≡M' refl) Γ⊢N∶A)
-eq-validity₁ {Γ = Γ} (convER Γ⊢P∶M≡N Γ⊢M'∶A Γ⊢N'∶A M≃M' N≃N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M'∶A
-
-eq-validity₂ {Γ = Γ} (varR _ validΓ) E≡M≡N = subst (λ E → Γ ⊢ right E ∶ ty (type E)) E≡M≡N (context-validity-Eq₂ validΓ)
-eq-validity₂ {Γ = Γ} (refR Γ⊢M∶A) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M∶A
-eq-validity₂ {Γ = Γ} (⊃*R Γ⊢P∶φ≡ψ Γ⊢Q∶φ'≡ψ') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) (⊃R (eq-validity₂ Γ⊢P∶φ≡ψ refl) (eq-validity₂ Γ⊢Q∶φ'≡ψ' refl))
-eq-validity₂ {Γ = Γ} (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) (generation-⊃₂ (prop-validity Γ⊢δ∶φ⊃ψ))
-eq-validity₂ {Γ = Γ} (lllR _ Γ⊢N∶A⇛B _) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢N∶A⇛B
-eq-validity₂ {Γ = Γ} (app*R Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) (appR (eq-validity₂ Γ⊢P∶M≡M' refl) Γ⊢N'∶A)
-eq-validity₂ {Γ = Γ} (convER _ _ Γ⊢N'∶A _ _) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢N'∶A
-
-_∶_⟶_ : ∀ {U V} → Sub U V → Context V → Context U → Set
-_∶_⟶_ {U} {V} σ Γ Δ = ∀ {K} (x : Var U K) → Γ ⊢ σ _ x ∶ typeof x Δ ⟦ σ ⟧
+open import PHOML.Meta.Sub public
+open import PHOML.Meta.TypeVal public
 
 _∶_≡_∶_⟶_ : ∀ {U V} → PathSub U V → Sub U V → Sub U V → Context V → Context U → Set
 τ ∶ ρ ≡ σ ∶ Γ ⟶ Δ = ∀ x → Γ ⊢ τ x ∶ ρ _ x ≡〈 typeof' x Δ 〉 σ _ x
 
-postulate substitution : ∀ {U} {V} {σ : Sub U V} {K}
-                       {Γ : Context U} {M : Expression U (varKind K)} {A} {Δ} →
-                       Γ ⊢ M ∶ A → valid Δ → σ ∶ Δ ⟶ Γ → Δ ⊢ M ⟦ σ ⟧ ∶ A ⟦ σ ⟧
+liftPathSub-typed : ∀ {U V} {τ : PathSub U V} {ρ σ Γ Δ A} →
+  τ ∶ ρ ≡ σ ∶ Γ ⟶ Δ → valid Γ → liftPathSub τ ∶ sub↖ ρ ≡ sub↗ σ ∶ addpath Γ A ⟶ Δ ,T A
+liftPathSub-typed τ∶ρ≡σ validΓ x₀ = varR x₀ (valid-addpath validΓ)
+liftPathSub-typed {Γ = Γ} {A = A} τ∶ρ≡σ validΓ (↑ x) = subst₄ (λ x₃ y z w → addpath Γ A ⊢ x₃ ∶ y ≡〈 z 〉 w) {!!} {!!} {!!} {!!} 
+  (weakening (τ∶ρ≡σ x) (valid-addpath validΓ) {!!})
 
-postulate ⊃-gen₁ : ∀ {V} {Γ : Context V} {φ} {ψ} → Γ ⊢ φ ⊃ ψ ∶ ty Ω → Γ ⊢ φ ∶ ty Ω
-
-postulate Type-Reduction : ∀ {V} {Γ : Context V} {K} {M : Expression V (varKind K)} {A} {B} →
-                         Γ ⊢ M ∶ A → A ↠ B → Γ ⊢ M ∶ B
-
-postulate path-substitution : ∀ {U} {V} {Γ : Context U} {Δ : Context V} 
-                            {ρ} {σ} {τ} {M} {A} →
-                            (Γ ⊢ M ∶ A) → (τ ∶ ρ ≡ σ ∶ Δ ⟶ Γ) →
-                            (ρ ∶ Δ ⟶ Γ) → (σ ∶ Δ ⟶ Γ) → 
-                            valid Δ → 
-                            Δ ⊢ M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ∶ M ⟦ ρ ⟧ ≡〈 yt A 〉 M ⟦ σ ⟧
+path-substitution : ∀ {U} {V} {Γ : Context U} {Δ : Context V} 
+  {ρ} {σ} {τ} {M} {A} →
+  Γ ⊢ M ∶ A → τ ∶ ρ ≡ σ ∶ Δ ⟶ Γ →
+  ρ ∶ Δ ⟶ Γ → σ ∶ Δ ⟶ Γ → 
+  valid Δ → 
+  Δ ⊢ M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ∶ M ⟦ ρ ⟧ ≡〈 yt A 〉 M ⟦ σ ⟧
+path-substitution (varR x _) τ∶ρ≡σ _ _ _ = τ∶ρ≡σ x
+path-substitution (appR Γ⊢M∶A⇛B Γ⊢N∶A) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = 
+  app*R (substitution Γ⊢N∶A validΔ ρ∶Δ⟶Γ) (substitution Γ⊢N∶A validΔ σ∶Δ⟶Γ) (path-substitution Γ⊢M∶A⇛B τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ) 
+    (path-substitution Γ⊢N∶A τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ)
+path-substitution (ΛR Γ,A⊢M∶B) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = lllR (ΛR (substitution Γ,A⊢M∶B (ctxTR validΔ) (liftSub-typed ρ∶Δ⟶Γ (ctxTR validΔ)))) 
+  (ΛR (substitution Γ,A⊢M∶B (ctxTR validΔ) (liftSub-typed σ∶Δ⟶Γ (ctxTR validΔ)))) 
+  (convER (path-substitution Γ,A⊢M∶B {!liftPathSub-typed!} {!!} {!!} {!!}) {!!} {!!} {!!} {!!})
+path-substitution (⊥R validΓ) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = {!!}
+path-substitution (⊃R Γ⊢M∶A Γ⊢M∶A₁) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = {!!}
 {- path-substitution (varR x validΓ) τ∶ρ≡σ _ _ _ = τ∶ρ≡σ x
 path-substitution (⊥R validΓ) _ _ _ validΔ = refR (⊥R validΔ)
 path-substitution (⊃R Γ⊢φ∶Ω Γ⊢ψ∶Ω) τ∶ρ≡σ ρ∶Γ⇒Δ σ∶Γ⇒Δ validΔ = ⊃*R (path-substitution Γ⊢φ∶Ω τ∶ρ≡σ ρ∶Γ⇒Δ σ∶Γ⇒Δ validΔ) (path-substitution Γ⊢ψ∶Ω τ∶ρ≡σ ρ∶Γ⇒Δ σ∶Γ⇒Δ validΔ)
@@ -93,20 +71,15 @@ path-substitution {U} {V} {Γ} {Δ} {ρ} {σ} {τ} (ΛR .{U} .{Γ} {A} {M} {B} �
                  (RSTClose.sym (redex-conv (subst (R -appTerm ((ΛT A M ⟦ ρ ⟧) ⇑ ⇑ ⇑ ∷ var x₂ ∷ [])) (sub↖-decomp M) (βR βT)))) (RSTClose.sym (redex-conv (subst (R -appTerm ((ΛT A M ⟦ σ ⟧) ⇑ ⇑ ⇑ ∷ var x₁ ∷ [])) (sub↗-decomp M) (βR βT)))) -}
 --  in lllR step1
 
-generation-ΛT : ∀ {V} {Γ : Context V} {A M B} →
-  Γ ⊢ ΛT A M ∶ ty B → Σ[ C ∈ Type ] Γ ,T A ⊢ M ∶ ty C × B ≡ A ⇛ C
-generation-ΛT (ΛR {B = B} Γ,A⊢M∶B) = B ,p Γ,A⊢M∶B ,p refl
+generation-ΛP : ∀ {V} {Γ : Context V} {φ δ ψ} →
+  Γ ⊢ ΛP φ δ ∶ ψ → Σ[ χ ∈ Term V ] Γ ,P φ ⊢ δ ∶ χ ⇑ × ψ ≃ φ ⊃ χ
+generation-ΛP (ΛPR _ _ Γ,φ⊢δ∶ψ) = _ ,p Γ,φ⊢δ∶ψ ,p ref
+generation-ΛP (convR Γ⊢Λδ∶ψ Γ⊢ψ'∶Ω ψ≃ψ') =
+  let χ ,p Γ,φ⊢δ∶χ ,p χ≃φ⊃ψ = generation-ΛP Γ⊢Λδ∶ψ in 
+  χ ,p Γ,φ⊢δ∶χ ,p trans (sym ψ≃ψ') χ≃φ⊃ψ
 
-botSub-typed : ∀ {V} {M : Term V} {Γ A} →
-  Γ ⊢ M ∶ ty A → x₀:= M ∶ Γ ⟶ Γ ,T A
-botSub-typed {V} {M} {Γ} {A} Γ⊢M∶A x₀ = change-type Γ⊢M∶A (≡-sym (botSub-upRep (ty A) {M}))
-botSub-typed {Γ = Γ} Γ⊢M∶A (↑ x) = change-type (varR x (context-validity Γ⊢M∶A)) (≡-sym (botSub-upRep (typeof x Γ)))
-
-⇛-injl : ∀ {A A' B B' : Type} → A ⇛ B ≡ A' ⇛ B' → A ≡ A'
-⇛-injl refl = refl
-
-⇛-injr : ∀ {A A' B B' : Type} → A ⇛ B ≡ A' ⇛ B' → B ≡ B'
-⇛-injr refl = refl
+context-validityP : ∀ {V} {Γ : Context V} {φ} → valid (Γ ,P φ) → Γ ⊢ φ ∶ ty Ω
+context-validityP (ctxPR Γ⊢φ∶Ω) = Γ⊢φ∶Ω
 
 subject-reduction-⇒ : ∀ {V} {K} {E F : Expression V (varKind K)} {Γ} {A} →
   Γ ⊢ E ∶ A → E ⇒ F → Γ ⊢ F ∶ A
@@ -114,11 +87,24 @@ subject-reduction-⇒ {A = app (-ty B) []} Γ⊢ΛMN∶B βT =
   let C ,p Γ⊢ΛM∶C⇛B ,p Γ⊢N∶C = generation-appT Γ⊢ΛMN∶B in
   let D ,p Γ,A⊢M∶D ,p C⇛B≡A⇛D = generation-ΛT Γ⊢ΛM∶C⇛B in
   change-type (substitution Γ,A⊢M∶D (context-validity Γ⊢ΛMN∶B) (botSub-typed (change-type Γ⊢N∶C (cong ty (⇛-injl C⇛B≡A⇛D))))) 
-  (cong ty (≡-sym {!⇛-injr C⇛B≡A⇛D!}))
-subject-reduction-⇒ Γ⊢E∶A (appTl E⇒F) = {!!}
-subject-reduction-⇒ Γ⊢E∶A (impl E⇒F) = {!!}
-subject-reduction-⇒ Γ⊢E∶A (impr E⇒F) = {!!}
-subject-reduction-⇒ Γ⊢E∶A βP = {!!}
+  (cong ty (≡-sym (⇛-injr C⇛B≡A⇛D)))
+subject-reduction-⇒ {A = app (-ty A) []} Γ⊢MN∶A (appTl M⇒M') = 
+  let B ,p Γ⊢M∶B⇛A ,p Γ⊢N∶B = generation-appT Γ⊢MN∶A in
+  appR (subject-reduction-⇒ Γ⊢M∶B⇛A M⇒M') Γ⊢N∶B
+subject-reduction-⇒ {A = app (-ty A) []} Γ⊢φ⊃ψ∶Ω (impl φ⇒φ') = 
+  let Γ⊢φ∶Ω = generation-⊃₁ Γ⊢φ⊃ψ∶Ω in
+  let Γ⊢ψ∶Ω = generation-⊃₂ Γ⊢φ⊃ψ∶Ω in
+  let A≡Ω = generation-⊃₃ Γ⊢φ⊃ψ∶Ω in
+  change-type (⊃R (subject-reduction-⇒ Γ⊢φ∶Ω φ⇒φ') Γ⊢ψ∶Ω) (cong ty (≡-sym A≡Ω))
+subject-reduction-⇒ {A = app (-ty A) []} Γ⊢φ⊃ψ∶Ω (impr ψ⇒ψ') = 
+  let Γ⊢φ∶Ω = generation-⊃₁ Γ⊢φ⊃ψ∶Ω in
+  let Γ⊢ψ∶Ω = generation-⊃₂ Γ⊢φ⊃ψ∶Ω in
+  let A≡Ω = generation-⊃₃ Γ⊢φ⊃ψ∶Ω in
+  change-type (⊃R Γ⊢φ∶Ω (subject-reduction-⇒ Γ⊢ψ∶Ω ψ⇒ψ')) (cong ty (≡-sym A≡Ω))
+subject-reduction-⇒ Γ⊢Λδε∶ψ (βP {ε = ε}) = 
+  let φ' ,p ψ' ,p Γ⊢Λδ∶φ'⊃ψ' ,p Γ⊢ε∶φ' ,p ψ'≃ψ = generation-appP Γ⊢Λδε∶ψ in
+  let χ ,p Γ,φ⊢δ∶χ ,p φ⊃χ≃φ'⊃ψ' = generation-ΛP Γ⊢Λδ∶φ'⊃ψ' in
+  change-type (substitution Γ,φ⊢δ∶χ (context-validity Γ⊢Λδε∶ψ) (botSub-typed (convR Γ⊢ε∶φ' {!!} {!!}))) {!!}
 subject-reduction-⇒ Γ⊢E∶A (appPl E⇒F) = {!!}
 subject-reduction-⇒ Γ⊢E∶A refdir = {!!}
 subject-reduction-⇒ Γ⊢E∶A univplus = {!!}
@@ -139,14 +125,8 @@ postulate subject-reduction : ∀ {V} {K} {Γ}
                             {E F : Expression V (varKind K)} {A} → 
                             (Γ ⊢ E ∶ A) → (E ↠ F) → (Γ ⊢ F ∶ A)
 
-postulate equation-validity₁ : ∀ {V} {Γ : Context V} {P : Path V} {M} {A} {N} →
-                             Γ ⊢ P ∶ M ≡〈 A 〉 N → Γ ⊢ M ∶ ty A
-
-postulate equation-validity₂ : ∀ {V} {Γ : Context V} {P : Path V} {M} {A} {N} →
-                             Γ ⊢ P ∶ M ≡〈 A 〉 N → Γ ⊢ N ∶ ty A
-
 app*R' : ∀ {V} {Γ : Context V} {P Q : Path V} {M M' N N' : Term V} {A B : Type} →
     Γ ⊢ P ∶ M ≡〈 A ⇛ B 〉 M' → Γ ⊢ Q ∶ N ≡〈 A 〉 N' →
   -------------------------------------------------
     Γ ⊢ app* N N' P Q ∶ appT M N ≡〈 B 〉 appT M' N'
-app*R' Γ⊢P∶M≡M' Γ⊢Q∶N≡N' = app*R (equation-validity₁ Γ⊢Q∶N≡N') (equation-validity₂ Γ⊢Q∶N≡N') Γ⊢P∶M≡M' Γ⊢Q∶N≡N'
+app*R' Γ⊢P∶M≡M' Γ⊢Q∶N≡N' = app*R (eq-validity₁ Γ⊢Q∶N≡N' refl) (eq-validity₂ Γ⊢Q∶N≡N' refl) Γ⊢P∶M≡M' Γ⊢Q∶N≡N'
