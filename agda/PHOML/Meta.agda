@@ -13,7 +13,7 @@ eq-validity₁ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P �
 eq-validity₂ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P ∶ E → E ≡ M ≡〈 A 〉 N → Γ ⊢ N ∶ ty A
 
 prop-validity (varR _ validΓ) = context-validity-Prop validΓ
-prop-validity (appPR Γ⊢δ∶φ⊃ψ _) = ⊃-gen₂ (prop-validity Γ⊢δ∶φ⊃ψ)
+prop-validity (appPR Γ⊢δ∶φ⊃ψ _) = generation-⊃₂ (prop-validity Γ⊢δ∶φ⊃ψ)
 prop-validity (ΛPR Γ⊢φ∶Ω Γ⊢ψ∶Ω _) = ⊃R Γ⊢φ∶Ω Γ⊢ψ∶Ω
 prop-validity (convR _ Γ⊢φ∶Ω _) = Γ⊢φ∶Ω
 prop-validity (plusR Γ⊢P∶φ≡ψ) = ⊃R (eq-validity₁ Γ⊢P∶φ≡ψ refl) (eq-validity₂ Γ⊢P∶φ≡ψ refl)
@@ -22,7 +22,7 @@ prop-validity (minusR Γ⊢P∶φ≡ψ) = ⊃R (eq-validity₂ Γ⊢P∶φ≡ψ 
 eq-validity₁ (varR {Γ = Γ} _ validΓ) E≡M≡N = subst (λ E → Γ ⊢ left E ∶ ty (type E)) E≡M≡N (context-validity-Eq₁ validΓ)
 eq-validity₁ {Γ = Γ} (refR Γ⊢P∶M≡N) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢P∶M≡N
 eq-validity₁ {Γ = Γ} (⊃*R Γ⊢P∶φ≡φ' Γ⊢Q∶ψ≡ψ') E≡φ⊃ψ≡φ'⊃ψ' = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡φ⊃ψ≡φ'⊃ψ') (eq-inj₂ E≡φ⊃ψ≡φ'⊃ψ') (⊃R (eq-validity₁ Γ⊢P∶φ≡φ' refl) (eq-validity₁ Γ⊢Q∶ψ≡ψ' refl))
-eq-validity₁ {Γ = Γ} (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) E≡φ≡ψ = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡φ≡ψ) (eq-inj₂ E≡φ≡ψ) (⊃-gen₂ (prop-validity Γ⊢ε∶ψ⊃φ))
+eq-validity₁ {Γ = Γ} (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) E≡φ≡ψ = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡φ≡ψ) (eq-inj₂ E≡φ≡ψ) (generation-⊃₂ (prop-validity Γ⊢ε∶ψ⊃φ))
 eq-validity₁ {Γ = Γ} (lllR Γ⊢M∶A _ _) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M∶A
 eq-validity₁ {Γ = Γ} (app*R Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) (appR (eq-validity₁ Γ⊢P∶M≡M' refl) Γ⊢N∶A)
 eq-validity₁ {Γ = Γ} (convER Γ⊢P∶M≡N Γ⊢M'∶A Γ⊢N'∶A M≃M' N≃N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M'∶A
@@ -30,26 +30,20 @@ eq-validity₁ {Γ = Γ} (convER Γ⊢P∶M≡N Γ⊢M'∶A Γ⊢N'∶A M≃M' N
 eq-validity₂ {Γ = Γ} (varR _ validΓ) E≡M≡N = subst (λ E → Γ ⊢ right E ∶ ty (type E)) E≡M≡N (context-validity-Eq₂ validΓ)
 eq-validity₂ {Γ = Γ} (refR Γ⊢M∶A) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M∶A
 eq-validity₂ {Γ = Γ} (⊃*R Γ⊢P∶φ≡ψ Γ⊢Q∶φ'≡ψ') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) (⊃R (eq-validity₂ Γ⊢P∶φ≡ψ refl) (eq-validity₂ Γ⊢Q∶φ'≡ψ' refl))
-eq-validity₂ {Γ = Γ} (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) (⊃-gen₂ (prop-validity Γ⊢δ∶φ⊃ψ))
+eq-validity₂ {Γ = Γ} (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) (generation-⊃₂ (prop-validity Γ⊢δ∶φ⊃ψ))
 eq-validity₂ {Γ = Γ} (lllR _ Γ⊢N∶A⇛B _) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢N∶A⇛B
 eq-validity₂ {Γ = Γ} (app*R Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) (appR (eq-validity₂ Γ⊢P∶M≡M' refl) Γ⊢N'∶A)
 eq-validity₂ {Γ = Γ} (convER _ _ Γ⊢N'∶A _ _) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢N'∶A
 
-postulate Generation-ΛP : ∀ {V} {Γ : Context V} {φ} {δ} {ε} {ψ} →
-                          Γ ⊢ appP (ΛP φ δ) ε ∶ ψ →
-                          Σ[ χ ∈ Term V ] 
-                          (ψ ≃ φ ⊃ χ × Γ ,P φ ⊢ δ ∶ χ ⇑)
+_∶_⟶_ : ∀ {U V} → Sub U V → Context V → Context U → Set
+_∶_⟶_ {U} {V} σ Γ Δ = ∀ {K} (x : Var U K) → Γ ⊢ σ _ x ∶ typeof x Δ ⟦ σ ⟧
 
-Generation-appT : ∀ {V} {Γ : Context V} {M N : Term V} {B} →
-  Γ ⊢ appT M N ∶ ty B → Σ[ A ∈ Type ] Γ ⊢ M ∶ ty (A ⇛ B) × Γ ⊢ N ∶ ty A
-Generation-appT (appR {V} {Γ} {M} {N} {A} {B} Γ⊢M∶A⇛B Γ⊢N∶A) = A ,p Γ⊢M∶A⇛B ,p Γ⊢N∶A
-
-postulate _∶_⟶_ : ∀ {U V} → Sub U V → Context U → Context V → Set
-postulate _∶_≡_∶_⟶_ : ∀ {U V} → PathSub U V → Sub U V → Sub U V → Context U → Context V → Set
+_∶_≡_∶_⟶_ : ∀ {U V} → PathSub U V → Sub U V → Sub U V → Context V → Context U → Set
+τ ∶ ρ ≡ σ ∶ Γ ⟶ Δ = ∀ x → Γ ⊢ τ x ∶ ρ _ x ≡〈 typeof' x Δ 〉 σ _ x
 
 postulate substitution : ∀ {U} {V} {σ : Sub U V} {K}
                        {Γ : Context U} {M : Expression U (varKind K)} {A} {Δ} →
-                       Γ ⊢ M ∶ A → valid Δ → σ ∶ Γ ⟶ Δ → Δ ⊢ M ⟦ σ ⟧ ∶ A ⟦ σ ⟧
+                       Γ ⊢ M ∶ A → valid Δ → σ ∶ Δ ⟶ Γ → Δ ⊢ M ⟦ σ ⟧ ∶ A ⟦ σ ⟧
 
 postulate ⊃-gen₁ : ∀ {V} {Γ : Context V} {φ} {ψ} → Γ ⊢ φ ⊃ ψ ∶ ty Ω → Γ ⊢ φ ∶ ty Ω
 
@@ -58,8 +52,8 @@ postulate Type-Reduction : ∀ {V} {Γ : Context V} {K} {M : Expression V (varKi
 
 postulate path-substitution : ∀ {U} {V} {Γ : Context U} {Δ : Context V} 
                             {ρ} {σ} {τ} {M} {A} →
-                            (Γ ⊢ M ∶ A) → (τ ∶ ρ ≡ σ ∶ Γ ⟶ Δ) →
-                            (ρ ∶ Γ ⟶ Δ) → (σ ∶ Γ ⟶ Δ) → 
+                            (Γ ⊢ M ∶ A) → (τ ∶ ρ ≡ σ ∶ Δ ⟶ Γ) →
+                            (ρ ∶ Δ ⟶ Γ) → (σ ∶ Δ ⟶ Γ) → 
                             valid Δ → 
                             Δ ⊢ M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ∶ M ⟦ ρ ⟧ ≡〈 yt A 〉 M ⟦ σ ⟧
 {- path-substitution (varR x validΓ) τ∶ρ≡σ _ _ _ = τ∶ρ≡σ x
@@ -99,29 +93,47 @@ path-substitution {U} {V} {Γ} {Δ} {ρ} {σ} {τ} (ΛR .{U} .{Γ} {A} {M} {B} �
                  (RSTClose.sym (redex-conv (subst (R -appTerm ((ΛT A M ⟦ ρ ⟧) ⇑ ⇑ ⇑ ∷ var x₂ ∷ [])) (sub↖-decomp M) (βR βT)))) (RSTClose.sym (redex-conv (subst (R -appTerm ((ΛT A M ⟦ σ ⟧) ⇑ ⇑ ⇑ ∷ var x₁ ∷ [])) (sub↗-decomp M) (βR βT)))) -}
 --  in lllR step1
 
-postulate Subject-Reduction-R : ∀ {V} {K} {E F : Expression V (varKind K)} {Γ} {A} →
-                              Γ ⊢ E ∶ A → E ⇒ F → Γ ⊢ F ∶ A
+generation-ΛT : ∀ {V} {Γ : Context V} {A M B} →
+  Γ ⊢ ΛT A M ∶ ty B → Σ[ C ∈ Type ] Γ ,T A ⊢ M ∶ ty C × B ≡ A ⇛ C
+generation-ΛT (ΛR {B = B} Γ,A⊢M∶B) = B ,p Γ,A⊢M∶B ,p refl
 
-{-Subject-Reduction-R : ∀ {V} {K} {C} 
-  {c : Constructor C} {E : ListAbs V C} {F : Expression V (varKind K)} {Γ} {A} →
-  Γ ⊢ (app c E) ∶ A → R c E F → Γ ⊢ F ∶ A
-Subject-Reduction-R Γ⊢ΛPφδε∶A βR =
-  let (χ ,p A≃φ⊃χ ,p Γ,φ⊢δ∶χ) = Generation-ΛP Γ⊢ΛPφδε∶A in {!!}
-Subject-Reduction-R Γ⊢cE∶A βE = {!!}
-Subject-Reduction-R Γ⊢cE∶A plus-ref = {!!}
-Subject-Reduction-R Γ⊢cE∶A minus-ref = {!!}
-Subject-Reduction-R Γ⊢cE∶A plus-univ = {!!}
-Subject-Reduction-R Γ⊢cE∶A minus-univ = {!!}
-Subject-Reduction-R Γ⊢cE∶A ref⊃*univ = {!!}
-Subject-Reduction-R Γ⊢cE∶A univ⊃*ref = {!!}
-Subject-Reduction-R Γ⊢cE∶A univ⊃*univ = {!!}
-Subject-Reduction-R Γ⊢cE∶A ref⊃*ref = {!!}
-Subject-Reduction-R Γ⊢cE∶A refref = {!!}
-Subject-Reduction-R Γ⊢cE∶A lllred = {!!}
-Subject-Reduction-R Γ⊢cE∶A reflamvar = {!!}
-Subject-Reduction-R Γ⊢cE∶A reflam⊃* = {!!}
-Subject-Reduction-R Γ⊢cE∶A reflamuniv = {!!}
-Subject-Reduction-R Γ⊢cE∶A reflamλλλ = {!!} -}
+botSub-typed : ∀ {V} {M : Term V} {Γ A} →
+  Γ ⊢ M ∶ ty A → x₀:= M ∶ Γ ⟶ Γ ,T A
+botSub-typed {V} {M} {Γ} {A} Γ⊢M∶A x₀ = change-type Γ⊢M∶A (≡-sym (botSub-upRep (ty A) {M}))
+botSub-typed {Γ = Γ} Γ⊢M∶A (↑ x) = change-type (varR x (context-validity Γ⊢M∶A)) (≡-sym (botSub-upRep (typeof x Γ)))
+
+⇛-injl : ∀ {A A' B B' : Type} → A ⇛ B ≡ A' ⇛ B' → A ≡ A'
+⇛-injl refl = refl
+
+⇛-injr : ∀ {A A' B B' : Type} → A ⇛ B ≡ A' ⇛ B' → B ≡ B'
+⇛-injr refl = refl
+
+subject-reduction-⇒ : ∀ {V} {K} {E F : Expression V (varKind K)} {Γ} {A} →
+  Γ ⊢ E ∶ A → E ⇒ F → Γ ⊢ F ∶ A
+subject-reduction-⇒ {A = app (-ty B) []} Γ⊢ΛMN∶B βT = 
+  let C ,p Γ⊢ΛM∶C⇛B ,p Γ⊢N∶C = generation-appT Γ⊢ΛMN∶B in
+  let D ,p Γ,A⊢M∶D ,p C⇛B≡A⇛D = generation-ΛT Γ⊢ΛM∶C⇛B in
+  change-type (substitution Γ,A⊢M∶D (context-validity Γ⊢ΛMN∶B) (botSub-typed (change-type Γ⊢N∶C (cong ty (⇛-injl C⇛B≡A⇛D))))) 
+  (cong ty (≡-sym {!⇛-injr C⇛B≡A⇛D!}))
+subject-reduction-⇒ Γ⊢E∶A (appTl E⇒F) = {!!}
+subject-reduction-⇒ Γ⊢E∶A (impl E⇒F) = {!!}
+subject-reduction-⇒ Γ⊢E∶A (impr E⇒F) = {!!}
+subject-reduction-⇒ Γ⊢E∶A βP = {!!}
+subject-reduction-⇒ Γ⊢E∶A (appPl E⇒F) = {!!}
+subject-reduction-⇒ Γ⊢E∶A refdir = {!!}
+subject-reduction-⇒ Γ⊢E∶A univplus = {!!}
+subject-reduction-⇒ Γ⊢E∶A univminus = {!!}
+subject-reduction-⇒ Γ⊢E∶A (dirR E⇒F) = {!!}
+subject-reduction-⇒ Γ⊢E∶A βE = {!!}
+subject-reduction-⇒ Γ⊢E∶A βPP = {!!}
+subject-reduction-⇒ Γ⊢E∶A ref⊃* = {!!}
+subject-reduction-⇒ Γ⊢E∶A ref⊃*univ = {!!}
+subject-reduction-⇒ Γ⊢E∶A univ⊃*ref = {!!}
+subject-reduction-⇒ Γ⊢E∶A univ⊃*univ = {!!}
+subject-reduction-⇒ Γ⊢E∶A (imp*l E⇒F) = {!!}
+subject-reduction-⇒ Γ⊢E∶A (imp*r E⇒F) = {!!}
+subject-reduction-⇒ Γ⊢E∶A (app*l E⇒F) = {!!}
+subject-reduction-⇒ Γ⊢E∶A (reffR E⇒F) = {!!}
 
 postulate subject-reduction : ∀ {V} {K} {Γ}
                             {E F : Expression V (varKind K)} {A} → 
