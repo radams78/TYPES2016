@@ -65,10 +65,10 @@ infixl 75 _•R_
 _•R_ : ∀ {U} {V} {W} → Rep V W → Rep U V → Rep U W
 (ρ' •R ρ) K x = ρ' K (ρ K x)
 
-liftRep-comp : ∀ {U} {V} {W} {K} {ρ' : Rep V W} {ρ : Rep U V} → 
+liftRep-•R : ∀ {U} {V} {W} {K} {ρ' : Rep V W} {ρ : Rep U V} → 
   liftRep K (ρ' •R ρ) ∼R liftRep K ρ' •R liftRep K ρ
-liftRep-comp x₀ = refl
-liftRep-comp (↑ _) = refl
+liftRep-•R x₀ = refl
+liftRep-•R (↑ _) = refl
 
 REP : OpFamily
 REP = record { 
@@ -76,7 +76,7 @@ REP = record {
   comp = record { 
     _∘_ = _•R_ ; 
     apV-comp = refl ; 
-    liftOp-comp' = liftRep-comp } }
+    liftOp-comp' = liftRep-•R } }
 
 •R-congl : ∀ {U V W} {ρ₁ ρ₂ : Rep V W} → ρ₁ ∼R ρ₂ → ∀ (ρ₃ : Rep U V) → ρ₁ •R ρ₃ ∼R ρ₂ •R ρ₃
 •R-congl = OpFamily.comp-congl REP
@@ -93,8 +93,8 @@ rep-congl = OpFamily.ap-congr REP
 rep-idRep : ∀ {V C K} {E : Subexp V C K} → E 〈 idRep V 〉 ≡ E
 rep-idRep = OpFamily.ap-idOp REP
 
-rep-comp : ∀ {U V W C K} (E : Subexp U C K) {σ : Rep V W} {ρ} → E 〈 σ •R ρ 〉 ≡ E 〈 ρ 〉 〈 σ 〉
-rep-comp = OpFamily.ap-comp REP
+rep-•R : ∀ {U V W C K} (E : Subexp U C K) {σ : Rep V W} {ρ} → E 〈 σ •R ρ 〉 ≡ E 〈 ρ 〉 〈 σ 〉
+rep-•R = OpFamily.ap-comp REP
 
 liftRep-idRep : ∀ {V K} → liftRep K (idRep V) ∼R idRep (V , K)
 liftRep-idRep = OpFamily.liftOp-idOp REP
@@ -102,33 +102,33 @@ liftRep-idRep = OpFamily.liftOp-idOp REP
 liftRep-upRep : ∀ {U V C K L} {σ : Rep U V} (E : Subexp U C K) → E 〈 upRep 〉 〈 liftRep L σ 〉 ≡ E 〈 σ 〉 〈 upRep 〉
 liftRep-upRep = OpFamily.liftOp-up REP
 
-liftRep-comp₄ : ∀ {U} {V1} {V2} {V3} {V4} {K} {ρ1 : Rep U V1} {ρ2 : Rep V1 V2} {ρ3 : Rep V2 V3} {ρ4 : Rep V3 V4} →
+liftRep-•R₄ : ∀ {U} {V1} {V2} {V3} {V4} {K} {ρ1 : Rep U V1} {ρ2 : Rep V1 V2} {ρ3 : Rep V2 V3} {ρ4 : Rep V3 V4} →
                 liftRep K (ρ4 •R ρ3 •R ρ2 •R ρ1) ∼R liftRep K ρ4 •R liftRep K ρ3 •R liftRep K ρ2 •R liftRep K ρ1
-liftRep-comp₄ {U} {V1} {V2} {V3} {V4} {K} {ρ1} {ρ2} {ρ3} {ρ4} =
+liftRep-•R₄ {U} {V1} {V2} {V3} {V4} {K} {ρ1} {ρ2} {ρ3} {ρ4} =
   let open Prelims.EqReasoning (PreOpFamily.OP Rep∶POF (U , K) (V4 , K)) in 
   begin
     liftRep K (ρ4 •R ρ3 •R ρ2 •R ρ1)
-  ≈⟨ liftRep-comp ⟩
+  ≈⟨ liftRep-•R ⟩
     liftRep K (ρ4 •R ρ3 •R ρ2) •R liftRep K ρ1
-  ≈⟨ •R-congl liftRep-comp (liftRep K ρ1)⟩
+  ≈⟨ •R-congl liftRep-•R (liftRep K ρ1)⟩
     liftRep K (ρ4 •R ρ3) •R liftRep K ρ2 •R liftRep K ρ1
-  ≈⟨ •R-congl (•R-congl liftRep-comp (liftRep K ρ2)) (liftRep K ρ1)⟩
+  ≈⟨ •R-congl (•R-congl liftRep-•R (liftRep K ρ2)) (liftRep K ρ1)⟩
     liftRep K ρ4 •R liftRep K ρ3 •R liftRep K ρ2 •R liftRep K ρ1
   ∎
 
-rep-comp₄ : ∀ {U} {V1} {V2} {V3} {V4} 
+rep-•R₄ : ∀ {U} {V1} {V2} {V3} {V4} 
             {ρ1 : Rep U V1} {ρ2 : Rep V1 V2} {ρ3 : Rep V2 V3} {ρ4 : Rep V3 V4} 
             {C} {K} (E : Subexp U C K) →
             E 〈 ρ4 •R ρ3 •R ρ2 •R ρ1 〉 ≡ E 〈 ρ1 〉 〈 ρ2 〉 〈 ρ3 〉 〈 ρ4 〉
-rep-comp₄ {U} {V1} {V2} {V3} {V4} {ρ1} {ρ2} {ρ3} {ρ4} {C} {K} E = 
+rep-•R₄ {U} {V1} {V2} {V3} {V4} {ρ1} {ρ2} {ρ3} {ρ4} {C} {K} E = 
   let open ≡-Reasoning in 
   begin
     E 〈 ρ4 •R ρ3 •R ρ2 •R ρ1 〉
-      ≡⟨ rep-comp E ⟩
+      ≡⟨ rep-•R E ⟩
     E 〈 ρ1 〉 〈 ρ4 •R ρ3 •R ρ2 〉
-      ≡⟨ rep-comp (E 〈 ρ1 〉) ⟩
+      ≡⟨ rep-•R (E 〈 ρ1 〉) ⟩
     E 〈 ρ1 〉 〈 ρ2 〉 〈 ρ4 •R ρ3 〉
-      ≡⟨ rep-comp (E 〈 ρ1 〉 〈 ρ2 〉) ⟩
+      ≡⟨ rep-•R (E 〈 ρ1 〉 〈 ρ2 〉) ⟩
     E 〈 ρ1 〉 〈 ρ2 〉 〈 ρ3 〉 〈 ρ4 〉
   ∎
 
@@ -156,13 +156,13 @@ liftsnocRep-ups {U} {V} [] E {ρ} = let open ≡-Reasoning in
 liftsnocRep-ups (KK snoc K) E {ρ} = let open ≡-Reasoning in 
   begin
     E 〈 upRep •R ups KK 〉 〈 liftRep K (liftsnocRep KK ρ) 〉
-  ≡⟨ rep-congl (rep-comp E) ⟩
+  ≡⟨ rep-congl (rep-•R E) ⟩
     E 〈 ups KK 〉 ⇑ 〈 liftRep K (liftsnocRep KK ρ) 〉
   ≡⟨ liftRep-upRep (E 〈 ups KK 〉) ⟩
     E 〈 ups KK 〉 〈 liftsnocRep KK ρ 〉 ⇑
   ≡⟨ rep-congl (liftsnocRep-ups KK E) ⟩
     E 〈 ρ 〉 〈 ups KK 〉 ⇑
-  ≡⟨⟨ rep-comp (E 〈 ρ 〉) ⟩⟩
+  ≡⟨⟨ rep-•R (E 〈 ρ 〉) ⟩⟩
     E 〈 ρ 〉 〈 upRep •R ups KK 〉
   ∎
 
@@ -178,7 +178,7 @@ magic-unique' : ∀ {U} {V} {C} {K}
 magic-unique' E {ρ} = let open ≡-Reasoning in
   begin
     E 〈 magic 〉 〈 ρ 〉
-  ≡⟨⟨ rep-comp E ⟩⟩
+  ≡⟨⟨ rep-•R E ⟩⟩
     E 〈 ρ •R magic 〉
   ≡⟨ rep-congr (magic-unique {ρ = ρ •R magic}) E ⟩
     E 〈 magic 〉

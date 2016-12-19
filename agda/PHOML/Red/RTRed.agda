@@ -1,4 +1,5 @@
 module PHOML.Red.RTRed where
+open import Data.Empty renaming (⊥ to Empty)
 open import Data.Unit
 open import Data.Bool
 open import Data.Product renaming (_,_ to _,p_)
@@ -127,3 +128,30 @@ red-appPl (trans δ↠ε δ↠ε₁) δ≡δ₁δ₂ | inj₂ δ₁↠Λ = inj�
 
 Pdirlm : ∀ {U V} {P : Path U} {ρ : Rep U V} {M} {δ d} → P ↠ reff M → appP (dir d P 〈 ρ 〉) δ ↠ δ
 Pdirlm P↠refM = trans (↠-appP (↠-dir (↠-resp-rep P↠refM))) (trans (inc (appPl refdir)) (inc βP))
+
+bot-red-bot : ∀ {V} {φ ψ : Term V} → φ ↠ ψ → φ ≡ ⊥ → ψ ≡ ⊥
+bot-red-bot (inc βT) ()
+bot-red-bot (inc (appTl _)) ()
+bot-red-bot (inc (impl _)) ()
+bot-red-bot (inc (impr _)) ()
+bot-red-bot ref φ≡⊥ = φ≡⊥
+bot-red-bot (trans φ₁↠φ₂ φ₂↠φ₃) φ₁≡⊥ = bot-red-bot φ₂↠φ₃ (bot-red-bot φ₁↠φ₂ φ₁≡⊥)
+
+bot-not-red-imp : ∀ {V} {φ ψ : Term V} → ⊥ ↠ φ ⊃ ψ → Empty
+bot-not-red-imp {V} {φ} {ψ} ⊥↠φ⊃ψ with bot-red-bot ⊥↠φ⊃ψ refl
+bot-not-red-imp ⊥↠φ⊃ψ | ()
+
+λλλ-red-ref : ∀ {V A} {P P' : Path V} {Q} → P ↠ P' → P ≡ λλλ A Q → P' ≡ λλλ A Q
+λλλ-red-ref (inc βE) ()
+λλλ-red-ref (inc βPP) ()
+λλλ-red-ref (inc ref⊃*) ()
+λλλ-red-ref (inc ref⊃*univ) ()
+λλλ-red-ref (inc univ⊃*ref) ()
+λλλ-red-ref (inc univ⊃*univ) ()
+λλλ-red-ref (inc (imp*l x₁)) ()
+λλλ-red-ref (inc (imp*r x₁)) ()
+λλλ-red-ref (inc (app*l x₁)) ()
+λλλ-red-ref (inc (reffR x₁)) ()
+λλλ-red-ref ref P≡λQ = P≡λQ
+λλλ-red-ref (trans P↠P' P'↠P'') P≡λQ = λλλ-red-ref P'↠P'' (λλλ-red-ref P↠P' P≡λQ)
+
