@@ -123,7 +123,11 @@ subject-reduction-⇒ {Γ = Γ} Γ⊢reffM+∶φ (refdir {φ = M} {d = -plus}) =
   let Γ⊢M∶Ω : Γ ⊢ M ∶ ty Ω
       Γ⊢M∶Ω = generation-reff₁ Γ⊢reffM∶ψ≡χ in
   convPR (ΛPR Γ⊢M∶Ω Γ⊢M∶Ω (varR x₀ (ctxPR Γ⊢M∶Ω))) (prop-validity Γ⊢reffM+∶φ) (trans (≃-imp (generation-reff₂ Γ⊢reffM∶ψ≡χ) (generation-reff₃ Γ⊢reffM∶ψ≡χ)) (sym φ≃ψ⊃χ))
-subject-reduction-⇒ Γ⊢reffφ∶φ≡φ (refdir {d = -minus}) = {!!} 
+subject-reduction-⇒ {Γ = Γ} Γ⊢reffM+∶φ (refdir {φ = M} {d = -minus}) = 
+  let ψ ,p χ ,p Γ⊢reffM∶ψ≡χ ,p φ≃ψ⊃χ = generation-minus Γ⊢reffM+∶φ in
+  let Γ⊢M∶Ω : Γ ⊢ M ∶ ty Ω
+      Γ⊢M∶Ω = generation-reff₁ Γ⊢reffM∶ψ≡χ in
+  convPR (ΛPR Γ⊢M∶Ω Γ⊢M∶Ω (varR x₀ (ctxPR Γ⊢M∶Ω))) (prop-validity Γ⊢reffM+∶φ) (trans (≃-imp (generation-reff₃ Γ⊢reffM∶ψ≡χ) (generation-reff₂ Γ⊢reffM∶ψ≡χ)) (sym φ≃ψ⊃χ))
 subject-reduction-⇒ Γ⊢E∶A univplus = {!!}
 subject-reduction-⇒ Γ⊢E∶A univminus = {!!}
 subject-reduction-⇒ Γ⊢E∶A (dirR E⇒F) = {!!}

@@ -36,6 +36,13 @@ generation-plus (convPR Γ⊢P+∶φ' Γ⊢φ∶Ω φ'≃φ) =
   ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p (trans (sym φ'≃φ) φ'≃ψ⊃χ)
 generation-plus (plusR {φ = φ} {ψ = ψ} Γ⊢P∶φ≡ψ) = φ ,p ψ ,p Γ⊢P∶φ≡ψ ,p ref
 
+generation-minus : ∀ {V Γ} {P : Path V} {φ} → Γ ⊢ minus P ∶ φ →
+  Σ[ ψ ∈ Term V ] Σ[ χ ∈ Term V ] Γ ⊢ P ∶ ψ ≡〈 Ω 〉 χ × φ ≃ χ ⊃ ψ
+generation-minus (convPR Γ⊢P+∶φ' Γ⊢φ∶Ω φ'≃φ) = 
+  let ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p φ'≃ψ⊃χ = generation-minus Γ⊢P+∶φ' in 
+  ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p (trans (sym φ'≃φ) φ'≃ψ⊃χ)
+generation-minus (minusR {φ = φ} {ψ = ψ} Γ⊢P∶φ≡ψ) = φ ,p ψ ,p Γ⊢P∶φ≡ψ ,p ref
+
 generation-reff₁ : ∀ {V} {Γ : Context V} {M N N' : Term V} {A} → Γ ⊢ reff M ∶ N ≡〈 A 〉 N' → Γ ⊢ M ∶ ty A
 generation-reff₁ (refR Γ⊢M∶A) = Γ⊢M∶A
 generation-reff₁ (convER Γ⊢refM∶N≡N' _ _ _ _) = generation-reff₁ Γ⊢refM∶N≡N'
