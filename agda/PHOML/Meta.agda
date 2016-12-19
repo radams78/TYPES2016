@@ -118,9 +118,11 @@ subject-reduction-⇒ {A = ψ} Γ⊢Λδε∶ψ (βP {ε = ε}) =
 subject-reduction-⇒ Γ⊢δε∶φ (appPl δ⇒δ') = 
   let ψ ,p φ' ,p Γ⊢δ∶ψ⊃φ' ,p Γ⊢ε∶ψ ,p φ'≃φ = generation-appP Γ⊢δε∶φ in 
   convPR (appPR (subject-reduction-⇒ Γ⊢δ∶ψ⊃φ' δ⇒δ') Γ⊢ε∶ψ) (prop-validity Γ⊢δε∶φ) φ'≃φ
-subject-reduction-⇒ Γ⊢reffM+∶φ (refdir {d = -plus}) = 
+subject-reduction-⇒ {Γ = Γ} Γ⊢reffM+∶φ (refdir {φ = M} {d = -plus}) = 
   let ψ ,p χ ,p Γ⊢reffM∶ψ≡χ ,p φ≃ψ⊃χ = generation-plus Γ⊢reffM+∶φ in
-  {!!}
+  let Γ⊢M∶Ω : Γ ⊢ M ∶ ty Ω
+      Γ⊢M∶Ω = generation-reff₁ Γ⊢reffM∶ψ≡χ in
+  convPR (ΛPR Γ⊢M∶Ω Γ⊢M∶Ω (varR x₀ (ctxPR Γ⊢M∶Ω))) (prop-validity Γ⊢reffM+∶φ) (trans (≃-imp (generation-reff₂ Γ⊢reffM∶ψ≡χ) (generation-reff₃ Γ⊢reffM∶ψ≡χ)) (sym φ≃ψ⊃χ))
 subject-reduction-⇒ Γ⊢reffφ∶φ≡φ (refdir {d = -minus}) = {!!} 
 subject-reduction-⇒ Γ⊢E∶A univplus = {!!}
 subject-reduction-⇒ Γ⊢E∶A univminus = {!!}
