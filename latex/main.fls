@@ -314,7 +314,6 @@ INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmss8.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmss8.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/lm/ec-lmr6.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/lm/ec-lmri9.tfm
-INPUT /usr/share/texmf/fonts/tfm/public/lm/ec-lmbxi10.tfm
 INPUT main.bbl
 INPUT main.bbl
 INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmbx10.tfm
@@ -324,9 +323,9 @@ INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmss10.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmss8.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/lm/rm-lmss8.tfm
 INPUT main.aux
-INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc
 INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc
 INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc
 INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc
+INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc
 INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc
 INPUT /usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc

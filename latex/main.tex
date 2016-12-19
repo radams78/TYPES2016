@@ -60,6 +60,7 @@
 \newcommand{\isProp}[1]{\mathsf{isProp} \left( {#1} \right)}
 \newcommand{\mapid}[2]{\mathsf{mapid}_{#1} \, {#2}}
 \newcommand{\comp}{\mathsf{comp}}
+\newcommand{\id}{\mathsf{id}}
 
 \theoremstyle{plain}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -149,18 +150,18 @@ and the proof variable $p$ is bound within $\delta$ in $\lambda p:\varphi.\delta
 $\triplelambda e:x =_A y.P$.  We identify terms, proofs and paths up to $\alpha$-conversion.  We write $E[z:=F]$ for the result of substituting $F$ for $z$ within
 $E$, using $\alpha$-conversion to avoid variable capture.
 
-We shall use the word 'expression' to mean either a type, term, proof, path, or equation (an equation having the form $M =_A N$).  We shall use $r$, $s$, $t$, $S$ and $T$ as metavariables that range over expressions.
+We shall use the word 'expression' to mean either a type, term, proof, path, or equation (an equation having the form $M =_A N$).  We shall use $E$, $F$, $S$ and $T$ as metavariables that range over expressions.
 
 Note that we use both Roman letters $M$, $N$ and Greek letters $\varphi$, $\psi$, $\chi$ to range over terms.  Intuitively, a term is understood as either a proposition or a function,
 and we shall use Greek letters for terms that are intended to be propositions.  Formally, there is no significance to which letter we choose.
 
 Note also that the types of PHOML are just the simple types over $\Omega$; therefore, no variable can occur in a type.
 
-The intuition behind the new expressions is as follows (see also the rules of deduction in Figure \ref{fig:lambdaoe}).  For any object $M : A$, there is the trivial path $\reff{M} : M =_A M$.  The constructor $\supset^*$ ensures congruence for $\supset$ --- if $P : \varphi =_\Omega \varphi'$ and $Q : \psi =_\Omega \psi'$ then $P \supset^* Q : \varphi \supset \psi =_\Omega \varphi' \supset \psi'$.  The constructor $\mathsf{univ}$ gives 'univalence' (propositional extensionality) for our propositions: if $\delta : \varphi \supset \psi$ and $\epsilon : \psi \supset \varphi$, then $\univ{\varphi}{\psi}{\delta}{\epsilon}$ is a path of type $\varphi =_\Omega \psi$.  The constructors $^+$ and $^-$ are the converses, which denote the action of transport along a path: if $P$ is a path of type $\varphi =_\Omega \psi$, then $P^+$ is a proof of $\varphi \supset \psi$, and $P^-$ is a proof of $\psi \supset \varphi$.  
+The intuition behind the new expressions is as follows (see also the rules of deduction in Figure \ref{fig:lambdaoe}).  For any object $M : A$, there is the trivial path $\reff{M} : M =_A M$.  The constructor $\supset^*$ ensures congruence for $\supset$ --- if $P : \varphi =_\Omega \varphi'$ and $Q : \psi =_\Omega \psi'$ then $P \supset^* Q : \varphi \supset \psi =_\Omega \varphi' \supset \psi'$.  The constructor $\mathsf{univ}$ gives 'univalence' (propositional extensionality) for our propositions: if $\delta : \varphi \supset \psi$ and $\epsilon : \psi \supset \varphi$, then $\univ{\varphi}{\psi}{\delta}{\epsilon}$ is a path $\varphi =_\Omega \psi$.  The constructors $^+$ and $^-$ are the converses, which denote the action of transport along a path: if $P$ is a path of type $\varphi =_\Omega \psi$, then $P^+$ is a proof of $\varphi \supset \psi$, and $P^-$ is a proof of $\psi \supset \varphi$.  
 
 The constructor $\triplelambda$ gives functional extensionality.  Let $F$ and $G$ be functions of type $A \rightarrow B$.  If $F x =_B G y$ whenever $x =_A y$, then $F =_{A \rightarrow B} G$.  More formally, if $P$ is a path of type $Fx =_B Gy$ that depends on $x : A$, $y : A$ and $e : x =_A y$, then $\triplelambda e : x =_A y . P$ is a path of type $F =_{A \rightarrow B} G$.  The proofs $P^+$ and $P^-$ represent transport along the path $P$.
 
-Finally, if $P$ is a path of type $F =_{A \rightarrow B} G$, and $Q$ is a path $M =_A N$, then $P_{MN} Q$ is a path $FM =_B G N$.
+Finally, if $P$ is a path $M =_{A \rightarrow B} M'$, and $Q$ is a path $N =_A N'$, then $P_{MN} Q$ is a path $MN =_B M'N'$.
 
 \subsubsection{Substitution and Path Substitution}
 
@@ -246,8 +247,8 @@ $$ \infer{(\lambda x:A.M)N \rightarrow M[x:=N]}{} \quad
 \infer{\varphi \supset \psi \rightarrow \varphi \supset \psi'}{\psi \rightarrow \psi'} $$
 \paragraph*{Reduction on Proofs}
 $$\infer{(\lambda p : \varphi . \delta)\epsilon \rightarrow \delta [ p := \epsilon ]}{} \quad
-\infer{\reff{\varphi}^+ \delta \rightarrow \delta}{} \quad
-\infer{\reff{\varphi}^- \delta \rightarrow \delta}{} $$
+\infer{\reff{\varphi}^+ \rightarrow \lambda p : \varphi . p}{} \quad
+\infer{\reff{\varphi}^- \rightarrow \lambda p : \varphi . p}{} $$
 $$ \infer{\delta \epsilon \rightarrow \delta' \epsilon}{\delta \rightarrow \delta'} \quad
 \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rightarrow \delta}{} \quad
 \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^- \rightarrow \epsilon}{} $$
@@ -314,16 +315,16 @@ We say an expression $E$ is in \emph{normal form} iff there is no expression $F$
 $ $
 \begin{enumerate}
 \item
-Reduction on proofs and paths does \emph{not} respect substitution.  For example, let $F \equiv \lambda x:\Omega.x$.  Then we have
+Reduction on proofs and paths does \emph{not} respect substitution.  For example, let $M \equiv \lambda x:\Omega.x$.  Then we have
 \begin{align}
-\reff{\lambda y : \Omega. z}_{\bot \bot} \reff{\bot} & \rightarrow z \{ y:= \reff{\bot} : \bot = \bot \} \equiv \reff{z} \nonumber \\
-(\reff{\lambda y : \Omega.z}_{\bot \bot} \reff{\bot}) [z := F] & \equiv \reff{\lambda x : \Omega.F}_{\bot \bot} \reff{\bot}
+\reff{\lambda y : \Omega. y'}_{\bot \bot} \reff{\bot} & \rightarrow y' \{ y:= \reff{\bot} : \bot = \bot \} \equiv \reff{y'} \nonumber \\
+(\reff{\lambda y : \Omega.y'}_{\bot \bot} \reff{\bot}) [y' := M] & \equiv \reff{\lambda x : \Omega.M}_{\bot \bot} \reff{\bot}
 \label{eq:exp1} \\
 \label{eq:exp2}
-\reff{z}[z:=F] & \equiv \reff{F} \equiv \reff{\lambda x : \Omega.x}
+\reff{y'}[y':=M] & \equiv \reff{M} \equiv \reff{\lambda x : \Omega.x}
 \end{align}
 Expression (\ref{eq:exp1}) does not reduce to (\ref{eq:exp2}).  Instead, (\ref{eq:exp1}) reduces to
-$$ F \{ y := \reff{\bot} : \bot = \bot \} \equiv \triplelambda e : x =_\Omega x'. e \enspace . $$
+$$ M \{ y := \reff{\bot} : \bot = \bot \} \equiv \triplelambda e : x =_\Omega x'. e \enspace . $$
 \item
 Reduction on terms does respect substitution: if $M \rightarrow N$ then $M[x:=P] \rightarrow N[x:=P]$, as is easily shown by induction on $M \rightarrow N$.
 \end{enumerate}
@@ -460,7 +461,8 @@ Induction on derivations.
 \subsubsection{Substitutions}
 
 \begin{definition}
-Let $\Gamma$ and $\Delta$ be contexts.  A \emph{substitution from $\Gamma$ to $\Delta$}\footnote{These have also been called \emph{context morphisms}, for example in Hoffman \cite{Hofmann97syntaxand}.  Note however that what we call a substitution from $\Gamma$ to $\Delta$ is what Hoffman calls a context morphism from $\Delta$ to $\Gamma$.}, $\sigma : \Gamma \Rightarrow \Delta$,
+Let $\Gamma$ and $\Delta$ be contexts.  A \emph{substitution from $\Delta$ to $\Gamma$}\footnote{These have also been called \emph{context morphisms}, for example in Hoffman \cite{Hofmann97syntaxand}.},
+$\sigma : \Delta \Rightarrow \Gamma$,
 is a substitution whose domain is $\dom \Gamma$ such that:
 \begin{itemize}
 \item
@@ -473,7 +475,7 @@ for every path variable $e : M =_A N \in \Gamma$, we have $\Delta \vdash \sigma(
 \end{definition}
 
 \begin{lemma}[Well-Typed Substitution]
-If $\Gamma \vdash \mathcal{J}$, $\sigma : \Gamma \Rightarrow \Delta$ and $\Delta \vald$, then $\Delta \vdash \mathcal{J} [\sigma]$.
+If $\Gamma \vdash \mathcal{J}$, $\sigma : \Delta \Rightarrow \Gamma$ and $\Delta \vald$, then $\Delta \vdash \mathcal{J} [\sigma]$.
 \end{lemma}
 
 \begin{proof}
@@ -481,15 +483,15 @@ Induction on derivations.
 \end{proof}
 
 \begin{definition}
-If $\rho, \sigma : \Gamma \Rightarrow \Delta$ and $\tau$ is a path substitution whose domain
+If $\rho, \sigma : \Delta \Rightarrow \Gamma$ and $\tau$ is a path substitution whose domain
 is the term variables in $\dom \Gamma$, then we write
-$\tau : \sigma = \rho : \Gamma \Rightarrow \Delta$ iff, for each variable $x : A \in \Gamma$, we have
+$\tau : \sigma = \rho : \Delta \Rightarrow \Gamma$ iff, for each variable $x : A \in \Gamma$, we have
 $\Delta \vdash \tau(x) : \sigma(x) =_A \rho(x)$.
 \end{definition}
 
 \begin{lemma}[Path Substitution]
 \label{lm:pathsub}
-If $\tau : \sigma = \rho : \Gamma \Rightarrow \Delta$ and $\Gamma \vdash M : A$ and $\Delta \vald$,
+If $\tau : \sigma = \rho : \Delta \Rightarrow \Gamma$ and $\Gamma \vdash M : A$ and $\Delta \vald$,
 then $\Delta \vdash M \{ \tau : \sigma = \rho \} : M [ \sigma ] =_A M [ \rho ]$.
 \end{lemma}
 
@@ -512,24 +514,12 @@ Well-Typed Substitution and Path Substitution Lemmas.
 $ $
 \begin{itemize}
 \item
-The canonical objects $\theta$ of $\Omega$, or \emph{canonical propositions}, are given by the grammar
+The \emph{canonical propositions}, are given by the grammar
 $$ \theta ::= \bot \mid \theta \supset \theta $$
 \item
-A canonical object of type $A \rightarrow B$ has the form $\lambda x:A.M$.
-\end{itemize}
-We define the \emph{canonical proofs} of a canonical object $\theta$ of $\Omega$ as follows:
-\begin{itemize}
+A \emph{canonical proof} is one of the form $\lambda p : \varphi . \delta$.
 \item
-There is no canonical proof of $\bot$.
-\item
-A canonical proof of $\varphi \supset \psi$ has the form $\lambda p : \varphi . \delta$.
-\end{itemize}
-We define the \emph{canonical paths} of an equation $M =_A N$ as follows.  (Note that this depends only on the type $A$, not on $M$ and $N$.)
-\begin{itemize}
-\item
-A canonical path of $\varphi =_\Omega \psi$ is one of the form $\reff{M}$ or $\univ{\varphi}{\psi}{\delta}{\epsilon}$.
-\item
-A canonical path of $F =_{A \rightarrow B} G$ is one of the form $\reff{M}$ or $\triplelambda e:x =_A y. P$.
+A \emph{canonical path} is one of the form $\reff{M}$, $\univ{\phi}{\psi}{\delta}{\epsilon}$ or $\triplelambda e : x =_A y.P$.
 \end{itemize}
 \end{definition}
 
@@ -606,7 +596,7 @@ And now we compute:
 
 \begin{align*}
 & ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- \\
-\rightarrow & ((h \top) \{ h := \triplelambda e : x =_\Omega y.P : F = I \})^- \\
+\twoheadrightarrow & ((h \top) \{ h := \triplelambda e : x =_\Omega y.P : F = I \})^- \\
 \equiv & ((\triplelambda e : x =_\Omega y.P)_{\top \top} (\reff{\top}))^- \\
 \rightarrow & (P [ x := \top, y := \top, e := \reff{\top} ])^- \\
 \equiv & \univ*{\lambda p : \top \supset \top. \reff{\top}^+ (p \iota)}{\lambda m:\top. \lambda n:\top. \reff{\top}^- m}^- \\
@@ -614,7 +604,7 @@ And now we compute:
 \end{align*}
 
 Therefore, given proofs $\delta, \epsilon : \top$, we have
-$$ ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- \delta \epsilon \rightarrow \delta \enspace . $$
+$$ ((\reff{H})_{FI}(\triplelambda e:x =_\Omega y.P))^- \delta \epsilon \twoheadrightarrow \delta \enspace . $$
 
 Thus, the construction gives a proof of $\top \supset (\top \supset \top)$ which, given two proofs of $\top$, selects the first.  We could have anticipated this:
 consider the context $\Delta \eqdef X : \Omega, Y : \Omega, p : X$.  By
@@ -647,14 +637,14 @@ Hence we have
 $$ \vdash \langle i \rangle H (Q i) : \Path{U}{HI}{HF} $$
 which is definitionally equal to
 $$ \vdash \langle i \rangle H (Q i) : \Path{U}{\top \rightarrow \top}{\top} $$
-From this, we can apply transport to create a term of type $\top \rightarrow \top \rightarrow \top$.  Applying this to any terms $\delta, \epsilon : \top$ gives a term that
+From this, we can apply transport to create a term $Q' : \top \rightarrow \top \rightarrow \top$.  Applying this to any terms $\delta, \epsilon : \top$ gives a term that
 is definitionally equal to
-$$ Q \delta \epsilon = \mapid{\top}{\mapid{\top}{\delta}} $$
+$$ Q' \delta \epsilon = \mapid{\top}{\mapid{\top}{\delta}} $$
 where $\mapid{}{}$ represents transport across the trivial path:
 $$ \mapid{A}{t} \eqdef \comp^i \, A \, [] \, t \qquad (i \text{ does not occur in } A) \enspace . $$
 (For the details of the calculation, see Appendix \ref{appendix:cubical}.)
 
-In the version of cubical type theory given in \cite{bch:cubical}, we have $\mapid{X}{x}$ is definitionally equal to $x$, and therefore $Q \delta \epsilon = \delta$, just as in PHOML.
+In the version of cubical type theory given in \cite{bch:cubical}, we have $\mapid{X}{x}$ is definitionally equal to $x$, and therefore $Q' \delta \epsilon = \delta$, just as in PHOML.
 This is no longer true in the version of cubical type theory given in \cite{cchm:cubical}.
 
 \section{Computable Expressions}
@@ -673,9 +663,9 @@ We define the relation $\models E : T$, read `$E$ is a computable expression of 
 \item
 $\models \delta : \bot$ iff $\delta$ reduces to a neutral proof.
 \item
-For $\varphi$ and $\psi$ canonical propositions, $\models \delta : \varphi \supset \psi$ iff, for all $\epsilon$ such that $\models \epsilon : \varphi$, we have $\models \delta \epsilon : \psi$.
+For $\theta$ and $\theta'$ canonical propositions, $\models \delta : \theta \supset \theta'$ iff, for all $\epsilon$ such that $\models \epsilon : \theta$, we have $\models \delta \epsilon : \theta'$.
 \item
-If $\varphi$ reduces to the canonical proposition $\psi$, then $\models \delta : \varphi$ iff $\models \delta : \psi$.
+If $\varphi$ reduces to the canonical proposition $\theta$, then $\models \delta : \varphi$ iff $\models \delta : \theta$.
 \item
 $\models P : \varphi =_\Omega \psi$ iff $\models P^+ : \varphi \supset \psi$ and $\models P^- : \psi \supset \varphi$.
 \item
@@ -736,9 +726,17 @@ $\models c_A : A$
 An easy induction on $A$.
 \end{proof}
 
-\begin{lemma}
+\begin{lemma}[Weak Normalization]
 \label{lm:neutral-canon}
-If $\models E : T$ then $E$ reduces to either a neutral term or canonical expression of $T$.
+$ $
+\begin{enumerate}
+\item
+If $\models \delta : \phi$ then $\delta$ reduces to either a neutral proof or canonical proof.
+\item
+If $\models P : M =_A N$ then $P$ reduces either to a neutral path or canonical path.
+\item
+If $\models M : A$ then $M$ reduces either to a canonical proposition or a $\lambda$-term.
+\end{enumerate}
 \end{lemma}
 
 \begin{proof}
@@ -755,7 +753,7 @@ Now, suppose $\models M : A$, i.e. $\models M \{\} : M =_A M$.  Let $A \equiv A_
 $$ \models M \{\}_{c_{A_1} c_{A_1}} c_{A_1} \{\}_{c_{A_2} c_{A_2}} \cdots c_{A_n} \{\}
 : M c_{A_1} \cdots c_{A_n} =_\Omega M c_{A_1} \cdots c_{A_n} \enspace . $$
 Therefore, $M c_{A_1} \cdots c_{A_n}$ reduces to a canonical proposition.  The reduction must consist either in reducing $M$ to a canonical proposition (if $n = 0$),
-or reducing $M$ to a $\lambda$-expression then performing a $\beta$-reduction.  In either case, $M$ reduces to a canonical term.
+or reducing $M$ to a $\lambda$-expression then performing a $\beta$-reduction.
 \end{proof}
 
 \begin{lemma}
@@ -782,6 +780,7 @@ Then $\models \reff{M}^+ \delta : \varphi$ and $\models \reff{M}^- \delta : \var
 \end{proof}
 
 \begin{lemma}
+\label{lm:models-canon}
 $\models \varphi : \Omega$ if and only if $\varphi$ reduces to a canonical proposition.
 \end{lemma}
 
@@ -814,8 +813,8 @@ Let $\models M : A$ and $\models N : A$.  If $P$ is a neutral path, then $\model
 \begin{proof}
 The proof is by induction on $A$.
 
-For $A \equiv \Omega$: we have that $P^+$ and $P^-$ are neutral proofs, and $M$ and $N$ head reduce to canonical propositions, so $\models P^+ : M \supset N$ and
-$\models P^- : N \supset M$ by the previous lemma, as required.
+For $A \equiv \Omega$: we have that $P^+$ and $P^-$ are neutral proofs, and $M$ and $N$ reduce to canonical propositions (by Lemma \ref{lm:models-canon}), so $\models P^+ : M \supset N$ and
+$\models P^- : N \supset M$ by Lemma \ref{lm:neutral-proof}, as required.
 
 For $A \equiv B \rightarrow C$: let $\models L : B$, $\models L' : B$ and $\models Q : L =_B L'$.  Then we have $\models ML : C$, $\models NL' : C$ and
 $P_{LL'} Q$ is a neutral path, hence $\models P_{L L'} Q : ML =_C NL'$ by the induction hypothesis, as required.
@@ -848,7 +847,11 @@ If $\models P : \varphi =_\Omega \varphi'$ and $\models Q : \psi =_\Omega \psi'$
 
 \begin{proof}
 %Extract as lemma
-By Reduction (Lemma \ref{lm:reduction}) and Expansion (Lemma \ref{lm:expansion}), we may assume that $P$ and $Q$ are either neutral, or have the form $\reff{-}$ or $\univ{-}{-}{-}{-}$.
+By Reduction (Lemma \ref{lm:reduction}) and Expansion (Lemma \ref{lm:expansion}), we may assume that $P$ and $Q$ are either neutral, or have the form $\reff{-}$ or $\univ{-}{-}{-}{-}$ or $\triplelambda e : x =_A y.-$.
+
+We cannot have that $P$ reduces to a $\triplelambda$-path; for let $\varphi'$ reduce to the canonical proposition $\theta_1 \supset \cdots \supset \theta_n \supset \bot$.  Then we have
+\[ \models P^+ p q_1 \cdots q_n : \bot \]
+and so $P^+ p q_1 \cdots q_n$ must reduce to a neutral path.  Similarly, $Q$ cannot reduce to a $\triplelambda$-path.
 
 If either $P$ or $Q$ is neutral then $P \supset^* Q$ is neutral, and the result follows from Lemma \ref{lm:neutral-path}.
 
@@ -884,6 +887,7 @@ These follow from the hypotheses, using Expansion (Lemma \ref{lm:expansion}).
 \section{Proof of Canonicity}
 
 \begin{theorem}
+$ $
 \begin{enumerate}
 \item
 If $\Gamma \vdash \mathcal{J}$ and $\models \sigma : \Gamma$, then $\models \mathcal{J} [ \sigma ]$.
@@ -904,7 +908,7 @@ We must show that
 $$ \models \lambda x:A.M[\sigma] : A \rightarrow B \enspace . $$
 So let $\models Q : N =_A N'$.  Define the path substitution $\tau$ by
 $$ \tau(x) \equiv Q, \qquad \tau(y) \equiv \reff{\sigma(y)} \ (y \in \dom \Gamma) $$
-Then we have $\models \tau : (\sigma, x:=N) = (\sigma, x:=N')$, and so the induction hypothesis gives
+Then we have $\models \tau : (\sigma, x:=N) = (\sigma, x:=N') : \Gamma , x : A$, and so the induction hypothesis gives
 $$ \models M \{ \tau \} : M[\sigma, x:=N] =_B M [ \sigma, x:= N' ] $$
 We observe that $M \{ \tau \} \equiv M [ \sigma ] \{ x:=Q:N=N' \}$ (Lemma \ref{lm:pathsubsub}),
 and so by Expansion (Lemma \ref{lm:expansion}) and Conversion (Lemma \ref{lm:conv-compute}) we have
@@ -916,12 +920,16 @@ $$  \models \triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y
 So let $ \models P : N =_A N'$.  The induction hypothesis gives
 $$  \models M \{ \tau : \rho = \sigma, x := P : N = N' \} : M [\rho, x := N] =_B M [\sigma, x := N'] \enspace , $$
 and so we have
-$$  \models (\triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y \})_{N N'} P : (\lambda x:A.M [ \rho ])N =_B (\lambda x:A.M [ \sigma ])N'$$
+\begin{align*}
+\models & (\triplelambda e : x =_A y. M \{ \tau : \rho = \sigma, x := e : x = y \})_{N N'} P \\
+: & (\lambda x:A.M [ \rho ])N =_B (\lambda x:A.M [ \sigma ])N'
+\end{align*}
 by Expansion and Conversion, as required.
 \end{enumerate}
 \end{proof}
 
 \begin{corollary}
+Let $\Gamma$ be a context in which no term variables occur.
 \begin{enumerate}
 \item
 If $\Gamma \vdash \delta : \phi$ then $\delta$ reduces to a neutral proof or canonical proof.
@@ -931,32 +939,27 @@ If $\Gamma \vdash P : M =_A N$ then $P$ reduces to a neutral path or canonical p
 \end{corollary}
 
 \begin{proof}
-For every context $\Gamma$, define the substitution $\sigma_\Gamma$ by
-\[ \sigma_\Gamma(x) \eqdef c_A \ (x : A \in \Gamma) \qquad \sigma_\Gamma(p) \eqdef p \qquad \sigma_\Gamma(e) \eqdef e \enspace . \]
-If $\Gamma \vald$ then $\models \sigma_\Gamma : \Gamma$ using Lemmas \ref{lm:neutral-proof} and \ref{lm:neutral-path}.
+Let $\id$ be the substitution $\Gamma \Rightarrow \Gamma$ such that $\id(x) \eqdef x$.
+If $\Gamma \vald$ then $\models \id : \Gamma$ using Lemmas \ref{lm:neutral-proof} and \ref{lm:neutral-path}.
 
-Therefore, if $\Gamma \vdash E : T$ then $\models E [ \sigma_\Gamma ] : T [ \sigma_\Gamma ]$, and so $E [ \sigma_\Gamma ]$ reduces to
-a neutral expression or canonical expression.  Each reduction step is either a reduction that can be carried out in $E$, or a reduction
-within one of the terms $c_A$.  By carrying out the same reduction steps in $E$, we see that $E$ can be reduced to a neutral expression or canonical
-expression.
+Therefore, if $\Gamma \vdash E : T$ then $\models E [ \id ] : T [ \id ]$, that is, $\models E : T$.  Hence $E$ reduces to
+a neutral expression or canonical expression.
 \end{proof}
 
 \begin{corollary}[Canonicity]
-$ $
+Let $\Gamma$ be a context with no term variables.
 \begin{enumerate}
 \item
-\textbf{(Consistency)}
-There is no $\delta$ such that $\vdash \delta : \bot$.
+If $\Gamma \vdash \delta : \bot$ then $\delta$ reduces to a neutral proof.
 \item
-If $\vdash \delta : \varphi \supset \psi$, then $\delta$ reduces to $\lambda p : \varphi' . \epsilon$ where $\varphi \simeq \varphi'$ and
-$p : \varphi' \vdash \epsilon : \psi$.
+If $\Gamma \vdash \delta : \phi \supset \psi$ then $\delta$ reduces either to a neutral proof, or a proof $\lambda p : \phi' . \epsilon$ where $\phi \simeq \phi'$
+and $\Gamma, p : \phi \vdash \epsilon : \psi$.
 \item
-If $\vdash P : \varphi =_\Omega \psi$ then either $P$ reduces to $\reff{\varphi'}$ and $\varphi' \simeq \varphi \simeq \psi$; or
-$P$ reduces to $\univ{\varphi'}{\psi'}{\lambda p:\varphi'.\delta}{\lambda q:\psi'.\epsilon}$ where $\varphi \simeq \varphi'$, $\psi \simeq \psi'$,
-$p : \varphi' \vdash \delta : \psi'$ and $q : \psi' \vdash \epsilon : \varphi'$.
+If $\Gamma \vdash P : \phi =_\Omega \psi$ then $P$ reduces either to a neutral path; or to $\reff{\chi}$ where $\phi \simeq \psi \simeq \chi$; or to
+$\univ{\phi'}{\psi'}{\delta}{\epsilon}$ where $\phi \simeq \phi'$, $\psi \simeq \psi'$, $\Gamma \vdash \delta : \phi \supset \psi$ and $\Gamma \vdash \epsilon : \psi \supset \phi$.
 \item
-If $\vdash P : F =_{A \rightarrow B} G$ then either $P$ reduces to $\reff{M}$ and $M \simeq F \simeq G$; or $P$ reduces to
-$\triplelambda e:x =_A y.Q$ where $x : A, y : A, e : x =_A y \vdash Q : F x =_B G y$.
+If $\Gamma \vdash P : M =_{A \rightarrow B} M'$ then $P$ reduces either to a neutral path; or to $\reff{N}$ where $M \simeq M' \simeq N$; or to
+$\triplelambda e : x =_A y. Q$ where $\Gamma, x : A, y : A, e : x =_A y \vdash Q : Mx =_B M'y$.
 \end{enumerate}
 \end{corollary}
 
@@ -965,7 +968,17 @@ A closed expression cannot be neutral, so from the previous corollary every type
 We now apply case analysis to the possible forms of canonical expression, and use the Generation Lemma.
 \end{proof}
 
-\section{Conclusion}
+\begin{corollary}[Conistency]
+There is no $\delta$ such that $\vdash \delta : \bot$.
+\end{corollary}
+
+\begin{note}
+We have not proved canonicity for terms.  However, we can observe that PHOML restricted to terms and types is just the simply-typed lambda calculus
+with one atomic type $\Omega$ and two constants $\bot$ and $\supset$; and our reduction relation restricted to this fragment is head reduction.
+Canonicity for this system is already a well-known result (see e.g. \cite[Ch. 4]{Girard1989}).
+\end{note}
+
+\section{Conclusion and Future Work}
 
 We have presented a system with propositional extensionality, and shown that it satisfies the property of canonicity.
 This gives hope that it will be possible to find a computation rule for homotopy type theory that satisfies canonicity, and
@@ -982,6 +995,10 @@ a system where the equations $M =_A N$ are objects of $\Omega$, allowing us to f
 a system with universal quantification over the types $A$, allowing us to form propositions such as $\forall x:A. x =_A x$ and
 $\forall x,y : A. x =_A y \supset y =_A x$
 \end{itemize}
+
+Ultimately, we hope to approach full homotopy type theory.  The study of how the reduction relation and its properties change as we
+move up and down this hierarchy of systems should reveal facts about computing with univalence that might be lost when working in
+a more complex system such as homotopy type theory or cubical type theory.
 
 \bibliography{../../../../type}
 

@@ -17,6 +17,11 @@ Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"{o}}rtberg.
 \newblock {\em CoRR}, abs/1611.02108, 2016.
 \newblock URL: \url{http://arxiv.org/abs/1611.02108}.
 
+\bibitem{Girard1989}
+Jean-Yves Girard.
+\newblock {\em Proofs and Types}.
+\newblock Cambridge University Press, 1989.
+
 \bibitem{Hofmann97syntaxand}
 Martin Hofmann.
 \newblock Syntax and semantics of dependent types.
@@ -32,7 +37,8 @@ Zhaohui Luo.
 \bibitem{Polonsky14a}
 Andrew Polonsky.
 \newblock Internalization of extensional equality.
-\newblock Preprint \url{http://arxiv.org/abs/1401.1148}, 2014.
+\newblock {\em CoRR}, abs/1401.1148, 2014.
+\newblock URL: \url{http://arxiv.org/abs/1401.1148}.
 
 \bibitem{tait1967}
 W.~W. Tait.
