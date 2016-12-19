@@ -57,10 +57,6 @@ E 〈 ρ 〉 = LiftFamily.ap Rep∶LF ρ E
 liftsRep : ∀ {U V} KK → Rep U V → Rep (extend U KK) (extend V KK)
 liftsRep = LiftFamily.liftsOp Rep∶LF
 
-liftsnocRep : ∀ {U V} KK → Rep U V → Rep (snoc-extend U KK) (snoc-extend V KK)
-liftsnocRep [] ρ = ρ
-liftsnocRep (KK snoc K) ρ = liftRep K (liftsnocRep KK ρ)
-
 infixl 75 _•R_
 _•R_ : ∀ {U} {V} {W} → Rep V W → Rep U V → Rep U W
 (ρ' •R ρ) K x = ρ' K (ρ K x)
@@ -102,6 +98,7 @@ liftRep-idRep = OpFamily.liftOp-idOp REP
 liftRep-upRep : ∀ {U V C K L} {σ : Rep U V} (E : Subexp U C K) → E 〈 upRep 〉 〈 liftRep L σ 〉 ≡ E 〈 σ 〉 〈 upRep 〉
 liftRep-upRep = OpFamily.liftOp-up REP
 
+--TODO Versions of below for any op-family
 liftRep-•R₄ : ∀ {U} {V1} {V2} {V3} {V4} {K} {ρ1 : Rep U V1} {ρ2 : Rep V1 V2} {ρ3 : Rep V2 V3} {ρ4 : Rep V3 V4} →
                 liftRep K (ρ4 •R ρ3 •R ρ2 •R ρ1) ∼R liftRep K ρ4 •R liftRep K ρ3 •R liftRep K ρ2 •R liftRep K ρ1
 liftRep-•R₄ {U} {V1} {V2} {V3} {V4} {K} {ρ1} {ρ2} {ρ3} {ρ4} =
@@ -116,6 +113,17 @@ liftRep-•R₄ {U} {V1} {V2} {V3} {V4} {K} {ρ1} {ρ2} {ρ3} {ρ4} =
     liftRep K ρ4 •R liftRep K ρ3 •R liftRep K ρ2 •R liftRep K ρ1
   ∎
 
+rep-•R₃ : ∀ {U V₁ V₂ V₃ C K} {E : Subexp U C K} {ρ₁ : Rep U V₁} {ρ₂ : Rep V₁ V₂} {ρ₃ : Rep V₂ V₃} →
+  E 〈 ρ₃ •R ρ₂ •R ρ₁ 〉 ≡ E 〈 ρ₁ 〉 〈 ρ₂ 〉 〈 ρ₃ 〉
+rep-•R₃ {U} {V₁} {V₂} {V₃} {C} {K} {E} {ρ₁} {ρ₂} {ρ₃} =
+  let open ≡-Reasoning in
+    E 〈 ρ₃ •R ρ₂ •R ρ₁ 〉
+  ≡⟨ rep-•R E ⟩
+    E 〈 ρ₁ 〉 〈 ρ₃ •R ρ₂ 〉
+  ≡⟨ rep-•R (E 〈 ρ₁ 〉) ⟩
+    E 〈 ρ₁ 〉 〈 ρ₂ 〉 〈 ρ₃ 〉
+  ∎
+
 rep-•R₄ : ∀ {U} {V1} {V2} {V3} {V4} 
             {ρ1 : Rep U V1} {ρ2 : Rep V1 V2} {ρ3 : Rep V2 V3} {ρ4 : Rep V3 V4} 
             {C} {K} (E : Subexp U C K) →
@@ -124,9 +132,7 @@ rep-•R₄ {U} {V1} {V2} {V3} {V4} {ρ1} {ρ2} {ρ3} {ρ4} {C} {K} E =
   let open ≡-Reasoning in 
   begin
     E 〈 ρ4 •R ρ3 •R ρ2 •R ρ1 〉
-      ≡⟨ rep-•R E ⟩
-    E 〈 ρ1 〉 〈 ρ4 •R ρ3 •R ρ2 〉
-      ≡⟨ rep-•R (E 〈 ρ1 〉) ⟩
+      ≡⟨ rep-•R₃ {E = E} ⟩
     E 〈 ρ1 〉 〈 ρ2 〉 〈 ρ4 •R ρ3 〉
       ≡⟨ rep-•R (E 〈 ρ1 〉 〈 ρ2 〉) ⟩
     E 〈 ρ1 〉 〈 ρ2 〉 〈 ρ3 〉 〈 ρ4 〉
@@ -136,6 +142,7 @@ infixl 70 _⇑
 _⇑ : ∀ {V} {K} {C} {L} → Subexp V C L → Subexp (V , K) C L
 E ⇑ = E 〈 upRep 〉
 
+--TODO Version of below for any op-family and foldfunc
 ups : ∀ {V} KK → Rep V (snoc-extend V KK)
 ups [] = idRep _
 ups (KK snoc K) = upRep •R ups KK
@@ -143,46 +150,6 @@ ups (KK snoc K) = upRep •R ups KK
 infix 70 _⇑⇑
 _⇑⇑ : ∀ {V C K KK} → Subexp V C K → Subexp (snoc-extend V KK) C K
 _⇑⇑ {KK = KK} E = E 〈 ups KK 〉
-
-liftsnocRep-ups : ∀ {U V C K} KK (E : Subexp U C K) {ρ : Rep U V} → (_⇑⇑ {KK = KK} E) 〈 liftsnocRep KK ρ 〉 ≡ (_⇑⇑ {KK = KK} (E 〈 ρ 〉))
-liftsnocRep-ups {U} {V} [] E {ρ} = let open ≡-Reasoning in
-  begin
-    E 〈 idRep U 〉 〈 ρ 〉
-  ≡⟨ rep-congl (rep-idRep {E = E}) ⟩
-    E 〈 ρ 〉
-  ≡⟨⟨ rep-idRep ⟩⟩
-    E 〈 ρ 〉 〈 idRep V 〉
-  ∎
-liftsnocRep-ups (KK snoc K) E {ρ} = let open ≡-Reasoning in 
-  begin
-    E 〈 upRep •R ups KK 〉 〈 liftRep K (liftsnocRep KK ρ) 〉
-  ≡⟨ rep-congl (rep-•R E) ⟩
-    E 〈 ups KK 〉 ⇑ 〈 liftRep K (liftsnocRep KK ρ) 〉
-  ≡⟨ liftRep-upRep (E 〈 ups KK 〉) ⟩
-    E 〈 ups KK 〉 〈 liftsnocRep KK ρ 〉 ⇑
-  ≡⟨ rep-congl (liftsnocRep-ups KK E) ⟩
-    E 〈 ρ 〉 〈 ups KK 〉 ⇑
-  ≡⟨⟨ rep-•R (E 〈 ρ 〉) ⟩⟩
-    E 〈 ρ 〉 〈 upRep •R ups KK 〉
-  ∎
-
-magic : ∀ {V} → Rep ∅ V
-magic _ ()
-
-magic-unique : ∀ {V} {ρ : Rep ∅ V} → ρ ∼R magic
-magic-unique {V} {ρ} ()
-
-magic-unique' : ∀ {U} {V} {C} {K}
-  (E : Subexp ∅ C K) {ρ : Rep U V} → 
-  E 〈 magic 〉 〈 ρ 〉 ≡ E 〈 magic 〉
-magic-unique' E {ρ} = let open ≡-Reasoning in
-  begin
-    E 〈 magic 〉 〈 ρ 〉
-  ≡⟨⟨ rep-•R E ⟩⟩
-    E 〈 ρ •R magic 〉
-  ≡⟨ rep-congr (magic-unique {ρ = ρ •R magic}) E ⟩
-    E 〈 magic 〉
-  ∎
 
 liftRep-upRep₂ : ∀ {U} {V} {C} {K} {L} {M} (E : Subexp U C M) {ρ : Rep U V} → E ⇑ ⇑ 〈 liftRep K (liftRep L ρ) 〉 ≡ E 〈 ρ 〉 ⇑ ⇑
 liftRep-upRep₂ {U} {V} {C} {K} {L} {M} E {ρ} = let open ≡-Reasoning in 
@@ -205,20 +172,6 @@ liftRep-upRep₃ {U} {V} {C} {K} {L} {M} E {ρ} = let open ≡-Reasoning in
     E 〈 ρ 〉 ⇑ ⇑ ⇑
   ∎
 
-postulate liftRep-upRep₄' : ∀ {U} {V} (ρ : Rep U V) {K1} {K2} {K3} → upRep •R upRep •R upRep •R ρ ∼R liftRep K1 (liftRep K2 (liftRep K3 ρ)) •R upRep •R upRep •R upRep
-
 Types-rep : ∀ {U V KK} → Types U KK → Rep U V → Types V KK
 Types-rep [] _ = []
 Types-rep (B , BB) ρ = B 〈 ρ 〉 , Types-rep BB (liftRep _ ρ)
-
-snocTypes-rep : ∀ {U V KK} → snocTypes U KK → Rep U V → snocTypes V KK
-snocTypes-rep [] _ = []
-snocTypes-rep {KK = KK snoc _} (AA snoc A) ρ = snocTypes-rep AA ρ snoc A 〈 liftsnocRep KK ρ 〉
-
-snocListExp-rep : ∀ {U V KK} → HetsnocList (VExpression U) KK → Rep U V → HetsnocList (VExpression V) KK
-snocListExp-rep [] _ = []
-snocListExp-rep (MM snoc M) ρ = snocListExp-rep MM ρ snoc (M 〈 ρ 〉)
-
-snocVec-rep : ∀ {U V C K n} → snocVec (Subexp U C K) n → Rep U V → snocVec (Subexp V C K) n
-snocVec-rep [] ρ = []
-snocVec-rep (EE snoc E) ρ = snocVec-rep EE ρ snoc E 〈 ρ 〉

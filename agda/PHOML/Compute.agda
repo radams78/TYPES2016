@@ -215,10 +215,6 @@ app-wnl' δ↠ε δ≡δ₁δ₂ ε≡χ | inj₂ (φ ,p δ₁' ,p δ₁↠Λφ�
 ⊧P-wn : ∀ {V} {δ : Proof V} {φ} → ⊧P δ ∶ φ → Σ[ ε ∈ CanonP V ] δ ↠ decode-CanonP ε
 ⊧P-wn (_ ,p _ ,p ⊧PCδ∶θ) = ⊧PC-wn ⊧PCδ∶θ
 
-⊧E-wn : ∀ {V} {P : Path V} {M A N} → ⊧E P ∶ M ≡〈 A 〉 N → Σ[ Q ∈ CanonE V ] P ↠ decode-CanonE Q
-⊧E-wn {A = Ω} (⊧P+∶M⊃N ,p _) = Lemma35e ⊧P+∶M⊃N
-⊧E-wn {A = A ⇛ B} ⊧P∶M≡N = {!!}
-
 not-λλλ-red-CanonΩ : ∀ {V A Q} {Qc : CanonΩ V} → λλλ A Q ↠ decode-CanonΩ Qc → Empty
 not-λλλ-red-CanonΩ λQ↠Qc with λλλ-red-ref λQ↠Qc refl
 not-λλλ-red-CanonΩ {V} {A} {Q} {neutral (var x)} λQ↠Qc | ()
