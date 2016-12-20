@@ -128,9 +128,18 @@ subject-reduction-⇒ {Γ = Γ} Γ⊢reffM+∶φ (refdir {φ = M} {d = -minus}) 
   let Γ⊢M∶Ω : Γ ⊢ M ∶ ty Ω
       Γ⊢M∶Ω = generation-reff₁ Γ⊢reffM∶ψ≡χ in
   convPR (ΛPR Γ⊢M∶Ω Γ⊢M∶Ω (varR x₀ (ctxPR Γ⊢M∶Ω))) (prop-validity Γ⊢reffM+∶φ) (trans (≃-imp (generation-reff₃ Γ⊢reffM∶ψ≡χ) (generation-reff₂ Γ⊢reffM∶ψ≡χ)) (sym φ≃ψ⊃χ))
-subject-reduction-⇒ Γ⊢E∶A univplus = {!!}
-subject-reduction-⇒ Γ⊢E∶A univminus = {!!}
-subject-reduction-⇒ Γ⊢E∶A (dirR E⇒F) = {!!}
+subject-reduction-⇒ Γ⊢univδε+∶φ univplus = 
+  let ψ ,p χ ,p Γ⊢univδε∶ψ≡χ ,p φ≃ψ⊃χ = generation-plus Γ⊢univδε+∶φ in 
+  convPR (generation-univ₃ Γ⊢univδε∶ψ≡χ) (prop-validity Γ⊢univδε+∶φ) (trans (≃-imp (generation-univ₁ Γ⊢univδε∶ψ≡χ) (generation-univ₂ Γ⊢univδε∶ψ≡χ)) (sym φ≃ψ⊃χ))
+subject-reduction-⇒ Γ⊢univδε-∶φ univminus = 
+  let ψ ,p χ ,p Γ⊢univδε∶ψ≡χ ,p φ≃χ⊃ψ = generation-minus Γ⊢univδε-∶φ in 
+  convPR (generation-univ₄ Γ⊢univδε∶ψ≡χ) (prop-validity Γ⊢univδε-∶φ) (trans (≃-imp (generation-univ₂ Γ⊢univδε∶ψ≡χ) (generation-univ₁ Γ⊢univδε∶ψ≡χ)) (sym φ≃χ⊃ψ))
+subject-reduction-⇒ Γ⊢P+∶φ (dirR {d = -plus} P⇒Q) = 
+  let ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p φ≃ψ⊃χ = generation-plus Γ⊢P+∶φ in 
+  convPR (plusR (subject-reduction-⇒ Γ⊢P∶ψ≡χ P⇒Q)) (prop-validity Γ⊢P+∶φ) (sym φ≃ψ⊃χ)
+subject-reduction-⇒ Γ⊢P-∶φ (dirR {d = -minus} P⇒Q) =
+  let ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p φ≃χ⊃ψ = generation-minus Γ⊢P-∶φ in 
+  convPR (minusR (subject-reduction-⇒ Γ⊢P∶ψ≡χ P⇒Q)) (prop-validity Γ⊢P-∶φ) (sym φ≃χ⊃ψ)
 subject-reduction-⇒ Γ⊢E∶A βE = {!!}
 subject-reduction-⇒ Γ⊢E∶A βPP = {!!}
 subject-reduction-⇒ Γ⊢E∶A ref⊃* = {!!}
