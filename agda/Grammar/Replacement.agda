@@ -101,7 +101,7 @@ liftRep-upRep = OpFamily.liftOp-up REP
 --TODO Versions of below for any op-family
 liftRep-•R₄ : ∀ {U} {V1} {V2} {V3} {V4} {K} {ρ1 : Rep U V1} {ρ2 : Rep V1 V2} {ρ3 : Rep V2 V3} {ρ4 : Rep V3 V4} →
                 liftRep K (ρ4 •R ρ3 •R ρ2 •R ρ1) ∼R liftRep K ρ4 •R liftRep K ρ3 •R liftRep K ρ2 •R liftRep K ρ1
-liftRep-•R₄ {U} {V1} {V2} {V3} {V4} {K} {ρ1} {ρ2} {ρ3} {ρ4} =
+liftRep-•R₄ {U} {V4 = V4} {K} {ρ1} {ρ2} {ρ3} {ρ4} =
   let open Prelims.EqReasoning (PreOpFamily.OP Rep∶POF (U , K) (V4 , K)) in 
   begin
     liftRep K (ρ4 •R ρ3 •R ρ2 •R ρ1)
@@ -113,9 +113,9 @@ liftRep-•R₄ {U} {V1} {V2} {V3} {V4} {K} {ρ1} {ρ2} {ρ3} {ρ4} =
     liftRep K ρ4 •R liftRep K ρ3 •R liftRep K ρ2 •R liftRep K ρ1
   ∎
 
-rep-•R₃ : ∀ {U V₁ V₂ V₃ C K} {E : Subexp U C K} {ρ₁ : Rep U V₁} {ρ₂ : Rep V₁ V₂} {ρ₃ : Rep V₂ V₃} →
+rep-•R₃ : ∀ {U V₁ V₂ V₃ C K} (E : Subexp U C K) {ρ₁ : Rep U V₁} {ρ₂ : Rep V₁ V₂} {ρ₃ : Rep V₂ V₃} →
   E 〈 ρ₃ •R ρ₂ •R ρ₁ 〉 ≡ E 〈 ρ₁ 〉 〈 ρ₂ 〉 〈 ρ₃ 〉
-rep-•R₃ {U} {V₁} {V₂} {V₃} {C} {K} {E} {ρ₁} {ρ₂} {ρ₃} =
+rep-•R₃ E {ρ₁} {ρ₂} {ρ₃} =
   let open ≡-Reasoning in
     E 〈 ρ₃ •R ρ₂ •R ρ₁ 〉
   ≡⟨ rep-•R E ⟩
@@ -128,15 +128,16 @@ rep-•R₄ : ∀ {U} {V1} {V2} {V3} {V4}
             {ρ1 : Rep U V1} {ρ2 : Rep V1 V2} {ρ3 : Rep V2 V3} {ρ4 : Rep V3 V4} 
             {C} {K} (E : Subexp U C K) →
             E 〈 ρ4 •R ρ3 •R ρ2 •R ρ1 〉 ≡ E 〈 ρ1 〉 〈 ρ2 〉 〈 ρ3 〉 〈 ρ4 〉
-rep-•R₄ {U} {V1} {V2} {V3} {V4} {ρ1} {ρ2} {ρ3} {ρ4} {C} {K} E = 
+rep-•R₄ {ρ1 = ρ1} {ρ2} {ρ3} {ρ4} E = 
   let open ≡-Reasoning in 
   begin
     E 〈 ρ4 •R ρ3 •R ρ2 •R ρ1 〉
-      ≡⟨ rep-•R₃ {E = E} ⟩
+      ≡⟨ rep-•R₃ E ⟩
     E 〈 ρ1 〉 〈 ρ2 〉 〈 ρ4 •R ρ3 〉
       ≡⟨ rep-•R (E 〈 ρ1 〉 〈 ρ2 〉) ⟩
     E 〈 ρ1 〉 〈 ρ2 〉 〈 ρ3 〉 〈 ρ4 〉
   ∎
+--TODO Make ordering of arguments consistent
 
 infixl 70 _⇑
 _⇑ : ∀ {V} {K} {C} {L} → Subexp V C L → Subexp (V , K) C L
@@ -152,7 +153,7 @@ _⇑⇑ : ∀ {V C K KK} → Subexp V C K → Subexp (snoc-extend V KK) C K
 _⇑⇑ {KK = KK} E = E 〈 ups KK 〉
 
 liftRep-upRep₂ : ∀ {U} {V} {C} {K} {L} {M} (E : Subexp U C M) {ρ : Rep U V} → E ⇑ ⇑ 〈 liftRep K (liftRep L ρ) 〉 ≡ E 〈 ρ 〉 ⇑ ⇑
-liftRep-upRep₂ {U} {V} {C} {K} {L} {M} E {ρ} = let open ≡-Reasoning in 
+liftRep-upRep₂ {K = K} {L} E {ρ} = let open ≡-Reasoning in 
   begin
     E ⇑ ⇑ 〈 liftRep K (liftRep L ρ) 〉
   ≡⟨ liftRep-upRep (E ⇑) ⟩
@@ -163,7 +164,7 @@ liftRep-upRep₂ {U} {V} {C} {K} {L} {M} E {ρ} = let open ≡-Reasoning in
 
 liftRep-upRep₃ : ∀ {U} {V} {C} {K} {L} {M} {N} (E : Subexp U C N) {ρ : Rep U V} → 
   E ⇑ ⇑ ⇑ 〈 liftRep K (liftRep L (liftRep M ρ)) 〉 ≡ E 〈 ρ 〉 ⇑ ⇑ ⇑
-liftRep-upRep₃ {U} {V} {C} {K} {L} {M} E {ρ} = let open ≡-Reasoning in 
+liftRep-upRep₃ {K = K} {L} {M} E {ρ} = let open ≡-Reasoning in 
   begin
     E ⇑ ⇑ ⇑ 〈 liftRep K (liftRep L (liftRep M ρ)) 〉
   ≡⟨ liftRep-upRep₂ (E ⇑) ⟩
