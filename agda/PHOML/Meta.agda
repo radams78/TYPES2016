@@ -16,24 +16,9 @@ _∶_≡_∶_⟶_ : ∀ {U V} → PathSub U V → Sub U V → Sub U V → Contex
 liftPathSub-typed : ∀ {U V} {τ : PathSub U V} {ρ σ Γ Δ A} →
   τ ∶ ρ ≡ σ ∶ Γ ⟶ Δ → valid Γ → liftPathSub τ ∶ sub↖ ρ ≡ sub↗ σ ∶ addpath Γ A ⟶ Δ ,T A
 liftPathSub-typed τ∶ρ≡σ validΓ x₀ = varR x₀ (valid-addpath validΓ)
-<<<<<<< HEAD
-liftPathSub-typed {τ = τ} {ρ} {σ} {Γ} {Δ} {A} τ∶ρ≡σ validΓ (↑ x) = subst₄ (λ x₃ y z w → addpath Γ A ⊢ x₃ ∶ y ≡〈 z 〉 w) 
-  (rep-•R₃ {E = τ x})
-  (let open ≡-Reasoning in 
-    begin
-      ρ -Term x 〈 upRep •R upRep •R upRep 〉
-    ≡⟨ rep-•R (ρ -Term x) ⟩
-      ρ -Term x ⇑ 〈 upRep •R upRep 〉
-    ≡⟨ rep-•R (ρ -Term x ⇑) ⟩
-      ρ -Term x ⇑ ⇑ ⇑
-    ∎) 
-  (≡-sym (yt-rep (typeof x Δ))) (rep-•R₃ {E = σ -Term x}) 
-  (weakening (τ∶ρ≡σ x) (valid-addpath validΓ) (upRep₃-typed {A1 = ty A} {A2 = ty A} {A3 = var x₁ ≡〈 A 〉 var x₀}))
-=======
 liftPathSub-typed {τ = τ} {ρ} {σ} {Γ = Γ} {Δ} {A = A} τ∶ρ≡σ validΓ (↑ x) = subst₄ (λ x₃ y z w → addpath Γ A ⊢ x₃ ∶ y ≡〈 z 〉 w) 
   (rep-•R₃ (τ x)) (rep-•R₃ (ρ -Term x)) (≡-sym (yt-rep (typeof x Δ))) (rep-•R₃ (σ -Term x)) 
   (weakening (τ∶ρ≡σ x) (valid-addpath validΓ) (upRep₃-addpath-typed A))
->>>>>>> a50b6a0374191829c97b791ab041febd3fa8289e
 
 path-substitution : ∀ {U} {V} {Γ : Context U} {Δ : Context V} 
   {ρ} {σ} {τ} {M} {A} →
