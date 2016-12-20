@@ -73,7 +73,7 @@ APPl-red NN (trans M↠N N↠P) M≡M'NN | inj₁ (N' ,p M'↠N' ,p N≡N'NN) | 
 APPl-red NN (trans M↠N N↠P) M≡M'NN | inj₁ (N' ,p M'↠N' ,p N≡N'NN) | inj₂ (reduces-to-Λ N'↠ΛN₀) = inj₂ (reduces-to-Λ (trans M'↠N' N'↠ΛN₀))
 APPl-red NN (trans M↠N N↠P) M≡M'NN | inj₂ N'rtΛ = inj₂ N'rtΛ
 
-private imp-red-inj₁' : ∀ {V} {φ ψ χ χ' : Term V} → χ ↠ χ' → χ ≡ φ ⊃ ψ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
+imp-red-inj₁' : ∀ {V} {φ ψ χ χ' : Term V} → χ ↠ χ' → χ ≡ φ ⊃ ψ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
                       χ' ≡ φ' ⊃ ψ' × φ ↠ φ'
 imp-red-inj₁' {χ' = χ'} (inc χ⇒χ') χ≡φ⊃ψ with imp-osr-inj₁ (subst (λ x → x ⇒ χ') χ≡φ⊃ψ χ⇒χ')
 imp-red-inj₁' (inc χ⇒χ') χ≡φ⊃ψ | φ' ,p ψ' ,p χ'≡φ'⊃ψ' ,p φ⇒?φ' = φ' ,p ψ' ,p χ'≡φ'⊃ψ' ,p sub-R-RT φ⇒?φ'
@@ -86,7 +86,7 @@ imp-red-inj₁ : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ↠ φ' ⊃ ψ' 
 imp-red-inj₁ φ⊃ψ↠φ'⊃ψ' with imp-red-inj₁' φ⊃ψ↠φ'⊃ψ' refl
 imp-red-inj₁ {φ = φ} φ⊃ψ↠φ'⊃ψ' | φ'' ,p ψ'' ,p φ'⊃ψ'≡φ''⊃ψ'' ,p φ↠φ'' = subst (λ x → φ ↠ x) (⊃-injl (≡-sym φ'⊃ψ'≡φ''⊃ψ'')) φ↠φ''
 
-private imp-red-inj₂' : ∀ {V} {φ ψ χ χ' : Term V} → χ ↠ χ' → χ ≡ φ ⊃ ψ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
+imp-red-inj₂' : ∀ {V} {φ ψ χ χ' : Term V} → χ ↠ χ' → χ ≡ φ ⊃ ψ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
                       χ' ≡ φ' ⊃ ψ' × ψ ↠ ψ'
 imp-red-inj₂' {χ' = χ'} (inc χ⇒χ') χ≡φ⊃ψ with imp-osr-inj₂ (subst (λ x → x ⇒ χ') χ≡φ⊃ψ χ⇒χ')
 imp-red-inj₂' (inc χ⇒χ') χ≡φ⊃ψ | φ' ,p ψ' ,p χ'≡φ'⊃ψ' ,p φ⇒?φ' = φ' ,p ψ' ,p χ'≡φ'⊃ψ' ,p sub-R-RT φ⇒?φ'

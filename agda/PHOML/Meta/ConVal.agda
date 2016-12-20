@@ -30,6 +30,9 @@ context-validity (lllR Γ⊢M∶A _ _) = context-validity Γ⊢M∶A
 context-validity (appER Γ⊢N∶A _ _ _) = context-validity Γ⊢N∶A
 context-validity (convER Γ⊢P∶M≡N _ _ _ _) = context-validity Γ⊢P∶M≡N
 
+context-validityP : ∀ {V} {Γ : Context V} {φ} → valid (Γ ,P φ) → Γ ⊢ φ ∶ ty Ω
+context-validityP (ctxPR Γ⊢φ∶Ω) = Γ⊢φ∶Ω
+
 weakening : ∀ {U} {V} {ρ : Rep U V} {K}
            {Γ : Context U} {M : Expression U (varKind K)} {A} {Δ} →
            Γ ⊢ M ∶ A → valid Δ → ρ ∶ Γ ⇒R Δ → Δ ⊢ M 〈 ρ 〉 ∶ A 〈 ρ 〉

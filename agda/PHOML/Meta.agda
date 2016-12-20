@@ -16,6 +16,7 @@ _∶_≡_∶_⟶_ : ∀ {U V} → PathSub U V → Sub U V → Sub U V → Contex
 liftPathSub-typed : ∀ {U V} {τ : PathSub U V} {ρ σ Γ Δ A} →
   τ ∶ ρ ≡ σ ∶ Γ ⟶ Δ → valid Γ → liftPathSub τ ∶ sub↖ ρ ≡ sub↗ σ ∶ addpath Γ A ⟶ Δ ,T A
 liftPathSub-typed τ∶ρ≡σ validΓ x₀ = varR x₀ (valid-addpath validΓ)
+<<<<<<< HEAD
 liftPathSub-typed {τ = τ} {ρ} {σ} {Γ} {Δ} {A} τ∶ρ≡σ validΓ (↑ x) = subst₄ (λ x₃ y z w → addpath Γ A ⊢ x₃ ∶ y ≡〈 z 〉 w) 
   (rep-•R₃ {E = τ x})
   (let open ≡-Reasoning in 
@@ -28,6 +29,11 @@ liftPathSub-typed {τ = τ} {ρ} {σ} {Γ} {Δ} {A} τ∶ρ≡σ validΓ (↑ x)
     ∎) 
   (≡-sym (yt-rep (typeof x Δ))) (rep-•R₃ {E = σ -Term x}) 
   (weakening (τ∶ρ≡σ x) (valid-addpath validΓ) (upRep₃-typed {A1 = ty A} {A2 = ty A} {A3 = var x₁ ≡〈 A 〉 var x₀}))
+=======
+liftPathSub-typed {τ = τ} {ρ} {σ} {Γ = Γ} {Δ} {A = A} τ∶ρ≡σ validΓ (↑ x) = subst₄ (λ x₃ y z w → addpath Γ A ⊢ x₃ ∶ y ≡〈 z 〉 w) 
+  (rep-•R₃ (τ x)) (rep-•R₃ (ρ -Term x)) (≡-sym (yt-rep (typeof x Δ))) (rep-•R₃ (σ -Term x)) 
+  (weakening (τ∶ρ≡σ x) (valid-addpath validΓ) (upRep₃-addpath-typed A))
+>>>>>>> a50b6a0374191829c97b791ab041febd3fa8289e
 
 path-substitution : ∀ {U} {V} {Γ : Context U} {Δ : Context V} 
   {ρ} {σ} {τ} {M} {A} →
@@ -36,50 +42,40 @@ path-substitution : ∀ {U} {V} {Γ : Context U} {Δ : Context V}
   valid Δ → 
   Δ ⊢ M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ∶ M ⟦ ρ ⟧ ≡〈 yt A 〉 M ⟦ σ ⟧
 path-substitution (varR x _) τ∶ρ≡σ _ _ _ = τ∶ρ≡σ x
-path-substitution (appTR Γ⊢M∶A⇛B Γ⊢N∶A) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = 
+path-substitution (appTR {A = A} Γ⊢M∶A⇛B Γ⊢N∶A) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = 
   appER (substitution Γ⊢N∶A validΔ ρ∶Δ⟶Γ) (substitution Γ⊢N∶A validΔ σ∶Δ⟶Γ) (path-substitution Γ⊢M∶A⇛B τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ) 
     (path-substitution Γ⊢N∶A τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ)
-path-substitution (ΛTR Γ,A⊢M∶B) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = lllR (ΛTR (substitution Γ,A⊢M∶B (ctxTR validΔ) (liftSub-typed ρ∶Δ⟶Γ (ctxTR validΔ)))) 
+path-substitution {Δ = Δ} {ρ} {σ} (ΛTR {A = A} {M = M} Γ,A⊢M∶B) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = lllR (ΛTR (substitution Γ,A⊢M∶B (ctxTR validΔ) (liftSub-typed ρ∶Δ⟶Γ (ctxTR validΔ)))) 
   (ΛTR (substitution Γ,A⊢M∶B (ctxTR validΔ) (liftSub-typed σ∶Δ⟶Γ (ctxTR validΔ)))) 
-  (convER (path-substitution Γ,A⊢M∶B {!liftPathSub-typed!} {!!} {!!} {!!}) {!!} {!!} {!!} {!!})
-path-substitution (⊥R validΓ) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = {!!}
-path-substitution (⊃R Γ⊢M∶A Γ⊢M∶A₁) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = {!!}
-{- path-substitution (varR x validΓ) τ∶ρ≡σ _ _ _ = τ∶ρ≡σ x
-path-substitution (⊥R validΓ) _ _ _ validΔ = refR (⊥R validΔ)
-path-substitution (⊃R Γ⊢φ∶Ω Γ⊢ψ∶Ω) τ∶ρ≡σ ρ∶Γ⇒Δ σ∶Γ⇒Δ validΔ = ⊃*R (path-substitution Γ⊢φ∶Ω τ∶ρ≡σ ρ∶Γ⇒Δ σ∶Γ⇒Δ validΔ) (path-substitution Γ⊢ψ∶Ω τ∶ρ≡σ ρ∶Γ⇒Δ σ∶Γ⇒Δ validΔ)
-path-substitution (appR {A = A} Γ⊢M∶A⇛B Γ⊢N∶A) τ∶σ≡σ' ρ∶Γ⇒Δ σ∶Γ⇒Δ validΔ = 
-  app*R (substitution Γ⊢N∶A validΔ ρ∶Γ⇒Δ) (substitution Γ⊢N∶A validΔ σ∶Γ⇒Δ)
-  (path-substitution Γ⊢M∶A⇛B τ∶σ≡σ' ρ∶Γ⇒Δ σ∶Γ⇒Δ validΔ) (path-substitution Γ⊢N∶A τ∶σ≡σ' ρ∶Γ⇒Δ σ∶Γ⇒Δ validΔ)
-path-substitution {U} {V} {Γ} {Δ} {ρ} {σ} {τ} (ΛTR .{U} .{Γ} {A} {M} {B} Γ,A⊢M∶B) τ∶σ≡σ' ρ∶Γ⇒Δ σ∶Γ⇒Δ validΔ = 
-  let ΔAAE = Δ ,T A ,T A ,E var x₁ ≡〈 A 〉 var x₀ in
-  let validΔAA  : valid (Δ ,T A ,T A)
-      validΔAA = ctxTR (ctxTR validΔ) in
-  let validΔAAE : valid ΔAAE
-      validΔAAE = ctxER (varR x₁ validΔAA) (varR x₀ validΔAA) in
-  let Mσ-typed : ∀ {σ} {x} → σ ∶ Γ ⇒ Δ → typeof x ΔAAE ≡ ty A → ΔAAE ⊢ appT ((ΛT A M) ⟦ σ ⟧ ⇑ ⇑ ⇑) (var x) ∶ ty B
-      Mσ-typed = λ {σ} {x} σ∶Γ⇒Δ x∶A∈ΔAAE → appR (weakening-addpath (substitution (ΛTR Γ,A⊢M∶B) validΔ σ∶Γ⇒Δ)) (change-type (varR x (valid-addpath validΔ)) x∶A∈ΔAAE) in
-  let step1 : Δ ,T A ,T A ,E var x₁ ≡〈 A 〉 var x₀ ⊢ 
-              M ⟦⟦ liftPathSub τ ∶ sub↖ ρ ≡ sub↗ σ ⟧⟧ ∶ 
-              appT ((ΛT A M) ⟦ ρ ⟧ ⇑ ⇑ ⇑) (var x₂) ≡〈 B 〉 appT ((ΛT A M) ⟦ σ ⟧ ⇑ ⇑ ⇑) (var x₁)
-      step1 = convER 
-              (path-substitution Γ,A⊢M∶B 
-                (liftPathSub-typed τ∶σ≡σ' validΔ) 
-                (sub↖-typed ρ∶Γ⇒Δ) (sub↗-typed σ∶Γ⇒Δ) validΔAAE) 
-                (Mσ-typed ρ∶Γ⇒Δ refl) (Mσ-typed σ∶Γ⇒Δ refl) 
-                (sym (inc (subst (λ x → appT ((ΛT A M ⟦ ρ ⟧) ⇑ ⇑ ⇑) (var x₂) ⇒ x) (let open ≡-Reasoning in 
-              begin
-                M ⟦ liftSub _ ρ ⟧ 〈 liftRep _ upRep 〉 〈 liftRep _ upRep 〉 〈 liftRep _ upRep 〉 ⟦ x₀:= var x₂ ⟧
-              ≡⟨ sub↖-decomp M ⟩
-                M ⟦ sub↖ ρ ⟧
-              ∎) βT))) (sym (inc (subst (λ x → appT ((ΛT A M ⟦ σ ⟧) ⇑ ⇑ ⇑) (var x₁) ⇒ x) (sub↗-decomp M) {!!}))) -}
-{- convER 
-               (path-substitution Γ,A⊢M∶B 
-                 (liftPathSub-typed τ∶σ≡σ' validΔ) (sub↖-typed ρ∶Γ⇒Δ) (sub↗-typed σ∶Γ⇒Δ) 
-                 validΔAAE)
-                 (Mσ-typed ρ∶Γ⇒Δ refl)
-                 (Mσ-typed σ∶Γ⇒Δ refl)
-                 (RSTClose.sym (redex-conv (subst (R -appTerm ((ΛT A M ⟦ ρ ⟧) ⇑ ⇑ ⇑ ∷ var x₂ ∷ [])) (sub↖-decomp M) (βR βT)))) (RSTClose.sym (redex-conv (subst (R -appTerm ((ΛT A M ⟦ σ ⟧) ⇑ ⇑ ⇑ ∷ var x₁ ∷ [])) (sub↗-decomp M) (βR βT)))) -}
---  in lllR step1
+  (convER (path-substitution Γ,A⊢M∶B (liftPathSub-typed τ∶ρ≡σ validΔ) (sub↖-typed ρ∶Δ⟶Γ validΔ) (sub↗-typed σ∶Δ⟶Γ validΔ) (valid-addpath validΔ)) 
+  (appTR (ΛTR (weakening (weakening (weakening (substitution Γ,A⊢M∶B (ctxTR validΔ) 
+                                               (liftSub-typed ρ∶Δ⟶Γ (ctxTR validΔ))) 
+                                    (ctxTR (ctxTR validΔ))
+                                    (liftRep-typed (upRep-typed (ty A)))) 
+                         (ctxTR (ctxTR (ctxTR validΔ))) 
+                         (liftRep-typed (upRep-typed (ty A)))) 
+              (ctxTR (valid-addpath validΔ)) 
+              (liftRep-typed (upRep-typed (var x₁ ≡〈 A 〉 var x₀))))) 
+         (varR x₂ (valid-addpath validΔ))) 
+  (appTR (ΛTR (weakening (weakening (weakening (substitution Γ,A⊢M∶B (ctxTR validΔ) 
+                                               (liftSub-typed σ∶Δ⟶Γ (ctxTR validΔ))) 
+                                    (ctxTR (ctxTR validΔ))
+                                    (liftRep-typed (upRep-typed (ty A)))) 
+                         (ctxTR (ctxTR (ctxTR validΔ))) 
+                         (liftRep-typed (upRep-typed (ty A)))) 
+              (ctxTR (valid-addpath validΔ)) 
+              (liftRep-typed (upRep-typed (var x₁ ≡〈 A 〉 var x₀))))) 
+         (varR x₁ (valid-addpath validΔ))) 
+  (sym (inc (subst
+               (λ x → appT (ΛT A (M ⟦ liftSub -Term ρ ⟧) ⇑ ⇑ ⇑) (var x₂) ⇒ x) 
+            (≡-sym (sub↖-decomp {E = M})) βT))) 
+  (sym (inc (subst
+               (λ x → appT (ΛT A (M ⟦ liftSub -Term σ ⟧) ⇑ ⇑ ⇑) (var x₁) ⇒ x) 
+            (≡-sym (sub↗-decomp {E = M})) βT))))
+path-substitution (⊥R _) _ _ _ validΔ = refR (⊥R validΔ)
+path-substitution (⊃R Γ⊢φ∶Ω Γ⊢ψ∶Ω) τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ = ⊃*R 
+  (path-substitution Γ⊢φ∶Ω τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ) 
+  (path-substitution Γ⊢ψ∶Ω τ∶ρ≡σ ρ∶Δ⟶Γ σ∶Δ⟶Γ validΔ)
 
 generation-ΛP : ∀ {V} {Γ : Context V} {φ δ ψ} →
   Γ ⊢ ΛP φ δ ∶ ψ → Σ[ χ ∈ Term V ] Γ ,P φ ⊢ δ ∶ χ ⇑ × ψ ≃ φ ⊃ χ
@@ -88,8 +84,17 @@ generation-ΛP (convPR Γ⊢Λδ∶ψ Γ⊢ψ'∶Ω ψ≃ψ') =
   let χ ,p Γ,φ⊢δ∶χ ,p χ≃φ⊃ψ = generation-ΛP Γ⊢Λδ∶ψ in 
   χ ,p Γ,φ⊢δ∶χ ,p trans (sym ψ≃ψ') χ≃φ⊃ψ
 
-context-validityP : ∀ {V} {Γ : Context V} {φ} → valid (Γ ,P φ) → Γ ⊢ φ ∶ ty Ω
-context-validityP (ctxPR Γ⊢φ∶Ω) = Γ⊢φ∶Ω
+≃-⊃-injl : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ≃ φ' ⊃ ψ' → φ ≃ φ'
+≃-⊃-injl {V} {φ} {φ'} {ψ} {ψ'} φ⊃ψ≃φ'⊃ψ' = 
+  let cr χ φ⊃ψ↠χ φ'⊃ψ'↠χ = PHOML-Church-Rosser φ⊃ψ≃φ'⊃ψ' in 
+  let φ₀ ,p ψ₀ ,p χ≡φ₀⊃ψ₀ ,p φ↠φ₀ = imp-red-inj₁' φ⊃ψ↠χ refl in
+  trans (sub-RT-RST φ↠φ₀) (sym (sub-RT-RST (imp-red-inj₁ (subst (λ x → φ' ⊃ ψ' ↠ x) χ≡φ₀⊃ψ₀ φ'⊃ψ'↠χ))))
+
+≃-⊃-injr : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ≃ φ' ⊃ ψ' → ψ ≃ ψ'
+≃-⊃-injr {V} {φ} {φ'} {ψ} {ψ'} φ⊃ψ≃φ'⊃ψ' = 
+  let cr χ φ⊃ψ↠χ φ'⊃ψ'↠χ = PHOML-Church-Rosser φ⊃ψ≃φ'⊃ψ' in 
+  let φ₀ ,p ψ₀ ,p χ≡φ₀⊃ψ₀ ,p ψ↠ψ₀ = imp-red-inj₂' φ⊃ψ↠χ refl in
+  trans (sub-RT-RST ψ↠ψ₀) (sym (sub-RT-RST (imp-red-inj₂ (subst (λ x → φ' ⊃ ψ' ↠ x) χ≡φ₀⊃ψ₀ φ'⊃ψ'↠χ))))
 
 subject-reduction-⇒ : ∀ {V} {K} {E F : Expression V (varKind K)} {Γ} {A} →
   Γ ⊢ E ∶ A → E ⇒ F → Γ ⊢ F ∶ A
@@ -111,12 +116,33 @@ subject-reduction-⇒ {A = app (-ty A) []} Γ⊢φ⊃ψ∶Ω (impr ψ⇒ψ') =
   let Γ⊢ψ∶Ω = generation-⊃₂ Γ⊢φ⊃ψ∶Ω in
   let A≡Ω = generation-⊃₃ Γ⊢φ⊃ψ∶Ω in
   change-type (⊃R Γ⊢φ∶Ω (subject-reduction-⇒ Γ⊢ψ∶Ω ψ⇒ψ')) (cong ty (≡-sym A≡Ω))
-subject-reduction-⇒ Γ⊢Λδε∶ψ (βP {ε = ε}) = 
+subject-reduction-⇒ {A = ψ} Γ⊢Λδε∶ψ (βP {ε = ε}) = 
   let φ' ,p ψ' ,p Γ⊢Λδ∶φ'⊃ψ' ,p Γ⊢ε∶φ' ,p ψ'≃ψ = generation-appP Γ⊢Λδε∶ψ in
-  let χ ,p Γ,φ⊢δ∶χ ,p φ⊃χ≃φ'⊃ψ' = generation-ΛP Γ⊢Λδ∶φ'⊃ψ' in
-  change-type (substitution Γ,φ⊢δ∶χ (context-validity Γ⊢Λδε∶ψ) (botSub-typed (convPR Γ⊢ε∶φ' {!!} {!!}))) {!!}
-subject-reduction-⇒ Γ⊢E∶A (appPl E⇒F) = {!!}
-subject-reduction-⇒ Γ⊢E∶A refdir = {!!}
+  let χ ,p Γ,φ⊢δ∶χ ,p φ'⊃ψ'≃φ⊃χ = generation-ΛP Γ⊢Λδ∶φ'⊃ψ' in
+  convPR (substitution Γ,φ⊢δ∶χ (context-validity Γ⊢Λδε∶ψ) (botSub-typed (convPR Γ⊢ε∶φ' (context-validityP (context-validity Γ,φ⊢δ∶χ)) 
+    (≃-⊃-injl φ'⊃ψ'≃φ⊃χ)))) (prop-validity Γ⊢Λδε∶ψ) (let open EqReasoning (RSTCLOSE _⇒_) in 
+    begin
+      χ ⇑ ⟦ x₀:= ε ⟧
+    ≡⟨ botSub-upRep χ ⟩
+      χ
+    ≈⟨⟨ ≃-⊃-injr φ'⊃ψ'≃φ⊃χ ⟩⟩
+      ψ'
+    ≈⟨ ψ'≃ψ ⟩
+      ψ
+    ∎)
+subject-reduction-⇒ Γ⊢δε∶φ (appPl δ⇒δ') = 
+  let ψ ,p φ' ,p Γ⊢δ∶ψ⊃φ' ,p Γ⊢ε∶ψ ,p φ'≃φ = generation-appP Γ⊢δε∶φ in 
+  convPR (appPR (subject-reduction-⇒ Γ⊢δ∶ψ⊃φ' δ⇒δ') Γ⊢ε∶ψ) (prop-validity Γ⊢δε∶φ) φ'≃φ
+subject-reduction-⇒ {Γ = Γ} Γ⊢reffM+∶φ (refdir {φ = M} {d = -plus}) = 
+  let ψ ,p χ ,p Γ⊢reffM∶ψ≡χ ,p φ≃ψ⊃χ = generation-plus Γ⊢reffM+∶φ in
+  let Γ⊢M∶Ω : Γ ⊢ M ∶ ty Ω
+      Γ⊢M∶Ω = generation-reff₁ Γ⊢reffM∶ψ≡χ in
+  convPR (ΛPR Γ⊢M∶Ω Γ⊢M∶Ω (varR x₀ (ctxPR Γ⊢M∶Ω))) (prop-validity Γ⊢reffM+∶φ) (trans (≃-imp (generation-reff₂ Γ⊢reffM∶ψ≡χ) (generation-reff₃ Γ⊢reffM∶ψ≡χ)) (sym φ≃ψ⊃χ))
+subject-reduction-⇒ {Γ = Γ} Γ⊢reffM+∶φ (refdir {φ = M} {d = -minus}) = 
+  let ψ ,p χ ,p Γ⊢reffM∶ψ≡χ ,p φ≃ψ⊃χ = generation-minus Γ⊢reffM+∶φ in
+  let Γ⊢M∶Ω : Γ ⊢ M ∶ ty Ω
+      Γ⊢M∶Ω = generation-reff₁ Γ⊢reffM∶ψ≡χ in
+  convPR (ΛPR Γ⊢M∶Ω Γ⊢M∶Ω (varR x₀ (ctxPR Γ⊢M∶Ω))) (prop-validity Γ⊢reffM+∶φ) (trans (≃-imp (generation-reff₃ Γ⊢reffM∶ψ≡χ) (generation-reff₂ Γ⊢reffM∶ψ≡χ)) (sym φ≃ψ⊃χ))
 subject-reduction-⇒ Γ⊢E∶A univplus = {!!}
 subject-reduction-⇒ Γ⊢E∶A univminus = {!!}
 subject-reduction-⇒ Γ⊢E∶A (dirR E⇒F) = {!!}

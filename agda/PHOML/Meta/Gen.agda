@@ -28,3 +28,29 @@ generation-appP (appPR Γ⊢δ∶ψ⊃φ Γ⊢ε∶ψ) = _ ,p _ ,p Γ⊢δ∶ψ�
 generation-appP (convPR Γ⊢δε∶φ _ φ≃φ') = 
   let ψ ,p χ ,p Γ⊢δ∶ψ⊃χ ,p Γ⊢ε∶ψ ,p χ≃φ = generation-appP Γ⊢δε∶φ in
   ψ ,p χ ,p Γ⊢δ∶ψ⊃χ ,p Γ⊢ε∶ψ ,p trans χ≃φ φ≃φ'
+
+generation-plus : ∀ {V Γ} {P : Path V} {φ} → Γ ⊢ plus P ∶ φ →
+  Σ[ ψ ∈ Term V ] Σ[ χ ∈ Term V ] Γ ⊢ P ∶ ψ ≡〈 Ω 〉 χ × φ ≃ ψ ⊃ χ
+generation-plus (convPR Γ⊢P+∶φ' Γ⊢φ∶Ω φ'≃φ) = 
+  let ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p φ'≃ψ⊃χ = generation-plus Γ⊢P+∶φ' in 
+  ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p (trans (sym φ'≃φ) φ'≃ψ⊃χ)
+generation-plus (plusR {φ = φ} {ψ = ψ} Γ⊢P∶φ≡ψ) = φ ,p ψ ,p Γ⊢P∶φ≡ψ ,p ref
+
+generation-minus : ∀ {V Γ} {P : Path V} {φ} → Γ ⊢ minus P ∶ φ →
+  Σ[ ψ ∈ Term V ] Σ[ χ ∈ Term V ] Γ ⊢ P ∶ ψ ≡〈 Ω 〉 χ × φ ≃ χ ⊃ ψ
+generation-minus (convPR Γ⊢P+∶φ' Γ⊢φ∶Ω φ'≃φ) = 
+  let ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p φ'≃ψ⊃χ = generation-minus Γ⊢P+∶φ' in 
+  ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p (trans (sym φ'≃φ) φ'≃ψ⊃χ)
+generation-minus (minusR {φ = φ} {ψ = ψ} Γ⊢P∶φ≡ψ) = φ ,p ψ ,p Γ⊢P∶φ≡ψ ,p ref
+
+generation-reff₁ : ∀ {V} {Γ : Context V} {M N N' : Term V} {A} → Γ ⊢ reff M ∶ N ≡〈 A 〉 N' → Γ ⊢ M ∶ ty A
+generation-reff₁ (refR Γ⊢M∶A) = Γ⊢M∶A
+generation-reff₁ (convER Γ⊢refM∶N≡N' _ _ _ _) = generation-reff₁ Γ⊢refM∶N≡N'
+
+generation-reff₂ : ∀ {V} {Γ : Context V} {M N N' : Term V} {A} → Γ ⊢ reff M ∶ N ≡〈 A 〉 N' → M ≃ N
+generation-reff₂ (refR _) = ref
+generation-reff₂ (convER Γ⊢refM∶N≡N' _ _ M≃M' _) = trans (generation-reff₂ Γ⊢refM∶N≡N') M≃M'
+
+generation-reff₃ : ∀ {V} {Γ : Context V} {M N N' : Term V} {A} → Γ ⊢ reff M ∶ N ≡〈 A 〉 N' → M ≃ N'
+generation-reff₃ (refR _) = ref
+generation-reff₃ (convER Γ⊢refM∶N≡N' _ _ _ N≃N') = trans (generation-reff₃ Γ⊢refM∶N≡N') N≃N'

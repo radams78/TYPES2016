@@ -60,3 +60,26 @@ substitution (appER Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') vali
 substitution (convER Γ⊢P∶M≡N Γ⊢M'∶A Γ⊢N'∶A M≃M' N≃N') validΔ σ∶Δ⟶Γ = 
   convER (substitution Γ⊢P∶M≡N validΔ σ∶Δ⟶Γ) (substitution Γ⊢M'∶A validΔ σ∶Δ⟶Γ) (substitution Γ⊢N'∶A validΔ σ∶Δ⟶Γ) (≃-resp-sub M≃M') (≃-resp-sub N≃N')
 
+sub↖-typed : ∀ {U V} {σ : Sub U V} {Δ Γ A} → σ ∶ Δ ⟶ Γ → valid Δ → sub↖ σ ∶ addpath Δ A ⟶ Γ ,T A
+sub↖-typed σ∶Δ⟶Γ validΔ x₀ = varR x₂ (valid-addpath validΔ)
+sub↖-typed {σ = σ} {Δ} {Γ} {A} σ∶Δ⟶Γ validΔ (↑ x) = subst₂ (λ x₃ y → addpath Δ A ⊢ x₃ ∶ y) (rep-•R₃ (σ _ x)) (let open ≡-Reasoning in
+  begin
+    typeof x Γ ⟦ σ ⟧ 〈 upRep •R upRep •R upRep 〉
+  ≡⟨ rep-•R₃ (typeof x Γ ⟦ σ ⟧) ⟩
+    typeof x Γ ⟦ σ ⟧ ⇑ ⇑ ⇑
+  ≡⟨⟨ sub↖-upRep {E = typeof x Γ} ⟩⟩
+    typeof x Γ ⇑ ⟦ sub↖ σ ⟧
+  ∎)
+  (weakening (σ∶Δ⟶Γ x) (valid-addpath validΔ) (upRep₃-addpath-typed A))
+
+sub↗-typed : ∀ {U V} {σ : Sub U V} {Δ Γ A} → σ ∶ Δ ⟶ Γ → valid Δ → sub↗ σ ∶ addpath Δ A ⟶ Γ ,T A
+sub↗-typed σ∶Δ⟶Γ validΔ x₀ = varR x₁ (valid-addpath validΔ)
+sub↗-typed {σ = σ} {Δ} {Γ} {A} σ∶Δ⟶Γ validΔ (↑ x) = subst₂ (λ x₃ y → addpath Δ A ⊢ x₃ ∶ y) (rep-•R₃ (σ _ x)) (let open ≡-Reasoning in
+  begin
+    typeof x Γ ⟦ σ ⟧ 〈 upRep •R upRep •R upRep 〉
+  ≡⟨ rep-•R₃ (typeof x Γ ⟦ σ ⟧) ⟩
+    typeof x Γ ⟦ σ ⟧ ⇑ ⇑ ⇑
+  ≡⟨⟨ sub↗-upRep {E = typeof x Γ} ⟩⟩
+    typeof x Γ ⇑ ⟦ sub↗ σ ⟧
+  ∎)
+  (weakening (σ∶Δ⟶Γ x) (valid-addpath validΔ) (upRep₃-addpath-typed A))
