@@ -140,7 +140,10 @@ subject-reduction-⇒ Γ⊢P+∶φ (dirR {d = -plus} P⇒Q) =
 subject-reduction-⇒ Γ⊢P-∶φ (dirR {d = -minus} P⇒Q) =
   let ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p φ≃χ⊃ψ = generation-minus Γ⊢P-∶φ in 
   convPR (minusR (subject-reduction-⇒ Γ⊢P∶ψ≡χ P⇒Q)) (prop-validity Γ⊢P-∶φ) (sym φ≃χ⊃ψ)
-subject-reduction-⇒ Γ⊢E∶A βE = {!!}
+subject-reduction-⇒ {Γ = Γ} {A = app (-eq B) (L ∷ L' ∷ [])} Γ⊢ΛPQ∶L≡L' (βE {A = A} {M} {N} {P} {Q}) = 
+  let C ,p F ,p G ,p Γ⊢ΛP∶F≡G ,p Γ⊢Q∶M≡N ,p FM≃L ,p GN≃L' = generation-app* Γ⊢ΛPQ∶L≡L' in
+  let D ,p ΓAAE⊢P∶Fx≡Gy = generation-λλλ Γ⊢ΛP∶F≡G in
+  {!!}
 subject-reduction-⇒ Γ⊢E∶A βPP = {!!}
 subject-reduction-⇒ Γ⊢E∶A ref⊃* = {!!}
 subject-reduction-⇒ Γ⊢E∶A ref⊃*univ = {!!}
