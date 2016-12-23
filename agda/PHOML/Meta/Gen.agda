@@ -6,10 +6,6 @@ open import PHOML.Red.Conv
 open import PHOML.Rules
 open import PHOML.Meta.ConVal
 
-generation-ΛT : ∀ {V} {Γ : Context V} {A M B} →
-  Γ ⊢ ΛT A M ∶ ty B → Σ[ C ∈ Type ] Γ ,T A ⊢ M ∶ ty C × B ≡ A ⇛ C
-generation-ΛT (ΛTR {B = B} Γ,A⊢M∶B) = B ,p Γ,A⊢M∶B ,p refl
-
 generation-appT : ∀ {V} {Γ : Context V} {M N : Term V} {B} →
   Γ ⊢ appT M N ∶ ty B → Σ[ A ∈ Type ] Γ ⊢ M ∶ ty (A ⇛ B) × Γ ⊢ N ∶ ty A
 generation-appT (appTR {V} {Γ} {M} {N} {A} {B} Γ⊢M∶A⇛B Γ⊢N∶A) = A ,p Γ⊢M∶A⇛B ,p Γ⊢N∶A
@@ -125,3 +121,9 @@ generation-λλλ {Γ = Γ} {A = A} (convER {M = M} {M' = M'} {N' = N'}  Γ⊢Λ
   (≃-appTl (≃-resp-rep (≃-resp-rep (≃-resp-rep M≃M')))) 
   (≃-appTl (≃-resp-rep (≃-resp-rep (≃-resp-rep N≃N')))) ,p 
   B≡A⇛C
+
+generation-⊃* : ∀ {V} {Γ} {P Q : Path V} {φ A φ'} → Γ ⊢ P ⊃* Q ∶ φ ≡〈 A 〉 φ' →
+  Σ[ ψ ∈ Term V ] Σ[ ψ' ∈ Term V ] Σ[ χ ∈ Term V ] Σ[ χ' ∈ Term V ]
+  Γ ⊢ P ∶ ψ ≡〈 Ω 〉 ψ' × Γ ⊢ Q ∶ χ ≡〈 Ω 〉 χ' × φ ≃ ψ ⊃ χ × φ' ≃ ψ' ⊃ χ' × A ≡ Ω
+generation-⊃* (⊃*R {φ = ψ} {ψ'} {χ} {χ'} Γ⊢P∶ψ≡ψ' Γ⊢Q∶χ≡χ') = {!!}
+generation-⊃* (convER Γ⊢P⊃*Q∶φ≡φ' Γ⊢P⊃*Q∶φ≡φ'' Γ⊢P⊃*Q∶φ≡φ''' M≃M' N≃N') = {!!}

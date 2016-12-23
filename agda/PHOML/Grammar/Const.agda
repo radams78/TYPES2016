@@ -92,6 +92,9 @@ yt-rep (app (-ty _) []) = refl
 yt-sub : ∀ {U V} {A : Expression U -nvType} {σ : Sub U V} → yt (A ⟦ σ ⟧) ≡ yt A
 yt-sub {A = app (-ty _) []} = refl
 
+ty-yt : ∀ {V} {A : Expression V -nvType} → ty (yt A) ≡ A
+ty-yt {A = app (-ty _) []} = refl
+
 typeof' : ∀ {V} → Var V -Term → Context V → Type
 typeof' x Γ  = yt (typeof x Γ)
 
