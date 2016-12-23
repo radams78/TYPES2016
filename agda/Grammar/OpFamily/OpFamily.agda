@@ -14,11 +14,6 @@ record OpFamily : Set₂ where
   open LiftFamily liftFamily public
   open Composition comp public
 
-  liftOp-up : ∀ {U} {V} {C} {K} {L}
-    {σ : Op U V} (E : Subexp U C K) →
-    ap (liftOp L σ) (ap up E) ≡ ap up (ap σ E)
-  liftOp-up E = liftOp-up-mixed comp comp refl {E = E}
-
   assoc : ∀ {U} {V} {W} {X} 
     {τ : Op W X} {σ : Op V W} {ρ : Op U V} → 
     τ ∘ (σ ∘ ρ) ∼op (τ ∘ σ) ∘ ρ
@@ -54,3 +49,13 @@ record OpFamily : Set₂ where
     ≡⟨ cong (ap σ) (apV-idOp x) ⟩
       apV σ x
     ∎
+
+  ups : ∀ {V} {KK} → Op V (snoc-extend V KK)
+  ups {V} {[]} = idOp V
+  ups {KK = KK snoc _} = up ∘ ups {KK = KK}
+
+  liftOp-up : ∀ {U} {V} {C} {K} {L}
+    {σ : Op U V} (E : Subexp U C K) →
+    ap (liftOp L σ) (ap up E) ≡ ap up (ap σ E)
+  liftOp-up E = liftOp-up-mixed comp comp refl {E = E}
+

@@ -11,10 +11,10 @@ open import Grammar.Substitution.LiftFamily G
 open import Grammar.Substitution.OpFamily G
 open LiftFamily
 
-botSub : ∀ {V} {AA} → HetsnocList (VExpression V) AA → Sub (snoc-extend V AA) V
-botSub {AA = []} _ _ x = var x
-botSub {AA = _ snoc _} (_ snoc E) _ x₀ = E
-botSub {AA = _ snoc _} (EE snoc _) L (↑ x) = botSub EE L x
+botSub : ∀ {V} {KK} → HetsnocList (VExpression V) KK → Sub (snoc-extend V KK) V
+botSub {KK = []} _ _ x = var x
+botSub {KK = _ snoc _} (_ snoc E) _ x₀ = E
+botSub {KK = _ snoc _} (EE snoc _) L (↑ x) = botSub EE L x
 
 infix 65 x₀:=_
 x₀:=_ : ∀ {V} {K} → Expression V (varKind K) → Sub (V , K) V
@@ -83,19 +83,19 @@ comp-botSub : ∀ {F} {U} {V} {K} {C} {L}
   ap F σ (E' ⟦ x₀:= E ⟧) ≡ (ap F (liftOp F K σ) E') ⟦ x₀:= (ap F σ E) ⟧
 comp-botSub {E' = E'} comp₁ comp₂ = ap-comp-sim comp₁ comp₂ (comp-botSub' comp₁ comp₂) E'
 
-compRS-botSub' : ∀ {U} {V} {K} {F : Expression U (varKind K)} {ρ : Rep U V} →
+•RS-botSub' : ∀ {U} {V} {K} {F : Expression U (varKind K)} {ρ : Rep U V} →
   ρ •RS x₀:= F ∼ x₀:= F 〈 ρ 〉 •SR liftRep K ρ
-compRS-botSub' = comp-botSub' COMPRS COMPSR
+•RS-botSub' = comp-botSub' COMPRS COMPSR
 
-compRS-botSub : ∀ {U} {V} {C} {K} {L} (E : Subexp (U , K) C L) {F : Expression U (varKind K)} {ρ : Rep U V} →
+•RS-botSub : ∀ {U} {V} {C} {K} {L} (E : Subexp (U , K) C L) {F : Expression U (varKind K)} {ρ : Rep U V} →
   E ⟦ x₀:= F ⟧ 〈 ρ 〉 ≡ E 〈 liftRep K ρ 〉 ⟦ x₀:= (F 〈 ρ 〉) ⟧
-compRS-botSub E = comp-botSub {E' = E} COMPRS COMPSR
+•RS-botSub E = comp-botSub {E' = E} COMPRS COMPSR
 
-comp-botSub'' : ∀ {U} {V} {C} {K} {L} 
+•-botSub'' : ∀ {U} {V} {C} {K} {L} 
   {E : Expression U (varKind K)} {σ : Sub U V} (F : Subexp (U , K) C L) →
    F ⟦ x₀:= E ⟧ ⟦ σ ⟧ ≡ F ⟦ liftSub K σ ⟧ ⟦ x₀:= (E ⟦ σ ⟧) ⟧
 --TODO Better name
-comp-botSub'' F = let COMP = OpFamily.comp SUB in comp-botSub {E' = F} COMP COMP
+•-botSub'' F = let COMP = OpFamily.comp SUB in comp-botSub {E' = F} COMP COMP
 
 botSub-upRep' : ∀ {V K} (E : VExpression V K) → x₀:= E •SR upRep ∼ idSub V
 botSub-upRep' E = botSub-up' {E = E} COMPSR
@@ -177,4 +177,11 @@ botSub-liftSub₃ {L₂ = L₂} {L₁} {L₀} {E} {F₂} {F₁} {F₀} {σ} = le
   ≡⟨ sub-• E ⟩
     E ⟦ x₂:= F₂ ,x₁:= F₁ ,x₀:= F₀ ⟧ ⟦ σ ⟧
   ∎
+
+botSub₃-upRep₂' : ∀ {V K₂ K₁ K₀} {M₂ : VExpression V K₂} {M₁ : VExpression V K₁} {M₀ : VExpression V K₀} →
+  (x₂:= M₂ ,x₁:= M₁ ,x₀:= M₀) •SR upRep •SR upRep ∼ x₀:= M₂
+botSub₃-upRep₂' x₀ = refl
+botSub₃-upRep₂' (↑ x₀) = refl
+botSub₃-upRep₂' (↑ (↑ x₀)) = refl
+botSub₃-upRep₂' (↑ (↑ (↑ x))) = refl
 

@@ -13,6 +13,22 @@ botSub-typed : ∀ {V K} {M : VExpression V K} {Γ A} →
 botSub-typed {V} {K} {M} {Γ} {A} Γ⊢M∶A x₀ = change-type Γ⊢M∶A (≡-sym (botSub-upRep A {M}))
 botSub-typed {Γ = Γ} Γ⊢M∶A (↑ x) = change-type (varR x (context-validity Γ⊢M∶A)) (≡-sym (botSub-upRep (typeof x Γ)))
 
+botSub₃-typed : ∀ {V K₂ K₁ K₀} {M₂ : VExpression V K₂} {M₁ : VExpression V K₁} {M₀ : VExpression V K₀} {Γ A₀ A₁ A₂} →
+  Γ ⊢ M₂ ∶ A₂ → Γ ⊢ M₁ ∶ A₁ ⟦ x₀:= M₂ ⟧ → Γ ⊢ M₀ ∶ A₀ ⇑ ⟦ x₂:= M₂ ,x₁:= M₁ ,x₀:= M₀ ⟧ → (x₂:= M₂ ,x₁:= M₁ ,x₀:= M₀) ∶ Γ ⟶ Γ , A₂ , A₁ , A₀
+botSub₃-typed _ _ Γ⊢M₀∶A₀ x₀ = Γ⊢M₀∶A₀
+botSub₃-typed {M₂ = M₂} {M₁} {M₀} {A₁ = A₁} Γ⊢M₂∶A₂ Γ⊢M₁∶A₁ Γ⊢M₀∶A₀ (↑ x₀) = change-type Γ⊢M₁∶A₁ (let open ≡-Reasoning in 
+  begin
+    A₁ ⟦ x₀:= M₂ ⟧
+  ≡⟨⟨ sub-congr A₁ (botSub₃-upRep₂' {M₁ = M₁} {M₀}) ⟩⟩
+    A₁ ⟦ (x₂:= M₂ ,x₁:= M₁ ,x₀:= M₀) •SR upRep •SR upRep ⟧
+  ≡⟨ sub-•SR A₁ ⟩
+    A₁ ⇑ ⟦ (x₂:= M₂ ,x₁:= M₁ ,x₀:= M₀) •SR upRep ⟧
+  ≡⟨ sub-•SR (A₁ ⇑) ⟩
+    A₁ ⇑ ⇑ ⟦ x₂:= M₂ ,x₁:= M₁ ,x₀:= M₀ ⟧
+  ∎)
+botSub₃-typed Γ⊢M₂∶A₂ _ _ (↑ (↑ x₀)) = change-type Γ⊢M₂∶A₂ (≡-sym botSub-upRep₃)
+botSub₃-typed Γ⊢M₂∶A₂ _ _ (↑ (↑ (↑ x))) = change-type (varR x (context-validity Γ⊢M₂∶A₂)) (≡-sym botSub-upRep₃)
+
 liftSub-typed : ∀ {U V} {σ : Sub U V} {Δ Γ K A} →
   σ ∶ Δ ⟶ Γ → valid (_,_ {V} {K} Δ (A ⟦ σ ⟧)) → liftSub K σ ∶ Δ , A ⟦ σ ⟧ ⟶ Γ , A
 liftSub-typed {A = A} σ∶Δ⟶Γ validΔA x₀ = change-type (varR x₀ validΔA) (≡-sym (liftSub-upRep A))

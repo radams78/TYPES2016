@@ -110,10 +110,18 @@ generation-app* (convER Γ⊢PQ∶L≡L' _ _ L≃L₁ L'≃L₁') =
 generation-λλλ : ∀ {V} {Γ : Context V} {A P M B N} →
   Γ ⊢ λλλ A P ∶ M ≡〈 B 〉 N → Σ[ C ∈ Type ] addpath Γ A ⊢ P ∶ appT (M ⇑ ⇑ ⇑) (var x₂) ≡〈 C 〉 appT (N ⇑ ⇑ ⇑) (var x₁) × B ≡ A ⇛ C
 generation-λλλ (lllR {B = C} _ _ Γ⊢P∶Mx≡Ny) = C ,p Γ⊢P∶Mx≡Ny ,p refl
-generation-λλλ {Γ = Γ} {A = A} (convER {M = M} Γ⊢ΛP∶M≡N Γ⊢M'∶B Γ⊢N'∶B M≃M' N≃N') = 
+generation-λλλ {Γ = Γ} {A = A} (convER {M = M} {M' = M'} {N' = N'}  Γ⊢ΛP∶M≡N Γ⊢M'∶B Γ⊢N'∶B M≃M' N≃N') = 
   let C ,p Γ⊢P∶Mx≡Ny ,p B≡A⇛C = generation-λλλ Γ⊢ΛP∶M≡N in
   C ,p 
-  let ΓAAE⊢M∶A⇛C : addpath Γ A ⊢ M ⇑ ⇑ ⇑ ∶ ty (A ⇛ C)
-      ΓAAE⊢M∶A⇛C = weakening (weakening (weakening (change-type (eq-validity₁ Γ⊢ΛP∶M≡N refl) (cong ty B≡A⇛C)) (ctxTR (context-validity Γ⊢ΛP∶M≡N)) (upRep-typed (ty A))) {!!} {!!}) {!!} {!!} in 
-  {!!} ,p 
+  let validΓ : valid Γ
+      validΓ = context-validity Γ⊢ΛP∶M≡N in
+  let validΓA : valid (Γ ,T A)
+      validΓA = ctxTR validΓ in
+  let ΓAAE⊢M'∶A⇛C : addpath Γ A ⊢ M' ⇑ ⇑ ⇑ ∶ ty (A ⇛ C)
+      ΓAAE⊢M'∶A⇛C = weakening (weakening (weakening (change-type Γ⊢M'∶B (cong ty B≡A⇛C)) validΓA (upRep-typed (ty A))) (ctxTR validΓA) (upRep-typed (ty A))) (valid-addpath validΓ) (upRep-typed (var x₁ ≡〈 A 〉 var x₀)) in 
+  let ΓAAE⊢N'∶A⇛C : addpath Γ A ⊢ N' ⇑ ⇑ ⇑ ∶ ty (A ⇛ C)
+      ΓAAE⊢N'∶A⇛C = weakening (weakening (weakening (change-type Γ⊢N'∶B (cong ty B≡A⇛C)) validΓA (upRep-typed (ty A))) (ctxTR validΓA) (upRep-typed (ty A))) (valid-addpath validΓ) (upRep-typed (var x₁ ≡〈 A 〉 var x₀)) in 
+  convER Γ⊢P∶Mx≡Ny (appTR ΓAAE⊢M'∶A⇛C (varR x₂ (valid-addpath validΓ))) (appTR ΓAAE⊢N'∶A⇛C (varR x₁ (valid-addpath validΓ))) 
+  (≃-appTl (≃-resp-rep (≃-resp-rep (≃-resp-rep M≃M')))) 
+  (≃-appTl (≃-resp-rep (≃-resp-rep (≃-resp-rep N≃N')))) ,p 
   B≡A⇛C

@@ -142,8 +142,22 @@ subject-reduction-⇒ Γ⊢P-∶φ (dirR {d = -minus} P⇒Q) =
   convPR (minusR (subject-reduction-⇒ Γ⊢P∶ψ≡χ P⇒Q)) (prop-validity Γ⊢P-∶φ) (sym φ≃χ⊃ψ)
 subject-reduction-⇒ {Γ = Γ} {A = app (-eq B) (L ∷ L' ∷ [])} Γ⊢ΛPQ∶L≡L' (βE {A = A} {M} {N} {P} {Q}) = 
   let C ,p F ,p G ,p Γ⊢ΛP∶F≡G ,p Γ⊢Q∶M≡N ,p FM≃L ,p GN≃L' = generation-app* Γ⊢ΛPQ∶L≡L' in
-  let D ,p ΓAAE⊢P∶Fx≡Gy = generation-λλλ Γ⊢ΛP∶F≡G in
-  {!!}
+  let D ,p ΓAAE⊢P∶Fx≡Gy ,p C⇛B≡A⇛D = generation-λλλ Γ⊢ΛP∶F≡G in
+  let C≡A : C ≡ A
+      C≡A = ⇛-injl C⇛B≡A⇛D in
+  let tyC≡tyA : ty C ≡ ty A
+      tyC≡tyA = cong ty C≡A in
+  convER (substitution (subst (λ x → addpath Γ A ⊢ P ∶ appT (F ⇑ ⇑ ⇑) (var x₂) ≡〈 x 〉 appT (G ⇑ ⇑ ⇑) (var x₁)) 
+    (≡-sym (⇛-injr C⇛B≡A⇛D)) 
+    ΓAAE⊢P∶Fx≡Gy) 
+    (context-validity Γ⊢ΛPQ∶L≡L') 
+    (botSub₃-typed (change-type (eq-validity₁ Γ⊢Q∶M≡N refl) tyC≡tyA) 
+      (change-type (eq-validity₂ Γ⊢Q∶M≡N refl) tyC≡tyA) 
+      (subst (λ x → Γ ⊢ Q ∶ M ≡〈 x 〉 N) C≡A Γ⊢Q∶M≡N))) 
+    (eq-validity₁ Γ⊢ΛPQ∶L≡L' refl) 
+    (eq-validity₂ Γ⊢ΛPQ∶L≡L' refl) 
+    (subst₂ _≃_ (cong₂ appT (≡-sym botSub-upRep₃) refl) refl FM≃L) 
+    (subst₂ _≃_ (cong₂ appT (≡-sym botSub-upRep₃) refl) refl GN≃L')
 subject-reduction-⇒ Γ⊢E∶A βPP = {!!}
 subject-reduction-⇒ Γ⊢E∶A ref⊃* = {!!}
 subject-reduction-⇒ Γ⊢E∶A ref⊃*univ = {!!}

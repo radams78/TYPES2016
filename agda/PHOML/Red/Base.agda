@@ -38,12 +38,12 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 
 ⇒-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ⇒ F → E 〈 ρ 〉 ⇒ F 〈 ρ 〉
 ⇒-resp-rep {ρ = ρ} (βT {V} {A} {M} {N}) = subst (λ x → (appT (ΛT A M) N 〈 ρ 〉) ⇒ x) 
-  (≡-sym (compRS-botSub M))
+  (≡-sym (•RS-botSub M))
   βT
 ⇒-resp-rep (appTl M⇒M') = appTl (⇒-resp-rep M⇒M')
 ⇒-resp-rep (impl φ⇒φ') = impl (⇒-resp-rep φ⇒φ')
 ⇒-resp-rep (impr ψ⇒ψ') = impr (⇒-resp-rep ψ⇒ψ')
-⇒-resp-rep {ρ = ρ} (βP {φ = φ} {δ} {ε}) = subst (λ x → (appP (ΛP φ δ) ε) 〈 ρ 〉 ⇒ x) (≡-sym (compRS-botSub δ)) βP
+⇒-resp-rep {ρ = ρ} (βP {φ = φ} {δ} {ε}) = subst (λ x → (appP (ΛP φ δ) ε) 〈 ρ 〉 ⇒ x) (≡-sym (•RS-botSub δ)) βP
 ⇒-resp-rep (appPl δ⇒δ') = appPl (⇒-resp-rep δ⇒δ')
 ⇒-resp-rep refdir = refdir
 ⇒-resp-rep univplus = univplus
@@ -84,7 +84,7 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-rep (reffR M⇒N) = reffR (⇒-resp-rep M⇒N)
 
 ⇒-resp-sub : ∀ {U V} {M N : Term U} {σ : Sub U V} → M ⇒ N → M ⟦ σ ⟧ ⇒ N ⟦ σ ⟧
-⇒-resp-sub {σ = σ} (βT {A = A} {M} {N}) = subst (λ x → appT (ΛT A (M ⟦ liftSub _ σ ⟧)) (N ⟦ σ ⟧) ⇒ x) (≡-sym (comp-botSub'' M)) βT
+⇒-resp-sub {σ = σ} (βT {A = A} {M} {N}) = subst (λ x → appT (ΛT A (M ⟦ liftSub _ σ ⟧)) (N ⟦ σ ⟧) ⇒ x) (≡-sym (•-botSub'' M)) βT
 ⇒-resp-sub (appTl E⇒F) = appTl (⇒-resp-sub E⇒F)
 ⇒-resp-sub (impl E⇒F) = impl (⇒-resp-sub E⇒F)
 ⇒-resp-sub (impr E⇒F) = impr (⇒-resp-sub E⇒F)

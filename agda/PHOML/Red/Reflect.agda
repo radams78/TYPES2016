@@ -22,14 +22,14 @@ open import PHOML.Red.RTRed
   let M' ,p M⇒M' ,p M'ρ≡M'ρ = ⇒-reflect-rep Mρ⇒M'ρ in
   appT M' N ,p appTl M⇒M' ,p cong (λ x → appT x (N 〈 ρ 〉)) M'ρ≡M'ρ
 ⇒-reflect-rep {E = app -appTerm (app (-lamTerm A) (M ∷ []) ∷ N ∷ [])} βT = 
-  M ⟦ x₀:= N ⟧ ,p βT ,p (≡-sym (compRS-botSub M))
+  M ⟦ x₀:= N ⟧ ,p βT ,p (≡-sym (•RS-botSub M))
 ⇒-reflect-rep {E = app -appTerm (app (-lamTerm A) (M ∷ []) ∷ N ∷ [])} (appTl ())
 ⇒-reflect-rep {E = app -appTerm (app -appTerm x₁ ∷ N ∷ [])} {ρ} (appTl Mρ⇒M'ρ) =
   let M' ,p M⇒M' ,p M'ρ≡M'ρ = ⇒-reflect-rep Mρ⇒M'ρ in
   appT M' N ,p appTl M⇒M' ,p cong (λ x → appT x (N 〈 ρ 〉)) M'ρ≡M'ρ
 ⇒-reflect-rep {E = app -lamProof _} ()
 ⇒-reflect-rep {E = app -appProof (var _ ∷ _ ∷ [])} (appPl ())
-⇒-reflect-rep {E = app -appProof (app -lamProof (φ ∷ δ ∷ []) ∷ ε ∷ [])} βP = (δ ⟦ x₀:= ε ⟧) ,p (βP ,p (≡-sym (compRS-botSub δ)))
+⇒-reflect-rep {E = app -appProof (app -lamProof (φ ∷ δ ∷ []) ∷ ε ∷ [])} βP = (δ ⟦ x₀:= ε ⟧) ,p (βP ,p (≡-sym (•RS-botSub δ)))
 ⇒-reflect-rep {E = app -appProof (app -lamProof (φ ∷ δ ∷ []) ∷ ε ∷ [])} {ρ} (appPl δρ⇒δ'ρ) =
   let δ' ,p δ⇒δ' ,p δ'ρ≡δ'ρ = ⇒-reflect-rep δρ⇒δ'ρ in
   appP δ' ε ,p appPl δ⇒δ' ,p cong (λ x → appP x (ε 〈 ρ 〉)) δ'ρ≡δ'ρ
@@ -164,7 +164,7 @@ open import PHOML.Red.RTRed
     N 〈 liftRep -Term ρ 〉 ⟦⟦ x₀::= (Q 〈 ρ 〉) ∶ x₀:= M 〈 ρ 〉 ≡ x₀:= M' 〈 ρ 〉 ⟧⟧
   ≡⟨ pathSub-•PR N ⟩
     N ⟦⟦ x₀::= (Q 〈 ρ 〉) •PR liftRep -Term ρ ∶ x₀:= M 〈 ρ 〉 •SR liftRep -Term ρ ≡ x₀:= M' 〈 ρ 〉 •SR liftRep -Term ρ ⟧⟧
-  ≡⟨⟨ pathSub-cong N botPathSub-liftRep compRS-botSub' compRS-botSub' ⟩⟩
+  ≡⟨⟨ pathSub-cong N botPathSub-liftRep •RS-botSub' •RS-botSub' ⟩⟩
     N ⟦⟦ ρ •RP x₀::= Q ∶ ρ •RS x₀:= M ≡ ρ •RS x₀:= M' ⟧⟧
   ≡⟨ pathSub-•RP N ⟩
     N ⟦⟦ x₀::= Q ∶ x₀:= M ≡ x₀:= M' ⟧⟧ 〈 ρ 〉
