@@ -1,8 +1,8 @@
 module PHOML.Red.Conv where
 open import Data.Unit
-open import Data.Product
+open import Data.Product renaming (_,_ to _,p_)
 open import Prelims
-open import Prelims.Closure.RST
+open import Prelims.Closure.RST public
 open import PHOML.Grammar
 open import PHOML.Red.Base
 open import PHOML.Red.RTRed
@@ -39,3 +39,15 @@ PHOML-Church-Rosser (trans E≃F F≃G) =
   let cr K F↠K G↠K = PHOML-Church-Rosser F≃G in 
   let cr L H↠L K↠L = diamond F↠H F↠K in 
   cr L (trans E↠H H↠L) (trans G↠K K↠L)
+
+≃-⊃-injl : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ≃ φ' ⊃ ψ' → φ ≃ φ'
+≃-⊃-injl {V} {φ} {φ'} {ψ} {ψ'} φ⊃ψ≃φ'⊃ψ' = 
+  let cr χ φ⊃ψ↠χ φ'⊃ψ'↠χ = PHOML-Church-Rosser φ⊃ψ≃φ'⊃ψ' in 
+  let φ₀ ,p ψ₀ ,p χ≡φ₀⊃ψ₀ ,p φ↠φ₀ = imp-red-inj₁' φ⊃ψ↠χ refl in
+  trans (sub-RT-RST φ↠φ₀) (sym (sub-RT-RST (imp-red-inj₁ (subst (λ x → φ' ⊃ ψ' ↠ x) χ≡φ₀⊃ψ₀ φ'⊃ψ'↠χ))))
+
+≃-⊃-injr : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ≃ φ' ⊃ ψ' → ψ ≃ ψ'
+≃-⊃-injr {V} {φ} {φ'} {ψ} {ψ'} φ⊃ψ≃φ'⊃ψ' = 
+  let cr χ φ⊃ψ↠χ φ'⊃ψ'↠χ = PHOML-Church-Rosser φ⊃ψ≃φ'⊃ψ' in 
+  let φ₀ ,p ψ₀ ,p χ≡φ₀⊃ψ₀ ,p ψ↠ψ₀ = imp-red-inj₂' φ⊃ψ↠χ refl in
+  trans (sub-RT-RST ψ↠ψ₀) (sym (sub-RT-RST (imp-red-inj₂ (subst (λ x → φ' ⊃ ψ' ↠ x) χ≡φ₀⊃ψ₀ φ'⊃ψ'↠χ))))

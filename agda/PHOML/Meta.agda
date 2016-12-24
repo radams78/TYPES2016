@@ -11,25 +11,6 @@ open import PHOML.Meta.Sub public
 open import PHOML.Meta.PathSub public
 open import PHOML.Meta.TypeVal public
 
-generation-ΛP : ∀ {V} {Γ : Context V} {φ δ ψ} →
-  Γ ⊢ ΛP φ δ ∶ ψ → Σ[ χ ∈ Term V ] Γ ,P φ ⊢ δ ∶ χ ⇑ × ψ ≃ φ ⊃ χ
-generation-ΛP (ΛPR _ _ Γ,φ⊢δ∶ψ) = _ ,p Γ,φ⊢δ∶ψ ,p ref
-generation-ΛP (convPR Γ⊢Λδ∶ψ Γ⊢ψ'∶Ω ψ≃ψ') =
-  let χ ,p Γ,φ⊢δ∶χ ,p χ≃φ⊃ψ = generation-ΛP Γ⊢Λδ∶ψ in 
-  χ ,p Γ,φ⊢δ∶χ ,p trans (sym ψ≃ψ') χ≃φ⊃ψ
-
-≃-⊃-injl : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ≃ φ' ⊃ ψ' → φ ≃ φ'
-≃-⊃-injl {V} {φ} {φ'} {ψ} {ψ'} φ⊃ψ≃φ'⊃ψ' = 
-  let cr χ φ⊃ψ↠χ φ'⊃ψ'↠χ = PHOML-Church-Rosser φ⊃ψ≃φ'⊃ψ' in 
-  let φ₀ ,p ψ₀ ,p χ≡φ₀⊃ψ₀ ,p φ↠φ₀ = imp-red-inj₁' φ⊃ψ↠χ refl in
-  trans (sub-RT-RST φ↠φ₀) (sym (sub-RT-RST (imp-red-inj₁ (subst (λ x → φ' ⊃ ψ' ↠ x) χ≡φ₀⊃ψ₀ φ'⊃ψ'↠χ))))
-
-≃-⊃-injr : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ≃ φ' ⊃ ψ' → ψ ≃ ψ'
-≃-⊃-injr {V} {φ} {φ'} {ψ} {ψ'} φ⊃ψ≃φ'⊃ψ' = 
-  let cr χ φ⊃ψ↠χ φ'⊃ψ'↠χ = PHOML-Church-Rosser φ⊃ψ≃φ'⊃ψ' in 
-  let φ₀ ,p ψ₀ ,p χ≡φ₀⊃ψ₀ ,p ψ↠ψ₀ = imp-red-inj₂' φ⊃ψ↠χ refl in
-  trans (sub-RT-RST ψ↠ψ₀) (sym (sub-RT-RST (imp-red-inj₂ (subst (λ x → φ' ⊃ ψ' ↠ x) χ≡φ₀⊃ψ₀ φ'⊃ψ'↠χ))))
-
 subject-reduction-⇒ : ∀ {V} {K} {E F : Expression V (varKind K)} {Γ} {A} →
   Γ ⊢ E ∶ A → E ⇒ F → Γ ⊢ F ∶ A
 subject-reduction-⇒ {A = app (-ty B) []} Γ⊢ΛMN∶B βT = 
@@ -130,21 +111,165 @@ subject-reduction-⇒ {Γ = Γ} {A = app (-eq A) (M ∷ M' ∷ [])} Γ⊢refΛLP
     (change-type (eq-validity₂ Γ⊢refΛLP∶M≡M' refl) (cong ty A≡D)) 
     (trans (trans (sym (inc βT)) (≃-appTl ΛL≃F)) FN≃M) 
     (trans (trans (sym (inc βT)) (≃-appTl ΛL≃G)) GN'≃M'))
-subject-reduction-⇒ Γ⊢E∶A ref⊃* = {!!}
-subject-reduction-⇒ Γ⊢E∶A ref⊃*univ = {!!}
-subject-reduction-⇒ Γ⊢E∶A univ⊃*ref = {!!}
-subject-reduction-⇒ Γ⊢E∶A univ⊃*univ = {!!}
-subject-reduction-⇒ Γ⊢E∶A (imp*l E⇒F) = {!!}
-subject-reduction-⇒ Γ⊢E∶A (imp*r E⇒F) = {!!}
-subject-reduction-⇒ Γ⊢E∶A (app*l E⇒F) = {!!}
-subject-reduction-⇒ Γ⊢E∶A (reffR E⇒F) = {!!}
+subject-reduction-⇒ {A = app (-eq A) (φ ∷ φ' ∷ [])} Γ⊢refM⊃*refN∶φ≡φ' ref⊃* = 
+  let ψ ,p ψ' ,p χ ,p χ' ,p Γ⊢refM∶ψ≡ψ' ,p Γ⊢refN∶χ≡χ' ,p φ≃ψ⊃χ ,p φ'≃ψ'⊃χ' ,p A≡Ω 
+              = generation-⊃* Γ⊢refM⊃*refN∶φ≡φ' in
+  convER (refR (change-type (⊃R (generation-reff₁ Γ⊢refM∶ψ≡ψ') (generation-reff₁ Γ⊢refN∶χ≡χ')) (cong ty (≡-sym A≡Ω)))) (eq-validity₁ Γ⊢refM⊃*refN∶φ≡φ' refl) (eq-validity₂ Γ⊢refM⊃*refN∶φ≡φ' refl) 
+  (sym (trans φ≃ψ⊃χ (≃-imp (sym (generation-reff₂ Γ⊢refM∶ψ≡ψ')) (sym (generation-reff₂ Γ⊢refN∶χ≡χ'))))) 
+  (trans (≃-imp (generation-reff₃ Γ⊢refM∶ψ≡ψ') (generation-reff₃ Γ⊢refN∶χ≡χ')) (sym φ'≃ψ'⊃χ'))
+subject-reduction-⇒ {V} {Γ = Γ} {A = app (-eq A) (M ∷ N ∷ [])} Γ⊢refφ⊃*univδε∶M≡N (ref⊃*univ {φ = φ} {ψ} {χ} {δ} {ε}) = 
+  let α ,p α' ,p β ,p β' ,p Γ⊢refφ∶α≡α' ,p Γ⊢univδε∶β≡β' ,p M≃α⊃β ,p N≃α'⊃β' ,p A≡Ω = generation-⊃* Γ⊢refφ⊃*univδε∶M≡N in
+  let Γ⊢φ∶Ω : Γ ⊢ φ ∶ ty Ω
+      Γ⊢φ∶Ω = generation-reff₁ Γ⊢refφ∶α≡α' in
+  let Γ⊢δ∶ψ⊃χ : Γ ⊢ δ ∶ ψ ⊃ χ
+      Γ⊢δ∶ψ⊃χ = generation-univ₃ Γ⊢univδε∶β≡β' in
+  let Γ⊢ψ⊃χ∶Ω : Γ ⊢ ψ ⊃ χ ∶ ty Ω
+      Γ⊢ψ⊃χ∶Ω = prop-validity Γ⊢δ∶ψ⊃χ in
+  let Γ⊢ψ∶Ω : Γ ⊢ ψ ∶ ty Ω
+      Γ⊢ψ∶Ω = generation-⊃₁ Γ⊢ψ⊃χ∶Ω in
+  let Γ⊢φ⊃ψ∶Ω : Γ ⊢ φ ⊃ ψ ∶ ty Ω
+      Γ⊢φ⊃ψ∶Ω = ⊃R Γ⊢φ∶Ω Γ⊢ψ∶Ω in
+  let Γ⊢ε∶χ⊃ψ : Γ ⊢ ε ∶ χ ⊃ ψ
+      Γ⊢ε∶χ⊃ψ = generation-univ₄ Γ⊢univδε∶β≡β' in
+  let Γ⊢χ∶Ω : Γ ⊢ χ ∶ ty Ω
+      Γ⊢χ∶Ω = generation-⊃₂ Γ⊢ψ⊃χ∶Ω in
+  let validΓ,φ⊃ψ : valid (Γ ,P φ ⊃ ψ)
+      validΓ,φ⊃ψ = ctxPR Γ⊢φ⊃ψ∶Ω in
+  let upRepφ⊃ψ : upRep ∶ Γ ⇒R Γ ,P φ ⊃ ψ
+      upRepφ⊃ψ = upRep-typed (φ ⊃ ψ) in
+  let Γφ⊃ψ⊢φ∶Ω : Γ ,P φ ⊃ ψ ⊢ φ ⇑ ∶ ty Ω
+      Γφ⊃ψ⊢φ∶Ω = weaken-prop Γ⊢φ∶Ω Γ⊢φ⊃ψ∶Ω in
+  let validΓ,φ⊃ψ,φ : valid (Γ ,P φ ⊃ ψ ,P φ ⇑)
+      validΓ,φ⊃ψ,φ = ctxPR Γφ⊃ψ⊢φ∶Ω in
+  let Γ⊢φ⊃χ∶Ω : Γ ⊢ φ ⊃ χ ∶ ty Ω
+      Γ⊢φ⊃χ∶Ω = ⊃R Γ⊢φ∶Ω Γ⊢χ∶Ω in
+  let validΓ,φ⊃χ : valid (Γ ,P φ ⊃ χ)
+      validΓ,φ⊃χ = ctxPR Γ⊢φ⊃χ∶Ω in
+  let upRepφ⊃χ : upRep ∶ Γ ⇒R Γ ,P φ ⊃ χ
+      upRepφ⊃χ = upRep-typed (φ ⊃ χ) in
+  let Γφ⊃χ⊢φ∶Ω : Γ ,P φ ⊃ χ ⊢ φ ⇑ ∶ ty Ω
+      Γφ⊃χ⊢φ∶Ω = weaken-prop Γ⊢φ∶Ω Γ⊢φ⊃χ∶Ω in
+  let validΓ,φ⊃χ,φ : valid (Γ ,P φ ⊃ χ ,P φ ⇑)
+      validΓ,φ⊃χ,φ = ctxPR Γφ⊃χ⊢φ∶Ω in
+  subst (λ x → Γ ⊢ univ (φ ⊃ ψ) (φ ⊃ χ) (ΛP (φ ⊃ ψ) (ΛP (φ ⇑) (appP (δ ⇑ ⇑) (appP (var x₁) (var x₀))))) (ΛP (φ ⊃ χ) (ΛP (φ ⇑) (appP (ε ⇑ ⇑) (appP (var x₁) (var x₀))))) ∶ M ≡〈 x 〉 N) 
+    (≡-sym A≡Ω) 
+    (convER (univR (ΛPR Γ⊢φ⊃ψ∶Ω Γ⊢φ⊃χ∶Ω
+    (ΛPR Γφ⊃ψ⊢φ∶Ω (weaken-prop Γ⊢χ∶Ω Γ⊢φ⊃ψ∶Ω)
+    (appPR (weaken-prop₂ Γ⊢δ∶ψ⊃χ Γ⊢φ⊃ψ∶Ω Γ⊢φ∶Ω)
+    (appPR (varR x₁ validΓ,φ⊃ψ,φ) (varR x₀ validΓ,φ⊃ψ,φ))))) 
+    (ΛPR Γ⊢φ⊃χ∶Ω Γ⊢φ⊃ψ∶Ω 
+    (ΛPR Γφ⊃χ⊢φ∶Ω (weaken-prop Γ⊢ψ∶Ω Γ⊢φ⊃χ∶Ω)
+    (appPR (weaken-prop₂ Γ⊢ε∶χ⊃ψ Γ⊢φ⊃χ∶Ω Γ⊢φ∶Ω)
+    (appPR (varR x₁ validΓ,φ⊃χ,φ) (varR x₀ validΓ,φ⊃χ,φ)))))) 
+    (change-type (eq-validity₁ Γ⊢refφ⊃*univδε∶M≡N refl) (cong ty A≡Ω)) 
+    (change-type (eq-validity₂ Γ⊢refφ⊃*univδε∶M≡N refl) (cong ty A≡Ω)) 
+    (sym (trans M≃α⊃β (≃-imp (sym (generation-reff₂ Γ⊢refφ∶α≡α')) (sym (generation-univ₁ Γ⊢univδε∶β≡β'))))) 
+    (trans (≃-imp (generation-reff₃ Γ⊢refφ∶α≡α') (generation-univ₂ Γ⊢univδε∶β≡β')) (sym N≃α'⊃β')))
+subject-reduction-⇒ {V} {Γ = Γ} {A = app (-eq A) (M ∷ N ∷ [])} Γ⊢univδε⊃*refχ∶M≡N (univ⊃*ref {φ = φ} {ψ} {χ} {δ} {ε}) =
+  let α ,p α' ,p β ,p β' ,p Γ⊢univδε∶α≡α' ,p Γ⊢refχ∶β≡β' ,p M≃α⊃β ,p N≃α'⊃β' ,p A≡Ω = generation-⊃* Γ⊢univδε⊃*refχ∶M≡N in
+  let Γ⊢φ⊃ψ∶Ω : Γ ⊢ φ ⊃ ψ ∶ ty Ω
+      Γ⊢φ⊃ψ∶Ω = prop-validity (generation-univ₃ Γ⊢univδε∶α≡α') in
+  let Γ⊢φ∶Ω : Γ ⊢ φ ∶ ty Ω
+      Γ⊢φ∶Ω = generation-⊃₁ Γ⊢φ⊃ψ∶Ω in
+  let Γ⊢ψ∶Ω : Γ ⊢ ψ ∶ ty Ω
+      Γ⊢ψ∶Ω = generation-⊃₂ Γ⊢φ⊃ψ∶Ω in
+  let Γ⊢χ∶Ω : Γ ⊢ χ ∶ ty Ω
+      Γ⊢χ∶Ω = generation-reff₁ Γ⊢refχ∶β≡β' in
+  let Γ⊢φ⊃χ∶Ω : Γ ⊢ φ ⊃ χ ∶ ty Ω
+      Γ⊢φ⊃χ∶Ω = ⊃R Γ⊢φ∶Ω Γ⊢χ∶Ω in
+  let Γ⊢ψ⊃χ∶Ω : Γ ⊢ ψ ⊃ χ ∶ ty Ω
+      Γ⊢ψ⊃χ∶Ω = ⊃R Γ⊢ψ∶Ω Γ⊢χ∶Ω in
+  let validΓ,φ⊃χ,ψ : valid (Γ ,P φ ⊃ χ ,P ψ ⇑)
+      validΓ,φ⊃χ,ψ = ctxPR (weaken-prop Γ⊢ψ∶Ω Γ⊢φ⊃χ∶Ω) in
+  let validΓ,ψ⊃χ,φ : valid (Γ ,P ψ ⊃ χ ,P φ ⇑)
+      validΓ,ψ⊃χ,φ = ctxPR (weaken-prop Γ⊢φ∶Ω Γ⊢ψ⊃χ∶Ω) in
+  subst (λ x → Γ ⊢ univ (φ ⊃ χ) (ψ ⊃ χ) (ΛP (φ ⊃ χ) (ΛP (ψ ⇑) (appP (var x₁) (appP (ε ⇑ ⇑) (var x₀))))) (ΛP (ψ ⊃ χ) (ΛP (φ ⇑) (appP (var x₁) (appP (δ ⇑ ⇑) (var x₀))))) ∶ M ≡〈 x 〉 N) 
+  (≡-sym A≡Ω) 
+  (convER 
+    (univR 
+      (ΛPR Γ⊢φ⊃χ∶Ω Γ⊢ψ⊃χ∶Ω
+      (ΛPR (weaken-prop Γ⊢ψ∶Ω Γ⊢φ⊃χ∶Ω) (weaken-prop Γ⊢χ∶Ω Γ⊢φ⊃χ∶Ω)
+      (appPR (varR x₁ validΓ,φ⊃χ,ψ)
+      (appPR (weaken-prop₂ (generation-univ₄ Γ⊢univδε∶α≡α') Γ⊢φ⊃χ∶Ω Γ⊢ψ∶Ω) 
+      (varR x₀ validΓ,φ⊃χ,ψ))))) 
+      (ΛPR Γ⊢ψ⊃χ∶Ω Γ⊢φ⊃χ∶Ω 
+      (ΛPR (weaken-prop Γ⊢φ∶Ω Γ⊢ψ⊃χ∶Ω) (weaken-prop Γ⊢χ∶Ω Γ⊢ψ⊃χ∶Ω) 
+      (appPR (varR x₁ validΓ,ψ⊃χ,φ)
+      (appPR (weaken-prop₂ (generation-univ₃ Γ⊢univδε∶α≡α') Γ⊢ψ⊃χ∶Ω Γ⊢φ∶Ω) 
+      (varR x₀ validΓ,ψ⊃χ,φ)))))) 
+    (change-type (eq-validity₁ Γ⊢univδε⊃*refχ∶M≡N refl) (cong ty A≡Ω)) 
+    (change-type (eq-validity₂ Γ⊢univδε⊃*refχ∶M≡N refl) (cong ty A≡Ω)) 
+    (sym (trans M≃α⊃β (≃-imp (sym (generation-univ₁ Γ⊢univδε∶α≡α')) (sym (generation-reff₂ Γ⊢refχ∶β≡β'))))) 
+    (trans (≃-imp (generation-univ₂ Γ⊢univδε∶α≡α') (generation-reff₃ Γ⊢refχ∶β≡β')) (sym N≃α'⊃β')))
+subject-reduction-⇒ {Γ = Γ} {A = app (-eq A) (M ∷ N ∷ [])} Γ⊢univδε⊃*univδ'ε'∶M≡N (univ⊃*univ {φ = φ} {φ'} {ψ} {ψ'} {δ} {δ'} {ε} {ε'}) =
+  let α ,p α' ,p β ,p β' ,p Γ⊢univδε∶α≡α' ,p Γ⊢univδ'ε'∶β≡β' ,p M≃α⊃β ,p N≃α'⊃β' ,p A≡Ω = generation-⊃* Γ⊢univδε⊃*univδ'ε'∶M≡N in 
+  let Γ⊢φ⊃ψ∶Ω : Γ ⊢ φ ⊃ ψ ∶ ty Ω
+      Γ⊢φ⊃ψ∶Ω = prop-validity (generation-univ₃ Γ⊢univδε∶α≡α') in
+  let Γ⊢φ'⊃ψ'∶Ω : Γ ⊢ φ' ⊃ ψ' ∶ ty Ω
+      Γ⊢φ'⊃ψ'∶Ω = prop-validity (generation-univ₃ Γ⊢univδ'ε'∶β≡β') in
+  let Γ⊢φ∶Ω : Γ ⊢ φ ∶ ty Ω
+      Γ⊢φ∶Ω = generation-⊃₁ Γ⊢φ⊃ψ∶Ω in
+  let Γ⊢ψ∶Ω : Γ ⊢ ψ ∶ ty Ω
+      Γ⊢ψ∶Ω = generation-⊃₂ Γ⊢φ⊃ψ∶Ω in
+  let Γ⊢φ'∶Ω : Γ ⊢ φ' ∶ ty Ω
+      Γ⊢φ'∶Ω = generation-⊃₁ Γ⊢φ'⊃ψ'∶Ω in
+  let Γ⊢ψ'∶Ω : Γ ⊢ ψ' ∶ ty Ω
+      Γ⊢ψ'∶Ω = generation-⊃₂ Γ⊢φ'⊃ψ'∶Ω in
+  let Γ⊢φ⊃φ'∶Ω : Γ ⊢ φ ⊃ φ' ∶ ty Ω
+      Γ⊢φ⊃φ'∶Ω = ⊃R Γ⊢φ∶Ω Γ⊢φ'∶Ω in
+  let Γ⊢ψ⊃ψ'∶Ω : Γ ⊢ ψ ⊃ ψ' ∶ ty Ω
+      Γ⊢ψ⊃ψ'∶Ω = ⊃R Γ⊢ψ∶Ω Γ⊢ψ'∶Ω in
+  let validΓ,φ⊃φ',ψ : valid (Γ ,P φ ⊃ φ' ,P ψ ⇑)
+      validΓ,φ⊃φ',ψ = ctxPR (weaken-prop Γ⊢ψ∶Ω Γ⊢φ⊃φ'∶Ω) in
+  subst
+    (λ x →
+       Γ ⊢
+       univ (φ ⊃ φ') (ψ ⊃ ψ')
+       (ΛP (φ ⊃ φ')
+        (ΛP (ψ ⇑) (appP (δ' ⇑ ⇑) (appP (var x₁) (appP (ε ⇑ ⇑) (var x₀))))))
+       (ΛP (ψ ⊃ ψ')
+        (ΛP (φ ⇑) (appP (ε' ⇑ ⇑) (appP (var x₁) (appP (δ ⇑ ⇑) (var x₀))))))
+       ∶ M ≡〈 x 〉 N)
+    (≡-sym A≡Ω) 
+  (convER 
+    (univR 
+      (ΛPR Γ⊢φ⊃φ'∶Ω Γ⊢ψ⊃ψ'∶Ω 
+      (ΛPR (weaken-prop Γ⊢ψ∶Ω Γ⊢φ⊃φ'∶Ω) (weaken-prop Γ⊢ψ'∶Ω Γ⊢φ⊃φ'∶Ω) 
+      (appPR (weaken-prop₂ (generation-univ₃ Γ⊢univδ'ε'∶β≡β') Γ⊢φ⊃φ'∶Ω Γ⊢ψ∶Ω) 
+      (appPR (varR x₁ validΓ,φ⊃φ',ψ) 
+      (appPR (weaken-prop₂ (generation-univ₄ Γ⊢univδε∶α≡α') Γ⊢φ⊃φ'∶Ω Γ⊢ψ∶Ω) 
+      (varR x₀ validΓ,φ⊃φ',ψ)))))) 
+      (ΛPR Γ⊢ψ⊃ψ'∶Ω Γ⊢φ⊃φ'∶Ω 
+      (ΛPR (weaken-prop Γ⊢φ∶Ω Γ⊢ψ⊃ψ'∶Ω) (weaken-prop Γ⊢φ'∶Ω Γ⊢ψ⊃ψ'∶Ω) 
+      (appPR (weaken-prop₂ (generation-univ₄ Γ⊢univδ'ε'∶β≡β') Γ⊢ψ⊃ψ'∶Ω Γ⊢φ∶Ω) 
+      (appPR (varR x₁ (ctxPR (weaken-prop Γ⊢φ∶Ω Γ⊢ψ⊃ψ'∶Ω))) 
+      (appPR (weaken-prop₂ (generation-univ₃ Γ⊢univδε∶α≡α') Γ⊢ψ⊃ψ'∶Ω Γ⊢φ∶Ω) 
+      (varR x₀ (ctxPR (weaken-prop Γ⊢φ∶Ω Γ⊢ψ⊃ψ'∶Ω))))))))) 
+    (change-type (eq-validity₁ Γ⊢univδε⊃*univδ'ε'∶M≡N refl) (cong ty A≡Ω)) 
+    (change-type (eq-validity₂ Γ⊢univδε⊃*univδ'ε'∶M≡N refl) (cong ty A≡Ω)) 
+    (trans (≃-imp (generation-univ₁ Γ⊢univδε∶α≡α') (generation-univ₁ Γ⊢univδ'ε'∶β≡β')) (sym M≃α⊃β)) 
+    (trans (≃-imp (generation-univ₂ Γ⊢univδε∶α≡α') (generation-univ₂ Γ⊢univδ'ε'∶β≡β')) (sym N≃α'⊃β')))
+subject-reduction-⇒ {Γ = Γ} {A = app (-eq A) (M ∷ N ∷ [])} Γ⊢P⊃*Q∶M≡N (imp*l {P = P} {P' = P'} {Q = Q} P⇒P') = 
+  let φ ,p φ' ,p ψ ,p ψ' ,p Γ⊢P∶φ≡φ' ,p Γ⊢Q∶ψ≡ψ' ,p M≃φ⊃ψ ,p N≃φ'⊃ψ' ,p A≡Ω = generation-⊃* Γ⊢P⊃*Q∶M≡N in 
+  subst (λ x → Γ ⊢ P' ⊃* Q ∶ M ≡〈 x 〉 N) (≡-sym A≡Ω) (convER (⊃*R (subject-reduction-⇒ Γ⊢P∶φ≡φ' P⇒P') Γ⊢Q∶ψ≡ψ') 
+    (change-type (eq-validity₁ Γ⊢P⊃*Q∶M≡N refl) (cong ty A≡Ω)) 
+    (change-type (eq-validity₂ Γ⊢P⊃*Q∶M≡N refl) (cong ty A≡Ω)) 
+    (sym M≃φ⊃ψ) (sym N≃φ'⊃ψ'))
+subject-reduction-⇒ {Γ = Γ} {A = app (-eq A) (M ∷ N ∷ [])} Γ⊢P⊃*Q∶M≡N (imp*r {P = P} {Q} {Q'} Q⇒Q') =
+  let φ ,p φ' ,p ψ ,p ψ' ,p Γ⊢P∶φ≡φ' ,p Γ⊢Q∶ψ≡ψ' ,p M≃φ⊃ψ ,p N≃φ'⊃ψ' ,p A≡Ω = generation-⊃* Γ⊢P⊃*Q∶M≡N in
+  subst (λ x → Γ ⊢ P ⊃* Q' ∶ M ≡〈 x 〉 N) (≡-sym A≡Ω) (convER (⊃*R Γ⊢P∶φ≡φ' (subject-reduction-⇒ Γ⊢Q∶ψ≡ψ' Q⇒Q')) 
+  (change-type (eq-validity₁ Γ⊢P⊃*Q∶M≡N refl) (cong ty A≡Ω)) 
+  (change-type (eq-validity₂ Γ⊢P⊃*Q∶M≡N refl) (cong ty A≡Ω)) 
+  (sym M≃φ⊃ψ) (sym N≃φ'⊃ψ'))
+subject-reduction-⇒ {Γ = Γ} {A = app (-eq A) (L ∷ L' ∷ [])} Γ⊢PQ∶L≡L' (app*l {M = M} {N} {P = P} {P'} {Q} P⇒P') = 
+  let B ,p F ,p G ,p Γ⊢P∶F≡G ,p Γ⊢Q∶M≡N ,p FM≃L ,p GN≃L' = generation-app* Γ⊢PQ∶L≡L' in
+  convER (appER (eq-validity₁ Γ⊢Q∶M≡N refl) (eq-validity₂ Γ⊢Q∶M≡N refl) (subject-reduction-⇒ Γ⊢P∶F≡G P⇒P') Γ⊢Q∶M≡N) (eq-validity₁ Γ⊢PQ∶L≡L' refl) (eq-validity₂ Γ⊢PQ∶L≡L' refl) 
+  FM≃L GN≃L'
+subject-reduction-⇒ {A = app (-eq A) (N ∷ N' ∷ [])} Γ⊢refM∶N≡N' (reffR M⇒M') = convER (refR (subject-reduction-⇒ (generation-reff₁ Γ⊢refM∶N≡N') M⇒M')) 
+  (eq-validity₁ Γ⊢refM∶N≡N' refl) (eq-validity₂ Γ⊢refM∶N≡N' refl) (trans (sym (inc M⇒M')) (generation-reff₂ Γ⊢refM∶N≡N')) 
+  (trans (sym (inc M⇒M')) (generation-reff₃ Γ⊢refM∶N≡N'))
 
-postulate subject-reduction : ∀ {V} {K} {Γ}
-                            {E F : Expression V (varKind K)} {A} → 
-                            (Γ ⊢ E ∶ A) → (E ↠ F) → (Γ ⊢ F ∶ A)
-
-app*R' : ∀ {V} {Γ : Context V} {P Q : Path V} {M M' N N' : Term V} {A B : Type} →
-    Γ ⊢ P ∶ M ≡〈 A ⇛ B 〉 M' → Γ ⊢ Q ∶ N ≡〈 A 〉 N' →
-  -------------------------------------------------
-    Γ ⊢ app* N N' P Q ∶ appT M N ≡〈 B 〉 appT M' N'
-app*R' Γ⊢P∶M≡M' Γ⊢Q∶N≡N' = appER (eq-validity₁ Γ⊢Q∶N≡N' refl) (eq-validity₂ Γ⊢Q∶N≡N' refl) Γ⊢P∶M≡M' Γ⊢Q∶N≡N'
+subject-reduction : ∀ {V} {K} {Γ} {E F : Expression V (varKind K)} {A} → (Γ ⊢ E ∶ A) → (E ↠ F) → (Γ ⊢ F ∶ A)
+subject-reduction Γ⊢E∶A (inc E⇒F) = subject-reduction-⇒ Γ⊢E∶A E⇒F
+subject-reduction Γ⊢E∶A ref = Γ⊢E∶A
+subject-reduction Γ⊢E∶A (trans E↠F F↠G) = subject-reduction (subject-reduction Γ⊢E∶A E↠F) F↠G

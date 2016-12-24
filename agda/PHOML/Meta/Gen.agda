@@ -5,91 +5,9 @@ open import PHOML.Grammar
 open import PHOML.Red.Conv
 open import PHOML.Rules
 open import PHOML.Meta.ConVal
-
-generation-appT : ∀ {V} {Γ : Context V} {M N : Term V} {B} →
-  Γ ⊢ appT M N ∶ ty B → Σ[ A ∈ Type ] Γ ⊢ M ∶ ty (A ⇛ B) × Γ ⊢ N ∶ ty A
-generation-appT (appTR {V} {Γ} {M} {N} {A} {B} Γ⊢M∶A⇛B Γ⊢N∶A) = A ,p Γ⊢M∶A⇛B ,p Γ⊢N∶A
-
-generation-⊃₁ : ∀ {V} {Γ : Context V} {φ} {ψ} {A} → Γ ⊢ φ ⊃ ψ ∶ ty A → Γ ⊢ φ ∶ ty Ω
-generation-⊃₁ (⊃R Γ⊢φ∶Ω _) = Γ⊢φ∶Ω
-
-generation-⊃₂ : ∀ {V} {Γ : Context V} {φ} {ψ} {A} → Γ ⊢ φ ⊃ ψ ∶ ty A → Γ ⊢ ψ ∶ ty Ω
-generation-⊃₂ (⊃R _ Γ⊢ψ∶Ω) = Γ⊢ψ∶Ω
-
-prop-validity : ∀ {V} {Γ : Context V} {δ : Proof V} {φ : Term V} → Γ ⊢ δ ∶ φ → Γ ⊢ φ ∶ ty Ω
-eq-validity₁ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P ∶ E → E ≡ M ≡〈 A 〉 N → Γ ⊢ M ∶ ty A
-eq-validity₂ : ∀ {V} {Γ : Context V} {P : Path V} {E M A N} → Γ ⊢ P ∶ E → E ≡ M ≡〈 A 〉 N → Γ ⊢ N ∶ ty A
-
-prop-validity (varR _ validΓ) = context-validity-Prop validΓ
-prop-validity (appPR Γ⊢δ∶φ⊃ψ _) = generation-⊃₂ (prop-validity Γ⊢δ∶φ⊃ψ)
-prop-validity (ΛPR Γ⊢φ∶Ω Γ⊢ψ∶Ω _) = ⊃R Γ⊢φ∶Ω Γ⊢ψ∶Ω
-prop-validity (convPR _ Γ⊢φ∶Ω _) = Γ⊢φ∶Ω
-prop-validity (plusR Γ⊢P∶φ≡ψ) = ⊃R (eq-validity₁ Γ⊢P∶φ≡ψ refl) (eq-validity₂ Γ⊢P∶φ≡ψ refl)
-prop-validity (minusR Γ⊢P∶φ≡ψ) = ⊃R (eq-validity₂ Γ⊢P∶φ≡ψ refl) (eq-validity₁ Γ⊢P∶φ≡ψ refl)
-
-eq-validity₁ (varR {Γ = Γ} _ validΓ) E≡M≡N = subst (λ E → Γ ⊢ left E ∶ ty (type E)) E≡M≡N (context-validity-Eq₁ validΓ)
-eq-validity₁ {Γ = Γ} (refR Γ⊢P∶M≡N) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢P∶M≡N
-eq-validity₁ {Γ = Γ} (⊃*R Γ⊢P∶φ≡φ' Γ⊢Q∶ψ≡ψ') E≡φ⊃ψ≡φ'⊃ψ' = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡φ⊃ψ≡φ'⊃ψ') (eq-inj₂ E≡φ⊃ψ≡φ'⊃ψ') (⊃R (eq-validity₁ Γ⊢P∶φ≡φ' refl) (eq-validity₁ Γ⊢Q∶ψ≡ψ' refl))
-eq-validity₁ {Γ = Γ} (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) E≡φ≡ψ = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡φ≡ψ) (eq-inj₂ E≡φ≡ψ) (generation-⊃₂ (prop-validity Γ⊢ε∶ψ⊃φ))
-eq-validity₁ {Γ = Γ} (lllR Γ⊢M∶A _ _) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M∶A
-eq-validity₁ {Γ = Γ} (appER Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) (appTR (eq-validity₁ Γ⊢P∶M≡M' refl) Γ⊢N∶A)
-eq-validity₁ {Γ = Γ} (convER Γ⊢P∶M≡N Γ⊢M'∶A Γ⊢N'∶A M≃M' N≃N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₁ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M'∶A
-
-eq-validity₂ {Γ = Γ} (varR _ validΓ) E≡M≡N = subst (λ E → Γ ⊢ right E ∶ ty (type E)) E≡M≡N (context-validity-Eq₂ validΓ)
-eq-validity₂ {Γ = Γ} (refR Γ⊢M∶A) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢M∶A
-eq-validity₂ {Γ = Γ} (⊃*R Γ⊢P∶φ≡ψ Γ⊢Q∶φ'≡ψ') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) (⊃R (eq-validity₂ Γ⊢P∶φ≡ψ refl) (eq-validity₂ Γ⊢Q∶φ'≡ψ' refl))
-eq-validity₂ {Γ = Γ} (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) (generation-⊃₂ (prop-validity Γ⊢δ∶φ⊃ψ))
-eq-validity₂ {Γ = Γ} (lllR _ Γ⊢N∶A⇛B _) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢N∶A⇛B
-eq-validity₂ {Γ = Γ} (appER Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) (appTR (eq-validity₂ Γ⊢P∶M≡M' refl) Γ⊢N'∶A)
-eq-validity₂ {Γ = Γ} (convER _ _ Γ⊢N'∶A _ _) E≡M≡N = subst₂ (λ x y → Γ ⊢ x ∶ ty y) (eq-inj₃ E≡M≡N) (eq-inj₂ E≡M≡N) Γ⊢N'∶A
-
-generation-⊃₃ : ∀ {V} {Γ : Context V} {φ} {ψ} {A} → Γ ⊢ φ ⊃ ψ ∶ ty A → A ≡ Ω
-generation-⊃₃ (⊃R _ _) = refl
-
-generation-appP : ∀ {V} {Γ : Context V} {δ ε φ} → Γ ⊢ appP δ ε ∶ φ → 
-  Σ[ ψ ∈ Term V ] Σ[ χ ∈ Term V ] Γ ⊢ δ ∶ ψ ⊃ χ × Γ ⊢ ε ∶ ψ × χ ≃ φ
-generation-appP (appPR Γ⊢δ∶ψ⊃φ Γ⊢ε∶ψ) = _ ,p _ ,p Γ⊢δ∶ψ⊃φ ,p Γ⊢ε∶ψ ,p ref
-generation-appP (convPR Γ⊢δε∶φ _ φ≃φ') = 
-  let ψ ,p χ ,p Γ⊢δ∶ψ⊃χ ,p Γ⊢ε∶ψ ,p χ≃φ = generation-appP Γ⊢δε∶φ in
-  ψ ,p χ ,p Γ⊢δ∶ψ⊃χ ,p Γ⊢ε∶ψ ,p trans χ≃φ φ≃φ'
-
-generation-plus : ∀ {V Γ} {P : Path V} {φ} → Γ ⊢ plus P ∶ φ →
-  Σ[ ψ ∈ Term V ] Σ[ χ ∈ Term V ] Γ ⊢ P ∶ ψ ≡〈 Ω 〉 χ × φ ≃ ψ ⊃ χ
-generation-plus (convPR Γ⊢P+∶φ' Γ⊢φ∶Ω φ'≃φ) = 
-  let ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p φ'≃ψ⊃χ = generation-plus Γ⊢P+∶φ' in 
-  ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p (trans (sym φ'≃φ) φ'≃ψ⊃χ)
-generation-plus (plusR {φ = φ} {ψ = ψ} Γ⊢P∶φ≡ψ) = φ ,p ψ ,p Γ⊢P∶φ≡ψ ,p ref
-
-generation-minus : ∀ {V Γ} {P : Path V} {φ} → Γ ⊢ minus P ∶ φ →
-  Σ[ ψ ∈ Term V ] Σ[ χ ∈ Term V ] Γ ⊢ P ∶ ψ ≡〈 Ω 〉 χ × φ ≃ χ ⊃ ψ
-generation-minus (convPR Γ⊢P+∶φ' Γ⊢φ∶Ω φ'≃φ) = 
-  let ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p φ'≃ψ⊃χ = generation-minus Γ⊢P+∶φ' in 
-  ψ ,p χ ,p Γ⊢P∶ψ≡χ ,p (trans (sym φ'≃φ) φ'≃ψ⊃χ)
-generation-minus (minusR {φ = φ} {ψ = ψ} Γ⊢P∶φ≡ψ) = φ ,p ψ ,p Γ⊢P∶φ≡ψ ,p ref
-
-generation-reff₁ : ∀ {V} {Γ : Context V} {M N N' : Term V} {A} → Γ ⊢ reff M ∶ N ≡〈 A 〉 N' → Γ ⊢ M ∶ ty A
-generation-reff₁ (refR Γ⊢M∶A) = Γ⊢M∶A
-generation-reff₁ (convER Γ⊢refM∶N≡N' _ _ _ _) = generation-reff₁ Γ⊢refM∶N≡N'
-
-generation-reff₂ : ∀ {V} {Γ : Context V} {M N N' : Term V} {A} → Γ ⊢ reff M ∶ N ≡〈 A 〉 N' → M ≃ N
-generation-reff₂ (refR _) = ref
-generation-reff₂ (convER Γ⊢refM∶N≡N' _ _ M≃M' _) = trans (generation-reff₂ Γ⊢refM∶N≡N') M≃M'
-
-generation-reff₃ : ∀ {V} {Γ : Context V} {M N N' : Term V} {A} → Γ ⊢ reff M ∶ N ≡〈 A 〉 N' → M ≃ N'
-generation-reff₃ (refR _) = ref
-generation-reff₃ (convER Γ⊢refM∶N≡N' _ _ _ N≃N') = trans (generation-reff₃ Γ⊢refM∶N≡N') N≃N'
-
-generation-univ₁ : ∀ {V} {Γ : Context V} {φ ψ δ ε M A N} → Γ ⊢ univ φ ψ δ ε ∶ M ≡〈 A 〉 N → φ ≃ M
-generation-univ₁ (univR _ _) = ref
-generation-univ₁ (convER Γ⊢univδε∶M≡N _ _ M≃M' _) = trans (generation-univ₁ Γ⊢univδε∶M≡N) M≃M'
-
-generation-univ₂ : ∀ {V} {Γ : Context V} {φ ψ δ ε M A N} → Γ ⊢ univ φ ψ δ ε ∶ M ≡〈 A 〉 N → ψ ≃ N
-generation-univ₂ (univR _ _) = ref
-generation-univ₂ (convER Γ⊢univδε∶M≡N _ _ _ N≃N') = trans (generation-univ₂ Γ⊢univδε∶M≡N) N≃N'
-
-generation-univ₃ : ∀ {V} {Γ : Context V} {φ ψ δ ε M A N} → Γ ⊢ univ φ ψ δ ε ∶ M ≡〈 A 〉 N → Γ ⊢ δ ∶ φ ⊃ ψ
-generation-univ₃ (univR Γ⊢δ∶M⊃N _) = Γ⊢δ∶M⊃N
-generation-univ₃ (convER Γ⊢univδε∶M≡N _ _ _ _) = generation-univ₃ Γ⊢univδε∶M≡N
+open import PHOML.Meta.Gen.Term public
+open import PHOML.Meta.Gen.Proof public
+open import PHOML.Meta.Gen.Path public
 
 generation-univ₄ : ∀ {V} {Γ : Context V} {φ ψ δ ε M A N} → Γ ⊢ univ φ ψ δ ε ∶ M ≡〈 A 〉 N → Γ ⊢ ε ∶ ψ ⊃ φ
 generation-univ₄ (univR _ Γ⊢ε∶N⊃M) = Γ⊢ε∶N⊃M
@@ -125,5 +43,7 @@ generation-λλλ {Γ = Γ} {A = A} (convER {M = M} {M' = M'} {N' = N'}  Γ⊢Λ
 generation-⊃* : ∀ {V} {Γ} {P Q : Path V} {φ A φ'} → Γ ⊢ P ⊃* Q ∶ φ ≡〈 A 〉 φ' →
   Σ[ ψ ∈ Term V ] Σ[ ψ' ∈ Term V ] Σ[ χ ∈ Term V ] Σ[ χ' ∈ Term V ]
   Γ ⊢ P ∶ ψ ≡〈 Ω 〉 ψ' × Γ ⊢ Q ∶ χ ≡〈 Ω 〉 χ' × φ ≃ ψ ⊃ χ × φ' ≃ ψ' ⊃ χ' × A ≡ Ω
-generation-⊃* (⊃*R {φ = ψ} {ψ'} {χ} {χ'} Γ⊢P∶ψ≡ψ' Γ⊢Q∶χ≡χ') = {!!}
-generation-⊃* (convER Γ⊢P⊃*Q∶φ≡φ' Γ⊢P⊃*Q∶φ≡φ'' Γ⊢P⊃*Q∶φ≡φ''' M≃M' N≃N') = {!!}
+generation-⊃* (⊃*R {φ = ψ} {ψ'} {χ} {χ'} Γ⊢P∶ψ≡ψ' Γ⊢Q∶χ≡χ') = ψ ,p ψ' ,p χ ,p χ' ,p Γ⊢P∶ψ≡ψ' ,p Γ⊢Q∶χ≡χ' ,p ref ,p ref ,p refl
+generation-⊃* (convER Γ⊢P⊃*Q∶φ≡φ' Γ⊢φ₁∶Ω Γ⊢φ₁'∶Ω φ≃φ₁ φ'≃φ₁') = 
+  let ψ ,p ψ' ,p χ ,p χ' ,p Γ⊢P∶ψ≡ψ' ,p Γ⊢Q∶χ≡χ' ,p φ₁≃ψ⊃χ ,p φ₁'≃ψ'⊃χ' ,p A≡Ω = generation-⊃* Γ⊢P⊃*Q∶φ≡φ' in 
+  ψ ,p ψ' ,p χ ,p χ' ,p Γ⊢P∶ψ≡ψ' ,p Γ⊢Q∶χ≡χ' ,p trans (sym φ≃φ₁) φ₁≃ψ⊃χ ,p (trans (sym φ'≃φ₁') φ₁'≃ψ'⊃χ') ,p A≡Ω

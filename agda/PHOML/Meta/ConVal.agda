@@ -86,3 +86,16 @@ context-validity-Eq₂ {e = ↑ e} (ctxTR {Γ = Γ} {A = A} validΓ) = subst₂ 
 context-validity-Eq₂ {e = ↑ e} (ctxPR {Γ = Γ} {φ = φ} Γ⊢φ∶Ω) = subst₂ (λ x y → Γ ,P φ ⊢ x ∶ y) (right-rep (typeof e Γ)) (cong ty (≡-sym (type-rep (typeof e Γ)))) (weakening (context-validity-Eq₂ {e = e} (context-validity Γ⊢φ∶Ω)) (ctxPR Γ⊢φ∶Ω) (upRep-typed φ))
 context-validity-Eq₂ {e = x₀} (ctxER {Γ = Γ} {M} {N} {A} Γ⊢M∶A Γ⊢N∶A) = weakening Γ⊢N∶A (ctxER Γ⊢M∶A Γ⊢N∶A) (upRep-typed (M ≡〈 A 〉 N))
 context-validity-Eq₂ {e = ↑ e} (ctxER {Γ = Γ} {M} {N} {A} Γ⊢M∶A Γ⊢N∶A) = subst₂ (λ x y → Γ ,E M ≡〈 A 〉 N ⊢ x ∶ y) (right-rep (typeof e Γ)) (cong ty (≡-sym (type-rep (typeof e Γ)))) (weakening (context-validity-Eq₂ {e = e} (context-validity Γ⊢M∶A)) (ctxER Γ⊢M∶A Γ⊢N∶A) (upRep-typed (M ≡〈 A 〉 N)))
+
+weaken-prop : ∀ {V K} {Γ : Context V} {φ} {E : VExpression V K} {T} → Γ ⊢ E ∶ T → Γ ⊢ φ ∶ ty Ω → Γ ,P φ ⊢ E ⇑ ∶ T ⇑
+weaken-prop {φ = φ} Γ⊢E∶T Γ⊢φ∶Ω = weakening Γ⊢E∶T (ctxPR Γ⊢φ∶Ω) (upRep-typed φ)
+
+weaken-prop₂ : ∀ {V K} {Γ : Context V} {φ ψ} {E : VExpression V K} {T} → 
+  Γ ⊢ E ∶ T → Γ ⊢ φ ∶ ty Ω → Γ ⊢ ψ ∶ ty Ω → Γ ,P φ ,P ψ ⇑ ⊢ E ⇑ ⇑ ∶ T ⇑ ⇑
+weaken-prop₂ Γ⊢E∶T Γ⊢φ∶Ω Γ⊢ψ∶Ω = weaken-prop (weaken-prop Γ⊢E∶T Γ⊢φ∶Ω) (weaken-prop Γ⊢ψ∶Ω Γ⊢φ∶Ω)
+
+{- app*R' : ∀ {V} {Γ : Context V} {P Q : Path V} {M M' N N' : Term V} {A B : Type} →
+                   Γ ⊢ P ∶ M ≡〈 A ⇛ B 〉 M' → Γ ⊢ Q ∶ N ≡〈 A 〉 N' →
+                   -------------------------------------------------
+                   Γ ⊢ app* N N' P Q ∶ appT M N ≡〈 B 〉 appT M' N'
+app*R' Γ⊢P∶M≡M' Γ⊢Q∶N≡N' = appER (eq-validity₁ Γ⊢Q∶N≡N' refl) (eq-validity₂ Γ⊢Q∶N≡N' refl) Γ⊢P∶M≡M' Γ⊢Q∶N≡N' -}
