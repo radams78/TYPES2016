@@ -150,27 +150,60 @@ neutralE-osr (imp*r P (imp*r Q Q')) (imp*r Q⊃*Q'⇒Q₀) =
   let Q₀ ,p Q₀≡Q₀ = neutralE-osr (imp*r Q Q') Q⊃*Q'⇒Q₀ in
   imp*r P Q₀ ,p (cong (λ x → P ⊃* x) Q₀≡Q₀)
 
-neutralP-red : ∀ {V} (δ : NeutralP V) {ε} → RClose _⇒_ (decode-NeutralP δ) ε →
-  Σ[ ε' ∈ NeutralP V ] ε ≡ decode-NeutralP ε'
-neutralP-red (var _) (inc ())
-neutralP-red (app (var x) χ) (inc (appPl ()))
-neutralP-red (app (app δ δ') χ) (inc (appPl δ⇒ε)) =
-  let ε' ,p ε≡ε' = neutralP-red (app δ δ') (inc δ⇒ε) in
-  (app ε' χ) ,p (cong (λ x → appP x χ) ε≡ε')
-neutralP-red (app (dirN d δ) χ) (inc (appPl δ⇒ε)) =
-  let ε' ,p ε≡ε' = neutralP-red (dirN d δ) (inc δ⇒ε) in
-  (app ε' χ) ,p (cong (λ x → appP x χ) ε≡ε')
-neutralP-red (dirN _ (var _)) (inc (dirR ()))
-neutralP-red (dirN d (app*N M N P₁ P₂)) (inc (dirR P₁P₂⇒Q)) =
+neutralP-red : ∀ {V} {δ ε} (ν : NeutralP V) → δ ↠ ε → δ ≡ decode-NeutralP ν →
+  Σ[ ν' ∈ NeutralP V ] ε ≡ decode-NeutralP ν'
+neutralP-red (var _) (inc βP) ()
+neutralP-red (app (var _) _) (inc βP) ()
+neutralP-red (app (app _ _) _) (inc βP) ()
+neutralP-red (app (dirN _ _) _) (inc βP) ()
+neutralP-red (dirN _ _) (inc βP) ()
+neutralP-red (var _) (inc refdir) ()
+neutralP-red (app _ _) (inc refdir) ()
+neutralP-red (dirN _ (var _)) (inc refdir) ()
+neutralP-red (dirN _ (app*N _ _ _ _)) (inc refdir) ()
+neutralP-red (dirN _ (imp*l _ _)) (inc refdir) ()
+neutralP-red (dirN _ (imp*r _ _)) (inc refdir) ()
+neutralP-red (var _) (inc (appPl _)) ()
+neutralP-red (app ν ε) (inc (appPl {δ' = ν'} ν⇒ν')) δ≡νε = 
+  let ν₀' ,p ν'≡ν₀' = neutralP-red (ν) (inc ν⇒ν') (appP-injl δ≡νε) in app ν₀' ε ,p cong₂ appP ν'≡ν₀' (appP-injr δ≡νε)
+neutralP-red (dirN _ _) (inc (appPl _)) ()
+neutralP-red (var _) (inc univplus) ()
+neutralP-red (app _ _) (inc univplus) ()
+neutralP-red (dirN _ (var _)) (inc univplus) ()
+neutralP-red (dirN _ (app*N _ _ _ _)) (inc univplus) ()
+neutralP-red (dirN _ (imp*l _ _)) (inc univplus) ()
+neutralP-red (dirN _ (imp*r _ _)) (inc univplus) ()
+neutralP-red (var _) (inc univminus) ()
+neutralP-red (app _ _) (inc univminus) ()
+neutralP-red (dirN _ (var _)) (inc univminus) ()
+neutralP-red (dirN _ (app*N _ _ _ _)) (inc univminus) ()
+neutralP-red (dirN _ (imp*l _ _)) (inc univminus) ()
+neutralP-red (dirN _ (imp*r _ _)) (inc univminus) ()
+neutralP-red (var _) (inc (dirR _)) ()
+neutralP-red (app _ _) (inc (dirR _)) ()
+neutralP-red (dirN _ (var _)) (inc (dirR βE)) ()
+neutralP-red (dirN _ (var _)) (inc (dirR βPP)) ()
+neutralP-red (dirN _ (var _)) (inc (dirR ref⊃*)) ()
+neutralP-red (dirN _ (var _)) (inc (dirR ref⊃*univ)) ()
+neutralP-red (dirN _ (var _)) (inc (dirR univ⊃*ref)) ()
+neutralP-red (dirN _ (var _)) (inc (dirR univ⊃*univ)) ()
+neutralP-red (dirN _ (var _)) (inc (dirR (app*l x₁))) ()
+neutralP-red (dirN _ (var _)) (inc (dirR (reffR x₁))) ()
+neutralP-red (dirN _ (var _)) (inc (dirR (imp*l x₁))) ()
+neutralP-red (dirN _ (var _)) (inc (dirR (imp*r x₁))) ()
+neutralP-red (dirN d (app*N M N P₁ P₂)) (inc (dirR P₁P₂⇒Q)) refl =
   let Q' ,p Q≡Q' = neutralE-osr (app*N M N P₁ P₂) P₁P₂⇒Q in
   (dirN d Q') ,p (cong (dir d) Q≡Q')
-neutralP-red (dirN d (imp*l P₁ P₂)) (inc (dirR P⇒Q)) =
+neutralP-red (dirN d (imp*l P₁ P₂)) (inc (dirR P⇒Q)) refl =
   let Q' ,p Q≡Q' = neutralE-osr (imp*l P₁ P₂) P⇒Q in
   (dirN d Q') ,p (cong (dir d) Q≡Q')
-neutralP-red (dirN d (imp*r x δ)) (inc (dirR P⇒Q)) =
+neutralP-red (dirN d (imp*r x δ)) (inc (dirR P⇒Q)) refl =
   let Q' ,p Q≡Q' = neutralE-osr (imp*r x δ) P⇒Q in
   (dirN d Q') ,p (cong (dir d) Q≡Q')
-neutralP-red δ ref = δ ,p refl
+neutralP-red (ν) ref δ≡ν = ν ,p δ≡ν
+neutralP-red (ν) (trans δ↠ε ε↠ε') δ≡ν =
+  let ν₂ ,p ε≡ν₂ = neutralP-red (ν) δ↠ε δ≡ν in 
+  neutralP-red ν₂ ε↠ε' ε≡ν₂
 
 NeutralE-not-closed : NeutralE ∅ → Empty
 NeutralE-not-closed (var ())

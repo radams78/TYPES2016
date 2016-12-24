@@ -26,29 +26,24 @@ open import PHOML.Compute.TermPath public
 ⊧rep {K = -Term} {T = app (-ty _) []} = ⊧Trep _
 ⊧rep {K = -Path} {T = app (-eq _) (_ ∷ _ ∷ [])} = ⊧Erep
 
-postulate ↞PC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC ε ∶ θ → δ ↠ ε → ⊧PC δ ∶ θ
-{- ↞PC ⊧ε∶θ (inc δ⇒ε) = expansionPC ⊧ε∶θ δ⇒ε
-↞PC ⊧ε∶θ ref = ⊧ε∶θ
-↞PC ⊧ε'∶θ (trans δ↠ε ε↠ε') = ↞PC (↞PC ⊧ε'∶θ ε↠ε') δ↠ε -}
-
 ↞P : ∀ {V} {δ ε : Proof V} {φ} → ⊧P ε ∶ φ → δ ↠ ε → ⊧P δ ∶ φ
 ↞P (θ ,p φ↠θ ,p ⊧ε∶θ) δ↠ε = θ ,p φ↠θ ,p ↞PC ⊧ε∶θ δ↠ε
 
-postulate ↞E : ∀ {V} {P Q : Path V} {M A N} → ⊧E Q ∶ M ≡〈 A 〉 N → P ↠ Q → ⊧E P ∶ M ≡〈 A 〉 N
-{- ↞E ⊧Q∶M≡N (inc P⇒Q) = expansionE ⊧Q∶M≡N P⇒Q
+↞E : ∀ {V} {P Q : Path V} {M A N} → ⊧E Q ∶ M ≡〈 A 〉 N → P ↠ Q → ⊧E P ∶ M ≡〈 A 〉 N
+↞E ⊧Q∶M≡N (inc P⇒Q) = expansionE ⊧Q∶M≡N P⇒Q
 ↞E ⊧Q∶M≡N ref = ⊧Q∶M≡N
-↞E ⊧Q∶M≡N (trans P↠P' P'↠Q) = ↞E (↞E ⊧Q∶M≡N P'↠Q) P↠P' -}
+↞E ⊧Q∶M≡N (trans P↠P' P'↠Q) = ↞E (↞E ⊧Q∶M≡N P'↠Q) P↠P'
 --TODO Duplication
 
-postulate reductionPC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC δ ∶ θ → δ ⇒ ε → ⊧PC ε ∶ θ
-{- reductionPC {V} {ε = ε} {θ = bot} (ν ,p δ↠ν) δ⇒ε = 
-  let cr μ ε↠μ ν⇒?μ = diamond-R-RT (λ _ _ _ → diamond) _ _ _ (inc δ⇒ε) δ↠ν in 
-  let μ' ,p μ≡μ' = neutralP-red ν ν⇒?μ in 
-  μ' ,p subst (λ x → ε ↠ x) μ≡μ' ε↠μ
-reductionPC {θ = imp θ θ'} ⊧δ∶θ⊃θ' δ⇒δ' W ρ ε ⊧ε∶θ = reductionPC {θ = θ'} (⊧δ∶θ⊃θ' W ρ ε ⊧ε∶θ) (appPl (⇒-resp-rep δ⇒δ')) -}
+reductionPC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC δ ∶ θ → δ ⇒ ε → ⊧PC ε ∶ θ
+reductionPC {V} {ε = ε} {θ = bot} (ν ,p δ↠ν) δ⇒ε = 
+  let cr ν' ν↠ν' ε↠ν' = diamond δ↠ν (inc δ⇒ε) in
+  let ν₀ ,p ν'≡ν₀ = neutralP-red ν ν↠ν' refl in
+  ν₀ ,p (subst (λ x → ε ↠ x) ν'≡ν₀ ε↠ν')
+reductionPC {θ = imp θ θ'} ⊧δ∶θ⊃θ' δ⇒δ' W ρ ε ⊧ε∶θ = reductionPC {θ = θ'} (⊧δ∶θ⊃θ' W ρ ε ⊧ε∶θ) (appPl (⇒-resp-rep δ⇒δ'))
 
-postulate reductionP : ∀ {V} {δ ε : Proof V} {φ} → ⊧P δ ∶ φ → δ ⇒ ε → ⊧P ε ∶ φ
---reductionP (θ ,p φ↠θ ,p ⊧ε∶θ) δ⇒ε = θ ,p φ↠θ ,p reductionPC ⊧ε∶θ δ⇒ε
+reductionP : ∀ {V} {δ ε : Proof V} {φ} → ⊧P δ ∶ φ → δ ⇒ ε → ⊧P ε ∶ φ
+reductionP (θ ,p φ↠θ ,p ⊧ε∶θ) δ⇒ε = θ ,p φ↠θ ,p reductionPC ⊧ε∶θ δ⇒ε
 
 reductionT : ∀ {V} {M N : Term V} {A} → ⊧T M ∶ A → M ⇒ N → ⊧T N ∶ A
 reductionE : ∀ {V} {P Q : Path V} {M A N} → ⊧E P ∶ M ≡〈 A 〉 N → P ⇒ Q → ⊧E Q ∶ M ≡〈 A 〉 N
