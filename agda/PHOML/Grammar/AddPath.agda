@@ -239,3 +239,10 @@ sub↗-decomp {E = E} {σ = σ} = let open ≡-Reasoning in
     E ⟦ liftSub -Term σ ⟧ 〈 liftRep -Term upRep 〉 〈 liftRep -Term upRep 〉 〈 liftRep -Term upRep 〉 ⟦ x₀:= var x₁ ⟧
   ∎
 
+botSub₃-sub↖id : ∀ {V} {M N : Term V} {P} → (x₂:= M ,x₁:= N ,x₀:= P) • sub↖ (idSub V) ∼ x₀:= M
+botSub₃-sub↖id x₀ = refl
+botSub₃-sub↖id (↑ x) = refl
+
+botSub₃-sub↗id : ∀ {V} {M N : Term V} {P} → (x₂:= M ,x₁:= N ,x₀:= P) • sub↗ (idSub V) ∼ x₀:= N
+botSub₃-sub↗id x₀ = refl
+botSub₃-sub↗id (↑ x) = refl

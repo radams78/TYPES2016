@@ -6,6 +6,7 @@ open import PHOML.Grammar
 open import PHOML.PathSub
 open import PHOML.Red
 open import PHOML.Canon
+open import PHOML.Neutral
 open import PHOML.Compute.PC
 open import PHOML.Compute.Prop
 
@@ -152,4 +153,30 @@ APPl-rtΛ {V} {P} {M} {N} {NN} {A ⇛ B} {L} ⊧P∶MNN≡N = APPl-rtΛ {V}
 
 ⊧TΩrep : ∀ {U V} {φ : Term U} {ρ : Rep U V} → ⊧T φ ∶ Ω → ⊧T φ 〈 ρ 〉 ∶ Ω
 ⊧TΩrep ⊧φ = let θ ,p φ↠θ = ⊧canon ⊧φ in ⊧canon' θ (rep-red-canon θ φ↠θ)
+
+⊧P⊃I : ∀ {V} {φ ψ : Term V} {δ} →
+  ⊧T φ ∶ Ω → ⊧T ψ ∶ Ω →
+  (∀ W (ρ : Rep V W) ε → ⊧P ε ∶ φ 〈 ρ 〉 → ⊧P appP (δ 〈 ρ 〉) ε ∶ ψ 〈 ρ 〉) →
+  ⊧P δ ∶ φ ⊃ ψ
+⊧P⊃I {φ = φ} {ψ} ⊧φ∶Ω ⊧ψ∶Ω hyp =
+  let θ ,p φ↠θ = ⊧canon ⊧φ∶Ω in 
+  let θ' ,p ψ↠θ' = ⊧canon ⊧ψ∶Ω in 
+  imp θ θ' ,p ↠-imp φ↠θ ψ↠θ' ,p λ W ρ ε ⊧ε∶φ → 
+    ⊧P-out (hyp W ρ ε (θ ,p rep-red-canon θ φ↠θ ,p ⊧ε∶φ)) (rep-red-canon θ' ψ↠θ')
+
+⊧neutralP' : ∀ {V} {δ : NeutralP V} {φ : Term V} → ⊧T φ ∶ Ω → ⊧P decode-NeutralP δ ∶ φ
+⊧neutralP' {δ = δ} ⊧φ∶Ω = let θ ,p φ↠θ = ⊧canon ⊧φ∶Ω in ⊧neutralP {δ = δ} {θ = θ} φ↠θ
+
+⊧appT : ∀ {V A B} {M N : Term V} → ⊧T M ∶ A ⇛ B → ⊧T N ∶ A → ⊧T appT M N ∶ B
+⊧appT {A = A} {B} {M} {N} ⊧M∶A⇛B ⊧N∶A = subst (λ x → ⊧E x ∶ appT M N ≡〈 B 〉 appT M N) 
+  (cong₂ (λ x y → app* x y (M ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧) (N ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧)) (≡-sym sub-idSub) (≡-sym sub-idSub))
+  (⊧E⇛E ⊧M∶A⇛B ⊧N∶A ⊧N∶A ⊧N∶A)
+
+⊧neutralE : ∀ {V} {P : NeutralE V} {M A N} → ⊧T M ∶ A → ⊧T N ∶ A → ⊧E decode-NeutralE P ∶ M ≡〈 A 〉 N
+⊧neutralE {P = P} {A = Ω} ⊧M∶Ω ⊧N∶Ω =
+  let θ ,p M↠θ = ⊧canon ⊧M∶Ω in 
+  let θ' ,p N↠θ' = ⊧canon ⊧N∶Ω in (imp θ θ' ,p (↠-imp M↠θ N↠θ') ,p (λ W ρ ε ⊧ε∶φ → subst (λ x → ⊧PC x ∶ θ') (cong (λ x → appP (plus x) ε) (decode-nrepE P)) (⊧neutralPC (app (dirN -plus (nrepE ρ P)) ε)))) ,p (imp θ' θ) ,p (↠-imp N↠θ' M↠θ ,p (λ W ρ ε ⊧ε∶φ → subst (λ x → ⊧PC x ∶ θ) (cong (λ x → appP (minus x) ε) (decode-nrepE P)) (⊧neutralPC (app (dirN -minus (nrepE ρ P)) ε))))
+⊧neutralE {P = P} {M} {A = A ⇛ B} {N} ⊧M∶A⇛B ⊧N∶A⇛B W ρ L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L' = subst (λ x → ⊧E x ∶ appT (M 〈 ρ 〉) L ≡〈 B 〉 appT (N 〈 ρ 〉) L') (cong (λ x → app* L L' x Q) (decode-nrepE P)) 
+  (⊧neutralE {P = app*N L L' (nrepE ρ P) Q} (⊧appT (⊧Trep M ⊧M∶A⇛B) ⊧L∶A) (⊧appT (⊧Trep N ⊧N∶A⇛B) ⊧L'∶A))
+
 

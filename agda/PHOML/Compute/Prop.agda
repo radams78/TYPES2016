@@ -1,4 +1,5 @@
 module PHOML.Compute.Prop where
+open import Data.Empty
 open import Data.Product renaming (_,_ to _,p_)
 open import Prelims
 open import PHOML.Grammar
@@ -58,4 +59,14 @@ reductionP (θ ,p φ↠θ ,p ⊧ε∶θ) δ⇒ε = θ ,p φ↠θ ,p reductionPC 
 ⊧P-out : ∀ {V} {δ : Proof V} {φ : Term V} {θ : CanonProp} →
   ⊧P δ ∶ φ → φ ↠ decode θ → ⊧PC δ ∶ θ
 ⊧P-out {δ = δ} (θ' ,p φ↠θ' ,p ⊧δ∶θ') φ↠θ = subst (λ x → ⊧PC δ ∶ x) (canon-unique φ↠θ' φ↠θ) ⊧δ∶θ'
+
+⊧P⊃E : ∀ {V} {δ : Proof V} {φ ψ ε} → ⊧P δ ∶ φ ⊃ ψ → ⊧P ε ∶ φ → ⊧P appP δ ε ∶ ψ
+⊧P⊃E (bot ,p φ⊃ψ↠⊥ ,p _) ⊧ε∶φ = ⊥-elim (imp-not-red-bot φ⊃ψ↠⊥)
+⊧P⊃E {V} {ε = ε} (imp θ θ' ,p φ⊃ψ↠θ⊃θ' ,p ⊧δ∶θ⊃θ') ⊧ε∶φ = θ' ,p imp-red-inj₂ φ⊃ψ↠θ⊃θ' ,p 
+  subst (λ x → ⊧PC appP x ε ∶ θ') rep-idRep (⊧δ∶θ⊃θ' V (idRep V) ε (⊧P-out ⊧ε∶φ (imp-red-inj₁ φ⊃ψ↠θ⊃θ')))
+
+⊧neutralP : ∀ {V} {δ : NeutralP V} {φ : Term V} {θ : CanonProp} →
+  φ ↠ decode θ → ⊧P decode-NeutralP δ ∶ φ
+⊧neutralP {δ = δ} {θ = θ} φ↠θ = θ ,p φ↠θ ,p ⊧neutralPC δ
+
 

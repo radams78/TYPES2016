@@ -26,56 +26,13 @@ open import PHOML.Compute.TermPath public
 ⊧rep {K = -Term} {T = app (-ty _) []} = ⊧Trep _
 ⊧rep {K = -Path} {T = app (-eq _) (_ ∷ _ ∷ [])} = ⊧Erep
 
-⊧P⊃I : ∀ {V} {φ ψ : Term V} {δ} →
-  ⊧T φ ∶ Ω → ⊧T ψ ∶ Ω →
-  (∀ W (ρ : Rep V W) ε → ⊧P ε ∶ φ 〈 ρ 〉 → ⊧P appP (δ 〈 ρ 〉) ε ∶ ψ 〈 ρ 〉) →
-  ⊧P δ ∶ φ ⊃ ψ
-⊧P⊃I {φ = φ} {ψ} ⊧φ∶Ω ⊧ψ∶Ω hyp =
-  let θ ,p φ↠θ = ⊧canon ⊧φ∶Ω in 
-  let θ' ,p ψ↠θ' = ⊧canon ⊧ψ∶Ω in 
-  imp θ θ' ,p ↠-imp φ↠θ ψ↠θ' ,p λ W ρ ε ⊧ε∶φ → 
-    ⊧P-out (hyp W ρ ε (θ ,p rep-red-canon θ φ↠θ ,p ⊧ε∶φ)) (rep-red-canon θ' ψ↠θ')
-
-⊧P⊃E : ∀ {V} {δ : Proof V} {φ ψ ε} → ⊧P δ ∶ φ ⊃ ψ → ⊧P ε ∶ φ → ⊧P appP δ ε ∶ ψ
-⊧P⊃E (bot ,p φ⊃ψ↠⊥ ,p _) ⊧ε∶φ = ⊥-elim (imp-not-red-bot φ⊃ψ↠⊥)
-⊧P⊃E {V} {ε = ε} (imp θ θ' ,p φ⊃ψ↠θ⊃θ' ,p ⊧δ∶θ⊃θ') ⊧ε∶φ = θ' ,p imp-red-inj₂ φ⊃ψ↠θ⊃θ' ,p 
-  subst (λ x → ⊧PC appP x ε ∶ θ') rep-idRep (⊧δ∶θ⊃θ' V (idRep V) ε (⊧P-out ⊧ε∶φ (imp-red-inj₁ φ⊃ψ↠θ⊃θ')))
-
-postulate ⊧neutralP : ∀ {V} {δ : NeutralP V} {φ : Term V} {θ : CanonProp} →
-                    φ ↠ decode θ → ⊧ decode-NeutralP δ ∶ φ
---⊧neutralP {δ = δ} {θ = θ} φ↠θ = θ ,p φ↠θ ,p ⊧neutralPC δ
-
-⊧neutralP' : ∀ {V} {δ : NeutralP V} {φ : Term V} → ⊧T φ ∶ Ω → ⊧P decode-NeutralP δ ∶ φ
-⊧neutralP' {δ = δ} ⊧φ∶Ω = let θ ,p φ↠θ = ⊧canon ⊧φ∶Ω in ⊧neutralP {δ = δ} {θ = θ} φ↠θ
-
-⊧appT : ∀ {V A B} {M N : Term V} → ⊧T M ∶ A ⇛ B → ⊧T N ∶ A → ⊧T appT M N ∶ B
-⊧appT {A = A} {B} {M} {N} ⊧M∶A⇛B ⊧N∶A = subst (λ x → ⊧E x ∶ appT M N ≡〈 B 〉 appT M N) 
-  (cong₂ (λ x y → app* x y (M ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧) (N ⟦⟦ refSub ∶ idSub _ ≡ idSub _ ⟧⟧)) (≡-sym sub-idSub) (≡-sym sub-idSub))
-  (⊧E⇛E ⊧M∶A⇛B ⊧N∶A ⊧N∶A ⊧N∶A)
-
-⊧neutralE : ∀ {V} {P : NeutralE V} {M A N} → ⊧T M ∶ A → ⊧T N ∶ A → ⊧E decode-NeutralE P ∶ M ≡〈 A 〉 N
-⊧neutralE {P = P} {A = Ω} ⊧M∶Ω ⊧N∶Ω =
-  let θ ,p M↠θ = ⊧canon ⊧M∶Ω in 
-  let θ' ,p N↠θ' = ⊧canon ⊧N∶Ω in (imp θ θ' ,p (↠-imp M↠θ N↠θ') ,p (λ W ρ ε ⊧ε∶φ → subst (λ x → ⊧PC x ∶ θ') (cong (λ x → appP (plus x) ε) (decode-nrepE P)) (⊧neutralPC (app (dirN -plus (nrepE ρ P)) ε)))) ,p (imp θ' θ) ,p (↠-imp N↠θ' M↠θ ,p (λ W ρ ε ⊧ε∶φ → subst (λ x → ⊧PC x ∶ θ) (cong (λ x → appP (minus x) ε) (decode-nrepE P)) (⊧neutralPC (app (dirN -minus (nrepE ρ P)) ε))))
-⊧neutralE {P = P} {M} {A = A ⇛ B} {N} ⊧M∶A⇛B ⊧N∶A⇛B W ρ L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L' = subst (λ x → ⊧E x ∶ appT (M 〈 ρ 〉) L ≡〈 B 〉 appT (N 〈 ρ 〉) L') (cong (λ x → app* L L' x Q) (decode-nrepE P)) 
-  (⊧neutralE {P = app*N L L' (nrepE ρ P) Q} (⊧appT (⊧Trep M ⊧M∶A⇛B) ⊧L∶A) (⊧appT (⊧Trep N ⊧N∶A⇛B) ⊧L'∶A))
-  --⊧neutralE {P = app*N L L' (nrepE ρ P) Q} ? ?
-
-postulate botSub₃-sub↖id : ∀ {V} {M N : Term V} {P} → (x₂:= M ,x₁:= N ,x₀:= P) • sub↖ (idSub V) ∼ x₀:= M
---botSub₃-sub↖id x₀ = refl
---botSub₃-sub↖id (↑ x) = refl
-
-postulate botSub₃-sub↗id : ∀ {V} {M N : Term V} {P} → (x₂:= M ,x₁:= N ,x₀:= P) • sub↗ (idSub V) ∼ x₀:= N
---botSub₃-sub↗id x₀ = refl
---botSub₃-sub↗id (↑ x) = refl
-
-postulate ⊧ref : ∀ {V} {M : Term V} {A} → ⊧T M ∶ A → ⊧E reff M ∶ M ≡〈 A 〉 M
-{- ⊧ref {V} {M} {A = Ω} ⊧M∶Ω = let θ ,p M↠θ = ⊧canon ⊧M∶Ω in ⊧refP {θ = θ} M↠θ
-⊧ref {V} {M} {A = A ⇛ B} ⊧M∶A⇛B L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' with Lemma30 ⊧M∶A⇛B
-⊧ref {V} {M} {A = A ⇛ B} ⊧M∶A⇛B L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' | reduces-to-Λ {C} {N} M↠ΛCN = 
-  let ⊧ΛCN∶A⇛B : ⊧T ΛT C N ∶ A ⇛ B
+⊧ref : ∀ {V} {M : Term V} {A} → ⊧T M ∶ A → ⊧E reff M ∶ M ≡〈 A 〉 M
+⊧ref {V} {M} {A = Ω} ⊧M∶Ω = let θ ,p M↠θ = ⊧canon ⊧M∶Ω in ⊧refP {θ = θ} M↠θ
+⊧ref {V} {M} {A = A ⇛ B} ⊧M∶A⇛B W ρ L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' =
+  let reduces-to-Λ C N M↠ΛCN = ⊧T-rtΛ {V} {M} {A} {B} ⊧M∶A⇛B in ?
+{-  let ⊧ΛCN∶A⇛B : ⊧T ΛT C N ∶ A ⇛ B
       ⊧ΛCN∶A⇛B = ↠T ⊧M∶A⇛B M↠ΛCN in
-  let ⊧λλλNP : ⊧E app* L L' (λλλ C (N ⟦⟦ liftPathSub refSub ∶ sub↖ (idSub V) ≡ sub↗ (idSub V) ⟧⟧)) P ∶
+  let ⊧λλλNP : ⊧E app* L L' (λλλ C (N 〈 liftRep _ ρ 〉 ⟦⟦ liftPathSub refSub ∶ sub↖ (idSub V) ≡ sub↗ (idSub V) ⟧⟧)) P ∶
              appT (ΛT C N) L ≡〈 B 〉 appT (ΛT C N) L'
       ⊧λλλNP = ⊧ΛCN∶A⇛B L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' in
   let ⊧N⟦⟦P⟧⟧ : ⊧E N ⟦⟦ x₀::= P ∶ x₀:= L ≡ x₀:= L' ⟧⟧ ∶ appT (ΛT C N) L ≡〈 B 〉 appT (ΛT C N) L'

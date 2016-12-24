@@ -57,20 +57,24 @@ _↠_ {V} {K} = RTClose (_⇒_ {V} {K})
 ↠-APPP : ∀ {V} {δ δ' : Proof V} εε → δ ↠ δ' → APPP δ εε ↠ APPP δ' εε
 ↠-APPP εε = respects-RT₂ (λ _ _ → ⇒-APPP εε) _ _
 
-data Reduces-to-Λ {V} (M : Term V) : Set where
-  reduces-to-Λ : ∀ {A N} → M ↠ ΛT A N → Reduces-to-Λ M
+record Reduces-to-Λ {V} (M : Term V) : Set where
+  constructor reduces-to-Λ 
+  field
+    A : Type
+    N : Term (V , -Term)
+    red : M ↠ ΛT A N
 
 -- If Mx1...xn ->> N with n >= 1 then either N = M'x1...xn where M ->> M', or M reduces to a lambda-term
 APPl-red : ∀ {V M N M' N'} (NN : snocList (Term V)) →
   M ↠ N → M ≡ APPl (appT M' N') NN → Σ[ M'' ∈ Term V ] M' ↠ M'' × N ≡ APPl (appT M'' N') NN ⊎ Reduces-to-Λ M'
 APPl-red NN (inc M⇒N) M≡M'NN with APPl-⇒ NN M⇒N M≡M'NN
 APPl-red _ (inc M⇒N) M≡M'NN | inj₁ (M'' ,p M'⇒M'' ,p N≡M''NN) = inj₁ (M'' ,p inc M'⇒M'' ,p N≡M''NN)
-APPl-red {M' = M'} _ (inc M⇒N) M≡M'NN | inj₂ (A ,p M'' ,p M'≡ΛM'') = inj₂ (reduces-to-Λ {A = A} {N = M''} (subst (λ x → M' ↠ x) M'≡ΛM'' ref))
+APPl-red {M' = M'} _ (inc M⇒N) M≡M'NN | inj₂ (A ,p M'' ,p M'≡ΛM'') = inj₂ (reduces-to-Λ A M'' (subst (λ x → M' ↠ x) M'≡ΛM'' ref))
 APPl-red _ ref M≡M'NN = inj₁ (_ ,p ref ,p M≡M'NN)
 APPl-red NN (trans M↠N N↠P) M≡M'NN with APPl-red NN M↠N M≡M'NN
 APPl-red NN (trans M↠N N↠P) M≡M'NN | inj₁ (N' ,p M'↠N' ,p N≡N'NN) with APPl-red NN N↠P N≡N'NN
 APPl-red NN (trans M↠N N↠P) M≡M'NN | inj₁ (N' ,p M'↠N' ,p N≡N'NN) | inj₁ (P' ,p N'↠P' ,p P≡P'NN) = inj₁ (P' ,p trans M'↠N' N'↠P' ,p P≡P'NN)
-APPl-red NN (trans M↠N N↠P) M≡M'NN | inj₁ (N' ,p M'↠N' ,p N≡N'NN) | inj₂ (reduces-to-Λ N'↠ΛN₀) = inj₂ (reduces-to-Λ (trans M'↠N' N'↠ΛN₀))
+APPl-red NN (trans M↠N N↠P) M≡M'NN | inj₁ (N' ,p M'↠N' ,p N≡N'NN) | inj₂ (reduces-to-Λ _ _ N'↠ΛN₀) = inj₂ (reduces-to-Λ _ _ (trans M'↠N' N'↠ΛN₀))
 APPl-red NN (trans M↠N N↠P) M≡M'NN | inj₂ N'rtΛ = inj₂ N'rtΛ
 
 imp-red-inj₁' : ∀ {V} {φ ψ χ χ' : Term V} → χ ↠ χ' → χ ≡ φ ⊃ ψ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
