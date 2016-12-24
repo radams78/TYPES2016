@@ -26,9 +26,6 @@ open import PHOML.Compute.TermPath public
 ⊧rep {K = -Term} {T = app (-ty _) []} = ⊧Trep _
 ⊧rep {K = -Path} {T = app (-eq _) (_ ∷ _ ∷ [])} = ⊧Erep
 
-postulate ⊧TΩrep : ∀ {U V} {φ : Term U} {ρ : Rep U V} → ⊧T φ ∶ Ω → ⊧T φ 〈 ρ 〉 ∶ Ω
--- ⊧TΩrep ⊧φ = let θ ,p φ↠θ = ⊧canon ⊧φ in ⊧canon' θ (rep-red-canon θ φ↠θ)
-
 ⊧P⊃I : ∀ {V} {φ ψ : Term V} {δ} →
   ⊧T φ ∶ Ω → ⊧T ψ ∶ Ω →
   (∀ W (ρ : Rep V W) ε → ⊧P ε ∶ φ 〈 ρ 〉 → ⊧P appP (δ 〈 ρ 〉) ε ∶ ψ 〈 ρ 〉) →

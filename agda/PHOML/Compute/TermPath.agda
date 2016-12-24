@@ -150,3 +150,6 @@ APPl-rtΛ {V} {P} {M} {N} {NN} {A ⇛ B} {L} ⊧P∶MNN≡N = APPl-rtΛ {V}
 ⊧canon' {V} {φ} θ φ↠θ = (imp θ θ ,p (↠-imp φ↠θ φ↠θ) ,p (λ W ρ ε ⊧ε∶φ → ↞PC (↞PC ⊧ε∶φ (trans (inc (appPl refdir)) (inc βP))) (↠-appP (↠-dir (↠-resp-rep (trans (↠-resp-ps φ↠θ) (θps-red-ref θ))))))) ,p 
   imp θ θ ,p (↠-imp φ↠θ φ↠θ) ,p (λ W ρ ε ⊧ε∶φ → ↞PC (↞PC ⊧ε∶φ (trans (inc (appPl refdir)) (inc βP))) (↠-appP (↠-dir (↠-resp-rep (trans (↠-resp-ps φ↠θ) (θps-red-ref θ))))))
 
+⊧TΩrep : ∀ {U V} {φ : Term U} {ρ : Rep U V} → ⊧T φ ∶ Ω → ⊧T φ 〈 ρ 〉 ∶ Ω
+⊧TΩrep ⊧φ = let θ ,p φ↠θ = ⊧canon ⊧φ in ⊧canon' θ (rep-red-canon θ φ↠θ)
+
