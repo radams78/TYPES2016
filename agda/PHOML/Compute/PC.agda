@@ -27,3 +27,15 @@ expansionPC {θ = imp θ θ'} ⊧ε∶θ⊃θ' δ⇒ε W ρ χ ⊧χ∶θ = expa
 ↞PC ⊧ε∶θ (inc δ⇒ε) = expansionPC ⊧ε∶θ δ⇒ε
 ↞PC ⊧ε∶θ ref = ⊧ε∶θ
 ↞PC ⊧ε'∶θ (trans δ↠ε ε↠ε') = ↞PC (↞PC ⊧ε'∶θ ε↠ε') δ↠ε
+
+reductionPC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC δ ∶ θ → δ ⇒ ε → ⊧PC ε ∶ θ
+reductionPC {V} {ε = ε} {θ = bot} (ν ,p δ↠ν) δ⇒ε = 
+  let cr ν' ν↠ν' ε↠ν' = diamond δ↠ν (inc δ⇒ε) in
+  let ν₀ ,p ν'≡ν₀ = neutralP-red ν ν↠ν' refl in
+  ν₀ ,p (subst (λ x → ε ↠ x) ν'≡ν₀ ε↠ν')
+reductionPC {θ = imp θ θ'} ⊧δ∶θ⊃θ' δ⇒δ' W ρ ε ⊧ε∶θ = reductionPC {θ = θ'} (⊧δ∶θ⊃θ' W ρ ε ⊧ε∶θ) (appPl (⇒-resp-rep δ⇒δ'))
+
+↠PC : ∀ {V} {δ ε : Proof V} {θ} → ⊧PC δ ∶ θ → δ ↠ ε → ⊧PC ε ∶ θ
+↠PC ⊧δ∶θ (inc δ⇒ε) = reductionPC ⊧δ∶θ δ⇒ε
+↠PC ⊧δ∶θ ref = ⊧δ∶θ
+↠PC ⊧δ∶θ (trans δ↠ε ε↠ε') = ↠PC (↠PC ⊧δ∶θ δ↠ε) ε↠ε'

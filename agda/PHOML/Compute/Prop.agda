@@ -46,3 +46,16 @@ conversionP (θ ,p φ↠θ ,p ⊧δ∶θ) φ≃ψ = θ ,p red-canon {θ = θ} φ
 expansionP : ∀ {V} {δ ε : Proof V} {φ} → ⊧P ε ∶ φ → δ ⇒ ε → ⊧P δ ∶ φ
 expansionP (θ ,p φ↠θ ,p ⊧ε∶θ) δ⇒ε = θ ,p φ↠θ ,p expansionPC ⊧ε∶θ δ⇒ε
 
+↞P : ∀ {V} {δ ε : Proof V} {φ} → ⊧P ε ∶ φ → δ ↠ ε → ⊧P δ ∶ φ
+↞P (θ ,p φ↠θ ,p ⊧ε∶θ) δ↠ε = θ ,p φ↠θ ,p ↞PC ⊧ε∶θ δ↠ε
+
+reductionP : ∀ {V} {δ ε : Proof V} {φ} → ⊧P δ ∶ φ → δ ⇒ ε → ⊧P ε ∶ φ
+reductionP (θ ,p φ↠θ ,p ⊧ε∶θ) δ⇒ε = θ ,p φ↠θ ,p reductionPC ⊧ε∶θ δ⇒ε
+
+↠P : ∀ {V} {δ ε : Proof V} {φ} → ⊧P δ ∶ φ → δ ↠ ε → ⊧P ε ∶ φ
+↠P (θ ,p φ↠θ ,p ⊧δ∶θ) δ↠ε = θ ,p φ↠θ ,p ↠PC ⊧δ∶θ δ↠ε
+
+⊧P-out : ∀ {V} {δ : Proof V} {φ : Term V} {θ : CanonProp} →
+  ⊧P δ ∶ φ → φ ↠ decode θ → ⊧PC δ ∶ θ
+⊧P-out {δ = δ} (θ' ,p φ↠θ' ,p ⊧δ∶θ') φ↠θ = subst (λ x → ⊧PC δ ∶ x) (canon-unique φ↠θ' φ↠θ) ⊧δ∶θ'
+
