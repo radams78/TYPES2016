@@ -17,8 +17,8 @@ soundness-path : ∀ {U V} {Γ : Context U} {M A} {τ : PathSub U V} {ρ σ} →
   Γ ⊢ M ∶ A → ⊧S ρ ∶ Γ → ⊧S σ ∶ Γ → ⊧ τ ∶ ρ ≡ σ ∶ Γ → ⊧E M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ∶ M ⟦ ρ ⟧ ≡〈 yt A 〉 M ⟦ σ ⟧
 
 soundness (varR x _) ⊧Sσ∶Γ = ⊧Sσ∶Γ x
-soundness (appR Γ⊢M∶A⇛B Γ⊢M∶A) ⊧Sσ∶Γ = ⊧appT (soundness Γ⊢M∶A⇛B ⊧Sσ∶Γ) (soundness Γ⊢M∶A ⊧Sσ∶Γ)
-soundness {U} {V} {σ = σ} (ΛR {A = A} {M = M} {B} Γ,A⊢M∶B) ⊧Sσ∶Γ W ρ N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' =
+soundness (appTR Γ⊢M∶A⇛B Γ⊢M∶A) ⊧Sσ∶Γ = ⊧appT (soundness Γ⊢M∶A⇛B ⊧Sσ∶Γ) (soundness Γ⊢M∶A ⊧Sσ∶Γ)
+soundness {U} {V} {σ = σ} (ΛTR {A = A} {M = M} {B} Γ,A⊢M∶B) ⊧Sσ∶Γ W ρ N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' =
   let NN'Q : Sub (extend W pathDom) W
       NN'Q = x₂:= N ,x₁:= N' ,x₀:= Q in
   let σ↑ : Sub (U , -Term) (W , -Term)
@@ -125,7 +125,7 @@ soundness {U} {σ = σ} (ΛPR {δ = δ} {φ = φ} {ψ = ψ} Γ⊢φ∶Ω Γ⊢ψ
             ψ ⟦ σ ⟧ 〈 ρ 〉
           ∎) ⊧δε∶ψ in
     expansionP ⊧δε∶ψ₂ βP)
-soundness (convR Γ⊢δ∶φ Γ⊢ψ∶Ω φ≃ψ) ⊧Sσ∶Γ = conversionP (soundness Γ⊢δ∶φ ⊧Sσ∶Γ) (≃-resp-sub φ≃ψ)
+soundness (convPR Γ⊢δ∶φ Γ⊢ψ∶Ω φ≃ψ) ⊧Sσ∶Γ = conversionP (soundness Γ⊢δ∶φ ⊧Sσ∶Γ) (≃-resp-sub φ≃ψ)
 soundness (refR Γ⊢M∶A) ⊧Sσ∶Γ = ⊧ref (soundness Γ⊢M∶A ⊧Sσ∶Γ)
 soundness (⊃*R Γ⊢P∶φ≡φ' Γ⊢Q∶ψ≡ψ') ⊧Sσ∶Γ = ⊧⊃* (soundness Γ⊢P∶φ≡φ' ⊧Sσ∶Γ) (soundness Γ⊢Q∶ψ≡ψ' ⊧Sσ∶Γ)
 soundness (univR Γ⊢δ∶φ⊃ψ Γ⊢ε∶ψ⊃φ) ⊧Sσ∶Γ = ⊧univ (soundness Γ⊢δ∶φ⊃ψ ⊧Sσ∶Γ) (soundness Γ⊢ε∶ψ⊃φ ⊧Sσ∶Γ)
@@ -211,7 +211,7 @@ soundness {U} {σ = σ} (lllR {B = B} {M = F} {G} {P} _ _ ΓAAE⊢P∶Fx≡Gy) �
     ≡⟨⟨ sub-congl (liftRep-upRep₃ (σ _ x)) ⟩⟩
       σ _ x ⇑ ⇑ ⇑ 〈 liftsRep pathDom ρ 〉 ⟦ x₂:= N ,x₁:= N' ,x₀:= Q ⟧
     ∎
-soundness {U} {V} {σ = σ} (app*R {P = P} {Q} {M} {M'} {N} {N'} {A} {B} Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') ⊧Sσ∶Γ = 
+soundness {U} {V} {σ = σ} (appER {P = P} {Q} {M} {M'} {N} {N'} {A} {B} Γ⊢N∶A Γ⊢N'∶A Γ⊢P∶M≡M' Γ⊢Q∶N≡N') ⊧Sσ∶Γ = 
   subst₃ (λ x y z → ⊧E x ∶ y ≡〈 B 〉 z) (cong (λ x → app* (N ⟦ σ ⟧) (N' ⟦ σ ⟧) x (Q ⟦ σ ⟧)) rep-idRep) 
     (cong (λ x → appT x (N ⟦ σ ⟧)) rep-idRep) (cong (λ x → appT x (N' ⟦ σ ⟧)) rep-idRep)
   (soundness Γ⊢P∶M≡M' ⊧Sσ∶Γ V (idRep V) (N ⟦ σ ⟧) (N' ⟦ σ ⟧) (Q ⟦ σ ⟧) 
@@ -219,7 +219,7 @@ soundness {U} {V} {σ = σ} (app*R {P = P} {Q} {M} {M'} {N} {N'} {A} {B} Γ⊢N�
 soundness (convER Γ⊢P∶M≡N Γ⊢M'∶A Γ⊢N'∶A M≃M' N≃N') ⊧Sσ∶Γ = conversionE (soundness Γ⊢P∶M≡N ⊧Sσ∶Γ) (≃-resp-sub M≃M') (≃-resp-sub N≃N')
 
 soundness-path (varR x _ ) _ _ ⊧τ∶ρ≡σ = ⊧τ∶ρ≡σ x
-soundness-path {V = V} {τ = τ} {ρ = ρ} {σ} (appR {M = M} {N} {A} {B} Γ⊢M∶A⇛B Γ⊢N∶A) ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ = 
+soundness-path {V = V} {τ = τ} {ρ = ρ} {σ} (appTR {M = M} {N} {A} {B} Γ⊢M∶A⇛B Γ⊢N∶A) ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ = 
   subst₃ (λ x y z → ⊧E x ∶ y ≡〈 B 〉 z) 
   (cong (λ x → app* (N ⟦ ρ ⟧) (N ⟦ σ ⟧) x (N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧)) rep-idRep) 
   (cong (λ x → appT x (N ⟦ ρ ⟧)) rep-idRep) 
@@ -227,7 +227,7 @@ soundness-path {V = V} {τ = τ} {ρ = ρ} {σ} (appR {M = M} {N} {A} {B} Γ⊢M
   (soundness-path Γ⊢M∶A⇛B ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ V (idRep V) (N ⟦ ρ ⟧) (N ⟦ σ ⟧) 
     (N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧) (soundness Γ⊢N∶A ⊧ρ∶Γ) (soundness Γ⊢N∶A ⊧σ∶Γ) 
     (soundness-path Γ⊢N∶A ⊧ρ∶Γ ⊧σ∶Γ ⊧τ∶ρ≡σ))
-soundness-path {U} {V} {τ = τ} {σ} {σ'} (ΛR {A = A} {M} {B} Γ,A⊢M∶B) ⊧σ∶Γ ⊧σ'∶Γ ⊧τ∶σ≡σ' W ρ N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' = 
+soundness-path {U} {V} {τ = τ} {σ} {σ'} (ΛTR {A = A} {M} {B} Γ,A⊢M∶B) ⊧σ∶Γ ⊧σ'∶Γ ⊧τ∶σ≡σ' W ρ N N' Q ⊧N∶A ⊧N'∶A ⊧Q∶N≡N' = 
   let ⊧MQ∶MN≡MN' : ⊧E M ⟦⟦ extendPS (ρ •RP τ) Q ∶ extendSub (ρ •RS σ) N ≡ extendSub (ρ •RS σ') N' ⟧⟧ ∶ M ⟦ extendSub (ρ •RS σ) N ⟧ ≡〈 B 〉 M ⟦ extendSub (ρ •RS σ') N' ⟧
       ⊧MQ∶MN≡MN' = soundness-path Γ,A⊢M∶B (⊧extendSub (⊧RS ⊧σ∶Γ) ⊧N∶A) (⊧extendSub (⊧RS ⊧σ'∶Γ) ⊧N'∶A) (⊧extendPS (⊧RP {ρ = ρ} {τ} {σ} {σ'} ⊧τ∶σ≡σ') ⊧Q∶N≡N') in
   expansionE (conversionE ⊧MQ∶MN≡MN' 

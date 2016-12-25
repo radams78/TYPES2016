@@ -1,6 +1,7 @@
 module PHOML.Canon.Proof where
 open import Relation.Binary.PropositionalEquality
 open import Data.Product renaming (_,_ to _,p_)
+open import Data.Sum
 open import Prelims
 open import PHOML.Grammar
 open import PHOML.Neutral
@@ -35,4 +36,10 @@ pre-app-wnl' {χ' = neutral (var _)} (appPl _) ()
 pre-app-wnl' {δ = δ} {χ' = neutral (app χ'' _)} (appPl δ⇒δ') χ≡χ' = neutral χ'' ,p inc (subst (λ x → δ ⇒ x) (appP-injl χ≡χ') δ⇒δ')
 pre-app-wnl' {χ' = neutral (dirN _ _)} (appPl _) ()
 pre-app-wnl' {χ' = Λ φ δ} (appPl _) ()
+
+app-wnl' : ∀ {V} {δ ε δ₁ δ₂ : Proof V} {χ : CanonP V} → δ ↠ ε → δ ≡ appP δ₁ δ₂ → ε ≡ decode-CanonP χ → Σ[ χ' ∈ CanonP V ] δ₁ ↠ decode-CanonP χ'
+app-wnl' δ↠ε δ≡δ₁δ₂ ε≡χ with red-appPl δ↠ε δ≡δ₁δ₂
+app-wnl' {δ₂ = δ₂} {χ} δ↠ε δ≡δ₁δ₂ ε≡χ | inj₁ (δ₁' ,p δ₁↠δ₁' ,p ε≡δ₁'δ₂) with app-canonl' {δ = δ₁'} {δ₂} {χ} (≡-trans (≡-sym ε≡δ₁'δ₂) ε≡χ)
+app-wnl' {δ₁ = δ₁} δ↠ε δ≡δ₁δ₂ ε≡χ | inj₁ (δ₁' ,p δ₁↠δ₁' ,p ε≡δ₁'δ₂) | χ' ,p δ₁'≡χ' = χ' ,p (subst (λ x → δ₁ ↠ x) δ₁'≡χ' δ₁↠δ₁')
+app-wnl' δ↠ε δ≡δ₁δ₂ ε≡χ | inj₂ (φ ,p δ₁' ,p δ₁↠Λφδ₁') = Λ φ δ₁' ,p δ₁↠Λφδ₁'
 

@@ -25,7 +25,7 @@ decodeNTA (V ,Proof) = decodeNTA V , -Proof
 decodeNTA (V ,Path) = decodeNTA V , -Path
 
 ⊧idSub : ∀ V Γ → valid Γ → ⊧S idSub (decodeNTA V) ∶ Γ
-⊧idSub ∅ .〈〉 empR ()
+⊧idSub ∅ 〈〉 empR ()
 ⊧idSub (V ,Proof) (Γ , φ) (ctxPR Γ⊢φ∶Ω) x₀ = ⊧neutralP' {δ = var x₀}
   (subst (λ x → ⊧T x ∶ Ω) (let open ≡-Reasoning in 
     begin

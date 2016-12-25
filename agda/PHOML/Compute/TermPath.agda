@@ -118,6 +118,11 @@ reductionE {A = A ⇛ B} ⊧Q∶M≡M' P⇒Q W ρ N N' R ⊧N∶A ⊧N'∶A ⊧R
 ↠T ⊧M∶A ref = ⊧M∶A
 ↠T ⊧M∶A (trans M↠N N↠N') = ↠T (↠T ⊧M∶A M↠N) N↠N'
 
+↠E : ∀ {V} {P Q : Path V} {M A N} → ⊧E P ∶ M ≡〈 A 〉 N → P ↠ Q → ⊧E Q ∶ M ≡〈 A 〉 N
+↠E ⊧P∶M≡N (inc P⇒Q) = reductionE ⊧P∶M≡N P⇒Q
+↠E ⊧P∶M≡N ref = ⊧P∶M≡N
+↠E ⊧P∶M≡N (trans P↠Q Q↠R) = ↠E (↠E ⊧P∶M≡N P↠Q) Q↠R
+
 APPl-rtΛ : ∀ {V P M N} {NN : snocList (Term V)} {A L} →
                    ⊧E P ∶ APPl (appT M N) NN ≡〈 A 〉 L → Reduces-to-Λ M
 APPl-rtΛ {A = Ω} ((bot ,p MNN⊃N↠⊥ ,p _) ,p _) = ⊥-elim (imp-not-red-bot MNN⊃N↠⊥)
@@ -179,4 +184,63 @@ APPl-rtΛ {V} {P} {M} {N} {NN} {A ⇛ B} {L} ⊧P∶MNN≡N = APPl-rtΛ {V}
 ⊧neutralE {P = P} {M} {A = A ⇛ B} {N} ⊧M∶A⇛B ⊧N∶A⇛B W ρ L L' Q ⊧L∶A ⊧L'∶A ⊧Q∶L≡L' = subst (λ x → ⊧E x ∶ appT (M 〈 ρ 〉) L ≡〈 B 〉 appT (N 〈 ρ 〉) L') (cong (λ x → app* L L' x Q) (decode-nrepE P)) 
   (⊧neutralE {P = app*N L L' (nrepE ρ P) Q} (⊧appT (⊧Trep M ⊧M∶A⇛B) ⊧L∶A) (⊧appT (⊧Trep N ⊧N∶A⇛B) ⊧L'∶A))
 
+private ⊧reflm : ∀ {U V} {M N : Term V} {P} {ρ : Rep U V} → ((x₂:= M ,x₁:= N ,x₀:= P) •SR liftsRep pathDom ρ •SP liftPathSub refSub) ∼∼ ((x₀::= P) •PR liftRep -Term ρ)
+⊧reflm x₀ = refl
+⊧reflm (↑ x) = refl
+
+private ⊧reflm₂ : ∀ {U V} {M N : Term V} {P} {ρ : Rep U V} → ((x₂:= M ,x₁:= N ,x₀:= P) •SR liftsRep pathDom ρ • sub↖ (idSub U)) ∼ ((x₀:= M) •SR liftRep -Term ρ)
+⊧reflm₂ x₀ = refl
+⊧reflm₂ (↑ x) = refl
+
+private ⊧reflm₃ : ∀ {U V} {M N : Term V} {P} {ρ : Rep U V} → ((x₂:= M ,x₁:= N ,x₀:= P) •SR liftsRep pathDom ρ • sub↗ (idSub U)) ∼ ((x₀:= N) •SR liftRep -Term ρ)
+⊧reflm₃ x₀ = refl
+⊧reflm₃ (↑ x) = refl
+
+⊧ref : ∀ {V} {M : Term V} {A} → ⊧T M ∶ A → ⊧E reff M ∶ M ≡〈 A 〉 M
+⊧ref {V} {M} {A = Ω} ⊧M∶Ω = let θ ,p M↠θ = ⊧canon ⊧M∶Ω in ⊧refP {θ = θ} M↠θ
+⊧ref {V} {M} {A = A ⇛ B} ⊧M∶A⇛B W ρ L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' =
+  let reduces-to-Λ C N M↠ΛCN = ⊧T-rtΛ {V} {M} {A} {B} ⊧M∶A⇛B in 
+  let ΛCNx≃Mx : ∀ x → N 〈 liftRep _ ρ 〉 ⟦ x₀:= x ⟧ ≃ appT (M 〈 ρ 〉) x
+      ΛCNx≃Mx x = sym (trans (≃-appTl (≃-resp-rep (sub-RT-RST M↠ΛCN))) (inc βT)) in
+  let ⊧ΛCN∶A⇛B : ⊧T ΛT C N ∶ A ⇛ B
+      ⊧ΛCN∶A⇛B = ↠T ⊧M∶A⇛B M↠ΛCN in
+  let ⊧λλλNP : ⊧E app* L L' (λλλ C (N ⟦⟦ liftPathSub refSub ∶ sub↖ (idSub V) ≡ sub↗ (idSub V) ⟧⟧ 〈 liftsRep pathDom ρ 〉)) P ∶
+             appT (ΛT C (N 〈 liftRep _ ρ 〉)) L ≡〈 B 〉 appT (ΛT C (N 〈 liftRep _ ρ 〉)) L'
+      ⊧λλλNP = ⊧ΛCN∶A⇛B W ρ L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' in
+  let ⊧N⟦⟦P⟧⟧ : ⊧E N ⟦⟦ liftPathSub refSub ∶ sub↖ (idSub V) ≡ sub↗ (idSub V) ⟧⟧ 〈 liftsRep pathDom ρ 〉 ⟦ x₂:= L ,x₁:= L' ,x₀:= P ⟧ ∶ appT (ΛT C (N 〈 liftRep _ ρ 〉)) L ≡〈 B 〉 appT (ΛT C (N 〈 liftRep _ ρ 〉)) L'
+      ⊧N⟦⟦P⟧⟧ = reductionE ⊧λλλNP βE in
+  let ⊧N⟦⟦P⟧⟧ : ⊧E N 〈 liftRep _ ρ 〉 ⟦⟦ x₀::= P ∶ x₀:= L ≡ x₀:= L' ⟧⟧ ∶ appT (ΛT C (N 〈 liftRep _ ρ 〉)) L ≡〈 B 〉 appT (ΛT C (N 〈 liftRep _ ρ 〉)) L'
+      ⊧N⟦⟦P⟧⟧ = subst
+                  (λ x →
+                     ⊧E x ∶ appT (ΛT C (N 〈 liftRep _ ρ 〉)) L ≡〈 B 〉
+                     appT (ΛT C (N 〈 liftRep _ ρ 〉)) L')
+                  (let open ≡-Reasoning in 
+                    begin
+                      N ⟦⟦ liftPathSub refSub ∶ sub↖ (idSub V) ≡ sub↗ (idSub V) ⟧⟧ 〈 liftsRep pathDom ρ 〉 ⟦ x₂:= L ,x₁:= L' ,x₀:= P ⟧
+                    ≡⟨⟨ sub-•SR (N ⟦⟦ liftPathSub refSub ∶ sub↖ (idSub V) ≡ sub↗ (idSub V) ⟧⟧) ⟩⟩
+                      N ⟦⟦ liftPathSub refSub ∶ sub↖ (idSub V) ≡ sub↗ (idSub V) ⟧⟧ ⟦ (x₂:= L ,x₁:= L' ,x₀:= P) •SR liftsRep pathDom ρ ⟧
+                    ≡⟨⟨ pathSub-•SP N ⟩⟩
+                      N ⟦⟦ (x₂:= L ,x₁:= L' ,x₀:= P) •SR liftsRep pathDom ρ •SP liftPathSub refSub ∶ (x₂:= L ,x₁:= L' ,x₀:= P) •SR liftsRep pathDom ρ • sub↖ (idSub V) ≡ (x₂:= L ,x₁:= L' ,x₀:= P) •SR liftsRep pathDom ρ • sub↗ (idSub V) ⟧⟧
+                    ≡⟨ pathSub-cong N ⊧reflm ⊧reflm₂ ⊧reflm₃ ⟩
+                      N ⟦⟦ x₀::= P •PR liftRep _ ρ ∶ x₀:= L •SR liftRep _ ρ ≡ x₀:= L' •SR liftRep _ ρ ⟧⟧
+                    ≡⟨⟨ pathSub-•PR N ⟩⟩
+                      N 〈 liftRep _ ρ 〉 ⟦⟦ x₀::= P ∶ x₀:= L ≡ x₀:= L' ⟧⟧
+                    ∎) ⊧N⟦⟦P⟧⟧ in
+  let ⊧N⟦⟦P⟧⟧ : ⊧E N 〈 liftRep _ ρ 〉 ⟦⟦ x₀::= P ∶ x₀:= L ≡ x₀:= L' ⟧⟧ ∶ N 〈 liftRep _ ρ 〉 ⟦ x₀:= L ⟧ ≡〈 B 〉 N 〈 liftRep _ ρ 〉 ⟦ x₀:= L' ⟧
+      ⊧N⟦⟦P⟧⟧ = conversionE ⊧N⟦⟦P⟧⟧ (inc βT) (inc βT) in
+  let ⊧refMP : ⊧E app* L L' (reff M 〈 ρ 〉) P ∶ N 〈 liftRep _ ρ 〉 ⟦ x₀:= L ⟧ ≡〈 B 〉 N 〈 liftRep _ ρ 〉 ⟦ x₀:= L' ⟧
+      ⊧refMP = (↞E ⊧N⟦⟦P⟧⟧ (trans (↠-app*l (↠-resp-rep (↠-reff M↠ΛCN))) (inc βPP))) in
+  conversionE ⊧refMP (ΛCNx≃Mx L) (ΛCNx≃Mx L')
+
+⊧E-valid₁ : ∀ {V} {P : Path V} {φ ψ : Term V} → ⊧E P ∶ φ ≡〈 Ω 〉 ψ → ⊧T φ ∶ Ω
+⊧E-valid₁ ((bot ,p φ⊃ψ↠⊥ ,p _) ,p _) = ⊥-elim (imp-not-red-bot φ⊃ψ↠⊥)
+⊧E-valid₁ ((imp θ θ' ,p φ⊃ψ↠θ⊃θ' ,p _) ,p _) = ⊧canon' θ (imp-red-inj₁ φ⊃ψ↠θ⊃θ')
+
+⊧E-valid₂ : ∀ {V} {P : Path V} {φ ψ : Term V} → ⊧E P ∶ φ ≡〈 Ω 〉 ψ → ⊧T ψ ∶ Ω
+⊧E-valid₂ ((bot ,p φ⊃ψ↠⊥ ,p _) ,p _) = ⊥-elim (imp-not-red-bot φ⊃ψ↠⊥)
+⊧E-valid₂ ((imp θ θ' ,p φ⊃ψ↠θ⊃θ' ,p proj₂) ,p proj₄) = ⊧canon' θ' (imp-red-inj₂ φ⊃ψ↠θ⊃θ')
+
+⊧imp : ∀ {V} {φ ψ : Term V} → ⊧T φ ∶ Ω → ⊧T ψ ∶ Ω → ⊧T φ ⊃ ψ ∶ Ω
+⊧imp ⊧Tφ ⊧Tψ = let θ ,p φ↠θ = ⊧canon ⊧Tφ in 
+  let θ' ,p ψ↠θ' = ⊧canon ⊧Tψ in ⊧canon' (imp θ θ') (↠-imp φ↠θ ψ↠θ')
 
