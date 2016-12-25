@@ -35,6 +35,9 @@ _↠_ {V} {K} = RTClose (_⇒_ {V} {K})
 ↠-appP : ∀ {V} {δ δ' ε : Proof V} → δ ↠ δ' → appP δ ε ↠ appP δ' ε
 ↠-appP = respects-RT₂ (λ _ _ → appPl) _ _
 
+↠-ΛP : ∀ {V} {φ φ' : Term V} {δ} → φ ↠ φ' → ΛP φ δ ↠ ΛP φ' δ
+↠-ΛP = respects-RT₂ (λ _ _ → ΛPR) _ _
+
 ↠-dir : ∀ {V} {P Q : Path V} {d} → P ↠ Q → dir d P ↠ dir d Q
 ↠-dir = respects-RT₂ (λ _ _ → dirR) _ _
 
@@ -135,6 +138,7 @@ red-appPl : ∀ {V} {δ ε δ₁ δ₂ : Proof V} → δ ↠ ε → δ ≡ appP 
 red-appPl (inc (βP {φ = φ} {δ})) Λφδε≡δ₁δ₂ = inj₂ (_ ,p (_ ,p subst (λ x → x ↠ ΛP φ δ) (appP-injl Λφδε≡δ₁δ₂) ref))
 red-appPl (inc (appPl {δ' = δ'} δ⇒δ')) δ≡δ₁δ₂ = inj₁ (δ' ,p inc (subst (λ x → x ⇒ δ') (appP-injl δ≡δ₁δ₂) δ⇒δ') ,p cong (appP δ') (appP-injr δ≡δ₁δ₂))
 red-appPl (inc refdir) ()
+red-appPl (inc (ΛPR φ↠φ')) ()
 red-appPl (inc univplus) ()
 red-appPl (inc univminus) ()
 red-appPl (inc (dirR δ⇒ε)) ()

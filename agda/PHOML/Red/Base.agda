@@ -16,6 +16,7 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   impr : ∀ {V} {φ ψ ψ' : Term V} → ψ ⇒ ψ' → φ ⊃ ψ ⇒ φ ⊃ ψ'
   βP : ∀ {V} {φ : Term V} {δ ε} → appP (ΛP φ δ) ε ⇒ δ ⟦ x₀:= ε ⟧
   refdir : ∀ {V} {φ : Term V} {d} → dir d (reff φ) ⇒ id φ
+  ΛPR : ∀ {V} {φ φ' : Term V} {δ} → φ ⇒ φ' → ΛP φ δ ⇒ ΛP φ' δ
   appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒ δ' → appP δ ε ⇒ appP δ' ε
   univplus : ∀ {V} {φ ψ : Term V} {δ ε} → plus (univ φ ψ δ ε) ⇒ δ
   univminus : ∀ {V} {φ ψ : Term V} {δ ε} → minus (univ φ ψ δ ε) ⇒ ε
@@ -49,6 +50,7 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-rep (impr ψ⇒ψ') = impr (⇒-resp-rep ψ⇒ψ')
 ⇒-resp-rep {ρ = ρ} (βP {φ = φ} {δ} {ε}) = subst (λ x → (appP (ΛP φ δ) ε) 〈 ρ 〉 ⇒ x) (≡-sym (•RS-botSub δ)) βP
 ⇒-resp-rep (appPl δ⇒δ') = appPl (⇒-resp-rep δ⇒δ')
+⇒-resp-rep (ΛPR φ⇒φ') = ΛPR (⇒-resp-rep φ⇒φ')
 ⇒-resp-rep refdir = refdir
 ⇒-resp-rep univplus = univplus
 ⇒-resp-rep univminus = univminus
