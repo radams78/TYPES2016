@@ -54,6 +54,21 @@ _↠_ {V} {K} = RTClose (_⇒_ {V} {K})
 ↠-reff : ∀ {V} {M N : Term V} → M ↠ N → reff M ↠ reff N
 ↠-reff = respects-RT₂ (λ _ _ → reffR) _ _
 
+↠-univ₁ : ∀ {V} {φ φ' ψ : Term V} {δ ε} → φ ↠ φ' → univ φ ψ δ ε ↠ univ φ' ψ δ ε
+↠-univ₁ = respects-RT₂ (λ _ _ → univ₁) _ _
+
+↠-univ₂ : ∀ {V} {φ ψ ψ' : Term V} {δ ε} → ψ ↠ ψ' → univ φ ψ δ ε ↠ univ φ ψ' δ ε
+↠-univ₂ = respects-RT₂ (λ _ _ → univ₂) _ _
+
+↠-univ₃ : ∀ {V} {φ ψ : Term V} {δ δ' ε} → δ ↠ δ' → univ φ ψ δ ε ↠ univ φ ψ δ' ε
+↠-univ₃ = respects-RT₂ (λ _ _ → univ₃) _ _
+
+↠-univ₄ : ∀ {V} {φ ψ : Term V} {δ ε ε'} → ε ↠ ε' → univ φ ψ δ ε ↠ univ φ ψ δ ε'
+↠-univ₄ = respects-RT₂ (λ _ _ → univ₄) _ _
+
+↠-univ : ∀ {V} {φ φ' ψ ψ' : Term V} {δ δ' ε ε'} → φ ↠ φ' → ψ ↠ ψ' → δ ↠ δ' → ε ↠ ε' → univ φ ψ δ ε ↠ univ φ' ψ' δ' ε'
+↠-univ φ↠φ' ψ↠ψ' δ↠δ' ε↠ε' = trans (↠-univ₁ φ↠φ') (trans (↠-univ₂ ψ↠ψ') (trans (↠-univ₃ δ↠δ') (↠-univ₄ ε↠ε')))
+
 ↠-APPP : ∀ {V} {δ δ' : Proof V} εε → δ ↠ δ' → APPP δ εε ↠ APPP δ' εε
 ↠-APPP εε = respects-RT₂ (λ _ _ → ⇒-APPP εε) _ _
 
@@ -152,10 +167,13 @@ bot-not-red-imp ⊥↠φ⊃ψ | ()
 λλλ-red-ref (inc ref⊃*univ) ()
 λλλ-red-ref (inc univ⊃*ref) ()
 λλλ-red-ref (inc univ⊃*univ) ()
-λλλ-red-ref (inc (imp*l x₁)) ()
-λλλ-red-ref (inc (imp*r x₁)) ()
-λλλ-red-ref (inc (app*l x₁)) ()
-λλλ-red-ref (inc (reffR x₁)) ()
+λλλ-red-ref (inc (imp*l _)) ()
+λλλ-red-ref (inc (imp*r _)) ()
+λλλ-red-ref (inc (app*l _)) ()
+λλλ-red-ref (inc (reffR _)) ()
+λλλ-red-ref (inc (univ₁ _)) ()
+λλλ-red-ref (inc (univ₂ _)) ()
+λλλ-red-ref (inc (univ₃ _)) ()
+λλλ-red-ref (inc (univ₄ _)) ()
 λλλ-red-ref ref P≡λQ = P≡λQ
 λλλ-red-ref (trans P↠P' P'↠P'') P≡λQ = λλλ-red-ref P'↠P'' (λλλ-red-ref P↠P' P≡λQ)
-

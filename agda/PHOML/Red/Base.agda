@@ -34,6 +34,10 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   reffR : ∀ {V} {M N : Term V} → M ⇒ N → reff M ⇒ reff N
   imp*l : ∀ {V} {P P' Q : Path V} → P ⇒ P' → P ⊃* Q ⇒ P' ⊃* Q
   imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒ Q' → P ⊃* Q ⇒ P ⊃* Q'
+  univ₁ : ∀ {V} {φ φ' ψ : Term V} {δ ε} → φ ⇒ φ' → univ φ ψ δ ε ⇒ univ φ' ψ δ ε
+  univ₂ : ∀ {V} {φ ψ ψ' : Term V} {δ ε} → ψ ⇒ ψ' → univ φ ψ δ ε ⇒ univ φ ψ' δ ε
+  univ₃ : ∀ {V} {φ ψ : Term V} {δ δ' ε} → δ ⇒ δ' → univ φ ψ δ ε ⇒ univ φ ψ δ' ε
+  univ₄ : ∀ {V} {φ ψ : Term V} {δ ε ε'} → ε ⇒ ε' → univ φ ψ δ ε ⇒ univ φ ψ δ ε'
 --Reduction in a univ
 
 ⇒-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ⇒ F → E 〈 ρ 〉 ⇒ F 〈 ρ 〉
@@ -82,6 +86,10 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-rep (imp*r Q⇒Q') = imp*r (⇒-resp-rep Q⇒Q')
 ⇒-resp-rep (app*l P⇒P') = app*l (⇒-resp-rep P⇒P')
 ⇒-resp-rep (reffR M⇒N) = reffR (⇒-resp-rep M⇒N)
+⇒-resp-rep (univ₁ φ⇒φ') = univ₁ (⇒-resp-rep φ⇒φ')
+⇒-resp-rep (univ₂ ψ⇒ψ') = univ₂ (⇒-resp-rep ψ⇒ψ')
+⇒-resp-rep (univ₃ δ⇒δ') = univ₃ (⇒-resp-rep δ⇒δ')
+⇒-resp-rep (univ₄ ε⇒ε') = univ₄ (⇒-resp-rep ε⇒ε')
 
 ⇒-resp-sub : ∀ {U V} {M N : Term U} {σ : Sub U V} → M ⇒ N → M ⟦ σ ⟧ ⇒ N ⟦ σ ⟧
 ⇒-resp-sub {σ = σ} (βT {A = A} {M} {N}) = subst (λ x → appT (ΛT A (M ⟦ liftSub _ σ ⟧)) (N ⟦ σ ⟧) ⇒ x) (≡-sym (•-botSub'' M)) βT
