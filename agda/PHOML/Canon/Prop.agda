@@ -41,10 +41,10 @@ canon-nf' θ (inc φ⇒ψ) θ≡φ = ⊥-elim (canon-nf {θ = θ} (subst (λ x �
 canon-nf' _ ref θ≡φ = θ≡φ
 canon-nf' θ (trans φ↠ψ ψ↠ψ') θ≡φ = canon-nf' θ ψ↠ψ' (canon-nf' θ φ↠ψ θ≡φ)
 
-postulate red-canon : ∀ {V} {φ ψ : Term V} {θ : CanonProp} → φ ↠ decode θ → φ ≃ ψ → ψ ↠ decode θ
-{- red-canon {V} {φ} {ψ} {θ} φ↠θ φ≃ψ = 
-  let cr χ θ↠χ ψ↠χ = diamond-CR (λ _ _ _ → diamond) (decode θ) ψ (trans (sym (sub-RT-RST φ↠θ)) φ≃ψ) in 
-  subst (λ x → ψ ↠ x) (≡-sym (canon-nf' θ θ↠χ refl)) ψ↠χ -}
+red-canon : ∀ {V} {φ ψ : Term V} {θ : CanonProp} → φ ↠ decode θ → φ ≃ ψ → ψ ↠ decode θ
+red-canon {V} {φ} {ψ} {θ} φ↠θ φ≃ψ = 
+  let cr χ θ↠χ ψ↠χ = diamondRT-CR (λ _ _ _ → diamond) (decode θ) ψ (trans (sym (sub-RT-RST φ↠θ)) φ≃ψ) in 
+  subst (λ x → ψ ↠ x) (≡-sym (canon-nf' θ θ↠χ refl)) ψ↠χ 
 
 canon-unique : ∀ {V} {φ : Term V} {θ θ' : CanonProp} → φ ↠ decode θ → φ ↠ decode θ' → θ ≡ θ'
 canon-unique {θ = θ} {θ'} φ↠θ φ↠θ' =
