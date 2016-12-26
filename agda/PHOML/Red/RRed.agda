@@ -31,12 +31,6 @@ _⇒?_ = RClose _⇒_
 ⇒?-appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒? δ' → appP δ ε ⇒? appP δ' ε
 ⇒?-appPl = respects-R' _ _⇒_ (λ _ _ → appPl) _ _
 
-⇒?-dir : ∀ {V} {P Q : Path V} {d} → P ⇒? Q → dir d P ⇒? dir d Q
-⇒?-dir = respects-R₂ (λ _ _ → dirR) _ _
-
-⇒?-reff : ∀ {V} {M N : Term V} → M ⇒? N → reff M ⇒? reff N
-⇒?-reff = respects-R₂ (λ _ _ → reffR) _ _
-
 imp-osr-inj₁ : ∀ {V} {φ ψ χ : Term V} → φ ⊃ ψ ⇒ χ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
   χ ≡ φ' ⊃ ψ' × φ ⇒? φ'
 imp-osr-inj₁ {ψ = ψ} (impl {φ' = φ'} φ⊃φ') = φ' ,p ψ ,p refl ,p inc φ⊃φ'

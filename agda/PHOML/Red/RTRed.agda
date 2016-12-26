@@ -35,12 +35,6 @@ _↠_ {V} {K} = RTClose (_⇒_ {V} {K})
 ↠-appP : ∀ {V} {δ δ' ε : Proof V} → δ ↠ δ' → appP δ ε ↠ appP δ' ε
 ↠-appP = respects-RT₂ (λ _ _ → appPl) _ _
 
-↠-ΛP : ∀ {V} {φ φ' : Term V} {δ} → φ ↠ φ' → ΛP φ δ ↠ ΛP φ' δ
-↠-ΛP = respects-RT₂ (λ _ _ → ΛPR) _ _
-
-↠-dir : ∀ {V} {P Q : Path V} {d} → P ↠ Q → dir d P ↠ dir d Q
-↠-dir = respects-RT₂ (λ _ _ → dirR) _ _
-
 ↠-imp*l : ∀ {V} {P P' Q : Path V} → P ↠ P' → P ⊃* Q ↠ P' ⊃* Q
 ↠-imp*l = respects-RT₂ (λ _ _ → imp*l) _ _
 
@@ -54,23 +48,11 @@ _↠_ {V} {K} = RTClose (_⇒_ {V} {K})
 ↠-app*l : ∀ {V} {M N : Term V} {P P' Q} → P ↠ P' → app* M N P Q ↠ app* M N P' Q
 ↠-app*l = respects-RT₂ (λ _ _ → app*l) _ _
 
-↠-reff : ∀ {V} {M N : Term V} → M ↠ N → reff M ↠ reff N
+↠-reff : ∀ {V} {M M' N N' : Term V} {P} → M ↠ M' → app* N N' (reff M) P ↠ app* N N' (reff M') P
 ↠-reff = respects-RT₂ (λ _ _ → reffR) _ _
 
-↠-univ₁ : ∀ {V} {φ φ' ψ : Term V} {δ ε} → φ ↠ φ' → univ φ ψ δ ε ↠ univ φ' ψ δ ε
-↠-univ₁ = respects-RT₂ (λ _ _ → univ₁) _ _
-
-↠-univ₂ : ∀ {V} {φ ψ ψ' : Term V} {δ ε} → ψ ↠ ψ' → univ φ ψ δ ε ↠ univ φ ψ' δ ε
-↠-univ₂ = respects-RT₂ (λ _ _ → univ₂) _ _
-
-↠-univ₃ : ∀ {V} {φ ψ : Term V} {δ δ' ε} → δ ↠ δ' → univ φ ψ δ ε ↠ univ φ ψ δ' ε
-↠-univ₃ = respects-RT₂ (λ _ _ → univ₃) _ _
-
-↠-univ₄ : ∀ {V} {φ ψ : Term V} {δ ε ε'} → ε ↠ ε' → univ φ ψ δ ε ↠ univ φ ψ δ ε'
-↠-univ₄ = respects-RT₂ (λ _ _ → univ₄) _ _
-
-↠-univ : ∀ {V} {φ φ' ψ ψ' : Term V} {δ δ' ε ε'} → φ ↠ φ' → ψ ↠ ψ' → δ ↠ δ' → ε ↠ ε' → univ φ ψ δ ε ↠ univ φ' ψ' δ' ε'
-↠-univ φ↠φ' ψ↠ψ' δ↠δ' ε↠ε' = trans (↠-univ₁ φ↠φ') (trans (↠-univ₂ ψ↠ψ') (trans (↠-univ₃ δ↠δ') (↠-univ₄ ε↠ε')))
+↠-dir : ∀ {V d} {P Q : Path V} → P ↠ Q → dir d P ↠ dir d Q
+↠-dir = respects-RT₂ (λ _ _ → dirR) _ _
 
 ↠-APPP : ∀ {V} {δ δ' : Proof V} εε → δ ↠ δ' → APPP δ εε ↠ APPP δ' εε
 ↠-APPP εε = respects-RT₂ (λ _ _ → ⇒-APPP εε) _ _
@@ -138,19 +120,15 @@ red-appPl : ∀ {V} {δ ε δ₁ δ₂ : Proof V} → δ ↠ ε → δ ≡ appP 
 red-appPl (inc (βP {φ = φ} {δ})) Λφδε≡δ₁δ₂ = inj₂ (_ ,p (_ ,p subst (λ x → x ↠ ΛP φ δ) (appP-injl Λφδε≡δ₁δ₂) ref))
 red-appPl (inc (appPl {δ' = δ'} δ⇒δ')) δ≡δ₁δ₂ = inj₁ (δ' ,p inc (subst (λ x → x ⇒ δ') (appP-injl δ≡δ₁δ₂) δ⇒δ') ,p cong (appP δ') (appP-injr δ≡δ₁δ₂))
 red-appPl (inc refdir) ()
-red-appPl (inc (ΛPR φ↠φ')) ()
 red-appPl (inc univplus) ()
 red-appPl (inc univminus) ()
-red-appPl (inc (dirR δ⇒ε)) ()
+red-appPl (inc (dirR _)) ()
 red-appPl {δ₁ = δ₁} ref δ≡δ₁δ₂ = inj₁ (δ₁ ,p (ref ,p δ≡δ₁δ₂))
 red-appPl (trans δ↠ε ε↠ε') δ≡δ₁δ₂ with red-appPl δ↠ε δ≡δ₁δ₂
 red-appPl (trans δ↠ε ε↠ε') δ≡δ₁δ₂ | inj₁ (δ₁' ,p δ₁↠δ₁' ,p ε≡δ₁'δ₂) with red-appPl ε↠ε' ε≡δ₁'δ₂
 red-appPl (trans δ↠ε ε↠ε') δ≡δ₁δ₂ | inj₁ (δ₁' ,p δ₁↠δ₁' ,p ε≡δ₁'δ₂) | inj₁ (δ₁'' ,p δ₁'↠δ₁'' ,p ε'≡δ₁''δ₂) = inj₁ (δ₁'' ,p trans δ₁↠δ₁' δ₁'↠δ₁'' ,p ε'≡δ₁''δ₂)
 red-appPl (trans δ↠ε ε↠ε') δ≡δ₁δ₂ | inj₁ (δ₁' ,p δ₁↠δ₁' ,p ε≡δ₁'δ₂) | inj₂ (φ ,p δ₁'' ,p δ₁'↠Λδ₁'') = inj₂ (φ ,p (δ₁'' ,p (trans δ₁↠δ₁' δ₁'↠Λδ₁'')))
 red-appPl (trans δ↠ε δ↠ε₁) δ≡δ₁δ₂ | inj₂ δ₁↠Λ = inj₂ δ₁↠Λ
-
-Pdirlm : ∀ {U V} {P : Path U} {ρ : Rep U V} {M} {δ d} → P ↠ reff M → appP (dir d P 〈 ρ 〉) δ ↠ δ
-Pdirlm P↠refM = trans (↠-appP (↠-dir (↠-resp-rep P↠refM))) (trans (inc (appPl refdir)) (inc βP))
 
 bot-red-bot : ∀ {V} {φ ψ : Term V} → φ ↠ ψ → φ ≡ ⊥ → ψ ≡ ⊥
 bot-red-bot (inc βT) ()
@@ -175,9 +153,6 @@ bot-not-red-imp ⊥↠φ⊃ψ | ()
 λλλ-red-ref (inc (imp*r _)) ()
 λλλ-red-ref (inc (app*l _)) ()
 λλλ-red-ref (inc (reffR _)) ()
-λλλ-red-ref (inc (univ₁ _)) ()
-λλλ-red-ref (inc (univ₂ _)) ()
-λλλ-red-ref (inc (univ₃ _)) ()
-λλλ-red-ref (inc (univ₄ _)) ()
+
 λλλ-red-ref ref P≡λQ = P≡λQ
 λλλ-red-ref (trans P↠P' P'↠P'') P≡λQ = λλλ-red-ref P'↠P'' (λλλ-red-ref P↠P' P≡λQ)

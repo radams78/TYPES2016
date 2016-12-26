@@ -8,55 +8,6 @@ open import PHOML.Red.RTRed
 open import PHOML.Red.POSR
 open import PHOML.Red.PRed
 
-diamond-▷ : ∀ {V K} {E F G : VExpression V K} → E ▷ F → E ▷ G → Common-Reduct _▷_ _▷_ F G
-diamond-▷ {G = G} ref E▷G = cr G E▷G ref
-diamond-▷ {G = G} (appTl ref) E▷G = cr G E▷G ref
-diamond-▷ {G = G} (appPl ref) E▷G = cr G E▷G ref
-diamond-▷ {G = G} (dirR ref) E▷G = cr G E▷G ref
-diamond-▷ {F = F} E▷F ref = cr F ref E▷F
-diamond-▷ {F = F} E▷F (appTl ref) = cr F ref E▷F
-diamond-▷ {F = F} E▷F (appPl ref) = cr F ref E▷F
-diamond-▷ {F = F} E▷F (dirR ref) = cr F ref E▷F
-diamond-▷ {F = F} E▷F (app*l ref) = cr F ref E▷F
-diamond-▷ {F = F} E▷F (⊃* ref ref) = cr F ref E▷F
-diamond-▷ βT βT = cr _ ref ref
-diamond-▷ (appTl M▷M') (appTl M▷M'') = let cr M₀ M'▷M₀ M''▷M₀ = diamond-▷ M▷M' M▷M'' in cr (appT M₀ _) (appTl M'▷M₀) (appTl M''▷M₀)
-diamond-▷ (imp φ▷φ' ψ▷ψ') (imp φ▷φ'' ψ▷ψ'') =
-  let cr φ₀ φ'▷φ₀ φ''▷φ₀ = diamond-▷ φ▷φ' φ▷φ'' in 
-  let cr ψ₀ ψ'▷ψ₀ ψ''▷ψ₀ = diamond-▷ ψ▷ψ' ψ▷ψ'' in 
-  cr (φ₀ ⊃ ψ₀) (imp φ'▷φ₀ ψ'▷ψ₀) (imp φ''▷φ₀ ψ''▷ψ₀)
-diamond-▷ βP βP = cr _ ref ref
-diamond-▷ βP (appPl (ΛPR φ▷φ')) = cr _ ref βP
-diamond-▷ refdir refdir = cr _ ref ref
-diamond-▷ refdir (dirR (reffR φ▷φ')) = cr (ΛP _ (var x₀)) (ΛPR φ▷φ') refdir
-diamond-▷ (ΛPR φ▷φ') (ΛPR φ▷φ'') = let cr φ₀ φ'▷φ₀ φ''▷φ₀ = diamond-▷ φ▷φ' φ▷φ'' in cr _ (ΛPR φ'▷φ₀) (ΛPR φ''▷φ₀)
-diamond-▷ (appPl (ΛPR φ▷φ')) βP = cr _ βP ref
-diamond-▷ (appPl δ▷δ') (appPl δ▷δ'') = let cr δ₀ δ'▷δ₀ δ''▷δ₀ = diamond-▷ δ▷δ' δ▷δ'' in cr _ (appPl δ'▷δ₀) (appPl δ''▷δ₀)
-diamond-▷ univplus univplus = cr _ ref ref
-diamond-▷ univplus (dirR (univR _ _ δ▷δ' _)) = cr _ δ▷δ' univplus
-diamond-▷ univminus univminus = cr _ ref ref
-diamond-▷ univminus (dirR (univR _ _ _ ε▷ε')) = cr _ ε▷ε' univminus
-diamond-▷ (dirR (reffR φ▷φ')) refdir = cr _ refdir (ΛPR φ▷φ')
-diamond-▷ (dirR (univR _ _ δ▷δ' _)) univplus = cr _ univplus δ▷δ'
-diamond-▷ (dirR (univR _ _ _ ε▷ε')) univminus = cr _ univminus ε▷ε'
-diamond-▷ (dirR P▷P') (dirR P▷P'') = let cr P₀ P'▷P₀ P''▷P₀ = diamond-▷ P▷P' P▷P'' in cr _ (dirR P'▷P₀) (dirR P''▷P₀)
-diamond-▷ βE βE = cr _ ref ref
-diamond-▷ βPP βPP = cr _ ref ref
-diamond-▷ βPP (app*l (reffR ref)) = cr _ ref βPP
-diamond-▷ ref⊃*ref ref⊃*ref = cr _ ref ref
-diamond-▷ ref⊃*ref (⊃* ref (reffR ψ▷ψ')) = cr _ (reffR (imp ref ψ▷ψ')) ref⊃*ref
-diamond-▷ ref⊃*ref (⊃* (reffR φ▷φ') ref) = cr _ (reffR (imp φ▷φ' ref)) ref⊃*ref
-diamond-▷ ref⊃*ref (⊃* (reffR φ▷φ') (reffR ψ▷ψ')) = cr _ (reffR (imp φ▷φ' ψ▷ψ')) ref⊃*ref
-diamond-▷ ref⊃*univ ref⊃*univ = cr _ ref ref
-diamond-▷ ref⊃*univ (⊃* ref (univR φ▷φ' ψ▷ψ' δ▷δ' ε▷ε')) = cr _ (univR (imp ref φ▷φ') (imp ref ψ▷ψ') {!!} {!!}) ref⊃*univ
-diamond-▷ ref⊃*univ (⊃* (reffR E▷G) E▷G₁) = {!!}
-diamond-▷ univ⊃*ref E▷G = {!!}
-diamond-▷ univ⊃*univ E▷G = {!!}
-diamond-▷ (app*l E▷F) E▷G = {!!}
-diamond-▷ (reffR E▷F) E▷G = {!!}
-diamond-▷ (⊃* E▷F E▷F₁) E▷G = {!!}
-diamond-▷ (univR E▷F E▷F₁ E▷F₂ E▷F₃) E▷G = {!!}
-
 postulate diamond : ∀ {V K} {E F G : Expression V K} → E ↠ F → E ↠ G →
                   Common-Reduct _↠_ _↠_ F G
 

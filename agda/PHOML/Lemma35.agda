@@ -31,26 +31,27 @@ open import PHOML.Compute
   let ⊧P-ε₁∶φ : ⊧P appP (minus P 〈 ρ₁ •R ρ 〉) ε₁ ∶ φ 〈 ρ₁ •R ρ 〉
       ⊧P-ε₁∶φ = ⊧P⊃E (⊧Prep ⊧P-∶φ'⊃φ) (⊧P-change-prop ⊧ε₁∶φ' (≡-sym (rep-•R φ'))) in
   let ⊧ε₁∶φ : ⊧P ε₁ ∶ φ 〈 ρ₁ •R ρ 〉
-      ⊧ε₁∶φ = ↠P ⊧P-ε₁∶φ (Pdirlm P↠refM) in
+      ⊧ε₁∶φ = ↠P ⊧P-ε₁∶φ ? in
   let ⊧εε₁∶ψ : ⊧P appP (ε 〈 ρ₁ 〉) ε₁ ∶ ψ 〈 ρ₁ •R ρ 〉
       ⊧εε₁∶ψ = ⊧P⊃E (⊧P-change-prop (⊧Prep ⊧ε∶φ⊃ψ) (≡-sym (rep-•R (φ ⊃ ψ)))) ⊧ε₁∶φ in
   let ⊧Q+εε₁∶ψ' : ⊧P appP (plus Q 〈 ρ₁ •R ρ 〉) (appP (ε 〈 ρ₁ 〉) ε₁) ∶ ψ' 〈 ρ₁ •R ρ 〉
       ⊧Q+εε₁∶ψ' = ⊧P⊃E (⊧Prep ⊧Q+∶ψ⊃ψ') ⊧εε₁∶ψ in
   let ⊧εε₁∶ψ' : ⊧P appP (ε 〈 ρ₁ 〉) ε₁ ∶ ψ' 〈 ρ₁ •R ρ 〉
-      ⊧εε₁∶ψ' = ↠P ⊧Q+εε₁∶ψ' (Pdirlm Q↠refN) in
-  ↞P (⊧P-change-prop ⊧εε₁∶ψ' (rep-•R ψ')) (↠-appP (subst (λ x → appP x (ε 〈 ρ₁ 〉) ↠ ε 〈 ρ₁ 〉) (rep-•R (plus (P ⊃* Q))) (Pdirlm (trans (↠-imp* P↠refM Q↠refN) (inc ref⊃*)))))))) ,p
+      ⊧εε₁∶ψ' = ↠P ⊧Q+εε₁∶ψ' ? in
+  ↞P (⊧P-change-prop ⊧εε₁∶ψ' (rep-•R ψ')) (↠-appP (subst (λ x → appP x (ε 〈 ρ₁ 〉) ↠ ε 〈 ρ₁ 〉) (rep-•R (plus (P ⊃* Q))) ?))))) ,p
+--(Pdirlm (trans (↠-imp* P↠refM Q↠refN) (inc ref⊃*)))))))) ,p
   (⊧P⊃I (⊧imp ⊧φ' ⊧ψ') (⊧imp ⊧φ ⊧ψ) (λ W ρ ε ⊧ε∶φ'⊃ψ' → 
   ⊧P⊃I (⊧TΩrep ⊧φ) (⊧TΩrep ⊧ψ) (λ W₁ ρ₁ ε₁ ⊧ε₁∶φ → 
   let ⊧P+ε₁∶φ' : ⊧P appP (plus P 〈 ρ₁ •R ρ 〉) ε₁ ∶ φ' 〈 ρ₁ •R ρ 〉
       ⊧P+ε₁∶φ' = ⊧P⊃E (⊧Prep ⊧P+∶φ⊃φ') (⊧P-change-prop ⊧ε₁∶φ (≡-sym (rep-•R φ))) in
   let ⊧ε₁∶φ' : ⊧P ε₁ ∶ φ' 〈 ρ₁ •R ρ 〉
-      ⊧ε₁∶φ' = ↠P ⊧P+ε₁∶φ' (Pdirlm P↠refM) in
+      ⊧ε₁∶φ' = ↠P ⊧P+ε₁∶φ' ? in
   let ⊧εε₁∶ψ' : ⊧P appP (ε 〈 ρ₁ 〉) ε₁ ∶ ψ' 〈 ρ₁ •R ρ 〉
       ⊧εε₁∶ψ' = ⊧P⊃E (⊧P-change-prop (⊧Prep ⊧ε∶φ'⊃ψ') (≡-sym (rep-•R (φ' ⊃ ψ')))) ⊧ε₁∶φ' in
   let ⊧Q-εε₁∶ψ : ⊧P appP (minus Q 〈 ρ₁ •R ρ 〉) (appP (ε 〈 ρ₁ 〉) ε₁) ∶ ψ 〈 ρ₁ •R ρ 〉
       ⊧Q-εε₁∶ψ = ⊧P⊃E (⊧Prep ⊧Q-∶ψ'⊃ψ) ⊧εε₁∶ψ' in
   let ⊧εε₁∶ψ : ⊧P appP (ε 〈 ρ₁ 〉) ε₁ ∶ ψ 〈 ρ₁ •R ρ 〉
-      ⊧εε₁∶ψ = ↠P ⊧Q-εε₁∶ψ (Pdirlm Q↠refN) in
+      ⊧εε₁∶ψ = ↠P ⊧Q-εε₁∶ψ ? in
    ↞P (⊧P-change-prop ⊧εε₁∶ψ (rep-•R ψ)) (↠-appP (subst (λ x → appP x (ε 〈 ρ₁ 〉) ↠ ε 〈 ρ₁ 〉) (rep-•R (minus (P ⊃* Q))) (Pdirlm (trans (↠-imp* P↠refM Q↠refN) (inc ref⊃*))))))))
 ⊧⊃* {V} {P} {φ} {φ'} {Q} {ψ} {ψ'} (⊧P+∶φ⊃φ' ,p ⊧P-∶φ'⊃φ) (⊧Q+∶ψ⊃ψ' ,p ⊧Q-∶ψ'⊃ψ) | reffC M ,p P↠refM | univC _ _ δ ε ,p Q↠univδε = 
   let ⊧φ : ⊧T φ ∶ Ω

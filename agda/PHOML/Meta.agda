@@ -265,9 +265,15 @@ subject-reduction-⇒ {Γ = Γ} {A = app (-eq A) (L ∷ L' ∷ [])} Γ⊢PQ∶L�
   let B ,p F ,p G ,p Γ⊢P∶F≡G ,p Γ⊢Q∶M≡N ,p FM≃L ,p GN≃L' = generation-app* Γ⊢PQ∶L≡L' in
   convER (appER (eq-validity₁ Γ⊢Q∶M≡N refl) (eq-validity₂ Γ⊢Q∶M≡N refl) (subject-reduction-⇒ Γ⊢P∶F≡G P⇒P') Γ⊢Q∶M≡N) (eq-validity₁ Γ⊢PQ∶L≡L' refl) (eq-validity₂ Γ⊢PQ∶L≡L' refl) 
   FM≃L GN≃L'
-subject-reduction-⇒ {A = app (-eq A) (N ∷ N' ∷ [])} Γ⊢refM∶N≡N' (reffR M⇒M') = convER (refR (subject-reduction-⇒ (generation-reff₁ Γ⊢refM∶N≡N') M⇒M')) 
-  (eq-validity₁ Γ⊢refM∶N≡N' refl) (eq-validity₂ Γ⊢refM∶N≡N' refl) (trans (sym (inc M⇒M')) (generation-reff₂ Γ⊢refM∶N≡N')) 
-  (trans (sym (inc M⇒M')) (generation-reff₃ Γ⊢refM∶N≡N'))
+subject-reduction-⇒ {A = app (-eq A) (L ∷ L' ∷ [])} Γ⊢refMQ∶L≡L' (reffR M⇒M') =
+  let B ,p F ,p G ,p Γ⊢refM∶F≡G ,p Γ⊢Q∶N≡N' ,p FM≃L ,p GN≃L' = generation-app* Γ⊢refMQ∶L≡L' in 
+  convER 
+    (appER (eq-validity₁ Γ⊢Q∶N≡N' refl) (eq-validity₂ Γ⊢Q∶N≡N' refl) 
+      (refR (subject-reduction-⇒ (generation-reff₁ Γ⊢refM∶F≡G) M⇒M')) 
+      Γ⊢Q∶N≡N') 
+    (eq-validity₁ Γ⊢refMQ∶L≡L' refl) (eq-validity₂ Γ⊢refMQ∶L≡L' refl) 
+  (trans (≃-appTl (trans (sym (inc M⇒M')) (generation-reff₂ Γ⊢refM∶F≡G))) FM≃L) 
+  (trans (≃-appTl (trans (sym (inc M⇒M')) (generation-reff₃ Γ⊢refM∶F≡G))) GN≃L')
 
 subject-reduction : ∀ {V} {K} {Γ} {E F : Expression V (varKind K)} {A} → (Γ ⊢ E ∶ A) → (E ↠ F) → (Γ ⊢ F ∶ A)
 subject-reduction Γ⊢E∶A (inc E⇒F) = subject-reduction-⇒ Γ⊢E∶A E⇒F

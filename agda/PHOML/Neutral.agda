@@ -180,26 +180,12 @@ neutralP-red (dirN _ (app*N _ _ _ _)) (inc univminus) ()
 neutralP-red (dirN _ (imp*l _ _)) (inc univminus) ()
 neutralP-red (dirN _ (imp*r _ _)) (inc univminus) ()
 neutralP-red (var _) (inc (dirR _)) ()
-neutralP-red (app _ _) (inc (dirR _)) ()
-neutralP-red (dirN _ (var _)) (inc (dirR βE)) ()
-neutralP-red (dirN _ (var _)) (inc (dirR βPP)) ()
-neutralP-red (dirN _ (var _)) (inc (dirR ref⊃*)) ()
-neutralP-red (dirN _ (var _)) (inc (dirR ref⊃*univ)) ()
-neutralP-red (dirN _ (var _)) (inc (dirR univ⊃*ref)) ()
-neutralP-red (dirN _ (var _)) (inc (dirR univ⊃*univ)) ()
-neutralP-red (dirN _ (var _)) (inc (dirR (app*l x₁))) ()
-neutralP-red (dirN _ (var _)) (inc (dirR (reffR x₁))) ()
-neutralP-red (dirN _ (var _)) (inc (dirR (imp*l x₁))) ()
-neutralP-red (dirN _ (var _)) (inc (dirR (imp*r x₁))) ()
-neutralP-red (dirN d (app*N M N P₁ P₂)) (inc (dirR P₁P₂⇒Q)) refl =
-  let Q' ,p Q≡Q' = neutralE-osr (app*N M N P₁ P₂) P₁P₂⇒Q in
-  (dirN d Q') ,p (cong (dir d) Q≡Q')
-neutralP-red (dirN d (imp*l P₁ P₂)) (inc (dirR P⇒Q)) refl =
-  let Q' ,p Q≡Q' = neutralE-osr (imp*l P₁ P₂) P⇒Q in
-  (dirN d Q') ,p (cong (dir d) Q≡Q')
-neutralP-red (dirN d (imp*r x δ)) (inc (dirR P⇒Q)) refl =
-  let Q' ,p Q≡Q' = neutralE-osr (imp*r x δ) P⇒Q in
-  (dirN d Q') ,p (cong (dir d) Q≡Q')
+neutralP-red (app (var _) _) (inc (dirR _)) ()
+neutralP-red (app (app _ _) _) (inc (dirR _)) ()
+neutralP-red (app (dirN _ _) _) (inc (dirR _)) ()
+neutralP-red (dirN d P) (inc (dirR {Q = Q} P⇒Q)) refl = 
+  let Q' ,p Q'≡Q = neutralE-osr P P⇒Q in 
+  dirN d Q' ,p cong (dir d) Q'≡Q
 neutralP-red (ν) ref δ≡ν = ν ,p δ≡ν
 neutralP-red (ν) (trans δ↠ε ε↠ε') δ≡ν =
   let ν₂ ,p ε≡ν₂ = neutralP-red (ν) δ↠ε δ≡ν in 

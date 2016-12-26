@@ -16,12 +16,10 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   impr : ∀ {V} {φ ψ ψ' : Term V} → ψ ⇒ ψ' → φ ⊃ ψ ⇒ φ ⊃ ψ'
   βP : ∀ {V} {φ : Term V} {δ ε} → appP (ΛP φ δ) ε ⇒ δ ⟦ x₀:= ε ⟧
   refdir : ∀ {V} {φ : Term V} {d} → dir d (reff φ) ⇒ id φ
-  ΛPR : ∀ {V} {φ φ' : Term V} {δ} → φ ⇒ φ' → ΛP φ δ ⇒ ΛP φ' δ
-  appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒ δ' → appP δ ε ⇒ appP δ' ε
   univplus : ∀ {V} {φ ψ : Term V} {δ ε} → plus (univ φ ψ δ ε) ⇒ δ
   univminus : ∀ {V} {φ ψ : Term V} {δ ε} → minus (univ φ ψ δ ε) ⇒ ε
-  dirR : ∀ {V} {P Q : Path V} {d} → P ⇒ Q → dir d P ⇒ dir d Q
---Reduction in a lambda
+  appPl : ∀ {V} {δ δ' ε : Proof V} → δ ⇒ δ' → appP δ ε ⇒ appP δ' ε
+  dirR : ∀ {V d} {P Q : Path V} → P ⇒ Q → dir d P ⇒ dir d Q
   βE : ∀ {V A M N P} {Q : Path V} → app* M N (λλλ A P) Q ⇒ P ⟦ x₂:= M ,x₁:= N ,x₀:= Q ⟧
   βPP : ∀ {V A M} {N N' : Term V} {P} → app* N N' (reff (ΛT A M)) P ⇒ M ⟦⟦ x₀::= P ∶ x₀:= N ≡ x₀:= N' ⟧⟧
   ref⊃* : ∀ {V} {φ ψ : Term V} → reff φ ⊃* reff ψ ⇒ reff (φ ⊃ ψ)
@@ -32,13 +30,9 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   univ⊃*univ : ∀ {V} {φ φ' ψ ψ' : Term V} {δ δ' ε ε'} →
     univ φ ψ δ ε ⊃* univ φ' ψ' δ' ε' ⇒ univ (φ ⊃ φ') (ψ ⊃ ψ') (ΛP (φ ⊃ φ') (ΛP (ψ ⇑) (appP (δ' ⇑ ⇑) (appP (var x₁) (appP (ε ⇑ ⇑) (var x₀)))))) (ΛP (ψ ⊃ ψ') (ΛP (φ ⇑) (appP (ε' ⇑ ⇑) (appP (var x₁) (appP (δ ⇑ ⇑) (var x₀))))))
   app*l : ∀ {V} {M N : Term V} {P P' Q} → P ⇒ P' → app* M N P Q ⇒ app* M N P' Q
-  reffR : ∀ {V} {M N : Term V} → M ⇒ N → reff M ⇒ reff N
+  reffR : ∀ {V} {M M' N N' : Term V} {P} → M ⇒ M' → app* N N' (reff M) P ⇒ app* N N' (reff M') P
   imp*l : ∀ {V} {P P' Q : Path V} → P ⇒ P' → P ⊃* Q ⇒ P' ⊃* Q
   imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒ Q' → P ⊃* Q ⇒ P ⊃* Q'
-  univ₁ : ∀ {V} {φ φ' ψ : Term V} {δ ε} → φ ⇒ φ' → univ φ ψ δ ε ⇒ univ φ' ψ δ ε
-  univ₂ : ∀ {V} {φ ψ ψ' : Term V} {δ ε} → ψ ⇒ ψ' → univ φ ψ δ ε ⇒ univ φ ψ' δ ε
-  univ₃ : ∀ {V} {φ ψ : Term V} {δ δ' ε} → δ ⇒ δ' → univ φ ψ δ ε ⇒ univ φ ψ δ' ε
-  univ₄ : ∀ {V} {φ ψ : Term V} {δ ε ε'} → ε ⇒ ε' → univ φ ψ δ ε ⇒ univ φ ψ δ ε'
 --Reduction in a univ
 
 ⇒-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ⇒ F → E 〈 ρ 〉 ⇒ F 〈 ρ 〉
@@ -50,11 +44,10 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-rep (impr ψ⇒ψ') = impr (⇒-resp-rep ψ⇒ψ')
 ⇒-resp-rep {ρ = ρ} (βP {φ = φ} {δ} {ε}) = subst (λ x → (appP (ΛP φ δ) ε) 〈 ρ 〉 ⇒ x) (≡-sym (•RS-botSub δ)) βP
 ⇒-resp-rep (appPl δ⇒δ') = appPl (⇒-resp-rep δ⇒δ')
-⇒-resp-rep (ΛPR φ⇒φ') = ΛPR (⇒-resp-rep φ⇒φ')
+⇒-resp-rep (dirR P⇒P') = dirR (⇒-resp-rep P⇒P')
 ⇒-resp-rep refdir = refdir
 ⇒-resp-rep univplus = univplus
 ⇒-resp-rep univminus = univminus
-⇒-resp-rep (dirR P⇒Q) = dirR (⇒-resp-rep P⇒Q)
 ⇒-resp-rep {ρ = ρ} (βE {A = A} {M} {N} {P} {Q}) = subst (λ x → (app* M N (λλλ A P) Q 〈 ρ 〉) ⇒ x) (botSub₃-liftRep₃ P) βE
 ⇒-resp-rep {ρ = ρ} (βPP {V} {A} {M} {N} {N'} {P}) = subst (λ x → (app* N N' (reff (ΛT A M)) P) 〈 ρ 〉 ⇒ x) 
   (let open ≡-Reasoning in 
@@ -63,7 +56,7 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   ≡⟨ pathSub-•PR M ⟩
     M ⟦⟦ x₀::= (P 〈 ρ 〉) •PR liftRep -Term ρ ∶ x₀:= N 〈 ρ 〉 •SR liftRep -Term ρ ≡
          x₀:= N' 〈 ρ 〉 •SR liftRep -Term ρ ⟧⟧
-  ≡⟨⟨ pathSub-cong M botPathSub-liftRep (comp-botSub' COMPRS COMPSR) (comp-botSub' COMPRS COMPSR) ⟩⟩
+  ≡⟨⟨ pathSub-cong M botPathSub-liftRep' (comp-botSub' COMPRS COMPSR) (comp-botSub' COMPRS COMPSR) ⟩⟩
     M ⟦⟦ ρ •RP x₀::= P ∶ ρ •RS x₀:= N ≡ ρ •RS x₀:= N' ⟧⟧
   ≡⟨ pathSub-•RP M ⟩
     M ⟦⟦ x₀::= P ∶ x₀:= N ≡ x₀:= N' ⟧⟧ 〈 ρ 〉
@@ -88,10 +81,6 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 ⇒-resp-rep (imp*r Q⇒Q') = imp*r (⇒-resp-rep Q⇒Q')
 ⇒-resp-rep (app*l P⇒P') = app*l (⇒-resp-rep P⇒P')
 ⇒-resp-rep (reffR M⇒N) = reffR (⇒-resp-rep M⇒N)
-⇒-resp-rep (univ₁ φ⇒φ') = univ₁ (⇒-resp-rep φ⇒φ')
-⇒-resp-rep (univ₂ ψ⇒ψ') = univ₂ (⇒-resp-rep ψ⇒ψ')
-⇒-resp-rep (univ₃ δ⇒δ') = univ₃ (⇒-resp-rep δ⇒δ')
-⇒-resp-rep (univ₄ ε⇒ε') = univ₄ (⇒-resp-rep ε⇒ε')
 
 ⇒-resp-sub : ∀ {U V} {M N : Term U} {σ : Sub U V} → M ⇒ N → M ⟦ σ ⟧ ⇒ N ⟦ σ ⟧
 ⇒-resp-sub {σ = σ} (βT {A = A} {M} {N}) = subst (λ x → appT (ΛT A (M ⟦ liftSub _ σ ⟧)) (N ⟦ σ ⟧) ⇒ x) (≡-sym (•-botSub'' M)) βT

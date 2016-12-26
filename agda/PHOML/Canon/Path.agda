@@ -96,17 +96,17 @@ Lemma35a : ∀ {V} {P : Path V} {pp : snocList (Var V -Proof)} {δ d} →
   APPP (dir d P) (snocmap var pp) ⇒ δ →
   Σ[ Q ∈ Path V ] P ⇒ Q × δ ≡ APPP (dir d Q) (snocmap var pp) ⊎
   Σ[ Q ∈ CanonΩ V ] P ≡ decode-CanonΩ Q
-Lemma35a {pp = []} (dirR P⇒Q) = inj₁ (_ ,p P⇒Q ,p refl)
 Lemma35a {pp = []} refdir = inj₂ ((reffC _) ,p refl)
 Lemma35a {pp = []} univplus = inj₂ ((univC _ _ _ _) ,p refl)
 Lemma35a {pp = []} univminus = inj₂ ((univC _ _ _ _) ,p refl)
 Lemma35a {pp = [] snoc p} (appPl univplus) = inj₂ ((univC _ _ _ _) ,p refl)
 Lemma35a {pp = [] snoc p} (appPl univminus) = inj₂ ((univC _ _ _ _) ,p refl)
-Lemma35a {pp = [] snoc _} (appPl (dirR P⇒Q)) = inj₁ (_ ,p P⇒Q ,p refl)
 Lemma35a {pp = [] snoc _} (appPl refdir) = inj₂ (reffC _ ,p refl)
 Lemma35a {pp = pp snoc x snoc _} (appPl Pppx⇒δ) with Lemma35a {pp = pp snoc x} Pppx⇒δ
 Lemma35a {pp = _ snoc _ snoc y} (appPl _) | inj₁ (Q ,p P⇒Q ,p δ≡Qppx) = inj₁ (Q ,p P⇒Q ,p cong (λ z → appP z (var y)) δ≡Qppx)
 Lemma35a {pp = _ snoc _ snoc _} (appPl _) | inj₂ Pcanon = inj₂ Pcanon
+Lemma35a {pp = []} (dirR P⇒P') = inj₁ (_ ,p P⇒P' ,p refl)
+Lemma35a {pp = [] snoc p} (appPl (dirR P⇒P')) = inj₁ (_ ,p P⇒P' ,p refl)
 
 Lemma35b : ∀ {V} {P : Path V} (pp : snocList (Var V -Proof)) {α β d} →
   α ↠ β → α ≡ APPP (dir d P) (snocmap var pp) →
@@ -151,7 +151,7 @@ red-app*l (inc (imp*l _)) ()
 red-app*l (inc (imp*r _)) ()
 red-app*l {M = M} {N} {Q₁ = Q₁} {Q₂} (inc (app*l {P' = P'} P⇒P')) P≡Q₁Q₂ = inj₁ (P' ,p (subst (λ x → x ↠ P') (app*-injl P≡Q₁Q₂) (inc P⇒P')) ,p 
   cong₄ app* (app*-inj₁ P≡Q₁Q₂) (app*-inj₂ P≡Q₁Q₂) refl (app*-injr P≡Q₁Q₂))
-red-app*l (inc (reffR _)) ()
+red-app*l (inc (reffR {M = M} M⇒M')) refMQ≡refMQ = inj₂ (reffC M ,p subst (λ x → x ↠ reff M) (app*-injl refMQ≡refMQ) ref)
 red-app*l ref P≡Q₁Q₂ = inj₁ (_ ,p ref ,p P≡Q₁Q₂)
 red-app*l (trans P↠P' P'↠P'') P≡Q₁Q₂ with red-app*l P↠P' P≡Q₁Q₂
 red-app*l (trans P↠P' P'↠P'') P≡Q₁Q₂ | inj₁ (Q₁' ,p Q₁↠Q₁' ,p P'≡Q₁'Q₂) with red-app*l P'↠P'' P'≡Q₁'Q₂

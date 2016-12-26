@@ -196,6 +196,9 @@ private ⊧reflm₃ : ∀ {U V} {M N : Term V} {P} {ρ : Rep U V} → ((x₂:= M
 ⊧reflm₃ x₀ = refl
 ⊧reflm₃ (↑ x) = refl
 
+↠-app*ref : ∀ {V} {M M' N N' : Term V} {P} → N ↠ N' → app* M M' (reff N) P ↠ app* M M' (reff N') P
+↠-app*ref = respects-RT₂ (λ _ _ → reffR) _ _
+
 ⊧ref : ∀ {V} {M : Term V} {A} → ⊧T M ∶ A → ⊧E reff M ∶ M ≡〈 A 〉 M
 ⊧ref {V} {M} {A = Ω} ⊧M∶Ω = let θ ,p M↠θ = ⊧canon ⊧M∶Ω in ⊧refP {θ = θ} M↠θ
 ⊧ref {V} {M} {A = A ⇛ B} ⊧M∶A⇛B W ρ L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' =
@@ -229,7 +232,7 @@ private ⊧reflm₃ : ∀ {U V} {M N : Term V} {P} {ρ : Rep U V} → ((x₂:= M
   let ⊧N⟦⟦P⟧⟧ : ⊧E N 〈 liftRep _ ρ 〉 ⟦⟦ x₀::= P ∶ x₀:= L ≡ x₀:= L' ⟧⟧ ∶ N 〈 liftRep _ ρ 〉 ⟦ x₀:= L ⟧ ≡〈 B 〉 N 〈 liftRep _ ρ 〉 ⟦ x₀:= L' ⟧
       ⊧N⟦⟦P⟧⟧ = conversionE ⊧N⟦⟦P⟧⟧ (inc βT) (inc βT) in
   let ⊧refMP : ⊧E app* L L' (reff M 〈 ρ 〉) P ∶ N 〈 liftRep _ ρ 〉 ⟦ x₀:= L ⟧ ≡〈 B 〉 N 〈 liftRep _ ρ 〉 ⟦ x₀:= L' ⟧
-      ⊧refMP = (↞E ⊧N⟦⟦P⟧⟧ (trans (↠-app*l (↠-resp-rep (↠-reff M↠ΛCN))) (inc βPP))) in
+      ⊧refMP = ↞E ⊧N⟦⟦P⟧⟧ (trans (↠-app*ref (↠-resp-rep M↠ΛCN)) (inc βPP)) in
   conversionE ⊧refMP (ΛCNx≃Mx L) (ΛCNx≃Mx L')
 
 ⊧E-valid₁ : ∀ {V} {P : Path V} {φ ψ : Term V} → ⊧E P ∶ φ ≡〈 Ω 〉 ψ → ⊧T φ ∶ Ω
