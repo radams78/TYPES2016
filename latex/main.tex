@@ -242,8 +242,8 @@ definition is given by the rules in Figure \ref{fig:reduction}
 \begin{figure}
 \paragraph*{Reduction on Terms}
 $$ \infer{(\lambda x:A.M)N \rightarrow M[x:=N]}{} \quad
-\infer{MN \rightarrow M'N}{M \rightarrow M'} \quad
-\infer{\varphi \supset \psi \rightarrow \varphi' \supset \psi}{\varphi \rightarrow \varphi'} \quad
+\infer{MN \rightarrow M'N}{M \rightarrow M'} $$
+$$ \infer{\varphi \supset \psi \rightarrow \varphi' \supset \psi}{\varphi \rightarrow \varphi'} \quad
 \infer{\varphi \supset \psi \rightarrow \varphi \supset \psi'}{\psi \rightarrow \psi'} $$
 \paragraph*{Reduction on Proofs}
 $$\infer{(\lambda p : \varphi . \delta)\epsilon \rightarrow \delta [ p := \epsilon ]}{} \quad

@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex main"] 1482950347 "main.aux" "main.bbl" "main" 1482950768
+["bibtex main"] 1482952850 "main.aux" "main.bbl" "main" 1482952852
   "../../../../type.bib" 1481447904 257110 283431bb728e911e177f0d906966f159 ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/urlbst/plainurl.bst" 1311291550 31050 ffdaefb09013f5fd4b31e485c13933c1 ""
-  "main.aux" 1482950767 5825 1a6b07d89786bdcfd4954e04bb4f4a4c ""
+  "main.aux" 1482952851 5828 2df35f7b1a9af5fcd0b85020bd4b0835 ""
   "main.bcf" 0 -1 0 ""
   (generated)
-  "main.blg"
   "main.bbl"
-["pdflatex"] 1482950766 "main.tex" "main.pdf" "main" 1482950768
+  "main.blg"
+["pdflatex"] 1482952850 "main.tex" "main.pdf" "main" 1482952852
   "/etc/texmf/web2c/texmf.cnf" 1482949960 1101 af7716885e081ab43982cab7b4672c1a ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecrm1000.tfm" 1136768653 3584 adb004a0c8e7c46ee66cad73671f37b4 ""
@@ -229,13 +229,13 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1482950224 3856136 1ee98d09b2991be950c748617ecb5f82 ""
   "cc-by.pdf" 1479463670 59879 b534039833ae0720e95faf00c3f48850 ""
   "lipics-logo-bw.pdf" 1479463736 13746 f468fb282d86ba458872de888bef15fe ""
-  "main.aux" 1482950767 5825 1a6b07d89786bdcfd4954e04bb4f4a4c ""
-  "main.bbl" 1482950347 2069 38d82d7c466dcdcd763643685bb78649 "bibtex main"
-  "main.out" 1482950767 1333 b527c09b2553ec180bdff3bd577d1a66 ""
-  "main.tex" 1482950764 66161 29d9fd1bc564c7153ba35a8239b1d021 ""
+  "main.aux" 1482952851 5828 2df35f7b1a9af5fcd0b85020bd4b0835 ""
+  "main.bbl" 1482952850 2069 38d82d7c466dcdcd763643685bb78649 "bibtex main"
+  "main.out" 1482952851 1333 b527c09b2553ec180bdff3bd577d1a66 ""
+  "main.tex" 1482952837 66161 40cf02cb8bcbc9b5aa579c85021dd044 ""
   (generated)
+  "main.vtc"
   "main.pdf"
-  "main.out"
   "main.log"
   "main.aux"
-  "main.vtc"
+  "main.out"
