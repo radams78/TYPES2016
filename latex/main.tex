@@ -254,7 +254,6 @@ $$ \infer{\delta \epsilon \rightarrow \delta' \epsilon}{\delta \rightarrow \delt
 \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^- \rightarrow \epsilon}{} $$
 $$ \infer{P^+ \rightarrow Q^+}{P \rightarrow Q} \quad
 \infer{P^- \rightarrow Q^-}{P \rightarrow Q}$$
-$$ \infer{\lambda p:\phi.\delta \rightarrow \lambda p:\phi'.\delta}{\phi \rightarrow \phi'} $$
 \paragraph*{Reduction on Paths}
 $$\infer{(\triplelambda e:x =_A y.P)_{MN} Q \rightarrow P [x := M, y := N, e := Q]}{} $$
 $$ \infer{\reff{\lambda x:A.M}_{N N'} P \rightarrow M \{ x:=P : N = N' \}}{} $$
@@ -269,15 +268,9 @@ $$ \infer{\begin{array}{l}
 \univ{\varphi \supset \varphi'}{\psi \supset \psi'}{\lambda p : \varphi \supset \varphi'. \lambda q : \psi. \delta' (p(\epsilon q))}{\lambda p : \psi \supset \psi'. \lambda q : \varphi. \epsilon' (p (\delta q))}
 \end{array}}{} $$
 $$ \infer{P_{MN} Q \rightarrow P'_{MN} Q}{P \rightarrow P'} \quad
-\infer{\reff{M} \rightarrow \reff{N}}{M \rightarrow N} \quad
-\infer{P \supset^* Q \rightarrow P' \supset^* Q}{P \rightarrow P'} \quad
+\infer{\reff{M}_{NN'}P \rightarrow \reff{M'}_{NN'}P}{M \rightarrow M'} $$
+$$ \infer{P \supset^* Q \rightarrow P' \supset^* Q}{P \rightarrow P'} \quad
 \infer{P \supset^* Q \rightarrow P \supset^* Q'}{Q \rightarrow Q'} $$
-$$ \infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi'}{\psi}{\delta}{\epsilon}}{\phi \rightarrow \phi'}
-\quad
-\infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi'}{\delta}{\epsilon}}{\psi \rightarrow \psi'} $$
-$$ \infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi}{\delta'}{\epsilon}}{\delta \rightarrow \delta'}
-\quad
-\infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi}{\psi}{\delta}{\epsilon'}}{\epsilon \rightarrow \epsilon'} $$
 \caption{Reduction in PHOML}
 \label{fig:reduction}
 \end{figure}
@@ -1078,12 +1071,10 @@ $$ \infer{(\lambda x:A.M)N \rhd M[x:=N]}{} \quad
 $$\infer{(\lambda p : \varphi . \delta)\epsilon \rhd \delta [ p := \epsilon ]}{} \quad
 \infer{\reff{\varphi}^+ \rhd \lambda p : \varphi . p}{} \quad
 \infer{\reff{\varphi}^- \rhd \lambda p : \varphi . p}{} $$
-$$ \infer{\delta \epsilon \rhd \delta' \epsilon}{\delta \rhd \delta'} \quad
-\infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rhd \delta}{} \quad
+$$ \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^+ \rhd \delta}{} \quad
 \infer{\univ{\varphi}{\psi}{\delta}{\epsilon}^- \rhd \epsilon}{} $$
-$$ \infer{P^+ \rhd Q^+}{P \rhd Q} \quad
+$$ \infer{\delta \epsilon \rhd \delta' \epsilon}{\delta \rhd \delta'} \quad \infer{P^+ \rhd Q^+}{P \rhd Q} \quad
 \infer{P^- \rhd Q^-}{P \rhd Q}$$
-$$ \infer{\lambda p:\phi.\delta \rhd \lambda p:\phi'.\delta}{\phi \rhd \phi'} $$
 \paragraph*{Reduction on Paths}
 $$\infer{(\triplelambda e:x =_A y.P)_{MN} Q \rhd P [x := M, y := N, e := Q]}{} $$
 $$ \infer{\reff{\lambda x:A.M}_{N N'} P \rhd M \{ x:=P : N = N' \}}{} $$
@@ -1098,9 +1089,8 @@ $$ \infer{\begin{array}{l}
 \univ{\varphi \supset \varphi'}{\psi \supset \psi'}{\lambda p : \varphi \supset \varphi'. \lambda q : \psi. \delta' (p(\epsilon q))}{\lambda p : \psi \supset \psi'. \lambda q : \varphi. \epsilon' (p (\delta q))}
 \end{array}}{} $$
 $$ \infer{P_{MN} Q \rhd P'_{MN} Q}{P \rhd P'} \quad
-\infer{\reff{M} \rhd \reff{N}}{M \rhd N} \quad
+\infer{\reff{M}_{NN'}P \rhd \reff{M'}_{NN'}P}{M \rhd N} \quad
 \infer{P \supset^* Q \rhd P' \supset^* Q}{P \rhd P' \quad Q \rhd Q'} $$
-$$ \infer{\univ{\phi}{\psi}{\delta}{\epsilon} \rightarrow \univ{\phi'}{\psi'}{\delta'}{\epsilon'}}{\phi \rhd \phi' \quad \psi \rhd \psi' \quad \delta \rhd \delta' \quad \epsilon \rhd \epsilon'} $$
 \caption{Parallel One-Step Reduction}
 \label{fig:POSR}
 \end{figure}
