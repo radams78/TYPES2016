@@ -24,13 +24,15 @@ module EqReasoning {s₁ s₂} (S : Setoid s₁ s₂) where
   _≈⟨⟨_⟩⟩_ : ∀ x {y z} → y ≈ x → y IsRelatedTo z → x IsRelatedTo z
   x ≈⟨⟨ y≈x ⟩⟩ y≈z = x ≈⟨ Setoid.sym S  y≈x ⟩ y≈z
 
-module ≡-Reasoning {a} {A : Set a} where
+module ≡-Reasoning where
   open Relation.Binary.PropositionalEquality public
-  open ≡-Reasoning {a} {A} public
+  open ≡-Reasoning public
 
-  infixr 2 _≡⟨⟨_⟩⟩_
-  _≡⟨⟨_⟩⟩_ : ∀ (x : A) {y z} → y ≡ x → y ≡ z → x ≡ z
-  _ ≡⟨⟨ y≡x ⟩⟩ y≡z = trans (sym y≡x) y≡z
+  module _ {a} {A : Set a} where
+  
+    infixr 2 _≡⟨⟨_⟩⟩_
+    _≡⟨⟨_⟩⟩_ : ∀ (x : A) {y z} → y ≡ x → y IsRelatedTo z → x IsRelatedTo z
+    _ ≡⟨⟨ y≡x ⟩⟩ (Relation.Binary.PreorderReasoning.relTo y≡z) = Relation.Binary.PreorderReasoning.relTo (Setoid.trans (setoid A) (≡-sym y≡x) y≡z)
 
 cong₃ : ∀ {A B C D : Set} (f : A → B → C → D) {a a' b b' c c'} →
           a ≡ a' → b ≡ b' → c ≡ c' → f a b c ≡ f a' b' c'

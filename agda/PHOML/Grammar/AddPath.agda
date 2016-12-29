@@ -28,7 +28,7 @@ sub↖-comp : ∀ {U V W} {σ : Sub V W} {ρ : Sub U V} → sub↖ (σ • ρ) �
 sub↖-comp x₀ = refl
 sub↖-comp {σ = σ} {ρ} (↑ x) = ≡-sym (liftSub-upRep₃ (ρ _ x))
 
-sub↗ : ∀ {U} {V} → Sub U V → Sub (U , -Term) (V , -Term , -Term , -Path)
+sub↗ : ∀ {U} {V} → Sub U V → Sub (U , -Term) (((V , -Term) , -Term) , -Path)
 sub↗ σ _ x₀ = var x₁
 sub↗ σ _ (↑ x) = σ _ x ⇑ ⇑ ⇑
 

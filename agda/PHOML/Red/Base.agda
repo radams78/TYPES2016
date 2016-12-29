@@ -33,7 +33,6 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
   reffR : ∀ {V} {M M' N N' : Term V} {P} → M ⇒ M' → app* N N' (reff M) P ⇒ app* N N' (reff M') P
   imp*l : ∀ {V} {P P' Q : Path V} → P ⇒ P' → P ⊃* Q ⇒ P' ⊃* Q
   imp*r : ∀ {V} {P Q Q' : Path V} → Q ⇒ Q' → P ⊃* Q ⇒ P ⊃* Q'
---Reduction in a univ
 
 ⇒-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ⇒ F → E 〈 ρ 〉 ⇒ F 〈 ρ 〉
 ⇒-resp-rep {ρ = ρ} (βT {V} {A} {M} {N}) = subst (λ x → (appT (ΛT A M) N 〈 ρ 〉) ⇒ x) 
@@ -115,7 +114,7 @@ data _⇒_ : ∀ {V K} → Expression V K → Expression V K → Set where
 
 -- If MN1...Nn -> N with n >= 1 then either N = M'N1...Nn where M -> M', or M is a lambda-term
 APPl-⇒ : ∀ {V M N M' N'} (NN : snocList (Term V)) →
-  M ⇒ N → M ≡ APPl (appT M' N') NN → Σ[ M'' ∈ Term V ] M' ⇒ M'' × N ≡ APPl (appT M'' N') NN ⊎ Σ[ A ∈ Type ] Σ[ M'' ∈ Term (V , -Term) ] M' ≡ ΛT A M''
+  M ⇒ N → M ≡ APPl (appT M' N') NN → Σ[ M'' ∈ Term V ] (M' ⇒ M'' × N ≡ APPl (appT M'' N') NN) ⊎ Σ[ A ∈ Type ] Σ[ M'' ∈ Term (V , -Term) ] M' ≡ ΛT A M''
 APPl-⇒ NN βT M≡M'NN = inj₂ (_ ,p _ ,p (APPl-Λ {NN = NN} (≡-sym M≡M'NN)))
 APPl-⇒ [] (appTl {M' = M''} M⇒N) M≡M'NN = inj₁ (M'' ,p subst (λ x → x ⇒ M'') (appT-injl M≡M'NN) M⇒N ,p cong (appT M'') (appT-injr M≡M'NN))
 APPl-⇒ (NN snoc _) (appTl M⇒N) M≡M'NN with APPl-⇒ NN M⇒N (appT-injl M≡M'NN)

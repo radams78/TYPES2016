@@ -32,12 +32,12 @@ _⇒?_ = RClose _⇒_
 ⇒?-appPl = respects-R' _ _⇒_ (λ _ _ → appPl) _ _
 
 imp-osr-inj₁ : ∀ {V} {φ ψ χ : Term V} → φ ⊃ ψ ⇒ χ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
-  χ ≡ φ' ⊃ ψ' × φ ⇒? φ'
+  (χ ≡ φ' ⊃ ψ' × φ ⇒? φ')
 imp-osr-inj₁ {ψ = ψ} (impl {φ' = φ'} φ⊃φ') = φ' ,p ψ ,p refl ,p inc φ⊃φ'
 imp-osr-inj₁ {φ = φ} (impr {ψ' = ψ'} _) = φ ,p ψ' ,p refl ,p ref
 
 imp-osr-inj₂ : ∀ {V} {φ ψ χ : Term V} → φ ⊃ ψ ⇒ χ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
-  χ ≡ φ' ⊃ ψ' × ψ ⇒? ψ'
+  (χ ≡ φ' ⊃ ψ' × ψ ⇒? ψ')
 imp-osr-inj₂ {ψ = ψ} (impl {φ' = φ'} _) = φ' ,p ψ ,p refl ,p ref
 imp-osr-inj₂ {φ = φ} (impr {ψ' = ψ'} ψ⇒ψ') = φ ,p ψ' ,p refl ,p inc ψ⇒ψ'
 

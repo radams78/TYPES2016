@@ -19,7 +19,7 @@ decode-CanonP (Λ φ δ) = ΛP φ δ
 reflect-CanonP : ∀ {U V} {δ : Proof U} {ρ : Rep U V} {χ : CanonP V} → δ 〈 ρ 〉 ≡ decode-CanonP χ → Σ[ χ' ∈ CanonP U ] δ ≡ decode-CanonP χ'
 reflect-CanonP {δ = δ} {ρ} {χ = neutral χ} δρ≡χ = let χ' ,p δ≡χ' = reflect-NeutralP δ χ δρ≡χ in (neutral χ') ,p δ≡χ'
 reflect-CanonP {δ = var x} {χ = Λ φ χ} ()
-reflect-CanonP {δ = app -lamProof (φ ∷ δ ∷ [])} δρ≡χ = (Λ φ δ) ,p refl
+reflect-CanonP {δ = app -lamProof (φ ∷ (δ ∷ []))} δρ≡χ = (Λ φ δ) ,p refl
 reflect-CanonP {δ = app -appProof x₁} {χ = Λ φ χ} ()
 reflect-CanonP {δ = app (-dir x) x₁} {χ = Λ φ χ} ()
 --TODO Common pattern in reflect lemmas

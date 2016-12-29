@@ -3,7 +3,8 @@ module PHOML.Compute.PC where
 open import Data.Product renaming (_,_ to _,p_)
 open import Prelims
 open import PHOML.Grammar
-open import PHOML.Canon.Prop
+open import PHOML.Canon.Prp
+open import PHOML.Canon.Proof
 open import PHOML.Neutral
 open import PHOML.Red
 
@@ -39,3 +40,12 @@ reductionPC {θ = imp θ θ'} ⊧δ∶θ⊃θ' δ⇒δ' W ρ ε ⊧ε∶θ = red
 ↠PC ⊧δ∶θ (inc δ⇒ε) = reductionPC ⊧δ∶θ δ⇒ε
 ↠PC ⊧δ∶θ ref = ⊧δ∶θ
 ↠PC ⊧δ∶θ (trans δ↠ε ε↠ε') = ↠PC (↠PC ⊧δ∶θ δ↠ε) ε↠ε'
+⊧PC-wn : ∀ {V} {δ : Proof V} {θ} → ⊧PC δ ∶ θ → Σ[ ε ∈ CanonP V ] δ ↠ decode-CanonP ε
+⊧PC-wn {θ = bot} (ε ,p δ↠ε) = neutral ε ,p δ↠ε
+⊧PC-wn {V} {δ} {θ = imp θ θ'} ⊧δ∶θ =
+  let χ ,p δ⇑ε↠χ = ⊧PC-wn (⊧δ∶θ (V , -Proof) upRep (var x₀) (⊧neutralPC (var x₀))) in
+  let χ' ,p δ⇑↠χ' = app-wnl' {χ = χ} δ⇑ε↠χ refl refl in
+  let χ'' ,p δ↠χ'' ,p χ''⇑≡χ' = ↠-reflect-rep {E = δ} {ρ = upRep} δ⇑↠χ' refl in  
+  let χ''' ,p χ'''⇑≡χ'' = reflect-CanonP {δ = χ''} {χ = χ'} χ''⇑≡χ' in
+  χ''' ,p subst (λ x → δ ↠ x) χ'''⇑≡χ'' δ↠χ''
+

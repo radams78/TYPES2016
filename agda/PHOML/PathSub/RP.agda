@@ -21,7 +21,7 @@ pathSub-•RP : ∀ {U} {V} {W} M {ρ : Rep V W} {τ : PathSub U V} {σ σ' : Su
   M ⟦⟦ ρ •RP τ ∶ ρ •RS σ ≡ ρ •RS σ' ⟧⟧ ≡ M ⟦⟦ τ ∶ σ ≡ σ' ⟧⟧ 〈 ρ 〉
 pathSub-•RP (var x) = refl
 pathSub-•RP (app -bot []) = refl
-pathSub-•RP (app -imp (φ ∷ ψ ∷ [])) = cong₂ _⊃*_ (pathSub-•RP φ) (pathSub-•RP ψ)
+pathSub-•RP (app -imp (φ ∷ (ψ ∷ []))) = cong₂ _⊃*_ (pathSub-•RP φ) (pathSub-•RP ψ)
 pathSub-•RP (app (-lamTerm A) (M ∷ [])) {ρ} {τ} {σ} {σ'} = cong (λλλ A) 
   (let open ≡-Reasoning in
   begin
@@ -31,5 +31,5 @@ pathSub-•RP (app (-lamTerm A) (M ∷ [])) {ρ} {τ} {σ} {σ'} = cong (λλλ 
   ≡⟨ pathSub-•RP M ⟩
     M ⟦⟦ liftPathSub τ ∶ sub↖ σ ≡ sub↗ σ' ⟧⟧ 〈 liftsRep pathDom ρ 〉
   ∎)
-pathSub-•RP (app -appTerm (M ∷ N ∷ [])) = cong₄ app* (sub-•RS N) (sub-•RS N) (pathSub-•RP M) (pathSub-•RP N)
+pathSub-•RP (app -appTerm (M ∷ (N ∷ []))) = cong₄ app* (sub-•RS N) (sub-•RS N) (pathSub-•RP M) (pathSub-•RP N)
 

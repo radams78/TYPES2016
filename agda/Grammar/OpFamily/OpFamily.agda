@@ -17,7 +17,7 @@ record OpFamily : Set₂ where
   assoc : ∀ {U} {V} {W} {X} 
     {τ : Op W X} {σ : Op V W} {ρ : Op U V} → 
     τ ∘ (σ ∘ ρ) ∼op (τ ∘ σ) ∘ ρ
-  assoc {U} {V} {W} {X} {τ} {σ} {ρ} {K} x = let open ≡-Reasoning {A = Expression X (varKind K)} in 
+  assoc {U} {V} {W} {X} {τ} {σ} {ρ} {K} x = let open ≡-Reasoning in 
     begin 
       apV (τ ∘ (σ ∘ ρ)) x
     ≡⟨ apV-comp ⟩
@@ -31,7 +31,7 @@ record OpFamily : Set₂ where
     ∎
 
   unitl : ∀ {U} {V} {σ : Op U V} → idOp V ∘ σ ∼op σ
-  unitl {U} {V} {σ} {K} x = let open ≡-Reasoning {A = Expression V (varKind K)} in 
+  unitl {U} {V} {σ} {K} x = let open ≡-Reasoning in 
     begin 
       apV (idOp V ∘ σ) x
     ≡⟨ apV-comp ⟩
@@ -41,7 +41,7 @@ record OpFamily : Set₂ where
     ∎
 
   unitr : ∀ {U} {V} {σ : Op U V} → σ ∘ idOp U ∼op σ
-  unitr {U} {V} {σ} {K} x = let open ≡-Reasoning {A = Expression V (varKind K)} in
+  unitr {U} {V} {σ} {K} x = let open ≡-Reasoning in
     begin 
       apV (σ ∘ idOp U) x
     ≡⟨ apV-comp ⟩

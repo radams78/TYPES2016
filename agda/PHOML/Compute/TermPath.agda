@@ -8,7 +8,7 @@ open import PHOML.Red
 open import PHOML.Canon
 open import PHOML.Neutral
 open import PHOML.Compute.PC
-open import PHOML.Compute.Prop
+open import PHOML.Compute.Prp
 
 ⊧T_∶_ : ∀ {V} → Term V → Type → Set
 ⊧E_∶_≡〈_〉_ : ∀ {V} → Path V → Term V → Type → Term V → Set

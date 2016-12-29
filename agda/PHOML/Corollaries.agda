@@ -42,7 +42,7 @@ decodeNTA (V ,Path) = decodeNTA V , -Path
   (⊧rep {decodeNTA V} {decodeNTA V , -Proof} {_} {var x} {typeof x Γ}
      {upRep} 
   (subst (λ y → ⊧ var x ∶ y) sub-idSub (⊧idSub V Γ (context-validity Γ⊢φ∶Ω) x)))
-⊧idSub (V ,Path) (Γ , app (-eq A) (M ∷ N ∷ [])) (ctxER Γ⊢M∶A Γ⊢N∶A) x₀ = 
+⊧idSub (V ,Path) (Γ , app (-eq A) (M ∷ (N ∷ []))) (ctxER Γ⊢M∶A Γ⊢N∶A) x₀ = 
   ⊧neutralE {P = var x₀} 
   (subst (λ x → ⊧T x ∶ A) (≡-sym sub-idSub) (⊧Trep M {ρ = upRep}  
   (subst (λ x → ⊧T x ∶ A) sub-idSub (soundness Γ⊢M∶A (⊧idSub V Γ (context-validity Γ⊢M∶A)))))) 

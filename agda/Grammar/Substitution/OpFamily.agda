@@ -17,7 +17,7 @@ _•RS_ : ∀ {U} {V} {W} → Rep V W → Sub U V → Sub U W
 liftSub-•RS' : ∀ {U} {V} {W} {K} {ρ : Rep V W} {σ : Sub U V} → 
   liftSub K (ρ •RS σ) ∼ liftRep K ρ •RS liftSub K σ
 liftSub-•RS' {K = K} x₀ = refl
-liftSub-•RS' {U} {V} {W} {K} {ρ} {σ} {L} (↑ x) = let open ≡-Reasoning {A = Expression (W , K) (varKind L)} in 
+liftSub-•RS' {U} {V} {W} {K} {ρ} {σ} {L} (↑ x) = let open ≡-Reasoning in 
   begin 
     (σ L x) 〈 ρ 〉 〈 upRep 〉
   ≡⟨⟨ rep-•R (σ L x) ⟩⟩

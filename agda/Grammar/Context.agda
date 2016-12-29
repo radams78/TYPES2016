@@ -76,9 +76,9 @@ liftsRep-typed {AA = A , AA} ρ∶Γ⇒RΔ = liftsRep-typed {AA = AA} (liftRep-t
   ∎
 
 upRep₃-typed : ∀ {V K1 K2 K3} {Γ : Context V} 
-  {A1 : Expression V (parent K1)} {A2 : Expression (V , K1) (parent K2)} {A3 : Expression (V , K1 , K2) (parent K3)} → 
-  upRep •R upRep •R upRep ∶ Γ ⇒R Γ , A1 , A2 , A3
+  {A1 : Expression V (parent K1)} {A2 : Expression (V , K1) (parent K2)} {A3 : Expression ((V , K1) , K2) (parent K3)} → 
+  (upRep •R upRep) •R upRep ∶ Γ ⇒R (((Γ , A1) , A2) , A3)
 upRep₃-typed {V} {Γ = Γ} {A1} {A2} {A3} = 
-  •R-typed {Θ = Γ , A1 , A2 , A3} 
-  (•R-typed {Θ = Γ , A1 , A2 , A3} (upRep-typed A3) (upRep-typed A2)) (upRep-typed A1)
+  •R-typed {Θ = ((Γ , A1) , A2) , A3} 
+  (•R-typed {Θ = ((Γ , A1) , A2) , A3} (upRep-typed A3) (upRep-typed A2)) (upRep-typed A1)
 

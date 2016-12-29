@@ -32,7 +32,7 @@ reflect-canonΩ {P = app -app* x₁} {reffC M} ()
 reflect-canonΩ {P = var x} {univC x₁ x₂ x₃ x₄} ()
 reflect-canonΩ {P = app -ref x₁} {univC x₂ x₃ x₄ x₅} ()
 reflect-canonΩ {P = app -imp* x₁} {univC x₂ x₃ x₄ x₅} ()
-reflect-canonΩ {P = app -univ (M₁ ∷ M₂ ∷ δ₁ ∷ δ₂ ∷ [])} {univC N₁ N₂ Q₁ Q₂} Pρ≡Q = univC M₁ M₂ δ₁ δ₂ ,p refl
+reflect-canonΩ {P = app -univ (M₁ ∷ (M₂ ∷ (δ₁ ∷ (δ₂ ∷ []))))} {univC N₁ N₂ Q₁ Q₂} Pρ≡Q = univC M₁ M₂ δ₁ δ₂ ,p refl
 reflect-canonΩ {P = app (-lll x) x₁} {univC x₂ x₃ x₄ x₅} ()
 reflect-canonΩ {P = app -app* x₁} {univC x₂ x₃ x₄ x₅} ()
 
@@ -72,7 +72,7 @@ reflect-canonE {P = app -app* x₁} {reffC M} ()
 reflect-canonE {P = var x} {univC x₁ x₂ x₃ x₄} ()
 reflect-canonE {P = app -ref x₁} {univC x₂ x₃ x₄ x₅} ()
 reflect-canonE {P = app -imp* x₁} {univC x₂ x₃ x₄ x₅} ()
-reflect-canonE {P = app -univ (M₁ ∷ M₂ ∷ δ₁ ∷ δ₂ ∷ [])} {univC N₁ N₂ Q₁ Q₂} Pρ≡Q = univC M₁ M₂ δ₁ δ₂ ,p refl
+reflect-canonE {P = app -univ (M₁ ∷ (M₂ ∷ (δ₁ ∷ (δ₂ ∷ []))))} {univC N₁ N₂ Q₁ Q₂} Pρ≡Q = univC M₁ M₂ δ₁ δ₂ ,p refl
 reflect-canonE {P = app (-lll x) x₁} {univC x₂ x₃ x₄ x₅} ()
 reflect-canonE {P = app -app* x₁} {univC x₂ x₃ x₄ x₅} ()
 reflect-canonE {P = var _} {λλλC _ _} ()
@@ -94,7 +94,7 @@ decode-CanonΩE {P = univC _ _ _ _} = refl
 
 Lemma35a : ∀ {V} {P : Path V} {pp : snocList (Var V -Proof)} {δ d} →
   APPP (dir d P) (snocmap var pp) ⇒ δ →
-  Σ[ Q ∈ Path V ] P ⇒ Q × δ ≡ APPP (dir d Q) (snocmap var pp) ⊎
+  Σ[ Q ∈ Path V ] (P ⇒ Q × δ ≡ APPP (dir d Q) (snocmap var pp)) ⊎
   Σ[ Q ∈ CanonΩ V ] P ≡ decode-CanonΩ Q
 Lemma35a {pp = []} refdir = inj₂ ((reffC _) ,p refl)
 Lemma35a {pp = []} univplus = inj₂ ((univC _ _ _ _) ,p refl)
@@ -102,15 +102,15 @@ Lemma35a {pp = []} univminus = inj₂ ((univC _ _ _ _) ,p refl)
 Lemma35a {pp = [] snoc p} (appPl univplus) = inj₂ ((univC _ _ _ _) ,p refl)
 Lemma35a {pp = [] snoc p} (appPl univminus) = inj₂ ((univC _ _ _ _) ,p refl)
 Lemma35a {pp = [] snoc _} (appPl refdir) = inj₂ (reffC _ ,p refl)
-Lemma35a {pp = pp snoc x snoc _} (appPl Pppx⇒δ) with Lemma35a {pp = pp snoc x} Pppx⇒δ
-Lemma35a {pp = _ snoc _ snoc y} (appPl _) | inj₁ (Q ,p P⇒Q ,p δ≡Qppx) = inj₁ (Q ,p P⇒Q ,p cong (λ z → appP z (var y)) δ≡Qppx)
-Lemma35a {pp = _ snoc _ snoc _} (appPl _) | inj₂ Pcanon = inj₂ Pcanon
+Lemma35a {pp = (pp snoc x) snoc _} (appPl Pppx⇒δ) with Lemma35a {pp = pp snoc x} Pppx⇒δ
+Lemma35a {pp = (_ snoc _) snoc y} (appPl _) | inj₁ (Q ,p P⇒Q ,p δ≡Qppx) = inj₁ (Q ,p P⇒Q ,p cong (λ z → appP z (var y)) δ≡Qppx)
+Lemma35a {pp = (_ snoc _) snoc _} (appPl _) | inj₂ Pcanon = inj₂ Pcanon
 Lemma35a {pp = []} (dirR P⇒P') = inj₁ (_ ,p P⇒P' ,p refl)
 Lemma35a {pp = [] snoc p} (appPl (dirR P⇒P')) = inj₁ (_ ,p P⇒P' ,p refl)
 
 Lemma35b : ∀ {V} {P : Path V} (pp : snocList (Var V -Proof)) {α β d} →
   α ↠ β → α ≡ APPP (dir d P) (snocmap var pp) →
-  Σ[ Q ∈ Path V ] P ↠ Q × β ≡ APPP (dir d Q) (snocmap var pp) ⊎
+  Σ[ Q ∈ Path V ] (P ↠ Q × β ≡ APPP (dir d Q) (snocmap var pp)) ⊎
   Σ[ Q ∈ CanonΩ V ] P ↠ decode-CanonΩ Q
 Lemma35b pp {β = β} (inc α⇒β) α≡Ppp with Lemma35a {pp = pp} (subst (λ x → x ⇒ β) α≡Ppp α⇒β) 
 Lemma35b _ (inc α⇒β) α≡Ppp | inj₁ (Q ,p P⇒Q ,p β≡Q+pp) = inj₁ (Q ,p inc P⇒Q ,p β≡Q+pp)
@@ -139,7 +139,7 @@ Lemma35c (pp snoc p) (dirN _ x) P+pp↠δ | inj₁ (Q ,p P↠Q ,p ())
 Lemma35c _ _ P+pp↠δ | inj₂ Pcanon = Pcanon
 
 red-app*l : ∀ {V} {M N : Term V} {P P' Q₁ Q₂ : Path V} → P ↠ P' → P ≡ app* M N Q₁ Q₂ →
-  Σ[ Q₁' ∈ Path V ] Q₁ ↠ Q₁' × P' ≡ app* M N Q₁' Q₂ ⊎
+  Σ[ Q₁' ∈ Path V ] (Q₁ ↠ Q₁' × P' ≡ app* M N Q₁' Q₂) ⊎
   Σ[ R ∈ CanonE V ] Q₁ ↠ decode-CanonE R
 red-app*l {Q₁ = Q₁} (inc (βE {A = A} {P = P})) P≡Q₁Q₂ = inj₂ (λλλC A P ,p subst (λ x → Q₁ ↠ x) (≡-sym (app*-injl P≡Q₁Q₂)) ref)
 red-app*l {Q₁ = Q₁} (inc (βPP {A = A} {M = M})) P≡Q₁Q₂ = inj₂ (reffC (ΛT A M) ,p subst (λ x → Q₁ ↠ x) (≡-sym (app*-injl P≡Q₁Q₂)) ref)

@@ -103,6 +103,7 @@ rep-•R₃ : ∀ {U V₁ V₂ V₃ C K} (E : Subexp U C K) {ρ₁ : Rep U V₁}
   E 〈 ρ₃ •R ρ₂ •R ρ₁ 〉 ≡ E 〈 ρ₁ 〉 〈 ρ₂ 〉 〈 ρ₃ 〉
 rep-•R₃ E {ρ₁} {ρ₂} {ρ₃} =
   let open ≡-Reasoning in
+  begin
     E 〈 ρ₃ •R ρ₂ •R ρ₁ 〉
   ≡⟨ rep-•R E ⟩
     E 〈 ρ₁ 〉 〈 ρ₃ •R ρ₂ 〉

@@ -105,8 +105,8 @@ botSub-upRep : ∀ {U} {C} {K} {L}
   E 〈 upRep 〉 ⟦ x₀:= F ⟧ ≡ E
 botSub-upRep _ = botSub-up COMPSR
 
-x₂:=_,x₁:=_,x₀:=_ : ∀ {V} {K1} {K2} {K3} → Expression V (varKind K1) → Expression V (varKind K2) → Expression V (varKind K3) → Sub (V , K1 , K2 , K3) V
-x₂:=_,x₁:=_,x₀:=_ M1 M2 M3 = botSub ([] snoc M1 snoc M2 snoc M3)
+x₂:=_,x₁:=_,x₀:=_ : ∀ {V} {K1} {K2} {K3} → Expression V (varKind K1) → Expression V (varKind K2) → Expression V (varKind K3) → Sub (((V , K1) , K2) , K3) V
+x₂:=_,x₁:=_,x₀:=_ M1 M2 M3 = botSub ((([] snoc M1) snoc M2) snoc M3)
 
 botSub₃-upRep₃' : ∀ {V K₁ K₂ K₃} {N₁ : VExpression V K₁} {N₂ : VExpression V K₂} {N₃ : VExpression V K₃} →
   (x₂:= N₁ ,x₁:= N₂ ,x₀:= N₃) •SR upRep •SR upRep  •SR upRep ∼ idSub V
@@ -143,7 +143,7 @@ botSub₃-liftRep₃' (↑ (↑ x₀)) = refl
 botSub₃-liftRep₃' (↑ (↑ (↑ x))) = refl
 
 botSub₃-liftRep₃ : ∀ {U} {V} {K2} {K1} {K0} {L}
-  {M2 : Expression U (varKind K2)} {M1 : Expression U (varKind K1)} {M0 : Expression U (varKind K0)} {ρ : Rep U V} (N : Expression (U , K2 , K1 , K0) L) →
+  {M2 : Expression U (varKind K2)} {M1 : Expression U (varKind K1)} {M0 : Expression U (varKind K0)} {ρ : Rep U V} (N : Expression (((U , K2) , K1) , K0) L) →
   N 〈 liftRep _ (liftRep _ (liftRep _ ρ)) 〉 ⟦ x₂:= M2 〈 ρ 〉 ,x₁:= M1 〈 ρ 〉 ,x₀:= M0 〈 ρ 〉 ⟧
   ≡ N ⟦ x₂:= M2 ,x₁:= M1 ,x₀:= M0 ⟧ 〈 ρ 〉
 botSub₃-liftRep₃ {M2 = M2} {M1} {M0} {ρ} N = let open ≡-Reasoning in
@@ -165,7 +165,7 @@ botSub-liftSub₃' (↑ x₀) = refl
 botSub-liftSub₃' (↑ (↑ x₀)) = refl
 botSub-liftSub₃' (↑ (↑ (↑ x))) = botSub-upRep₃
 
-botSub-liftSub₃ : ∀ {U V C K L₂ L₁ L₀} {E : Subexp (U , L₂ , L₁ , L₀) C K} {F₂ : VExpression U L₂} {F₁ : VExpression U L₁} {F₀ : VExpression U L₀} {σ : Sub U V} →
+botSub-liftSub₃ : ∀ {U V C K L₂ L₁ L₀} {E : Subexp (((U , L₂) , L₁) , L₀) C K} {F₂ : VExpression U L₂} {F₁ : VExpression U L₁} {F₀ : VExpression U L₀} {σ : Sub U V} →
   E ⟦ liftSub L₀ (liftSub L₁ (liftSub L₂ σ)) ⟧ ⟦ x₂:= F₂ ⟦ σ ⟧ ,x₁:= F₁ ⟦ σ ⟧ ,x₀:= F₀ ⟦ σ ⟧ ⟧ ≡ E ⟦ x₂:= F₂ ,x₁:= F₁ ,x₀:= F₀ ⟧ ⟦ σ ⟧
 botSub-liftSub₃ {L₂ = L₂} {L₁} {L₀} {E} {F₂} {F₁} {F₀} {σ} = let open ≡-Reasoning in 
   begin

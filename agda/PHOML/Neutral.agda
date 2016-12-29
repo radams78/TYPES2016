@@ -67,10 +67,10 @@ reflect-NeutralE (app -ref _) (imp*l _ _) _ ()
 reflect-NeutralE (app -ref _) (imp*r _ _) _ ()
 reflect-NeutralE (app -imp* _) (var _) _ ()
 reflect-NeutralE (app -imp* _) (app*N _ _ _ _) _ ()
-reflect-NeutralE (app -imp* (P ∷ Q ∷ [])) (imp*l P' Q') ρ Pρ≡Q = 
+reflect-NeutralE (app -imp* (P ∷ (Q ∷ []))) (imp*l P' Q') ρ Pρ≡Q = 
   let P₀ ,p P₀≡P = reflect-NeutralE (P) (P') ρ (⊃*-injl Pρ≡Q) in
   imp*l P₀ Q ,p cong (λ x → x ⊃* Q) P₀≡P
-reflect-NeutralE (app -imp* (P ∷ Q ∷ [])) (imp*r P' Q') ρ Pρ≡Q = 
+reflect-NeutralE (app -imp* (P ∷ (Q ∷ []))) (imp*r P' Q') ρ Pρ≡Q = 
   let Q₀ ,p Q₀≡Q = reflect-NeutralE (Q) (Q') ρ (⊃*-injr Pρ≡Q) in 
   imp*r P Q₀ ,p cong (λ x → P ⊃* x) Q₀≡Q
 reflect-NeutralE (app -univ _) (var _) _ ()
@@ -82,7 +82,7 @@ reflect-NeutralE (app (-lll _) _) (app*N _ _ _ _) _ ()
 reflect-NeutralE (app (-lll _) _) (imp*l P Q) _ ()
 reflect-NeutralE (app (-lll _) _) (imp*r P Q) _ ()
 reflect-NeutralE (app -app* _) (var _) _ ()
-reflect-NeutralE (app -app* (M₁ ∷ M₂ ∷ P₁ ∷ P₂ ∷ [])) (app*N N₁ N₂ Q₁ Q₂) (ρ) Pρ≡Q = 
+reflect-NeutralE (app -app* (M₁ ∷ (M₂ ∷ (P₁ ∷ (P₂ ∷ []))))) (app*N N₁ N₂ Q₁ Q₂) (ρ) Pρ≡Q = 
   let P₁' ,p P₁≡P₁' = reflect-NeutralE P₁ Q₁ ρ (app*-injl Pρ≡Q) in
   (app*N M₁ M₂ P₁' P₂) ,p (cong (λ x → app* M₁ M₂ x P₂) P₁≡P₁')
 reflect-NeutralE (app -app* _) (imp*l P Q) _ ()
@@ -92,7 +92,7 @@ reflect-NeutralP : ∀ {U V} (δ : Proof U) (χ : NeutralP V) {ρ : Rep U V} →
 reflect-NeutralP (var x) _ _ = var x ,p refl
 reflect-NeutralP (app _ _) (var _) ()
 reflect-NeutralP (app -lamProof x₁) (app χ x₂) ()
-reflect-NeutralP (app -appProof (δ ∷ ε ∷ [])) (app χ ε') δρ≡χ =
+reflect-NeutralP (app -appProof (δ ∷ (ε ∷ []))) (app χ ε') δρ≡χ =
   let χ' ,p χ'ρ≡χ = reflect-NeutralP δ χ (appP-injl δρ≡χ) in 
   app χ' ε ,p cong (λ x → appP x ε) χ'ρ≡χ
 reflect-NeutralP (app (-dir x) x₁) (app χ x₂) ()

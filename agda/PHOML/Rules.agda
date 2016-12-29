@@ -132,7 +132,7 @@ data _⊢_∶_ where
     Γ ⊢ minus P ∶ ψ ⊃ φ
 
   lllR : ∀ {V} {Γ : Context V} {A B : Type} {M N : Term V} 
-    {P : Path (V , -Term , -Term , -Path)} →
+    {P : Path (((V , -Term) , -Term) , -Path)} →
 
                    Γ ⊢ M ∶ ty (A ⇛ B) → Γ ⊢ N ∶ ty (A ⇛ B) →
     Γ ,T A ,T A ,E var x₁ ≡〈 A 〉 var x₀

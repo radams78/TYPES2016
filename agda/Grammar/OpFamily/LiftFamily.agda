@@ -35,8 +35,8 @@ record IsLiftFamily (F : PreOpFamily) (L : Lifting F) : Set₁ where
     ≡⟨ apV-up ⟩
       var (↑ x)
     ≡⟨⟨ apV-idOp (↑ x) ⟩⟩
-      (apV (idOp (V , K)) (↑ x)
-    ∎)
+      apV (idOp (V , K)) (↑ x)
+    ∎
 
   liftsOp-idOp : ∀ {V} A → 
     liftsOp A (idOp V) ∼op idOp (extend V A)

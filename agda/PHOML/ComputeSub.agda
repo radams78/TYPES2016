@@ -20,11 +20,11 @@ open import PHOML.Compute
   ⊧ τ ∶ σ ≡ σ' ∶ Γ → ⊧ ρ •RP τ ∶ ρ •RS σ ≡ ρ •RS σ' ∶ Γ
 ⊧RP {U} {V} {W} {ρ} {τ} {σ} {σ'} {Γ} ⊧τ∶σ≡σ' x = ⊧Erep (⊧τ∶σ≡σ' x)
 
-⊧extendSub : ∀ {U V K} {σ : Sub U V} {Γ} {E : VExpression V K} {T : Expression U (parent K)} → ⊧S σ ∶ Γ → ⊧ E ∶ T ⟦ σ ⟧ → ⊧S extendSub σ E ∶ Γ , T
+⊧extendSub : ∀ {U V K} {σ : Sub U V} {Γ} {E : VExpression V K} {T : Expression U (parent K)} → ⊧S σ ∶ Γ → ⊧ E ∶ T ⟦ σ ⟧ → ⊧S extendSub σ E ∶ (Γ , T)
 ⊧extendSub {E = E} {T} ⊧σ∶Γ ⊧E∶T x₀ = subst (λ x → ⊧ E ∶ x) (sub-•SR T) ⊧E∶T
 ⊧extendSub {σ = σ} {Γ} ⊧σ∶Γ ⊧E∶T (↑ x) = subst (λ y → ⊧ σ _ x ∶ y) (sub-•SR (typeof x Γ)) (⊧σ∶Γ x)
 
-⊧extendSub' : ∀ {U V K} {σ : Sub U V} {Γ} {E : VExpression V K} {T : Expression U (parent K)} → ⊧S σ ∶ Γ → ⊧ E ∶ T ⟦ σ ⟧ → ⊧S x₀:= E • liftSub K σ ∶ Γ , T
+⊧extendSub' : ∀ {U V K} {σ : Sub U V} {Γ} {E : VExpression V K} {T : Expression U (parent K)} → ⊧S σ ∶ Γ → ⊧ E ∶ T ⟦ σ ⟧ → ⊧S x₀:= E • liftSub K σ ∶ (Γ , T)
 ⊧extendSub' {E = E} {T} ⊧σ∶Γ ⊧E∶T = ⊧S-cong (⊧extendSub ⊧σ∶Γ ⊧E∶T) extendSub-decomp'
 
 ⊧extend : ∀ {U V} {Q : Path V} {N N'} {σ : Sub U V} {Γ A} → ⊧S σ ∶ Γ → ⊧E Q ∶ N ≡〈 A 〉 N' → ⊧ x₀::= Q ∶ x₀:= N ≡ x₀:= N' •PS liftSub -Term σ ∶ x₀:= N • liftSub -Term σ ≡ x₀:= N' • liftSub -Term σ ∶ Γ ,T A

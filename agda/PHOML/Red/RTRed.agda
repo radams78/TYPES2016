@@ -66,7 +66,7 @@ record Reduces-to-Λ {V} (M : Term V) : Set where
 
 -- If Mx1...xn ->> N with n >= 1 then either N = M'x1...xn where M ->> M', or M reduces to a lambda-term
 APPl-red : ∀ {V M N M' N'} (NN : snocList (Term V)) →
-  M ↠ N → M ≡ APPl (appT M' N') NN → Σ[ M'' ∈ Term V ] M' ↠ M'' × N ≡ APPl (appT M'' N') NN ⊎ Reduces-to-Λ M'
+  M ↠ N → M ≡ APPl (appT M' N') NN → Σ[ M'' ∈ Term V ] (M' ↠ M'' × N ≡ APPl (appT M'' N') NN) ⊎ Reduces-to-Λ M'
 APPl-red NN (inc M⇒N) M≡M'NN with APPl-⇒ NN M⇒N M≡M'NN
 APPl-red _ (inc M⇒N) M≡M'NN | inj₁ (M'' ,p M'⇒M'' ,p N≡M''NN) = inj₁ (M'' ,p inc M'⇒M'' ,p N≡M''NN)
 APPl-red {M' = M'} _ (inc M⇒N) M≡M'NN | inj₂ (A ,p M'' ,p M'≡ΛM'') = inj₂ (reduces-to-Λ A M'' (subst (λ x → M' ↠ x) M'≡ΛM'' ref))
@@ -78,7 +78,7 @@ APPl-red NN (trans M↠N N↠P) M≡M'NN | inj₁ (N' ,p M'↠N' ,p N≡N'NN) | 
 APPl-red NN (trans M↠N N↠P) M≡M'NN | inj₂ N'rtΛ = inj₂ N'rtΛ
 
 imp-red-inj₁' : ∀ {V} {φ ψ χ χ' : Term V} → χ ↠ χ' → χ ≡ φ ⊃ ψ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
-                      χ' ≡ φ' ⊃ ψ' × φ ↠ φ'
+                      (χ' ≡ φ' ⊃ ψ' × φ ↠ φ')
 imp-red-inj₁' {χ' = χ'} (inc χ⇒χ') χ≡φ⊃ψ with imp-osr-inj₁ (subst (λ x → x ⇒ χ') χ≡φ⊃ψ χ⇒χ')
 imp-red-inj₁' (inc χ⇒χ') χ≡φ⊃ψ | φ' ,p ψ' ,p χ'≡φ'⊃ψ' ,p φ⇒?φ' = φ' ,p ψ' ,p χ'≡φ'⊃ψ' ,p sub-R-RT φ⇒?φ'
 imp-red-inj₁' {φ = φ} {ψ} ref χ≡φ⊃ψ = φ ,p ψ ,p χ≡φ⊃ψ ,p ref
@@ -91,7 +91,7 @@ imp-red-inj₁ φ⊃ψ↠φ'⊃ψ' with imp-red-inj₁' φ⊃ψ↠φ'⊃ψ' refl
 imp-red-inj₁ {φ = φ} φ⊃ψ↠φ'⊃ψ' | φ'' ,p ψ'' ,p φ'⊃ψ'≡φ''⊃ψ'' ,p φ↠φ'' = subst (λ x → φ ↠ x) (⊃-injl (≡-sym φ'⊃ψ'≡φ''⊃ψ'')) φ↠φ''
 
 imp-red-inj₂' : ∀ {V} {φ ψ χ χ' : Term V} → χ ↠ χ' → χ ≡ φ ⊃ ψ → Σ[ φ' ∈ Term V ] Σ[ ψ' ∈ Term V ]
-                      χ' ≡ φ' ⊃ ψ' × ψ ↠ ψ'
+                      (χ' ≡ φ' ⊃ ψ' × ψ ↠ ψ')
 imp-red-inj₂' {χ' = χ'} (inc χ⇒χ') χ≡φ⊃ψ with imp-osr-inj₂ (subst (λ x → x ⇒ χ') χ≡φ⊃ψ χ⇒χ')
 imp-red-inj₂' (inc χ⇒χ') χ≡φ⊃ψ | φ' ,p ψ' ,p χ'≡φ'⊃ψ' ,p φ⇒?φ' = φ' ,p ψ' ,p χ'≡φ'⊃ψ' ,p sub-R-RT φ⇒?φ'
 imp-red-inj₂' {φ = φ} {ψ} ref χ≡φ⊃ψ = φ ,p ψ ,p χ≡φ⊃ψ ,p ref
@@ -103,20 +103,7 @@ imp-red-inj₂ : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ⊃ ψ ↠ φ' ⊃ ψ' 
 imp-red-inj₂ φ⊃ψ↠φ'⊃ψ' with imp-red-inj₂' φ⊃ψ↠φ'⊃ψ' refl
 imp-red-inj₂ {ψ = ψ} φ⊃ψ↠φ'⊃ψ' | φ'' ,p ψ'' ,p φ'⊃ψ'≡φ''⊃ψ'' ,p ψ↠ψ'' = subst (λ x → ψ ↠ x) (⊃-injr (≡-sym φ'⊃ψ'≡φ''⊃ψ'')) ψ↠ψ''
 
-{- ⇒-dir' : ∀ {V} {P : Path V} {δ d} → dir d P ⇒ δ → Σ[ Q ∈ Path V ] P ⇒ Q × δ ≡ dir d Q
-⇒-dir' (dirR P⇒Q) = _ ,p P⇒Q ,p refl
-⇒-dir' refdir = {!!}
-
-↠-dir' : ∀ {V} {P : Path V} {δ ε : Proof V} {d} → 
-  δ ↠ ε → δ ≡ dir d P → Σ[ Q ∈ Path V ] P ↠ Q × ε ≡ dir d Q
-↠-dir' {ε = ε} (inc δ⇒ε) δ≡P+ = let Q ,p P⇒Q ,p ε≡Q+ = ⇒-dir' (subst (λ x → x ⇒ ε) δ≡P+ δ⇒ε) in Q ,p inc P⇒Q ,p ε≡Q+
-↠-dir' ref δ≡P+ = _ ,p ref ,p δ≡P+
-↠-dir' (trans δ↠ε ε↠ε') δ≡P+ =
-  let Q ,p P↠Q ,p ε≡Q+ = ↠-dir' δ↠ε δ≡P+ in
-  let R ,p Q↠R ,p ε'≡R+ = ↠-dir' ε↠ε' ε≡Q+ in 
-  R ,p trans P↠Q Q↠R ,p ε'≡R+ -}
-
-red-appPl : ∀ {V} {δ ε δ₁ δ₂ : Proof V} → δ ↠ ε → δ ≡ appP δ₁ δ₂ → Σ[ δ₁' ∈ Proof V ] δ₁ ↠ δ₁' × ε ≡ appP δ₁' δ₂ ⊎ Σ[ φ ∈ Term V ] Σ[ δ' ∈ Proof (V , -Proof) ] δ₁ ↠ ΛP φ δ'
+red-appPl : ∀ {V} {δ ε δ₁ δ₂ : Proof V} → δ ↠ ε → δ ≡ appP δ₁ δ₂ → Σ[ δ₁' ∈ Proof V ] (δ₁ ↠ δ₁' × ε ≡ appP δ₁' δ₂) ⊎ Σ[ φ ∈ Term V ] Σ[ δ' ∈ Proof (V , -Proof) ] δ₁ ↠ ΛP φ δ'
 red-appPl (inc (βP {φ = φ} {δ})) Λφδε≡δ₁δ₂ = inj₂ (_ ,p (_ ,p subst (λ x → x ↠ ΛP φ δ) (appP-injl Λφδε≡δ₁δ₂) ref))
 red-appPl (inc (appPl {δ' = δ'} δ⇒δ')) δ≡δ₁δ₂ = inj₁ (δ' ,p inc (subst (λ x → x ⇒ δ') (appP-injl δ≡δ₁δ₂) δ⇒δ') ,p cong (appP δ') (appP-injr δ≡δ₁δ₂))
 red-appPl (inc refdir) ()

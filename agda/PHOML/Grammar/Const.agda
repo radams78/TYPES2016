@@ -25,7 +25,7 @@ ty A = app (-ty A) []
 
 infix 65 _⊃_
 _⊃_ : ∀ {V} → Term V → Term V → Term V
-φ ⊃ ψ = app -imp (φ ∷ ψ ∷ [])
+φ ⊃ ψ = app -imp (φ ∷ (ψ ∷ []))
 
 data Is-⊃ {V} : Term V → Set where
   is-⊃ : ∀ {φ} {ψ} → Is-⊃ (φ ⊃ ψ)
@@ -34,13 +34,13 @@ data Is-⊃ {V} : Term V → Set where
 ΛT A M = app (-lamTerm A) (M ∷ [])
 
 appT : ∀ {V} → Term V → Term V → Term V
-appT M N = app -appTerm (M ∷ N ∷ [])
+appT M N = app -appTerm (M ∷ (N ∷ []))
 
 ΛP : ∀ {V} → Term V → Proof (V , -Proof) → Proof V
-ΛP φ δ = app -lamProof (φ ∷ δ ∷ [])
+ΛP φ δ = app -lamProof (φ ∷ (δ ∷ []))
 
 appP : ∀ {V} → Proof V → Proof V → Proof V
-appP δ ε = app -appProof (δ ∷ ε ∷ [])
+appP δ ε = app -appProof (δ ∷ (ε ∷ []))
 
 dir : ∀ {V} → Dir → Path V → Proof V
 dir d P = app (-dir d) (P ∷ [])
@@ -56,20 +56,20 @@ reff M = app -ref (M ∷ [])
 
 infix 15 _⊃*_
 _⊃*_ : ∀ {V} → Path V → Path V → Path V
-P ⊃* Q = app -imp* (P ∷ Q ∷ [])
+P ⊃* Q = app -imp* (P ∷ (Q ∷ []))
 
 univ : ∀ {V} → Term V → Term V → Proof V → Proof V → Path V
-univ φ ψ P Q = app -univ (φ ∷ ψ ∷ P ∷ Q ∷ [])
+univ φ ψ P Q = app -univ (φ ∷ (ψ ∷ (P ∷ (Q ∷ []))))
 
-λλλ : ∀ {V} → Type → Path (V , -Term , -Term , -Path) → Path V
+λλλ : ∀ {V} → Type → Path (((V , -Term) , -Term) , -Path) → Path V
 λλλ A P = app (-lll A) (P ∷ [])
 
 app* : ∀ {V} → Term V → Term V → Path V → Path V → Path V
-app* M N P Q = app -app* (M ∷ N ∷ P ∷ Q ∷ [])
+app* M N P Q = app -app* (M ∷ (N ∷ (P ∷ (Q ∷ []))))
 
 infix 60 _≡〈_〉_
 _≡〈_〉_ : ∀ {V} → Term V → Type → Term V → Equation V
-M ≡〈 A 〉 N = app (-eq A) (M ∷ N ∷ [])
+M ≡〈 A 〉 N = app (-eq A) (M ∷ (N ∷ []))
 
 infixl 59 _,T_
 _,T_ : ∀ {V} → Context V → Type → Context (V , -Term)
@@ -113,16 +113,16 @@ type-rep : ∀ {U V} (E : Equation U) {ρ : Rep U V} → type (E 〈 ρ 〉) ≡
 type-rep (app (-eq _) _) = refl
 
 left : ∀ {V} → Equation V → Term V
-left (app (-eq _) (M ∷ _ ∷ [])) = M
+left (app (-eq _) (M ∷ (_ ∷ []))) = M
 
 left-rep : ∀ {U V} (E : Equation U) {ρ : Rep U V} → left E 〈 ρ 〉 ≡ left (E 〈 ρ 〉)
-left-rep (app (-eq _) (_ ∷ _ ∷ [])) = refl
+left-rep (app (-eq _) (_ ∷ (_ ∷ []))) = refl
 
 right : ∀ {V} → Equation V → Term V
-right (app (-eq _) (_ ∷ N ∷ [])) = N
+right (app (-eq _) (_ ∷ (N ∷ []))) = N
 
 right-rep : ∀ {U V} (E : Equation U) {ρ : Rep U V} → right E 〈 ρ 〉 ≡ right (E 〈 ρ 〉)
-right-rep (app (-eq _) (_ ∷ _ ∷ [])) = refl
+right-rep (app (-eq _) (_ ∷ (_ ∷ []))) = refl
 
 id : ∀ {V} → Term V → Proof V
 id φ = ΛP φ (var x₀)
