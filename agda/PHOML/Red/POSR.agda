@@ -70,7 +70,7 @@ sub-▷-↠ univ⊃*ref = inc univ⊃*ref
 sub-▷-↠ univ⊃*univ = inc univ⊃*univ
 sub-▷-↠ (app*l E▷F) = ↠-app*l (sub-▷-↠ E▷F)
 sub-▷-↠ (⊃* P▷P' Q▷Q') = ↠-imp* (sub-▷-↠ P▷P') (sub-▷-↠ Q▷Q')
-sub-▷-↠ (reffR M▷M') = ↠-reff (sub-▷-↠ M▷M')
+sub-▷-↠ (reffR M▷M') = ↠-app*ref (sub-▷-↠ M▷M')
 sub-▷-↠ (dirR P▷Q) = ↠-dir (sub-▷-↠ P▷Q)
 
 diamond-▷ : ∀ {V K} {E F G : VExpression V K} → E ▷ F → E ▷ G → Common-Reduct _▷_ _▷_ F G

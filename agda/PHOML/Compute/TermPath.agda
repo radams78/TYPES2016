@@ -196,9 +196,6 @@ private ⊧reflm₃ : ∀ {U V} {M N : Term V} {P} {ρ : Rep U V} → ((x₂:= M
 ⊧reflm₃ x₀ = refl
 ⊧reflm₃ (↑ x) = refl
 
-↠-app*ref : ∀ {V} {M M' N N' : Term V} {P} → N ↠ N' → app* M M' (reff N) P ↠ app* M M' (reff N') P
-↠-app*ref = respects-RT₂ (λ _ _ → reffR) _ _
-
 ⊧ref : ∀ {V} {M : Term V} {A} → ⊧T M ∶ A → ⊧E reff M ∶ M ≡〈 A 〉 M
 ⊧ref {V} {M} {A = Ω} ⊧M∶Ω = let θ ,p M↠θ = ⊧canon ⊧M∶Ω in ⊧refP {θ = θ} M↠θ
 ⊧ref {V} {M} {A = A ⇛ B} ⊧M∶A⇛B W ρ L L' P ⊧L∶A ⊧L'∶A ⊧P∶L≡L' =
@@ -246,4 +243,7 @@ private ⊧reflm₃ : ∀ {U V} {M N : Term V} {P} {ρ : Rep U V} → ((x₂:= M
 ⊧imp : ∀ {V} {φ ψ : Term V} → ⊧T φ ∶ Ω → ⊧T ψ ∶ Ω → ⊧T φ ⊃ ψ ∶ Ω
 ⊧imp ⊧Tφ ⊧Tψ = let θ ,p φ↠θ = ⊧canon ⊧Tφ in 
   let θ' ,p ψ↠θ' = ⊧canon ⊧Tψ in ⊧canon' (imp θ θ') (↠-imp φ↠θ ψ↠θ')
+
+⊧univ : ∀ {V} {φ ψ : Term V} {δ ε} → ⊧P δ ∶ φ ⊃ ψ → ⊧P ε ∶ ψ ⊃ φ → ⊧E univ φ ψ δ ε ∶ φ ≡〈 Ω 〉 ψ
+⊧univ ⊧δ∶φ⊃ψ ⊧ε∶ψ⊃φ = expansionP ⊧δ∶φ⊃ψ univplus ,p expansionP ⊧ε∶ψ⊃φ univminus
 

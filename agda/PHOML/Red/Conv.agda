@@ -51,3 +51,13 @@ PHOML-Church-Rosser (trans E≃F F≃G) =
   let cr χ φ⊃ψ↠χ φ'⊃ψ'↠χ = PHOML-Church-Rosser φ⊃ψ≃φ'⊃ψ' in 
   let φ₀ ,p ψ₀ ,p χ≡φ₀⊃ψ₀ ,p ψ↠ψ₀ = imp-red-inj₂' φ⊃ψ↠χ refl in
   trans (sub-RT-RST ψ↠ψ₀) (sym (sub-RT-RST (imp-red-inj₂ (subst (λ x → φ' ⊃ ψ' ↠ x) χ≡φ₀⊃ψ₀ φ'⊃ψ'↠χ))))
+
+≃-yt : ∀ {V A B} → A ≃ B → yt {V} A ≡ yt B
+≃-yt (inc ())
+≃-yt ref = refl
+≃-yt (sym A≃B) = ≡-sym (≃-yt A≃B)
+≃-yt (trans A≃B B≃C) = ≡-trans (≃-yt A≃B) (≃-yt B≃C)
+
+≃-ty-inj : ∀ {V A B} → ty {V} A ≃ ty B → A ≡ B
+≃-ty-inj = ≃-yt
+
