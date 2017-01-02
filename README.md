@@ -19,7 +19,7 @@ The following is a guide to which lemmas in the paper correspond to which terms 
 | Lemma 12.1 (Type Validity) | PHOML / Meta / TypeVal.agda | prop-validity |
 | Lemma 12.2 (Type Validity) | PHOML / Meta / TypeVal.agda | eq-validity₁ |
 | | | eq-validity₂ |
-| Lemma 13.1 (Generation) | 
+| Lemma 13.1 (Generation) | PHOML / Meta / Gen / Term.agda | generation-var |
 | Lemma 17 (Subject Reduction) | PHOML / Meta.agda | Subject-Reduction-R |
 | Lemma 19 (Well-Typed Substitution) | PHOML / Meta.agda | substitution |
 | Lemma 24 (Conversion) | PHOML / Compute.agda | conversionP, conversionE |

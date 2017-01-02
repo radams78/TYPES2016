@@ -12,6 +12,9 @@ generation-var (⊃R _ _) ()
 generation-var (appTR _ _) ()
 generation-var (ΛTR _) ()
 
+generation-⊥ : ∀ {V} {Γ : Context V} {A} → Γ ⊢ ⊥ ∶ ty A → A ≡ Ω
+generation-⊥ (⊥R _) = refl
+
 generation-ΛT : ∀ {V} {Γ : Context V} {A M B} →
   Γ ⊢ ΛT A M ∶ ty B → Σ[ C ∈ Type ] (Γ ,T A ⊢ M ∶ ty C × B ≡ A ⇛ C)
 generation-ΛT (ΛTR {B = B} Γ,A⊢M∶B) = B ,p Γ,A⊢M∶B ,p refl
