@@ -6,11 +6,6 @@ data RClose {i} {A : Set} (R : Rel A i) : Rel A i where
   inc : ∀ {x} {y} → R x y → RClose R x y
   ref : ∀ {x} → RClose R x x
 
-respects-R : ∀ {i} {A : Set} {B : A → Set} (R : ∀ a → Rel (B a) i) {a b : A}
-  (f : B a → B b) → Respects-dep R f → Respects-dep (λ a → RClose (R a)) f
-respects-R _ _ hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
-respects-R _ _ _ _ _ ref = ref
-
 respects-R' : ∀ {i A} (f : A → A) (R : Rel A i) → Respects f R → Respects f (RClose R)
 respects-R' _ _ hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
 respects-R' _ _ _ _ _ ref = ref

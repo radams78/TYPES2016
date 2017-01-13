@@ -30,7 +30,7 @@ sub-R-RT (inc xRy) = inc xRy
 sub-R-RT ref = ref
 
 respects-RT : ∀ {i} {A : Set} {B : A → Set} (R : ∀ a → Rel (B a) i) {a b : A}
-  (f : B a → B b) → Respects-dep R f → Respects-dep (λ a → RTClose (R a)) f
+  (f : B a → B b) → Respects₂ f (R a) (R b) → Respects₂ f (RTClose (R a)) (RTClose (R b))
 respects-RT _ _ hyp x y (inc x⇒y) = inc (hyp x y x⇒y)
 respects-RT _ _ _ _ _ ref = ref
 respects-RT R f hyp x z (trans x↠y y↠z) = trans (respects-RT R f hyp x _ x↠y) (respects-RT R f hyp _ z y↠z)

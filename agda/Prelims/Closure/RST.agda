@@ -24,7 +24,7 @@ sub-RT-RST ref = ref
 sub-RT-RST (trans xRTy yRTz) = trans (sub-RT-RST xRTy) (sub-RT-RST yRTz)
 
 respects-RST : ∀ {i} {A : Set} {B : A → Set} (R : ∀ a → Rel (B a) i) {a b : A}
-  (f : B a → B b) → Respects-dep R f → Respects-dep (λ a → RSTClose (R a)) f
+  (f : B a → B b) → Respects₂ f (R a) (R b) → Respects₂ f (RSTClose (R a)) (RSTClose (R b))
 respects-RST R f R-respects-f x y (inc xRy) = inc (R-respects-f x y xRy)
 respects-RST R f R-respects-f y .y ref = ref
 respects-RST R f R-respects-f x x₁ (sym xRSTy) = sym (respects-RST R f R-respects-f _ _ xRSTy)

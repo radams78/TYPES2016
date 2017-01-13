@@ -7,7 +7,7 @@ open import PHOML.Rules
 open import PHOML.Meta.ConVal
 
 generation-varE : ∀ {V} {Γ : Context V} {e : Var V -Path} {T M A N} →
-  Γ ⊢ var e ∶ T → T ≡ M ≡〈 A 〉 N → Σ[ M' ∈ Term V ] Σ[ N' ∈ Term V ] typeof e Γ ≡ M' ≡〈 A 〉 N' × M ≃ M' × N ≃ N'
+  Γ ⊢ var e ∶ T → T ≡ M ≡〈 A 〉 N → Σ[ M' ∈ Term V ] Σ[ N' ∈ Term V ] (typeof e Γ ≡ M' ≡〈 A 〉 N' × M ≃ M' × N ≃ N')
 generation-varE (varR e validΓ) T≡M≡N = _ ,p _ ,p T≡M≡N ,p ref ,p ref
 generation-varE (convER {M = M} {N = N} Γ⊢e∶M≡N Γ⊢M'∶A Γ⊢N'∶A M≃M' N≃N') M'≡N'≡M≡N =
   let M'' ,p N'' ,p M≡N≡M''≡N'' ,p M≃M'' ,p N≃N'' = generation-varE Γ⊢e∶M≡N refl in 

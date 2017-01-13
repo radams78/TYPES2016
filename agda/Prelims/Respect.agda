@@ -19,9 +19,3 @@ Respects₂ f R S = ∀ x y → R x y → S (f x) (f y)
 
 Respects : ∀ {i j} {A : Set i} → (A → A) → Rel A j → Set (i ⊔ j)
 Respects f R = Respects₂ f R R
-
-Respects-dep : ∀ {i j k} {A : Set i} {B : A → Set j}
-  (R : ∀ a → Rel (B a) k) {a b : A} (f : B a → B b) → Set (j ⊔ k)
-Respects-dep R {a} {b} f = Respects₂ f (R a) (R b)
-
-
