@@ -2,7 +2,7 @@ module Prelims.Closure.RT where
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality hiding (trans)
 import Relation.Binary.PropositionalEquality.Core
-open import Prelims.Closure.R
+open import Prelims.Closure.Refl
 open import Prelims.Respect
 
 data RTClose {i} {A : Set} (R : Rel A i) : Rel A i where

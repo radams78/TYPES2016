@@ -1,3 +1,11 @@
+--------------------------------------------------------------
+-- Project: Canonicity of PHOML
+-- Author:  Robin Adams
+-- Module:  Prelims
+--------------------------------------------------------------
+-- Lists which cons on the right ('snoc')
+--------------------------------------------------------------
+
 module Prelims.Snoclist where
 open import Relation.Binary.PropositionalEquality
 

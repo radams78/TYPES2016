@@ -1,7 +1,7 @@
 --------------------------------------------------------------
 -- Project: Canonicity of PHOML
 -- Author:  Robin Adams
--- Module:  Prelims
+-- Module:  Prelims.EqReasoning
 --------------------------------------------------------------
 -- Reasoning with equations and inequalities
 --------------------------------------------------------------
