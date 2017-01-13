@@ -15,4 +15,6 @@ snocmap-comp : ∀ {A B C} {g : B → C} {f : A → B} (l : snocList A) →
 snocmap-comp [] = refl
 snocmap-comp {g = g} {f = f} (l snoc a) = cong (λ x → x snoc g (f a)) (snocmap-comp l)
 
-
+data HetsnocList {A} (B : A → Set) : snocList A → Set where
+  [] : HetsnocList B []
+  _snoc_ : ∀ {aa} {a} → HetsnocList B aa → B a → HetsnocList B (aa snoc a)
