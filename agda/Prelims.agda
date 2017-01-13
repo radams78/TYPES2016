@@ -11,7 +11,7 @@ module Prelims where
 -- Setoid functions with two arguments
 open import Prelims.Bifunction public
 
--- Relations respecting functions
+-- Functions respecting relations
 open import Prelims.Respect public
 
 -- Equational reasoning

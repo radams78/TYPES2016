@@ -1,14 +1,27 @@
+--------------------------------------------------------------
+-- Project: Canonicity of PHOML
+-- Author:  Robin Adams
+-- Module:  Prelims.Respect
+--------------------------------------------------------------
+-- Functions respecting relations
+--------------------------------------------------------------
+
 module Prelims.Respect where
 open import Level
 open import Relation.Binary
 
-Respects : ∀ {i} {A : Set} → (A → A) → Rel A i → Set i
-Respects f R = ∀ x y → R x y → R (f x) (f y)
+-- A function f respects relations R and S iff, whenever x R y, then f(x) S f(y)
 
-Respects-dep : ∀ {i} {A : Set} {B : A → Set} (R : ∀ a → Rel (B a) i) {a b : A}
-  (f : B a → B b) → Set i
-Respects-dep R {a} {b} f = ∀ x y → R a x y → R b (f x) (f y)
-
-Respects₂ : ∀ {i j} {A B : Set} (f : A → B) (R : Rel A i) (S : Rel B j) → Set (i ⊔ j)
+Respects₂ : ∀ {i j k l} {A : Set i} {B : Set j} (f : A → B) (R : Rel A k) (S : Rel B l) → Set (i ⊔ k ⊔ l)
 Respects₂ f R S = ∀ x y → R x y → S (f x) (f y)
+
+-- A function f respects a relation R iff, whenever x R y, then f(x) R f(y)
+
+Respects : ∀ {i j} {A : Set i} → (A → A) → Rel A j → Set (i ⊔ j)
+Respects f R = Respects₂ f R R
+
+Respects-dep : ∀ {i j k} {A : Set i} {B : A → Set j}
+  (R : ∀ a → Rel (B a) k) {a b : A} (f : B a → B b) → Set (j ⊔ k)
+Respects-dep R {a} {b} f = Respects₂ f (R a) (R b)
+
 
