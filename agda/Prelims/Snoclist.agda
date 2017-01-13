@@ -1,11 +1,5 @@
 module Prelims.Snoclist where
-open import Level
 open import Relation.Binary.PropositionalEquality
-open import Relation.Binary
-open import Function.Equality hiding (cong)
-open import Algebra
-open import Data.Nat
-open import Data.Fin
 
 infixl 20 _snoc_
 data snocList (A : Set) : Set where
@@ -21,14 +15,4 @@ snocmap-comp : ∀ {A B C} {g : B → C} {f : A → B} (l : snocList A) →
 snocmap-comp [] = refl
 snocmap-comp {g = g} {f = f} (l snoc a) = cong (λ x → x snoc g (f a)) (snocmap-comp l)
 
-replicate : ∀ {A} → ℕ → A → snocList A
-replicate zero _ = []
-replicate (suc n) a = replicate n a snoc a
 
-data snocVec (A : Set) : ℕ → Set where
-  [] : snocVec A ℕ.zero
-  _snoc_ : ∀ {n} → snocVec A n → A → snocVec A (ℕ.suc n)
-
-lookup : ∀ {A : Set} {n} → Fin n → snocVec A n → A
-lookup zero (_ snoc x) = x
-lookup (suc i) (v snoc _) = lookup i v

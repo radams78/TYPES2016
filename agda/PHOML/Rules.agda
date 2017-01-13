@@ -157,8 +157,3 @@ data _⊢_∶_ where
 change-type : ∀ {V} {Γ} {K} {M : Expression V (varKind K)} {A} {B} → 
   Γ ⊢ M ∶ A → A ≡ B → Γ ⊢ M ∶ B
 change-type {Γ = Γ} {M = M} Γ⊢M∶A A≡B = subst (λ x → Γ ⊢ M ∶ x) A≡B Γ⊢M∶A
-
-infix 10 _⊩_∶_
-_⊩_∶_ : ∀ {V n} → Context V → snocVec (Term V) n → snocVec Type n → Set
-Γ ⊩ [] ∶ [] = valid Γ
-Γ ⊩ MM snoc M ∶ AA snoc A = Γ ⊩ MM ∶ AA × Γ ⊢ M ∶ ty A
