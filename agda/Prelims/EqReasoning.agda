@@ -2,7 +2,7 @@ module Prelims.EqReasoning where
 open import Relation.Binary public hiding (_⇒_)
 import Relation.Binary.PreorderReasoning
 import Relation.Binary.EqReasoning
-open import Relation.Binary.PropositionalEquality public using (_≡_;refl;cong;cong₂;subst;subst₂) renaming (sym to ≡-sym;trans to ≡-trans)
+open import Relation.Binary.PropositionalEquality public using (_≡_;refl;cong;cong₂;subst;subst₂;setoid) renaming (sym to ≡-sym;trans to ≡-trans)
 
 module PreorderReasoning {p₁ p₂ p₃} (P : Preorder p₁ p₂ p₃) where
   open Relation.Binary.PreorderReasoning P public
@@ -25,10 +25,10 @@ module EqReasoning {s₁ s₂} (S : Setoid s₁ s₂) where
   x ≈⟨⟨ y≈x ⟩⟩ y≈z = x ≈⟨ Setoid.sym S  y≈x ⟩ y≈z
 
 module ≡-Reasoning where
-  open Relation.Binary.PropositionalEquality public
-  open ≡-Reasoning public
+--We use Relation.Binary.EqReasoning instead of Relation.Binary.PropositionalEquality for backwards comapatibility with older versions of the standard library
 
   module _ {a} {A : Set a} where
+    open Relation.Binary.EqReasoning (setoid A) public
   
     infixr 2 _≡⟨⟨_⟩⟩_
     _≡⟨⟨_⟩⟩_ : ∀ (x : A) {y z} → y ≡ x → y IsRelatedTo z → x IsRelatedTo z

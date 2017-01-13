@@ -2,7 +2,7 @@ open import Grammar.Base
 
 module Grammar.OpFamily.OpFamily (G : Grammar) where
 
-open import Prelims hiding (cong)
+open import Prelims
 open Grammar G
 open import Grammar.OpFamily.LiftFamily G
 open import Grammar.OpFamily.Composition G 

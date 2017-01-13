@@ -48,8 +48,8 @@ _↠_ {V} {K} = RTClose (_⇒_ {V} {K})
 ↠-app*l : ∀ {V} {M N : Term V} {P P' Q} → P ↠ P' → app* M N P Q ↠ app* M N P' Q
 ↠-app*l = respects-RT₂ (λ _ _ → app*l) _ _
 
-↠-reff : ∀ {V} {M M' N N' : Term V} {P} → M ↠ M' → app* N N' (reff M) P ↠ app* N N' (reff M') P
-↠-reff = respects-RT₂ (λ _ _ → reffR) _ _
+↠-app*ref : ∀ {V} {M M' N N' : Term V} {P} → N ↠ N' → app* M M' (reff N) P ↠ app* M M' (reff N') P
+↠-app*ref = respects-RT₂ (λ _ _ → reffR) _ _
 
 ↠-dir : ∀ {V d} {P Q : Path V} → P ↠ Q → dir d P ↠ dir d Q
 ↠-dir = respects-RT₂ (λ _ _ → dirR) _ _
