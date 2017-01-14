@@ -5,6 +5,7 @@
 --------------------------------------------------------------
 -- Reflexive and/or symmetric and/or transitive closures of relations
 --------------------------------------------------------------
+-- TODO General notion of closure
 
 module Prelims.Closure where
 
@@ -16,4 +17,3 @@ open import Prelims.Closure.RT public
 
 -- Reflexive symmetric transitive closure
 open import Prelims.Closure.RST public
-

@@ -25,5 +25,3 @@ open import Prelims.Closure public
 
 -- Reduction relations
 open import Prelims.Red public
-
-
