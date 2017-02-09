@@ -15,47 +15,47 @@ _↠_ : ∀ {V K} → Expression V K → Expression V K → Set
 _↠_ {V} {K} = RTClose (_⇒_ {V} {K})
 
 ↠-resp-rep : ∀ {U V K} {E F : Expression U K} {ρ : Rep U V} → E ↠ F → E 〈 ρ 〉 ↠ F 〈 ρ 〉
-↠-resp-rep = respects-RT₂ (λ _ _ → ⇒-resp-rep) _ _
+↠-resp-rep = respects-RT (λ _ _ → ⇒-resp-rep) _ _
 
 ↠-resp-ps : ∀ {U V} {M N : Term U} {τ : PathSub U V} {ρ σ} → M ↠ N → M ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧ ↠ N ⟦⟦ τ ∶ ρ ≡ σ ⟧⟧
-↠-resp-ps = respects-RT₂ (λ _ _ → ⇒-resp-ps) _ _
+↠-resp-ps = respects-RT (λ _ _ → ⇒-resp-ps) _ _
 
 ↠-impl : ∀ {V} {φ φ' ψ : Term V} → φ ↠ φ' → φ ⊃ ψ ↠ φ' ⊃ ψ
-↠-impl = respects-RT₂ (λ _ _ → impl) _ _
+↠-impl = respects-RT (λ _ _ → impl) _ _
 
 ↠-impr : ∀ {V} {φ ψ ψ' : Term V} → ψ ↠ ψ' → φ ⊃ ψ ↠ φ ⊃ ψ'
-↠-impr = respects-RT₂ (λ _ _ → impr) _ _
+↠-impr = respects-RT (λ _ _ → impr) _ _
 
 ↠-imp : ∀ {V} {φ φ' ψ ψ' : Term V} → φ ↠ φ' → ψ ↠ ψ' → φ ⊃ ψ ↠ φ' ⊃ ψ'
 ↠-imp φ↠φ' ψ↠ψ' = trans (↠-impl φ↠φ') (↠-impr ψ↠ψ')
 
 ↠-appT : ∀ {V} {M M' N : Term V} → M ↠ M' → appT M N ↠ appT M' N
-↠-appT = respects-RT₂ (λ _ _ → appTl) _ _
+↠-appT = respects-RT (λ _ _ → appTl) _ _
 
 ↠-appP : ∀ {V} {δ δ' ε : Proof V} → δ ↠ δ' → appP δ ε ↠ appP δ' ε
-↠-appP = respects-RT₂ (λ _ _ → appPl) _ _
+↠-appP = respects-RT (λ _ _ → appPl) _ _
 
 ↠-imp*l : ∀ {V} {P P' Q : Path V} → P ↠ P' → P ⊃* Q ↠ P' ⊃* Q
-↠-imp*l = respects-RT₂ (λ _ _ → imp*l) _ _
+↠-imp*l = respects-RT (λ _ _ → imp*l) _ _
 
 ↠-imp*r : ∀ {V} {P Q Q' : Path V} → Q ↠ Q' → P ⊃* Q ↠ P ⊃* Q'
-↠-imp*r = respects-RT₂ (λ _ _ → imp*r) _ _
+↠-imp*r = respects-RT (λ _ _ → imp*r) _ _
 
 ↠-imp* : ∀ {V} {P P' Q Q' : Path V} → P ↠ P' → Q ↠ Q' → P ⊃* Q ↠ P' ⊃* Q'
 ↠-imp* P↠P' Q↠Q' = trans (↠-imp*l P↠P') (↠-imp*r Q↠Q')
 --TODO Duplication
 
 ↠-app*l : ∀ {V} {M N : Term V} {P P' Q} → P ↠ P' → app* M N P Q ↠ app* M N P' Q
-↠-app*l = respects-RT₂ (λ _ _ → app*l) _ _
+↠-app*l = respects-RT (λ _ _ → app*l) _ _
 
 ↠-app*ref : ∀ {V} {M M' N N' : Term V} {P} → N ↠ N' → app* M M' (reff N) P ↠ app* M M' (reff N') P
-↠-app*ref = respects-RT₂ (λ _ _ → reffR) _ _
+↠-app*ref = respects-RT (λ _ _ → reffR) _ _
 
 ↠-dir : ∀ {V d} {P Q : Path V} → P ↠ Q → dir d P ↠ dir d Q
-↠-dir = respects-RT₂ (λ _ _ → dirR) _ _
+↠-dir = respects-RT (λ _ _ → dirR) _ _
 
 ↠-APPP : ∀ {V} {δ δ' : Proof V} εε → δ ↠ δ' → APPP δ εε ↠ APPP δ' εε
-↠-APPP εε = respects-RT₂ (λ _ _ → ⇒-APPP εε) _ _
+↠-APPP εε = respects-RT (λ _ _ → ⇒-APPP εε) _ _
 
 record Reduces-to-Λ {V} (M : Term V) : Set where
   constructor reduces-to-Λ 

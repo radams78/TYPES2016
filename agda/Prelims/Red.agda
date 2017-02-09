@@ -1,3 +1,11 @@
+--------------------------------------------------------------
+-- Project: Canonicity of PHOML
+-- Author:  Robin Adams
+-- Module:  Prelims.Red
+--------------------------------------------------------------
+-- Reduction Relations
+--------------------------------------------------------------
+
 module Prelims.Red where
 open import Relation.Binary
 open import Prelims.Closure

@@ -1,11 +1,13 @@
+--------------------------------------------------------------
+-- Project: Canonicity of PHOML
+-- Author:  Robin Adams
+-- Module:  Prelims
+--------------------------------------------------------------
+-- Lists which cons on the right ('snoc')
+--------------------------------------------------------------
+
 module Prelims.Snoclist where
-open import Level
 open import Relation.Binary.PropositionalEquality
-open import Relation.Binary
-open import Function.Equality hiding (cong)
-open import Algebra
-open import Data.Nat
-open import Data.Fin
 
 infixl 20 _snoc_
 data snocList (A : Set) : Set where
@@ -21,6 +23,6 @@ snocmap-comp : ∀ {A B C} {g : B → C} {f : A → B} (l : snocList A) →
 snocmap-comp [] = refl
 snocmap-comp {g = g} {f = f} (l snoc a) = cong (λ x → x snoc g (f a)) (snocmap-comp l)
 
-replicate : ∀ {A} → ℕ → A → snocList A
-replicate zero _ = []
-replicate (suc n) a = replicate n a snoc a
+data HetsnocList {A} (B : A → Set) : snocList A → Set where
+  [] : HetsnocList B []
+  _snoc_ : ∀ {aa} {a} → HetsnocList B aa → B a → HetsnocList B (aa snoc a)

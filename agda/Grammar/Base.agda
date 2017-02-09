@@ -52,9 +52,6 @@ record Grammar : Set₁ where
   var-inj : ∀ {V} {K} {x y : Var V K} → var x ≡ var y → x ≡ y
   var-inj refl = refl
 
-  ListExp : Alphabet → List VarKind → Set
-  ListExp V = HetList (VExpression V)
-
   data Types : Alphabet → List VarKind → Set where
     [] : ∀ {V} → Types V []
     _,_ : ∀ {V K AA} → Expression V (parent K) → Types (V , K) AA → Types V (K ∷ AA)
