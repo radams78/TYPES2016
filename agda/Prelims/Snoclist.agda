@@ -24,11 +24,3 @@ snocmap-comp {g = g} {f = f} (l snoc a) = cong (λ x → x snoc g (f a)) (snocma
 replicate : ∀ {A} → ℕ → A → snocList A
 replicate zero _ = []
 replicate (suc n) a = replicate n a snoc a
-
-data snocVec (A : Set) : ℕ → Set where
-  [] : snocVec A ℕ.zero
-  _snoc_ : ∀ {n} → snocVec A n → A → snocVec A (ℕ.suc n)
-
-lookup : ∀ {A : Set} {n} → Fin n → snocVec A n → A
-lookup zero (_ snoc x) = x
-lookup (suc i) (v snoc _) = lookup i v
