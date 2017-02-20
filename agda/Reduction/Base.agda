@@ -29,14 +29,8 @@ _↠⁺_ = TClose _⇒_
 _↠_ : Rewrite
 _↠_ = RTClose _⇒_
 
-RED : Alphabet → ∀ C → Kind C → Preorder _ _ _
-RED V C K = RTCLOSE (_⇒_ {V} {C} {K})
-
 _≃_ : Rewrite
 _≃_ = RSTClose _⇒_
-
-CONV : Alphabet → ∀ C → Kind C → Setoid _ _
-CONV V C K = RSTCLOSE {A = Subexp V C K} _⇒_
 
 redex-conv : ∀ {V} {K} {C} {c} {E} {F} → R {V} {K} {C} c E F → app c E ≃ F
 redex-conv rcEF = inc (redex rcEF)

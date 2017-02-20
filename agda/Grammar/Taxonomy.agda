@@ -75,7 +75,6 @@ record Taxonomy : Set₁ where
   ConKind = SimpleKind AbsKind ExpKind
 
 -- A kind is either an expression kind or a list of abstraction kinds
--- TODO Remove this
   data KindClass : Set where
     -Expression : KindClass
     -ListAbs : KindClass
